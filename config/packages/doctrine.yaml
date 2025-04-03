@@ -1,13 +1,11 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
-
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '16'
-
+        server_version: '10.4.32-MariaDB' # Ajouté pour correspondre à votre version MariaDB
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+        mapping_types: # Ajouté pour gérer les colonnes enum
+            enum: string
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
@@ -22,7 +20,7 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
-                enum: string
+                # "enum: string" a été supprimé d'ici
 
 when@test:
     doctrine:

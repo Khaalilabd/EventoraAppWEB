@@ -5,115 +5,162 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
 use App\Repository\MembreRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: MembreRepository::class)]
 #[ORM\Table(name: 'membres')]
-class Membre
+class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $Id = null;
-
-    public function getId(): ?int
-    {
-        return $this->Id;
-    }
-
-    public function setId(int $Id): self
-    {
-        $this->Id = $Id;
-        return $this;
-    }
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Nom = null;
-
-    public function getNom(): ?string
-    {
-        return $this->Nom;
-    }
-
-    public function setNom(string $Nom): self
-    {
-        $this->Nom = $Nom;
-        return $this;
-    }
+    private ?string $nom = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Prénom = null;
-
-    public function getPrénom(): ?string
-    {
-        return $this->Prénom;
-    }
-
-    public function setPrénom(string $Prénom): self
-    {
-        $this->Prénom = $Prénom;
-        return $this;
-    }
+    private ?string $prenom = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Email = null;
-
-    public function getEmail(): ?string
-    {
-        return $this->Email;
-    }
-
-    public function setEmail(string $Email): self
-    {
-        $this->Email = $Email;
-        return $this;
-    }
+    private ?string $email = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $CIN = null;
-
-    public function getCIN(): ?string
-    {
-        return $this->CIN;
-    }
-
-    public function setCIN(string $CIN): self
-    {
-        $this->CIN = $CIN;
-        return $this;
-    }
+    private ?string $cin = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $NumTel = null;
-
-    public function getNumTel(): ?string
-    {
-        return $this->NumTel;
-    }
-
-    public function setNumTel(string $NumTel): self
-    {
-        $this->NumTel = $NumTel;
-        return $this;
-    }
+    private ?string $numTel = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Adresse = null;
-
-    public function getAdresse(): ?string
-    {
-        return $this->Adresse;
-    }
-
-    public function setAdresse(string $Adresse): self
-    {
-        $this->Adresse = $Adresse;
-        return $this;
-    }
+    private ?string $adresse = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
     private ?string $motDePasse = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private ?string $role = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $image = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $token = null;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $isConfirmed = null;
+
+    #[ORM\OneToMany(targetEntity: Feedback::class, mappedBy: 'membre')]
+    private Collection $feedbacks;
+
+    #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'membre')]
+    private Collection $reclamations;
+
+    public function __construct()
+    {
+        $this->feedbacks = new ArrayCollection();
+        $this->reclamations = new ArrayCollection();
+    }
+
+    // Implémentation des méthodes de UserInterface
+    public function getRoles(): array
+    {
+        return ['ROLE_' . strtoupper($this->role)]; // Ex: ROLE_ADMIN, ROLE_AGENT, ROLE_MEMBRE
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->motDePasse;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email; // Utilisé pour identifier l'utilisateur (email dans votre cas)
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Si vous stockez des données sensibles temporairement, supprimez-les ici
+    }
+
+    // Getters et setters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    public function getCin(): ?string
+    {
+        return $this->cin;
+    }
+
+    public function setCin(string $cin): self
+    {
+        $this->cin = $cin;
+        return $this;
+    }
+
+    public function getNumTel(): ?string
+    {
+        return $this->numTel;
+    }
+
+    public function setNumTel(string $numTel): self
+    {
+        $this->numTel = $numTel;
+        return $this;
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(string $adresse): self
+    {
+        $this->adresse = $adresse;
+        return $this;
+    }
 
     public function getMotDePasse(): ?string
     {
@@ -126,22 +173,16 @@ class Membre
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Role = null;
-
     public function getRole(): ?string
     {
-        return $this->Role;
+        return $this->role;
     }
 
-    public function setRole(string $Role): self
+    public function setRole(string $role): self
     {
-        $this->Role = $Role;
+        $this->role = $role;
         return $this;
     }
-
-    #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $image = null;
 
     public function getImage(): ?string
     {
@@ -154,9 +195,6 @@ class Membre
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $token = null;
-
     public function getToken(): ?string
     {
         return $this->token;
@@ -168,10 +206,7 @@ class Membre
         return $this;
     }
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private ?bool $isConfirmed = null;
-
-    public function isIsConfirmed(): ?bool
+    public function isConfirmed(): ?bool
     {
         return $this->isConfirmed;
     }
@@ -182,41 +217,26 @@ class Membre
         return $this;
     }
 
-    #[ORM\OneToMany(targetEntity: Feedback::class, mappedBy: 'membre')]
-    private Collection $feedbacks;
-
     /**
      * @return Collection<int, Feedback>
      */
     public function getFeedbacks(): Collection
     {
-        if (!$this->feedbacks instanceof Collection) {
-            $this->feedbacks = new ArrayCollection();
-        }
         return $this->feedbacks;
     }
 
     public function addFeedback(Feedback $feedback): self
     {
-        if (!$this->getFeedbacks()->contains($feedback)) {
-            $this->getFeedbacks()->add($feedback);
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks[] = $feedback;
         }
         return $this;
     }
 
     public function removeFeedback(Feedback $feedback): self
     {
-        $this->getFeedbacks()->removeElement($feedback);
+        $this->feedbacks->removeElement($feedback);
         return $this;
-    }
-
-    #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'membre')]
-    private Collection $reclamations;
-
-    public function __construct()
-    {
-        $this->feedbacks = new ArrayCollection();
-        $this->reclamations = new ArrayCollection();
     }
 
     /**
@@ -224,29 +244,20 @@ class Membre
      */
     public function getReclamations(): Collection
     {
-        if (!$this->reclamations instanceof Collection) {
-            $this->reclamations = new ArrayCollection();
-        }
         return $this->reclamations;
     }
 
     public function addReclamation(Reclamation $reclamation): self
     {
-        if (!$this->getReclamations()->contains($reclamation)) {
-            $this->getReclamations()->add($reclamation);
+        if (!$this->reclamations->contains($reclamation)) {
+            $this->reclamations[] = $reclamation;
         }
         return $this;
     }
 
     public function removeReclamation(Reclamation $reclamation): self
     {
-        $this->getReclamations()->removeElement($reclamation);
+        $this->reclamations->removeElement($reclamation);
         return $this;
     }
-
-    public function isConfirmed(): ?bool
-    {
-        return $this->isConfirmed;
-    }
-
 }
