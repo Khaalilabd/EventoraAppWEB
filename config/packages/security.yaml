@@ -1,47 +1,56 @@
+parameters:
+    images_directory: '%kernel.project_dir%/public/uploads/images'
 security:
-    enable_authenticator_manager: true
+    enable_authenticator_manager: true # Active le nouveau système d'authentification (Symfony 5.3+)
     password_hashers:
         App\Entity\Membre:
-            algorithm: auto
+            algorithm: auto # Bonne pratique, utilise l'algorithme le plus sécurisé disponible
 
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\Membre
-                property: email
+                property: email # Correct : utilise l'email comme identifiant
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+            security: false # Désactive la sécurité pour les outils de dev
         main:
-            lazy: true
-            provider: app_user_provider
+            lazy: true # Charge le provider seulement quand nécessaire
+            provider: app_user_provider # Lie au provider défini ci-dessus
             form_login:
                 login_path: app_auth
                 check_path: app_auth
+                username_parameter: "login_form[email]"
+                password_parameter: "login_form[password]"
+                default_target_path: / # Redirection après connexion réussie
+                always_use_default_target_path: true # Force la redirection même après échec
             logout:
-                path: app_logout
-                target: app_auth
+                path: app_logout # Route de déconnexion
+                target: app_auth # Redirection après déconnexion
             remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800
-                path: /
+                secret: '%kernel.secret%' # Clé secrète pour le cookie
+                lifetime: 604800 # Durée de vie du cookie (7 jours)
+                path: / # Chemin où le cookie est valide
 
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN } # Accès réservé aux admins
+        - { path: ^/profile, roles: ROLE_USER } # Accès réservé aux utilisateurs connectés
+        # Ajoutez cette ligne si vous voulez que /auth soit accessible à tous
+        - { path: ^/auth, roles: PUBLIC_ACCESS }
 
     role_hierarchy:
-        ROLE_ADMIN: [ROLE_AGENT, ROLE_MEMBRE]
-        ROLE_AGENT: [ROLE_MEMBRE]
-        ROLE_MEMBRE: [ROLE_USER]
+        ROLE_ADMIN: [ROLE_AGENT, ROLE_MEMBRE] # Admin hérite des rôles inférieurs
+        ROLE_AGENT: [ROLE_MEMBRE] # Agent hérite de membre
+        ROLE_MEMBRE: [ROLE_USER] # Membre hérite de ROLE_USER
 
+# Configuration spécifique pour l'environnement de test
 when@test:
     security:
         password_hashers:
             App\Entity\Membre:
                 algorithm: auto
-                cost: 4
+                cost: 4 # Réduit le coût pour les tests
                 time_cost: 3
                 memory_cost: 10
