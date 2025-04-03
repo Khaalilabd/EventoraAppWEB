@@ -18,44 +18,46 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false, name: 'Nom')] // Correction ici
     private ?string $nom = null;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false, name: 'Prénom')] // Correction ici
     private ?string $prenom = null;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false, name: 'Email')] // Correction ici
     private ?string $email = null;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false, name: 'CIN')] // Correction ici
     private ?string $cin = null;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false, name: 'NumTel')] // Correction ici
     private ?string $numTel = null;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false, name: 'Adresse')] // Correction ici
     private ?string $adresse = null;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false, name: 'motDePasse')] // Correction ici
     private ?string $motDePasse = null;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false, name: 'Role')] // Correction ici
     private ?string $role = null;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true, name: 'image')] // Correction ici
     private ?string $image = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $token = null;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private ?bool $isConfirmed = null;
+    #[ORM\Column(type: 'boolean', nullable: true, name: 'isConfirmed')] // Correction ici
+    private ?bool $isConfirmed = false; // Valeur par défaut à false (0)
 
     #[ORM\OneToMany(targetEntity: Feedback::class, mappedBy: 'membre')]
     private Collection $feedbacks;
 
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'membre')]
     private Collection $reclamations;
+
+    
 
     public function __construct()
     {
