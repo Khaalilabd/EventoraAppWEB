@@ -1,0 +1,20 @@
+{% extends 'admin/dashboard.html.twig' %}
+
+{% block admin_content %}
+    <h2>Modifier le Statut de la Réclamation #{{ reclamation.id }}</h2>
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0">Détails de la Réclamation</h6>
+        </div>
+        <div class="card-body">
+            <p><strong>Titre :</strong> {{ reclamation.titre }}</p>
+            <p><strong>Description :</strong> {{ reclamation.description }}</p>
+            <p><strong>Membre :</strong> {{ reclamation.membre ? reclamation.membre.email : 'Anonyme' }}</p>
+
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button type="submit" class="btn btn-primary mt-3">Mettre à jour</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

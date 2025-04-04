@@ -1,0 +1,61 @@
+{% extends 'admin/dashboard.html.twig' %}
+
+{% block admin_content %}
+    <h2>Gestion des Réclamations</h2>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0">Liste des Réclamations</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Titre</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Statut</th>
+                            <th>Membre</th>
+                            <th>QR Code</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reclamation in reclamations %}
+                            <tr>
+                                <td>{{ reclamation.id }}</td>
+                                <td>{{ reclamation.titre }}</td>
+                                <td>{{ reclamation.description|length > 50 ? reclamation.description|slice(0, 50) ~ '...' : reclamation.description }}</td>
+                                <td>{{ reclamation.type }}</td>
+                                <td>{{ reclamation.statut }}</td>
+                                <td>{{ reclamation.membre ? reclamation.membre.email : 'Anonyme' }}</td>
+                                <td>
+                                    <a href="{{ path('admin_reclamations_show_qr', {'id': reclamation.id}) }}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-qrcode"></i> Voir QR
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ path('admin_reclamations_edit_status', {'id': reclamation.id}) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-edit"></i> Modifier Statut
+                                    </a>
+                                    <form method="post" action="{{ path('admin_reclamations_delete', {'id': reclamation.id}) }}" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer cette réclamation ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="8">Aucune réclamation trouvée.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

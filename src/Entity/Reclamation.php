@@ -30,7 +30,7 @@ class Reclamation
     }
 
     #[ORM\ManyToOne(targetEntity: Membre::class, inversedBy: 'reclamations')]
-    #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'Id')]
+    #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'id')] // Changé 'Id' en 'id'
     private ?Membre $membre = null;
 
     public function getMembre(): ?Membre
