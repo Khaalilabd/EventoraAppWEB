@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block body %}
+    <div class="sidebar">
+        <div class="p-3">
+            <a href="{{ path('admin_dashboard') }}" class="navbar-brand text-white d-flex align-items-center">
+                <img src="https://via.placeholder.com/40" alt="Logo" class="me-2">
+                <span>Admin Dashboard</span>
+            </a>
+        </div>
+        <hr class="bg-light">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ path('admin_dashboard') }}">
+                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('admin_tables') }}">
+                    <i class="fas fa-table me-2"></i> Tables
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <nav class="navbar navbar-custom">
+            <div class="container-fluid">
+                <div class="breadcrumb">
+                    <span class="text-muted">Pages / </span>
+                    <span class="fw-bold">Dashboard</span>
+                </div>
+                <div class="ms-auto d-flex align-items-center">
+                    <span class="me-3"><i class="fas fa-user me-1"></i> {{ app.user.email }}</span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <p>Active Users</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <p>Total Projects</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">Projects</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Project</th>
+                                            <th>Members</th>
+                                            <th>Budget</th>
+                                            <th>Completion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="progress">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">Quick Stats</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress mb-3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
