@@ -39,7 +39,7 @@ class AdminController extends AbstractController
     #[Route('/admin/tables', name: 'admin_tables')]
     public function tables(): Response
     {
-        // Placeholder pour la page des tables
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return new Response('Tables page - to be implemented');
     }
 }

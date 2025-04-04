@@ -15,13 +15,12 @@ class ReclamationStatusType extends AbstractType
         $builder
             ->add('statut', ChoiceType::class, [
                 'choices' => [
-                    'En attente' => 'en_attente',
-                    'En cours' => 'en_cours',
-                    'Résolu' => 'resolu',
+                    'En attente' => 'En attente',
+                    'En cours' => 'En cours',
+                    'Résolu' => 'Résolu',
                 ],
                 'label' => 'Statut',
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
