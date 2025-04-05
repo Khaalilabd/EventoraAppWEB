@@ -78,7 +78,7 @@ class ReclamationsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/generate-qr', name: 'admin_reclamations_generate_qr', methods: ['GET'])]
+  /*  #[Route('/{id}/generate-qr', name: 'admin_reclamations_generate_qr', methods: ['GET'])]
     public function generateQr(Reclamation $reclamation): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -89,5 +89,5 @@ class ReclamationsController extends AbstractController
         $result = $writer->write($qrCode);
 
         return new Response($result->getString(), Response::HTTP_OK, ['Content-Type' => 'image/png']);
-    }
+    }*/
 }

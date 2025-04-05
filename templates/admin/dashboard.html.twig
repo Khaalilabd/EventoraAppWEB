@@ -83,12 +83,32 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-concierge-bell text-dark"></i>
+                            <i class="fas fa-exclamation-triangle text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Services</span>
                     </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'show' : '' }}" id="servicesMenu">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_services' ? 'active' : '' }}" href="{{ path('admin_services') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-exclamation-circle text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Services</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="{{ path('admin_sponsors') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-comment-dots text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Partenaires</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_logout') }}">
