@@ -4,9 +4,6 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
 use App\Repository\FeedbackRepository;
 
 #[ORM\Entity(repositoryClass: FeedbackRepository::class)]
@@ -18,6 +15,23 @@ class Feedback
     #[ORM\Column(type: 'integer')]
     private ?int $ID = null;
 
+    #[ORM\ManyToOne(targetEntity: Membre::class, inversedBy: 'feedbacks')]
+    #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'id')] // Changé 'Id' en 'id'
+    private ?Membre $membre = null;
+
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private ?int $Vote = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private ?string $Description = null;
+
+    #[ORM\Column(type: 'blob', nullable: true)]
+    private ?string $Souvenirs = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $Recommend = null;
+
+    // Getters et setters
     public function getID(): ?int
     {
         return $this->ID;
@@ -28,10 +42,6 @@ class Feedback
         $this->ID = $ID;
         return $this;
     }
-
-    #[ORM\ManyToOne(targetEntity: Membre::class, inversedBy: 'feedbacks')]
-    #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'Id')]
-    private ?Membre $membre = null;
 
     public function getMembre(): ?Membre
     {
@@ -44,9 +54,6 @@ class Feedback
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $Vote = null;
-
     public function getVote(): ?int
     {
         return $this->Vote;
@@ -57,9 +64,6 @@ class Feedback
         $this->Vote = $Vote;
         return $this;
     }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Description = null;
 
     public function getDescription(): ?string
     {
@@ -72,9 +76,6 @@ class Feedback
         return $this;
     }
 
-    #[ORM\Column(type: 'blob', nullable: true)]
-    private ?string $Souvenirs = null;
-
     public function getSouvenirs(): ?string
     {
         return $this->Souvenirs;
@@ -86,9 +87,6 @@ class Feedback
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $Recommend = null;
-
     public function getRecommend(): ?string
     {
         return $this->Recommend;
@@ -99,5 +97,4 @@ class Feedback
         $this->Recommend = $Recommend;
         return $this;
     }
-
 }

@@ -208,6 +208,19 @@ body {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+.form-check-input.bg-success:checked {
+  background-color: #28a745; /* Vert personnalisé */
+  border-color: #28a745;
+}
+
+.form-check-input.bg-danger:checked {
+  background-color: #dc3545; /* Rouge personnalisé */
+  border-color: #dc3545;
+}
+
+.form-check-input:disabled {
+  opacity: 0.8; /* Légère transparence pour indiquer que c’est désactivé */
+}
 
 hr {
   margin: 1rem 0;

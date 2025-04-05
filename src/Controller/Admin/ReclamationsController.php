@@ -34,10 +34,18 @@ class ReclamationsController extends AbstractController
         $form = $this->createForm(ReclamationStatusType::class, $reclamation);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-            $this->addFlash('success', 'Statut mis à jour avec succès.');
-            return $this->redirectToRoute('admin_reclamations', [], Response::HTTP_SEE_OTHER);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $newStatut = $reclamation->getStatut();
+                $entityManager->persist($reclamation);
+                $entityManager->flush();
+                $this->addFlash('success', 'Statut mis à jour avec succès. Nouveau statut : ' . ($newStatut ?? 'non défini'));
+                return $this->redirectToRoute('admin_reclamations', [], Response::HTTP_SEE_OTHER);
+            } else {
+                // Ajouter des détails sur les erreurs pour déboguer
+                $errors = $form->getErrors(true);
+                $this->addFlash('error', 'Erreur dans le formulaire : ' . $errors->__toString());
+            }
         }
 
         return $this->render('admin/reclamations/edit_status.html.twig', [
