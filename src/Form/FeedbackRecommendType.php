@@ -18,10 +18,10 @@ class FeedbackRecommendType extends AbstractType
                     'Oui' => 'oui',
                     'Non' => 'non',
                 ],
-                'label' => 'Recommandé',
-                'attr' => ['class' => 'form-select'],
+                'label' => false, // Pas besoin de label ici, on l’ajoute manuellement dans le template
+                'expanded' => true,
+                'multiple' => false,
                 'required' => true,
-                'placeholder' => 'Choisir une option',
             ]);
     }
 

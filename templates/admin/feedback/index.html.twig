@@ -163,7 +163,7 @@
             </div>
         </nav>
 
-   <div class="container-fluid py-4">
+<div class="container-fluid py-4">
             <div class="row">
                 {% for feedback in feedbacks %}
                     <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
@@ -176,9 +176,10 @@
                                 <p class="text-sm mb-2"><strong>Note :</strong> {{ feedback.vote }}/5</p>
                                 <p class="text-sm mb-2"><strong>Description :</strong> {{ feedback.description }}</p>
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input recommend-checkbox" 
+                                    <input class="form-check-input recommend-checkbox 
+                                                  {% if feedback.recommend|lower == 'oui' %}recommend-yes{% else %}recommend-no{% endif %}" 
                                            type="checkbox" 
-                                           {{ feedback.recommend == 'oui' ? 'checked="checked"' : '' }} 
+                                           {{ feedback.recommend|lower == 'oui' ? 'checked' : '' }} 
                                            disabled>
                                     <label class="form-check-label">Recommandé ({{ feedback.recommend|default('non défini') }})</label>
                                 </div>
@@ -206,13 +207,16 @@
         .form-check .recommend-checkbox {
             width: 1.25em;
             height: 1.25em;
-            background-color: #dc3545; /* Rouge par défaut pour "non" */
-            border-color: #dc3545;
         }
-        .form-check .recommend-checkbox:checked {
-            background-color: #28a745; /* Vert pour "oui" */
-            border-color: #28a745;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+        .form-check .recommend-yes {
+            background-color: #28a745 !important; /* Vert pour "oui" */
+            border-color: #28a745 !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e") !important;
+        }
+        .form-check .recommend-no {
+            background-color: #dc3545 !important; /* Rouge pour "non" ou vide */
+            border-color: #dc3545 !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 6l8 8m0-8l-8 8'/%3e%3c/svg%3e") !important;
         }
         .form-check .recommend-checkbox:disabled {
             opacity: 0.8;
