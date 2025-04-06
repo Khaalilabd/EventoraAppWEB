@@ -13,21 +13,30 @@ class ReservationpackRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservationpack::class);
     }
 
-    public function findAllCustom(): array
+    /**
+     * Récupère une réservation pack par ID sans charger Pack.
+     * @param mixed $id
+     * @return Reservationpack|null
+     */
+    public function find($id, $lockMode = null, $lockVersion = null): ?Reservationpack
     {
         return $this->createQueryBuilder('r')
-            ->select('r')
-            ->getQuery()
-            ->getResult();
-    }
-
-    // Optionally, override find() for edit/delete consistency
-    public function findCustom($id): ?Reservationpack
-    {
-        return $this->createQueryBuilder('r')
-            ->where('r.IDReservationPack = :id') // Use the exact column name from the database
+            ->select('r') // Sélectionne uniquement les champs de Reservationpack
+            ->where('r.IDReservationPack = :id')
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * Récupère toutes les réservations pack sans charger Pack.
+     * @return Reservationpack[]
+     */
+    public function findAll(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->select('r') // Sélectionne uniquement les champs de Reservationpack
+            ->getQuery()
+            ->getResult();
     }
 }

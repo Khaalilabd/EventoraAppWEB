@@ -58,5 +58,37 @@ class ReservationPersonaliseService
 
         return $this;
     }
+    
+    #[ORM\OneToMany(targetEntity: ReservationPersonaliseService::class, mappedBy: 'reservation_id')]
+private Collection $services;
+
+public function __construct()
+{
+    $this->services = new ArrayCollection();
+}
+
+public function getServices(): Collection
+{
+    return $this->services;
+}
+
+public function addService(ReservationPersonaliseService $service): self
+{
+    if (!$this->services->contains($service)) {
+        $this->services->add($service);
+        $service->setReservationId($this->getIDReservationPersonalise());
+    }
+    return $this;
+}
+
+public function removeService(ReservationPersonaliseService $service): self
+{
+    if ($this->services->removeElement($service)) {
+        if ($service->getReservationId() === $this->getIDReservationPersonalise()) {
+            $service->setReservationId(null);
+        }
+    }
+    return $this;
+}
 
 }
