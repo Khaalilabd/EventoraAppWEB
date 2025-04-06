@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Pack;
+use App\Entity\Typepack;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +17,30 @@ class PackRepository extends ServiceEntityRepository
         parent::__construct($registry, Pack::class);
     }
 
-    //    /**
-    //     * @return Pack[] Returns an array of Pack objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findAll(): array
+    {
+        $packs = parent::findAll(); // Fetch all Pack entities
 
-    //    public function findOneBySomeField($value): ?Pack
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        // Populate the typepack property for each Pack
+        foreach ($packs as $pack) {
+            $typepack = $this->getEntityManager()
+                ->getRepository(Typepack::class)
+                ->findOneBy(['type' => $pack->getType()]);
+            $pack->setTypepack($typepack);
+        }
+
+        return $packs;
+    }
+
+    public function find($id, $lockMode = null, $lockVersion = null): ?Pack
+    {
+        $pack = parent::find($id, $lockMode, $lockVersion);
+        if ($pack) {
+            $typepack = $this->getEntityManager()
+                ->getRepository(Typepack::class)
+                ->findOneBy(['type' => $pack->getType()]);
+            $pack->setTypepack($typepack);
+        }
+        return $pack;
+    }
 }

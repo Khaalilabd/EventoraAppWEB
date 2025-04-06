@@ -2,12 +2,11 @@
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
 use App\Repository\PackRepository;
+use App\Entity\Typepack;
 
 #[ORM\Entity(repositoryClass: PackRepository::class)]
 #[ORM\Table(name: 'pack')]
@@ -17,6 +16,37 @@ class Pack
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
+
+    #[ORM\Column(type: 'string', nullable: false, name: 'nomPack')]
+    private ?string $nomPack = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: 'decimal', nullable: false)]
+    private ?float $prix = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private ?string $location = null;
+
+    #[ORM\Column(type: 'string', nullable: false, name: 'type')]
+    private ?string $type = null;
+
+    #[ORM\Column(type: 'integer', nullable: false, name: 'nbrGuests')]
+    private ?int $nbrGuests = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private ?string $image_path = null;
+
+    #[ORM\OneToMany(targetEntity: Reservationpack::class, mappedBy: 'pack')]
+    private Collection $reservationpacks;
+
+    private ?Typepack $typepack = null;
+
+    public function __construct()
+    {
+        $this->reservationpacks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -29,9 +59,6 @@ class Pack
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $nomPack = null;
-
     public function getNomPack(): ?string
     {
         return $this->nomPack;
@@ -42,9 +69,6 @@ class Pack
         $this->nomPack = $nomPack;
         return $this;
     }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $description = null;
 
     public function getDescription(): ?string
     {
@@ -57,9 +81,6 @@ class Pack
         return $this;
     }
 
-    #[ORM\Column(type: 'decimal', nullable: false)]
-    private ?float $prix = null;
-
     public function getPrix(): ?float
     {
         return $this->prix;
@@ -70,9 +91,6 @@ class Pack
         $this->prix = $prix;
         return $this;
     }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $location = null;
 
     public function getLocation(): ?string
     {
@@ -85,23 +103,16 @@ class Pack
         return $this;
     }
 
-    #[ORM\ManyToOne(targetEntity: Typepack::class, inversedBy: 'packs')]
-    #[ORM\JoinColumn(name: 'type', referencedColumnName: 'type')]
-    private ?Typepack $typepack = null;
-
-    public function getTypepack(): ?Typepack
+    public function getType(): ?string
     {
-        return $this->typepack;
+        return $this->type;
     }
 
-    public function setTypepack(?Typepack $typepack): self
+    public function setType(string $type): self
     {
-        $this->typepack = $typepack;
+        $this->type = $type;
         return $this;
     }
-
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $nbrGuests = null;
 
     public function getNbrGuests(): ?int
     {
@@ -114,26 +125,15 @@ class Pack
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $image_path = null;
-
-    public function getImage_path(): ?string
+    public function getImagePath(): ?string
     {
         return $this->image_path;
     }
 
-    public function setImage_path(string $image_path): self
+    public function setImagePath(string $image_path): self
     {
         $this->image_path = $image_path;
         return $this;
-    }
-
-    #[ORM\OneToMany(targetEntity: Reservationpack::class, mappedBy: 'pack')]
-    private Collection $reservationpacks;
-
-    public function __construct()
-    {
-        $this->reservationpacks = new ArrayCollection();
     }
 
     /**
@@ -151,26 +151,33 @@ class Pack
     {
         if (!$this->getReservationpacks()->contains($reservationpack)) {
             $this->getReservationpacks()->add($reservationpack);
+            $reservationpack->setPack($this); // Ensure bidirectional relationship
         }
         return $this;
     }
 
     public function removeReservationpack(Reservationpack $reservationpack): self
     {
-        $this->getReservationpacks()->removeElement($reservationpack);
+        if ($this->getReservationpacks()->removeElement($reservationpack)) {
+            // Set the owning side to null (if the relationship is bidirectional)
+            if ($reservationpack->getPack() === $this) {
+                $reservationpack->setPack(null);
+            }
+        }
         return $this;
     }
 
-    public function getImagePath(): ?string
+    public function getTypepack(): ?Typepack
     {
-        return $this->image_path;
+        return $this->typepack;
     }
 
-    public function setImagePath(string $image_path): static
+    public function setTypepack(?Typepack $typepack): self
     {
-        $this->image_path = $image_path;
-
+        $this->typepack = $typepack;
+        if ($typepack !== null) {
+            $this->type = $typepack->getType();
+        }
         return $this;
     }
-
 }
