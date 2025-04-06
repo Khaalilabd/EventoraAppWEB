@@ -27,7 +27,7 @@ class ReservationsController extends AbstractController
         $reservationPacks = $reservationPackRepository->findAllCustom(); // Updated to custom method
         $reservationPersonnalises = $reservationPersonnaliseRepository->findAll();
 
-        return $this->render('admin/reservations/index.html.twig', [
+        return $this->render('admin/reservation/index.html.twig', [
             'reservationPacks' => $reservationPacks,
             'reservationPersonnalises' => $reservationPersonnalises,
         ]);
@@ -41,7 +41,7 @@ class ReservationsController extends AbstractController
         $type = $request->query->get('type');
 
         if (!$type || !in_array($type, ['pack', 'personnalise'])) {
-            return $this->render('admin/reservations/select_type.html.twig');
+            return $this->render('admin/reservation/select_type.html.twig');
         }
 
         if ($type === 'pack') {
@@ -61,7 +61,7 @@ class ReservationsController extends AbstractController
             return $this->redirectToRoute('admin_reservations', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/reservations/new.html.twig', [
+        return $this->render('admin/reservation/new.html.twig', [
             'form' => $form->createView(),
             'type' => $type,
         ]);
@@ -102,7 +102,7 @@ class ReservationsController extends AbstractController
             return $this->redirectToRoute('admin_reservations', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/reservations/edit.html.twig', [
+        return $this->render('admin/reservation/edit.html.twig', [
             'reservation' => $reservation,
             'form' => $form->createView(),
             'type' => $type,

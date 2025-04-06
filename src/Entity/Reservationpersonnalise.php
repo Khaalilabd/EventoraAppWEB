@@ -15,7 +15,7 @@ class Reservationpersonnalise
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer',  name: 'IDReservationPersonalise')]
     private ?int $IDReservationPersonalise = null;
 
     public function getIDReservationPersonalise(): ?int

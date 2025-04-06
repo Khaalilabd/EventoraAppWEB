@@ -15,7 +15,7 @@ class Reservationpack
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', name: 'IDReservationPack')]
     private ?int $IDReservationPack = null;
     
     public function getIDReservationPack(): ?int
