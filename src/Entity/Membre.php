@@ -18,46 +18,47 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Nom')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'Nom')]
     private ?string $nom = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Prénom')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'Prénom')]
     private ?string $prenom = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Email')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'Email', unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'CIN')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'CIN')]
     private ?string $cin = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'NumTel')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'NumTel')]
     private ?string $numTel = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Adresse')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'Adresse')]
     private ?string $adresse = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'motDePasse')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'motDePasse')]
     private ?string $motDePasse = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Role')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'Role')]
     private ?string $role = null;
 
-    #[ORM\Column(type: 'string', nullable: true, name: 'image')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: true, name: 'image')]
     private ?string $image = null;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $token = null;
 
-    #[ORM\Column(type: 'boolean', nullable: true, name: 'isConfirmed')] // Correction ici
-    private ?bool $isConfirmed = false; // Valeur par défaut à false (0)
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $tokenExpiration = null;
+
+    #[ORM\Column(type: 'boolean', nullable: true, name: 'isConfirmed')]
+    private ?bool $isConfirmed = false;
 
     #[ORM\OneToMany(targetEntity: Feedback::class, mappedBy: 'membre')]
     private Collection $feedbacks;
 
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'membre')]
     private Collection $reclamations;
-
-    
 
     public function __construct()
     {
@@ -78,7 +79,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->email; // Utilisé pour identifier l'utilisateur (email dans votre cas)
+        return $this->email;
     }
 
     public function eraseCredentials(): void
@@ -205,6 +206,17 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     public function setToken(?string $token): self
     {
         $this->token = $token;
+        return $this;
+    }
+
+    public function getTokenExpiration(): ?\DateTimeInterface
+    {
+        return $this->tokenExpiration;
+    }
+
+    public function setTokenExpiration(?\DateTimeInterface $tokenExpiration): self
+    {
+        $this->tokenExpiration = $tokenExpiration;
         return $this;
     }
 

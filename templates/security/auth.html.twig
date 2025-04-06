@@ -48,7 +48,7 @@
         </div>
 
         <div class="form-container sign-in-container">
-            {{ form_start(login_form) }}
+            {{ form_start(login_form, {'action': path('login_check'), 'method': 'POST'}) }}
                 <h1>Sign in</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -60,9 +60,9 @@
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
                 {{ form_row(login_form.email) }}
-                {{ form_row(login_form.password) }}
+                {{ form_row(login_form.motDePasse) }} {# Correction : password -> motDePasse #}
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
-                <a href="#">Forgot your password?</a>
+                <a href="{{ path('app_reset_password_request') }}">Forgot your password?</a>
                 <button type="submit">Sign In</button>
             {{ form_end(login_form) }}
         </div>
@@ -77,7 +77,7 @@
                 <div class="overlay-panel overlay-right">
                     <h1>Hello, Friend!</h1>
                     <p>Enter your personal details and start journey with us</p>
-                    <a href="{{ path('app_register') }}" class="ghost">Sign Up</a> {# Changement ici #}
+                    <a href="{{ path('app_register') }}" class="ghost">Sign Up</a>
                 </div>
             </div>
         </div>
