@@ -7,7 +7,6 @@
     <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/soft-ui-dashboard.css') }}" rel="stylesheet" />
-    <!-- Charger Font Awesome localement -->
     <link href="{{ asset('assets/fontawesome/css/all.css') }}" rel="stylesheet" />
 {% endblock %}
 
@@ -31,7 +30,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations' ? 'active' : '' }}" href="{{ path('admin_reservations') }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-calendar-check text-dark"></i>
                         </div>
