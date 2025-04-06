@@ -1,6 +1,6 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Gestion des services{% endblock %}
+{% block title %}Gestion des sponsors{% endblock %}
 
 {% block body %}
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main">
@@ -140,9 +140,9 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Pages</a></li>
-                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Réclamations</li>
+                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Partenaires</li>
                     </ol>
-                    <h6 class="font-weight-bolder mb-0">Gestion des Réclamations</h6>
+                    <h6 class="font-weight-bolder mb-0">Gestion des Partenaires</h6>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -167,9 +167,9 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card mb-4 shadow-sm border-radius-xl">
-                         <div class="card-header p-3 d-flex justify-content-between">
-                            <h6 class="font-weight-bolder mb-0">Liste des Services</h6>
-                            <a href="{{ path('admin_service_create') }}" class="btn btn-sm btn-outline-success">
+                        <div class="card-header p-3 d-flex justify-content-between">
+                            <h6 class="font-weight-bolder mb-0">Liste des partenaire</h6>
+                            <a href="{{ path('admin_sponsors_create') }}" class="btn btn-sm btn-outline-success">
                                 <i class="fas fa-plus"></i> Ajouter un service
                             </a>
                         </div>
@@ -188,39 +188,39 @@
                                 </div>
                             {% endfor %}
 
-                            {% if GServices is defined and GServices is not empty %}
+                            {% if Sponsor is defined and Sponsor is not empty %}
                                 <div class="table-responsive">
                                    <div class="table-container">
     <table class="table align-items-center mb-0">
         <thead class="table-header bg-warning text-white">
             <tr>
-                <th class="text-uppercase text-xs font-weight-bold opacity-7">ID</th>
                 <th class="text-uppercase text-xs font-weight-bold opacity-7">ID Partenaire</th>
-                <th class="text-uppercase text-xs font-weight-bold opacity-7">Titre</th>
-                <th class="text-uppercase text-xs font-weight-bold opacity-7">Location</th>
-                <th class="text-uppercase text-xs font-weight-bold opacity-7">Type Service</th>
-                <th class="text-uppercase text-xs font-weight-bold opacity-7">Description</th>
-                <th class="text-uppercase text-xs font-weight-bold opacity-7">Prix</th>
+                <th class="text-uppercase text-xs font-weight-bold opacity-7">Nom Partenaire</th>
+                <th class="text-uppercase text-xs font-weight-bold opacity-7">Email Partenaire</th>
+                <th class="text-uppercase text-xs font-weight-bold opacity-7">Telephone Partenaire</th>
+                <th class="text-uppercase text-xs font-weight-bold opacity-7">Adresse Partenaire</th>
+                <th class="text-uppercase text-xs font-weight-bold opacity-7">Site Web</th>
+                <th class="text-uppercase text-xs font-weight-bold opacity-7">Type Partenaire</th>
                 <th class="text-uppercase text-xs font-weight-bold opacity-7">Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for Gservice in GServices %}
+            {% for Sponsor in Sponsor %}
                 <tr class="table-row">
-                    <td class="table-cell ps-3 py-3">{{ Gservice.id }}</td>
-                    <td class="table-cell ps-3 py-3">{{ Gservice.sponsor.nom_partenaire }}</td>
-                    <td class="table-cell ps-3 py-3">{{ Gservice.titre }}</td>
-                    <td class="table-cell ps-3 py-3">{{ Gservice.Location }}</td>
-                    <td class="table-cell ps-3 py-3">{{ Gservice.type_service }}</td>
-                    <td class="table-cell ps-3 py-3">{{ Gservice.description|length > 50 ? Gservice.description|slice(0, 50) ~ '...' : Gservice.description }}</td>
-                    <td class="table-cell ps-3 py-3">{{ Gservice.prix }}</td>
+                    <td class="table-cell ps-3 py-3">{{ Sponsor.id_partenaire }}</td>
+                    <td class="table-cell ps-3 py-3">{{ Sponsor.nom_partenaire }}</td>
+                    <td class="table-cell ps-3 py-3">{{ Sponsor.email_partenaire }}</td>
+                    <td class="table-cell ps-3 py-3">{{ Sponsor.telephone_partenaire }}</td>
+                    <td class="table-cell ps-3 py-3">{{ Sponsor.adresse_partenaire }}</td>
+                    <td class="table-cell ps-3 py-3">{{ Sponsor.site_web}}</td>
+                    <td class="table-cell ps-3 py-3">{{ Sponsor.type_partenaire }}</td>
                     <td class="table-cell ps-3 py-3 text-center">
                         <!-- Actions -->
-                        <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="btn btn-sm btn-outline-primary me-2 action-btn">
+                        <a href="{{ path('admin_sponsors_edit', {'id_partenaire': Sponsor.id_partenaire}) }}" class="btn btn-sm btn-outline-primary me-2 action-btn">
                             <i class="fas fa-edit"></i> Modifier
                         </a>
-                        <form method="post" action="{{ path('admin_service_delete', {'id': Gservice.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce service ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Gservice.id) }}">
+                        <form method="post" action="{{ path('admin_sponsors_delete', {'id_partenaire': Sponsor.id_partenaire}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce partenaire ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Sponsor.id_partenaire) }}">
                             <button class="btn btn-sm btn-outline-danger action-btn">
                                 <i class="fas fa-trash"></i> Supprimer
                             </button>
@@ -323,7 +323,7 @@
                             {% else %}
                                 <div class="text-center p-4">
                                     <i class="fas fa-exclamation-circle text-muted" style="font-size: 2rem;"></i>
-                                    <p class="text-muted mt-2">Aucune service trouvée.</p>
+                                    <p class="text-muted mt-2">Aucune partenaire trouvée.</p>
                                 </div>
                             {% endif %}
                         </div>

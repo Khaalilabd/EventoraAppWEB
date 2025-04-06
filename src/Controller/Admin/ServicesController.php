@@ -61,44 +61,35 @@ public function delete(Request $request, GService $gService, EntityManagerInterf
     return $this->redirectToRoute('admin_services', [], Response::HTTP_SEE_OTHER);
 }
 
-#[Route('/gservice/new', name: 'gservice_new', methods: ['GET', 'POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager): Response
-{
-    $gService = new GService();
-    $form = $this->createForm(GServiceType::class, $gService);
-    $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->persist($gService);
-        $entityManager->flush();
+#[Route("/admin/service", name:"admin_service_create", methods:['GET' , 'POST'])]
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Créer un nouveau service
+        $GService = new GService();
 
-        return $this->redirectToRoute('gservice_index');
+        // Créer et gérer le formulaire
+        $form = $this->createForm(GServiceType::class, $GService);
+        $form->handleRequest($request);
+
+        // Si le formulaire est soumis et valide, on persiste l'entité
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($GService);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Service ajouté avec succès.');
+
+            // Rediriger vers la page des services ou une autre route
+            return $this->redirectToRoute('admin_services');
+        }
+
+        // Passer le formulaire au template, ainsi que l'entité GService si nécessaire
+        return $this->render('admin/service/create.html.twig', [
+            'form' => $form->createView(),
+            'GService' => $GService,  // Assurez-vous que la variable GService est passée au template
+        ]);
     }
 
-    return $this->render('g_service/new.html.twig', [
-        'g_service' => $gService,
-        'form' => $form->createView(),
-    ]);
-}
-#[Route('/gservice/new', name: 'gservice_new', methods: ['GET', 'POST'])]
-public function create(Request $request, EntityManagerInterface $entityManager): Response
-{
-    $gService = new GService();
-    $form = $this->createForm(GServiceType::class, $gService);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->persist($gService);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Service ajouté avec succès.');
-        return $this->redirectToRoute('gservice_index'); // ou une autre route selon ton app
-    }
-
-    return $this->render('user/service/create.html.twig', [
-        'form' => $form->createView(),
-    ]);
-}
 
 
 

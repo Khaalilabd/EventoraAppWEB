@@ -17,6 +17,12 @@ class GServiceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+        ->add('Sponsor', EntityType::class, [
+            'label' => 'Partenaire (Sponsor)',
+            'class' => Sponsor::class,
+            'choice_label' => 'nom_partenaire', // ou un autre champ à afficher
+            'placeholder' => 'Sélectionner un sponsor',
+        ])
             ->add('titre', TextType::class, [
                 'label' => 'Titre du service',
             ])
@@ -49,12 +55,7 @@ class GServiceType extends AbstractType
             ->add('prix', TextType::class, [
                 'label' => 'Prix',
             ])
-            ->add('Sponsor', EntityType::class, [
-                'label' => 'Partenaire (Sponsor)',
-                'class' => Sponsor::class,
-                'choice_label' => 'nom_partenaire', // ou un autre champ à afficher
-                'placeholder' => 'Sélectionner un sponsor',
-            ])
+            
         ;
     }
 
