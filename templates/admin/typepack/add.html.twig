@@ -1,9 +1,9 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Gestion des Types de Packs{% endblock %}
+{% block title %}Ajouter un Type de Pack{% endblock %}
 
 {% block body %}
- <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
     <div class="sidenav-header">
         <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
             <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
@@ -86,13 +86,13 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'true' : 'false' }}">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks', 'admin_typepacks_edit', 'admin_typepacks_create'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks', 'admin_typepacks_edit', 'admin_typepacks_create'] ? 'true' : 'false' }}">
                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="fas fa-box text-dark"></i>
                     </div>
                     <span class="nav-link-text ms-1">Packs</span>
                 </a>
-                <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'show' : '' }}" id="packsMenu">
+                <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks', 'admin_typepacks_edit', 'admin_typepacks_create'] ? 'show' : '' }}" id="packsMenu">
                     <ul class="navbar-nav ms-3">
                         <li class="nav-item">
                             <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
@@ -103,7 +103,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_typepacks' ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
+                            <a class="nav-link {{ app.request.attributes.get('_route') in ['admin_typepacks', 'admin_typepacks_edit', 'admin_typepacks_create'] ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
                                 <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                                     <i class="fas fa-tags text-dark"></i>
                                 </div>
@@ -178,123 +178,97 @@
     hr.horizontal { border: 0; height: 1px; background-color: #ddd; }
 </style>
 
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
-            <div class="container-fluid py-1 px-3">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Pages</a></li>
-                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Types de Packs</li>
-                    </ol>
-                    <h6 class="font-weight-bolder mb-0">Gestion des Types de Packs</h6>
-                </nav>
-                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-                    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                        <div class="input-group">
-                            <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Rechercher...">
-                        </div>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_dashboard') }}">Pages</a></li>
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_typepacks') }}">Types de Packs</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Ajouter</li>
+                </ol>
+                <h6 class="font-weight-bolder mb-0">Ajouter un Type de Pack</h6>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    <div class="input-group">
+                        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" placeholder="Rechercher...">
                     </div>
-                    <ul class="navbar-nav justify-content-end">
-                        <li class="nav-item d-flex align-items-center">
-                            <a href="#" class="nav-link text-body font-weight-bold px-0">
-                                <i class="fa fa-user me-sm-1"></i>
-                                <span class="d-sm-inline d-none">{{ app.user.email ?? 'Utilisateur' }}</span>
-                            </a>
-                        </li>
-                    </ul>
                 </div>
+                <ul class="navbar-nav justify-content-end">
+                    <li class="nav-item d-flex align-items-center">
+                        <a href="#" class="nav-link text-body font-weight-bold px-0">
+                            <i class="fa fa-user me-sm-1"></i>
+                            <span class="d-sm-inline d-none">{{ app.user.email ?? 'Utilisateur' }}</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-4 shadow-sm border-radius-xl">
-                        <div class="card-header p-3 d-flex justify-content-between">
-    <h6 class="font-weight-bolder mb-0">Liste des Types de Packs</h6>
-   <a href="{{ path('admin_typepacks_create') }}" class="btn btn-sm btn-outline-success">
-    <i class="fas fa-plus"></i> Ajouter un type de pack
-</a>
-</div>
-<div class="card-body p-3">
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-    {% for message in app.flashes('info') %}
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-
-    {% if typepacks is defined and typepacks is not empty %}
-        <div class="table-responsive">
-            <div class="table-container">
-                <table class="table align-items-center mb-0">
-                    <thead class="table-header bg-warning text-white">
-                        <tr>
-                            <th class="text-uppercase text-xs font-weight-bold opacity-7">ID</th>
-                            <th class="text-uppercase text-xs font-weight-bold opacity-7">Nom</th>
-                            <th class="text-uppercase text-xs font-weight-bold opacity-7">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for typepack in typepacks %}
-                            <tr class="table-row">
-                                <td class="table-cell ps-3 py-3">{{ typepack.id }}</td>
-                                <td class="table-cell ps-3 py-3">{{ typepack.type }}</td>
-                                <td class="table-cell ps-3 py-3 text-center">
-                                   <a href="{{ path('admin_typepacks_edit', {'id': typepack.id}) }}" class="btn btn-sm btn-outline-primary me-2 action-btn">
-    <i class="fas fa-edit"></i> Modifier
-</a>
-                                   <form method="post" action="{{ path('admin_typepacks_delete', {'id': typepack.id}) }}" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer ce type de pack ?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ typepack.id) }}">
-    <button class="btn btn-sm btn-outline-danger action-btn">
-        <i class="fas fa-trash"></i> Supprimer
-    </button>
-</form>
-                                </td>
-                            </tr>
+   <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4 shadow-sm border-radius-xl">
+                    <div class="card-header p-3">
+                        <h6 class="font-weight-bolder mb-0">Ajouter un Type de Pack</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    {% else %}
-        <div class="text-center p-4">
-            <i class="fas fa-tags text-muted" style="font-size: 2rem;"></i>
-            <p class="text-muted mt-2">Aucun type de pack trouvé.</p>
-        </div>
-    {% endif %}
-</div>
+                        {% for message in app.flashes('warning') %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+
+                        {{ form_start(form, {'action': path('admin_typepacks_create'), 'method': 'POST'}) }}
+                            {% if form_errors(form) %}
+                                <div class="alert alert-danger">
+                                    {{ form_errors(form) }}
+                                </div>
+                            {% endif %}
+                            <div class="mb-3">
+                                {{ form_label(form.type, 'Type', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+                                {% if form_errors(form.type) %}
+                                    <div class="text-danger">{{ form_errors(form.type) }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-sm btn-primary">Ajouter</button>
+                                <a href="{{ path('admin_typepacks') }}" class="btn btn-sm btn-secondary">Annuler</a>
+                            </div>
+                        {{ form_end(form) }}
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <style>
-            .table { border-collapse: collapse; width: 100%; background-color: #f9f9f9; border-radius: 8px; }
-            .table thead { background-color: #FF9800; color: white; }
-            .table th { text-align: left; padding: 12px 15px; font-size: 0.9rem; text-transform: uppercase; font-weight: bold; }
-            .table td { padding: 10px 15px; text-align: left; border-bottom: 1px solid #ddd; color: #555; }
-            .table tr:hover { background-color: #f1f1f1; cursor: pointer; transform: scale(1.02); transition: all 0.3s ease; }
-            .action-btn { font-size: 0.85rem; padding: 8px 15px; border-radius: 4px; transition: background-color 0.3s, transform 0.2s; }
-            .btn-outline-primary { border: 1px solid #007bff; color: #007bff; }
-            .btn-outline-primary:hover { background-color: #007bff; color: white; transform: scale(1.05); }
-            .btn-outline-danger { border: 1px solid #dc3545; color: #dc3545; }
-            .btn-outline-danger:hover { background-color: #dc3545; color: white; transform: scale(1.05); }
-            .action-btn:hover { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); }
-            .text-center { display: flex; justify-content: center; align-items: center; }
-        </style>
-    </main>
+    <style>
+        .form-control { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd; }
+        .form-control:focus { border-color: #007bff; box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); }
+        .form-label { font-weight: 500; margin-bottom: 5px; }
+        .btn-primary { background-color: #007bff; border: none; }
+        .btn-primary:hover { background-color: #0056b3; }
+        .btn-secondary { background-color: #6c757d; border: none; }
+        .btn-secondary:hover { background-color: #5a6268; }
+        .text-danger { font-size: 0.9em; margin-top: 5px; }
+        .alert-warning { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
+    </style>
+</main>
 {% endblock %}
