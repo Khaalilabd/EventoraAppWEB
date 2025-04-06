@@ -24,6 +24,7 @@ class UserReclamationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $reclamation->setMembre($this->getUser()); // Associer la réclamation au Membre connecté
+            $reclamation->setStatut(Reclamation::STATUT_EN_ATTENTE); // Définir le statut initial
             $entityManager->persist($reclamation);
             $entityManager->flush();
 
