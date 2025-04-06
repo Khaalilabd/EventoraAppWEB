@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% block title %}Soumettre une Réclamation - Eventora{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
+
+        {% block stylesheets %}
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+            <!-- Animate.css -->
+            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+            <!-- Icomoon Icon Fonts -->
+            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+            <!-- Bootstrap -->
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <!-- Magnific Popup -->
+            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+            <!-- Owl Carousel -->
+            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+            <!-- Theme style -->
+            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <!-- Style personnalisé pour l'icône utilisateur et le formulaire -->
+            <style>
+                .user-circle {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 20px;
+                    vertical-align: middle;
+                }
+                /* Style pour le conteneur event-wrap */
+                .event-wrap {
+                    background: rgba(0, 123, 255, 0.2); /* Fond bleu semi-transparent */
+                    padding: 30px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                }
+                .event-wrap h3 {
+                    color: #fff;
+                    margin-bottom: 30px;
+                    font-size: 24px;
+                    text-transform: uppercase;
+                }
+                .event-wrap .form-group {
+                    margin-bottom: 20px;
+                }
+                .event-wrap .form-group label {
+                    color: #fff;
+                    font-weight: 500;
+                    margin-bottom: 5px;
+                    display: block;
+                }
+                .event-wrap .form-control {
+                    background: rgba(255, 255, 255, 0.1); /* Fond gris foncé pour les champs */
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: #fff;
+                    border-radius: 5px;
+                    padding: 10px;
+                }
+                .event-wrap .form-control::placeholder {
+                    color: rgba(255, 255, 255, 0.7);
+                }
+                .event-wrap .form-control:focus {
+                    border-color: #007bff;
+                    box-shadow: none;
+                }
+                /* Style pour la liste déroulante */
+                .event-wrap .form-control option {
+                    color: #333; /* Texte gris foncé pour les options */
+                    background: #fff; /* Fond blanc pour les options */
+                }
+                .event-wrap .form-control option:checked {
+                    color: #fff; /* Texte blanc pour l'option sélectionnée */
+                    background: #007bff; /* Fond bleu pour l'option sélectionnée */
+                }
+                /* Style pour les boutons */
+                .event-wrap .btn {
+                    margin-top: 10px;
+                    padding: 10px;
+                    border-radius: 5px;
+                    font-size: 16px;
+                }
+                .event-wrap .btn-primary {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                }
+                .event-wrap .btn-primary:hover {
+                    background-color: #0056b3;
+                    border-color: #0056b3;
+                }
+                .event-wrap .btn-secondary {
+                    background-color: #6c757d;
+                    border-color: #6c757d;
+                }
+                .event-wrap .btn-secondary:hover {
+                    background-color: #5a6268;
+                    border-color: #5a6268;
+                }
+            </style>
+        {% endblock %}
+
+        <!-- Modernizr JS -->
+        <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
+        <!-- FOR IE9 below -->
+        <!--[if lt IE 9]>
+        <script src="{{ asset('js/respond.min.js') }}"></script>
+        <![endif]-->
+
+        {% block javascripts_head %}{% endblock %}
+    </head>
+    <body>
+        <div class="fh5co-loader"></div>
+        <div id="page">
+            {% block body %}
+                <nav class="fh5co-nav" role="navigation">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <div id="fh5co-logo"><a href="{{ path('app_home') }}">Eventora<strong></strong></a></div>
+                            </div>
+                            <div class="col-xs-10 text-right menu-1">
+                                <ul>
+                                    <li><a href="{{ path('app_home') }}">Home</a></li>
+                                    <li class="has-dropdown">
+                                        <a href="#">Services</a>
+                                        <ul class="dropdown">
+                                            <li><a href="#">Service</a></li>
+                                            <li><a href="#">Partenaire</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="active"><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                                    <li><a href="#">Talk with Evi</a></li>
+                                    <li><a href="#">Contact</a></li>
+                                    {% if app.user %}
+                                        <li class="has-dropdown">
+                                            <a href="#" class="user-profile">
+                                                <span class="user-circle">
+                                                    <i class="icon-user"></i>
+                                                </span>
+                                            </a>
+                                            <ul class="dropdown">
+                                                <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                                <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                                <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                                <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                            </ul>
+                                        </li>
+                                    {% else %}
+                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Section avec fond d'image et superposition -->
+                <div id="fh5co-event" class="fh5co-bg" style="background-image:url({{ asset('images/img_bg_3.jpg') }});">
+                    <div class="overlay"></div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
+                                <span>Votre Avis Compte</span>
+                                <h2>Soumettre une Réclamation</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="display-t">
+                                <div class="display-tc">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="col-md-6 col-md-offset-3 text-center">
+                                            <div class="event-wrap animate-box">
+                                                <h3>Remplissez le Formulaire</h3>
+                                                {% for message in app.flashes('success') %}
+                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                        {{ message }}
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                {% endfor %}
+                                                {% for message in app.flashes('error') %}
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        {{ message }}
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                {% endfor %}
+                                                {{ form_start(form, {'attr': {'class': 'form'}}) }}
+                                                    <div class="form-group">
+                                                        {{ form_label(form.titre) }}
+                                                        {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                                                        {{ form_errors(form.titre) }}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        {{ form_label(form.description) }}
+                                                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                        {{ form_errors(form.description) }}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        {{ form_label(form.Type) }}
+                                                        {{ form_widget(form.Type, {'attr': {'class': 'form-control'}}) }}
+                                                        {{ form_errors(form.Type) }}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
+                                                        <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
+                                                    </div>
+                                                {{ form_end(form) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pied de page -->
+                <footer id="fh5co-footer" role="contentinfo">
+                    <div class="container">
+                        <div class="row copyright">
+                            <div class="col-md-12 text-center">
+                                <p>
+                                    <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                                    <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            {% endblock %}
+
+            <div class="gototop js-top">
+                <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
+            </div>
+
+            {% block javascripts %}
+                <!-- Charger d'abord jQuery -->
+                <script src="{{ asset('js/jquery.min.js') }}"></script>
+                <!-- Ensuite, Waypoints.js -->
+                <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
+                <!-- Ensuite Stellar.js -->
+                <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
+                <!-- Ensuite les autres scripts -->
+                <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+                <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
+                <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+                <script src="{{ asset('js/simplyCountdown.js') }}"></script>
+                <script src="{{ asset('js/main.js') }}"></script>
+            {% endblock %}
+        </div>
+    </body>
+</html>

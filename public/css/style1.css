@@ -1833,4 +1833,35 @@ form label {
   opacity: 0;
 }
 
+.user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.user-circle {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #fff;
+}
+
+.user-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-circle i {
+  font-size: 20px;
+  line-height: 40px;
+  text-align: center;
+  width: 100%;
+  color: #fff;
+}
+
+.menu-1 ul .has-dropdown:hover .dropdown {
+  display: block;
+}
 /*# sourceMappingURL=style.css.map */
