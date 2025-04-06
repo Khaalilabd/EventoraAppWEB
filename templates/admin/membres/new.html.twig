@@ -1,0 +1,45 @@
+{% extends 'admin/dashboard.html.twig' %}
+
+{% block title %}Ajouter un Membre{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_membres') }}">Membres</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Ajouter</li>
+                </ol>
+                <h6 class="font-weight-bolder mb-0">Ajouter un Membre</h6>
+            </nav>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Nouveau Membre</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                            {{ form_row(form.nom) }}
+                            {{ form_row(form.prenom) }}
+                            {{ form_row(form.email) }}
+                            {{ form_row(form.cin) }}
+                            {{ form_row(form.numTel) }}
+                            {{ form_row(form.adresse) }}
+                            {{ form_row(form.motDePasse) }}
+                            {{ form_row(form.role) }}
+                            {{ form_row(form.isConfirmed) }}
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                            <a href="{{ path('admin_membres') }}" class="btn btn-secondary">Retour</a>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
