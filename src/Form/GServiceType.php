@@ -30,9 +30,9 @@ class GServiceType extends AbstractType
                 'label' => 'Lieu',
                 'choices' => [
                     'Hotel' => 'hotel',
-                    'Maison_d_hote' => 'maison_d_hote',
-                    'Espace_vert' => 'espace_vert',
-                    'Salle_de_fete' => 'salle_de_fete',
+                    'Maison d hote' => 'maison_d_hote',
+                    'Espace vert' => 'espace_vert',
+                    'Salle de fete' => 'salle_de_fete',
                     'Autre' => 'autre',
                 ],
                 'placeholder' => 'Choisissez un lieu',
