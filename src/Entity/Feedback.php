@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FeedbackRepository;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FeedbackRepository::class)]
 #[ORM\Table(name: 'feedback')]
@@ -16,31 +18,37 @@ class Feedback
     private ?int $ID = null;
 
     #[ORM\ManyToOne(targetEntity: Membre::class, inversedBy: 'feedbacks')]
-    #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'id')] // Changé 'Id' en 'id'
+    #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'id', nullable: false)]
     private ?Membre $membre = null;
 
     #[ORM\Column(type: 'integer', nullable: false)]
+    #[Assert\Range(min: 1, max: 5, notInRangeMessage: 'Le vote doit être entre 1 et 5.')]
     private ?int $Vote = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank(message: 'La description ne peut pas être vide.')]
     private ?string $Description = null;
 
     #[ORM\Column(type: 'blob', nullable: true)]
-    private ?string $Souvenirs = null;
+    private $Souvenirs = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $Recommend = null;
+
+    /**
+     * @var UploadedFile|null
+     */
+    #[Assert\Image(
+        maxSize: '5M',
+        mimeTypes: ['image/jpeg', 'image/png'],
+        mimeTypesMessage: 'Veuillez uploader une image valide (JPEG ou PNG).'
+    )]
+    private $souvenirsFile;
 
     // Getters et setters
     public function getID(): ?int
     {
         return $this->ID;
-    }
-
-    public function setID(int $ID): self
-    {
-        $this->ID = $ID;
-        return $this;
     }
 
     public function getMembre(): ?Membre
@@ -76,12 +84,12 @@ class Feedback
         return $this;
     }
 
-    public function getSouvenirs(): ?string
+    public function getSouvenirs()
     {
         return $this->Souvenirs;
     }
 
-    public function setSouvenirs(?string $Souvenirs): self
+    public function setSouvenirs($Souvenirs): self
     {
         $this->Souvenirs = $Souvenirs;
         return $this;
@@ -95,6 +103,18 @@ class Feedback
     public function setRecommend(?string $Recommend): self
     {
         $this->Recommend = $Recommend;
+        return $this;
+    }
+
+    // Gestion de l'upload de fichier
+    public function getSouvenirsFile(): ?UploadedFile
+    {
+        return $this->souvenirsFile;
+    }
+
+    public function setSouvenirsFile(?UploadedFile $souvenirsFile): self
+    {
+        $this->souvenirsFile = $souvenirsFile;
         return $this;
     }
 }
