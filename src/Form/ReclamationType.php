@@ -17,9 +17,11 @@ class ReclamationType extends AbstractType
         $builder
             ->add('titre', TextType::class, [
                 'label' => 'Titre de la réclamation',
+                'required' => false, // Désactiver la validation HTML5
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
+                'required' => false, // Désactiver la validation HTML5
             ])
             ->add('Type', ChoiceType::class, [
                 'label' => 'Type de réclamation',
@@ -31,6 +33,7 @@ class ReclamationType extends AbstractType
                     'Autre' => Reclamation::TYPE_AUTRE,
                 ],
                 'placeholder' => 'Choisissez un type',
+                'required' => false, // Désactiver la validation HTML5
             ]);
     }
 

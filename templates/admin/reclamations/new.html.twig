@@ -11,21 +11,53 @@
         {% block stylesheets %}
             <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
             <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
-            <!-- Animate.css -->
             <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
-            <!-- Icomoon Icon Fonts -->
             <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
-            <!-- Bootstrap -->
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-            <!-- Magnific Popup -->
             <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-            <!-- Owl Carousel -->
             <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
-            <!-- Theme style -->
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
-            <!-- Style personnalisé pour l'icône utilisateur, le formulaire et la navbar -->
             <style>
+                body {
+                    background-image: url({{ asset('images/img_bg_3.jpg') }});
+                    background-size: cover;
+                    background-position: center;
+                    background-attachment: fixed;
+                    min-height: 100vh;
+                    margin: 0;
+                    padding: 0;
+                    position: relative;
+                }
+                body::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.4);
+                    z-index: -1;
+                }
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                }
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                }
                 .user-circle {
                     display: inline-block;
                     width: 40px;
@@ -38,12 +70,13 @@
                     font-size: 20px;
                     vertical-align: middle;
                 }
-                /* Style pour le conteneur event-wrap */
                 .event-wrap {
                     background: rgba(0, 123, 255, 0.2);
-                    padding: 30px;
+                    padding: 40px;
                     border-radius: 10px;
                     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                    max-width: 700px;
+                    margin: 0 auto;
                 }
                 .event-wrap h3 {
                     color: #fff;
@@ -74,13 +107,13 @@
                     border-color: #007bff;
                     box-shadow: none;
                 }
-                .event-wrap .form-control option {
+                .event-wrap .form-control select {
+                    color: #fff;
+                    background: rgba(255, 255, 255, 0.1);
+                }
+                .event-wrap .form-control select option {
                     color: #333;
                     background: #fff;
-                }
-                .event-wrap .form-control option:checked {
-                    color: #fff;
-                    background: #007bff;
                 }
                 .event-wrap .btn {
                     margin-top: 10px;
@@ -92,32 +125,32 @@
                     background-color: #007bff;
                     border-color: #007bff;
                 }
-                .event-wrap .btn-primary:hover {
-                    background-color: #0056b3;
-                    border-color: #0056b3;
-                }
                 .event-wrap .btn-secondary {
                     background-color: #6c757d;
                     border-color: #6c757d;
                 }
-                .event-wrap .btn-secondary:hover {
-                    background-color: #5a6268;
-                    border-color: #5a6268;
+                #fh5co-footer {
+                    background: rgba(255, 255, 255, 0.9);
+                    padding: 20px 0;
                 }
-                /* Styles de la navbar fixe */
-                .fh5co-nav {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    z-index: 1000;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                #fh5co-event {
+                    margin-top: 60px;
+                    flex: 1 0 auto;
+                    padding-top: 50px;
                 }
-                .fh5co-nav .container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px 15px;
+                .fh5co-heading {
+                    margin-bottom: 40px;
+                }
+                .fh5co-heading span {
+                    color: #fff;
+                    font-size: 18px;
+                    display: block;
+                    margin-bottom: 10px;
+                }
+                .fh5co-heading h2 {
+                    color: #fff;
+                    font-size: 36px;
+                    margin: 0;
                 }
                 .fh5co-logo a {
                     font-family: 'Work Sans', sans-serif;
@@ -126,27 +159,11 @@
                     color: #333;
                     text-decoration: none;
                 }
-                .user-circle {
-                    display: inline-block;
-                    width: 32px;
-                    height: 32px;
-                    line-height: 32px;
-                    text-align: center;
-                    border-radius: 50%;
-                    background-color: #f0f0f0;
-                    color: #333;
-                    font-size: 16px;
-                    vertical-align: middle;
-                    margin-right: 8px;
-                }
                 .user-circle img {
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
                     border-radius: 50%;
-                }
-                .fh5co-nav .menu-1 {
-                    display: block;
                 }
                 .fh5co-nav .menu-1 ul {
                     display: flex;
@@ -167,52 +184,6 @@
                     text-decoration: none;
                     transition: color 0.3s ease;
                 }
-                .fh5co-nav .menu-1 ul li a:hover {
-                    color: #007bff;
-                }
-                .fh5co-nav .menu-1 ul li.active a {
-                    color: #007bff !important;
-                    font-weight: 600;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown {
-                    position: relative;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    right: 0;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    list-style: none;
-                    padding: 10px 0;
-                    min-width: 150px;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                    margin: 0;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                    padding: 10px 20px;
-                    display: block;
-                    font-size: 14px;
-                    text-transform: none;
-                    color: #333;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                    color: #007bff;
-                }
-                .menu-toggle {
-                    display: none;
-                    font-size: 24px;
-                    cursor: pointer;
-                    color: #333;
-                }
-                #fh5co-event {
-                    margin-top: 60px;
-                }
                 @media (max-width: 768px) {
                     .menu-toggle {
                         display: block;
@@ -228,147 +199,121 @@
                         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                         padding: 20px 0;
                     }
-                    .fh5co-nav .menu-1 ul.active {
-                        display: flex;
+                    .event-wrap {
+                        max-width: 90%;
+                        padding: 20px;
                     }
-                    .fh5co-nav .menu-1 ul li {
-                        margin: 10px 0;
-                        text-align: center;
+                    .fh5co-heading h2 {
+                        font-size: 28px;
                     }
-                    .user-circle {
-                        margin-right: 0;
-                        margin-bottom: 5px;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                        position: static;
-                        display: none;
-                        box-shadow: none;
-                        background-color: #f8f9fa;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block;
+                    #fh5co-event {
+                        padding-top: 30px;
                     }
                 }
             </style>
         {% endblock %}
-
-        <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
-        <!--[if lt IE 9]>
-        <script src="{{ asset('js/respond.min.js') }}"></script>
-        <![endif]-->
-
-        {% block javascripts_head %}{% endblock %}
     </head>
     <body>
-        <div class="fh5co-loader"></div>
         <div id="page">
-            {% block body %}
-                <nav class="fh5co-nav" role="navigation">
-                    <div class="container">
-                        <div class="fh5co-logo">
-                            <a href="{{ path('app_home') }}">Eventora</a>
-                        </div>
-                        <div class="menu-toggle">
-                            <i class="icon-menu"></i>
-                        </div>
-                        <div class="menu-1">
-                            <ul>
-                                <li><a href="{{ path('app_home') }}">Home</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#">Service</a></li>
-                                        <li><a href="#">Partenaire</a></li>
-                                    </ul>
-                                </li>
-                                <li class="active"><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="#">Talk with Evi</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                    <ul class="dropdown">
-                                        {% if app.user %}
-                                            <li><a href="{{ path('app_home') }}">Paramètres</a></li>
-                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_home') }}">Historique</a></li>
-                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
+                    </div>
+                    <div class="menu-toggle">
+                        <i class="icon-menu"></i>
+                    </div>
+                    <div class="menu-1">
+                        <ul>
+                            <li><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Service</a></li>
+                                    <li><a href="#">Partenaire</a></li>
+                                </ul>
+                            </li>
+                            <li class="active"><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="#">Talk with Evi</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
                                         {% else %}
-                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                            <i class="icon-user"></i>
                                         {% endif %}
-                                    </ul>
-                                </li>
-                            </ul>
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="fh5co-event">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
+                            <span>Votre Avis Compte</span>
+                            <h2>Soumettre une Réclamation</h2>
                         </div>
                     </div>
-                </nav>
-
-                <div id="fh5co-event" class="fh5co-bg" style="background-image:url({{ asset('images/img_bg_3.jpg') }});">
-                    <div class="overlay"></div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                                <span>Votre Avis Compte</span>
-                                <h2>Soumettre une Réclamation</h2>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="display-t">
-                                <div class="display-tc">
-                                    <div class="col-md-10 col-md-offset-1">
-                                        <div class="col-md-6 col-md-offset-3 text-center">
-                                            <div class="event-wrap animate-box">
-                                                <h3>Remplissez le Formulaire</h3>
-                                                {% for message in app.flashes('success') %}
-                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                                        {{ message }}
-                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                {% endfor %}
-                                                {% for message in app.flashes('error') %}
-                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                        {{ message }}
-                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                {% endfor %}
-                                                {{ form_start(form, {'attr': {'class': 'form'}}) }}
-                                                    <div class="form-group">
-                                                        {{ form_label(form.titre) }}
-                                                        {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
-                                                        {{ form_errors(form.titre) }}
-                                                    </div>
-                                                    <div class="form-group">
-                                                        {{ form_label(form.description) }}
-                                                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
-                                                        {{ form_errors(form.description) }}
-                                                    </div>
-                                                    <div class="form-group">
-                                                        {{ form_label(form.Type) }}
-                                                        {{ form_widget(form.Type, {'attr': {'class': 'form-control'}}) }}
-                                                        {{ form_errors(form.Type) }}
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
-                                                        <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
-                                                    </div>
-                                                {{ form_end(form) }}
-                                            </div>
+                    <div class="row">
+                        <div class="display-t">
+                            <div class="display-tc">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <div class="col-md-8 col-md-offset-2 text-center">
+                                        <div class="event-wrap animate-box">
+                                            <h3>Remplissez le Formulaire</h3>
+                                            {% for message in app.flashes('success') %}
+                                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                            {% endfor %}
+                                            {% for message in app.flashes('error') %}
+                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                            {% endfor %}
+                                            {# Désactiver la validation HTML5 avec novalidate #}
+                                            {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate'}}) }}
+                                                <div class="form-group">
+                                                    {{ form_label(form.titre) }}
+                                                    {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.description) }}
+                                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.Type) }}
+                                                    {{ form_widget(form.Type, {'attr': {'class': 'form-control'}}) }}
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
+                                                    <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
+                                                </div>
+                                            {{ form_end(form) }}
                                         </div>
                                     </div>
                                 </div>
@@ -376,49 +321,41 @@
                         </div>
                     </div>
                 </div>
-
-                <footer id="fh5co-footer" role="contentinfo">
-                    <div class="container">
-                        <div class="row copyright">
-                            <div class="col-md-12 text-center">
-                                <p>
-                                    <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                                    <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            {% endblock %}
-
-            <div class="gototop js-top">
-                <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
             </div>
 
-            {% block javascripts %}
-                <script src="{{ asset('js/jquery.min.js') }}"></script>
-                <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
-                <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
-                <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-                <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
-                <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-                <script src="{{ asset('js/simplyCountdown.js') }}"></script>
-                <script src="{{ asset('js/main.js') }}"></script>
-                <script>
-                    $(document).ready(function() {
-                        $('.menu-toggle').click(function() {
-                            $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                        });
-
-                        $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                            if ($(window).width() <= 768) {
-                                e.preventDefault();
-                                $(this).parent().toggleClass('active');
-                            }
-                        });
-                    });
-                </script>
-            {% endblock %}
+            <footer id="fh5co-footer" role="contentinfo">
+                <div class="container">
+                    <div class="row copyright">
+                        <div class="col-md-12 text-center">
+                            <p>
+                                <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                                <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
+
+        {# Script JavaScript pour afficher les erreurs sous forme d’alertes #}
+        <script>
+            // Récupérer les erreurs de validation depuis Twig
+            const errors = {
+                titre: {% if form_errors(form.titre) %}"{{ form_errors(form.titre) }}"{% else %}null{% endif %},
+                description: {% if form_errors(form.description) %}"{{ form_errors(form.description) }}"{% else %}null{% endif %},
+                type: {% if form_errors(form.Type) %}"{{ form_errors(form.Type) }}"{% else %}null{% endif %}
+            };
+
+            // Afficher chaque erreur dans une alerte JavaScript, si elle existe
+            if (errors.titre) {
+                alert("Erreur dans le titre : " + errors.titre);
+            }
+            if (errors.description) {
+                alert("Erreur dans la description : " + errors.description);
+            }
+            if (errors.type) {
+                alert("Erreur dans le type : " + errors.type);
+            }
+        </script>
     </body>
 </html>
