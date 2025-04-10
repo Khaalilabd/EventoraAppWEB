@@ -29,6 +29,9 @@ class UserFeedbackController extends AbstractController
                 // Associer le feedback à l'utilisateur connecté
                 $feedback->setMembre($this->getUser());
 
+                // Définir la date du système
+                $feedback->setDate(new \DateTime());
+
                 // Gérer l'upload de l'image
                 $souvenirsFile = $feedback->getSouvenirsFile();
                 if ($souvenirsFile) {

@@ -35,6 +35,9 @@ class Feedback
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $Recommend = null;
 
+    #[ORM\Column(type: 'date', nullable: false)]
+    private ?\DateTimeInterface $date = null;
+
     /**
      * @var UploadedFile|null
      */
@@ -103,6 +106,17 @@ class Feedback
     public function setRecommend(?string $Recommend): self
     {
         $this->Recommend = $Recommend;
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
         return $this;
     }
 

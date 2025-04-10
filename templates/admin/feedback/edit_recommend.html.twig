@@ -1,6 +1,6 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Modifier Recommandation - Feedback #{{ feedback.id }}{% endblock %}
+{% block title %}Modifier Recommandation - Feedback #{{ feedback.ID }}{% endblock %}
 
 {% block body %}
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main">
@@ -133,7 +133,7 @@
         </div>
     </aside>
 
- <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
@@ -142,7 +142,7 @@
                         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_feedback') }}">Feedback</a></li>
                         <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modifier Recommandation</li>
                     </ol>
-                    <h6 class="font-weight-bolder mb-0">Modifier Recommandation - Feedback #{{ feedback.id }}</h6>
+                    <h6 class="font-weight-bolder mb-0">Modifier Recommandation - Feedback #{{ feedback.ID }}</h6>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -165,28 +165,40 @@
 
         <div class="container-fluid py-4">
             <div class="row">
-                <div class="col-12 col-md-6 mx-auto">
-                    <div class="card mb-4 shadow-sm border-radius-xl">
+                <div class="col-12 col-md-10 mx-auto">
+                    <div class="card mb-4 shadow-sm border-radius-xl card-custom-height">
                         <div class="card-header p-3 bg-gradient-dark text-white">
                             <h6 class="font-weight-bolder mb-0">Modifier Recommandation</h6>
                             <p class="text-sm text-white mb-0">Feedback : {{ feedback.description }}</p>
                         </div>
-                        <div class="card-body p-4">
+                        <div class="card-body p-4 d-flex flex-column">
                             {{ form_start(form, {'attr': {'method': 'post'}}) }}
                                 <div class="mb-4">
-                                    <h6 class="font-weight-bold text-dark mb-3">Recommandation</h6>
-                                    <div class="d-flex align-items-center">
-                                        {% for child in form.recommend %}
-                                            <div class="form-check me-4">
-                                                {{ form_widget(child, {'attr': {'class': 'form-check-input'}}) }}
-                                                {{ form_label(child, null, {'label_attr': {'class': 'form-check-label ms-2'}}) }}
-                                            </div>
-                                        {% endfor %}
+                                    <h6 class="font-weight-bold text-dark mb-3">Détails du Feedback</h6>
+                                    <div class="mb-3">
+                                        {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.date) }}
                                     </div>
-                                    {{ form_errors(form.recommend) }}
+                                    <div class="mb-3">
+                                        <label class="form-label">Note</label>
+                                        <div class="star-rating-display">
+                                            {% for i in 1..5 %}
+                                                <span class="star {% if i <= feedback.vote %}filled{% endif %}">★</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <h6 class="font-weight-bold text-dark mb-3">Recommandation</h6>
+                                    <div class="form-check">
+                                        {{ form_widget(form.Recommend, {'attr': {'class': 'form-check-input'}}) }}
+                                        {{ form_label(form.Recommend, 'Recommanderiez-vous notre service ?', {'label_attr': {'class': 'form-check-label ms-2'}}) }}
+                                        {{ form_errors(form.Recommend) }}
+                                    </div>
                                 </div>
                                 {{ form_rest(form) }}
-                                <div class="d-flex justify-content-between mt-4">
+                                <div class="d-flex justify-content-between mt-auto">
                                     <a href="{{ path('admin_feedback') }}" class="btn btn-outline-secondary">Retour</a>
                                     <button type="submit" class="btn btn-primary">Mettre à jour</button>
                                 </div>
@@ -202,6 +214,15 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
+        .card-custom-height {
+            min-height: 600px; /* Ajustez cette valeur selon vos besoins */
+        }
+        .card-body {
+            background-color: #f8f9fa;
+            flex: 1; /* Permet au contenu de s'étendre pour remplir la hauteur */
+            display: flex;
+            flex-direction: column;
+        }
         .form-check-input {
             width: 1.25em;
             height: 1.25em;
@@ -213,9 +234,6 @@
         .form-check {
             margin-right: 1.5rem;
         }
-        .card-body {
-            background-color: #f8f9fa;
-        }
         .btn-primary {
             background-color: #ff6200;
             border-color: #ff6200;
@@ -223,6 +241,19 @@
         .btn-primary:hover {
             background-color: #e55a00;
             border-color: #e55a00;
+        }
+        .star-rating-display {
+            display: inline-flex;
+            font-size: 16px;
+            gap: 5px;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+        .star-rating-display .star {
+            color: #ddd;
+        }
+        .star-rating-display .star.filled {
+            color: #ffd700;
         }
     </style>
 {% endblock %}
