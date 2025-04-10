@@ -27,7 +27,7 @@ class FeedbackType extends AbstractType
                     '5 étoiles' => 5,
                 ],
                 'label' => 'Note (1 à 5 étoiles)',
-                'attr' => ['class' => 'form-select star-rating'],
+                'attr' => ['class' => 'form-control star-rating', 'id' => 'feedback_vote'], // Ajout d'un id pour le JavaScript
                 'required' => true,
             ])
             ->add('Description', TextareaType::class, [
@@ -39,7 +39,7 @@ class FeedbackType extends AbstractType
                 'label' => 'Uploader une image (optionnel)',
                 'mapped' => true,
                 'required' => false,
-                'attr' => ['class' => 'form-control-file'],
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('Recommend', CheckboxType::class, [
                 'label' => 'Recommanderiez-vous notre service ?',

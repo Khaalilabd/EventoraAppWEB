@@ -11,140 +11,39 @@
         {% block stylesheets %}
             <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
             <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
-            <!-- Animate.css -->
             <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
-            <!-- Icomoon Icon Fonts -->
             <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
-            <!-- Bootstrap -->
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-            <!-- Magnific Popup -->
             <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-            <!-- Owl Carousel -->
             <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
-            <!-- Theme style -->
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
-            <!-- Style personnalisé -->
             <style>
-                .user-circle {
-                    display: inline-block;
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
-                    text-align: center;
-                    border-radius: 50%;
-                    background-color: #f0f0f0;
-                    color: #333;
-                    font-size: 20px;
-                    vertical-align: middle;
-                }
-                .event-wrap {
-                    background: rgba(0, 123, 255, 0.2);
-                    padding: 20px;
-                    border-radius: 10px;
-                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-                }
-                .event-wrap h3 {
-                    color: #fff;
-                    margin-bottom: 15px;
-                    font-size: 20px;
-                    text-transform: uppercase;
-                }
-                .event-wrap .form-group {
-                    margin-bottom: 15px;
-                }
-                .event-wrap .form-group label {
-                    color: #fff;
-                    font-weight: 500;
-                    margin-bottom: 5px;
-                    display: block;
-                }
-                .event-wrap .form-control {
-                    background: rgba(255, 255, 255, 0.1);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    color: #fff;
-                    border-radius: 5px;
-                    padding: 10px;
-                }
-                .event-wrap .form-control::placeholder {
-                    color: rgba(255, 255, 255, 0.7);
-                }
-                .event-wrap .form-control:focus {
-                    border-color: #007bff;
-                    box-shadow: none;
-                }
-                .event-wrap .form-control option {
-                    color: #333;
-                    background: #fff;
-                }
-                .event-wrap .form-control option:checked {
-                    color: #fff;
-                    background: #007bff;
-                }
-                .event-wrap .btn {
-                    margin-top: 10px;
-                    padding: 10px;
-                    border-radius: 5px;
-                    font-size: 16px;
-                }
-                .event-wrap .btn-primary {
-                    background-color: #007bff;
-                    border-color: #007bff;
-                }
-                .event-wrap .btn-primary:hover {
-                    background-color: #0056b3;
-                    border-color: #0056b3;
-                }
-                .event-wrap .btn-secondary {
-                    background-color: #6c757d;
-                    border-color: #6c757d;
-                }
-                .event-wrap .btn-secondary:hover {
-                    background-color: #5a6268;
-                    border-color: #5a6268;
-                }
-                /* Style pour les étoiles */
-                .star-rating-container {
-                    display: flex;
-                    justify-content: center;
-                    font-size: 30px;
-                    gap: 10px;
-                }
-                .star-rating-container select {
-                    display: none;
-                }
-                .star-rating-container .stars {
-                    display: flex;
-                }
-                .star-rating-container .star {
-                    cursor: pointer;
-                    color: #ddd !important;
-                    transition: color 0.2s ease;
-                }
-                .star-rating-container .star.filled {
-                    color: #ffd700 !important;
-                }
-                .event-wrap .form-check-label {
-                    color: #fff;
-                    margin-left: 10px;
-                }
-                .event-wrap .form-check-input {
-                    transform: scale(1.5);
-                }
-                /* Style pour l'arrière-plan et centrage */
-                .fh5co-bg {
+                body {
+                    background-image: url({{ asset('images/img_bg_3.jpg') }});
                     background-size: cover;
                     background-position: center;
+                    background-attachment: fixed;
                     min-height: 100vh;
+                    margin: 0;
+                    padding: 0;
+                    position: relative;
+                }
+                body::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
                     width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.4);
+                    z-index: -1;
+                }
+                #page {
+                    min-height: 100vh;
                     display: flex;
-                    align-items: center;
-                    justify-content: center;
+                    flex-direction: column;
                 }
-                .fh5co-heading {
-                    margin-bottom: 20px !important;
-                }
-                /* Styles de la navbar fixe */
                 .fh5co-nav {
                     position: fixed;
                     top: 0;
@@ -198,6 +97,7 @@
                 }
                 .fh5co-nav .menu-1 ul li {
                     margin: 0 15px;
+                    position: relative;
                 }
                 .fh5co-nav .menu-1 ul li a {
                     font-family: 'Work Sans', sans-serif;
@@ -227,9 +127,10 @@
                     list-style: none;
                     padding: 10px 0;
                     min-width: 150px;
+                    z-index: 1001;
                 }
                 .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block;
+                    display: block !important;
                 }
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
                     margin: 0;
@@ -249,9 +150,116 @@
                     font-size: 24px;
                     cursor: pointer;
                     color: #333;
+                    padding: 10px;
+                }
+                .event-wrap {
+                    background: rgba(0, 123, 255, 0.2);
+                    padding: 40px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                    max-width: 700px;
+                    margin: 0 auto;
+                }
+                .event-wrap h3 {
+                    color: #fff;
+                    margin-bottom: 30px;
+                    font-size: 24px;
+                    text-transform: uppercase;
+                }
+                .event-wrap .form-group {
+                    margin-bottom: 20px;
+                }
+                .event-wrap .form-group label {
+                    color: #fff;
+                    font-weight: 500;
+                    margin-bottom: 5px;
+                    display: block;
+                }
+                .event-wrap .form-control {
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: #fff;
+                    border-radius: 5px;
+                    padding: 10px;
+                }
+                .event-wrap .form-control::placeholder {
+                    color: rgba(255, 255, 255, 0.7);
+                }
+                .event-wrap .form-control:focus {
+                    border-color: #007bff;
+                    box-shadow: none;
+                }
+                .event-wrap .form-control select {
+                    color: #fff;
+                    background: rgba(255, 255, 255, 0.1);
+                }
+                .event-wrap .form-control select option {
+                    color: #333;
+                    background: #fff;
+                }
+                .event-wrap .btn {
+                    margin-top: 10px;
+                    padding: 10px;
+                    border-radius: 5px;
+                    font-size: 16px;
+                }
+                .event-wrap .btn-primary {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                }
+                .event-wrap .btn-secondary {
+                    background-color: #6c757d;
+                    border-color: #6c757d;
+                }
+                #fh5co-footer {
+                    background: rgba(255, 255, 255, 0.9);
+                    padding: 20px 0;
                 }
                 #fh5co-event {
                     margin-top: 60px;
+                    flex: 1 0 auto;
+                    padding-top: 50px;
+                }
+                .fh5co-heading {
+                    margin-bottom: 40px;
+                }
+                .fh5co-heading span {
+                    color: #fff;
+                    font-size: 18px;
+                    display: block;
+                    margin-bottom: 10px;
+                }
+                .fh5co-heading h2 {
+                    color: #fff;
+                    font-size: 36px;
+                    margin: 0;
+                }
+                .event-wrap .form-check-label {
+                    color: #fff;
+                    margin-left: 10px;
+                }
+                .event-wrap .form-check-input {
+                    transform: scale(1.5);
+                }
+                .star-rating-container {
+                    display: flex;
+                    justify-content: center;
+                    font-size: 30px;
+                    gap: 10px;
+                }
+                .star-rating-container select {
+                    display: none;
+                }
+                .star-rating-container .stars {
+                    display: flex;
+                }
+                .star-rating-container .star {
+                    cursor: pointer;
+                    color: #ddd !important;
+                    transition: color 0.2s ease;
+                }
+                .star-rating-container .star.filled {
+                    color: #ffd700 !important;
                 }
                 @media (max-width: 768px) {
                     .menu-toggle {
@@ -286,143 +294,136 @@
                         background-color: #f8f9fa;
                     }
                     .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none;
+                        display: none !important;
                     }
                     .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block;
+                        display: block !important;
+                    }
+                    .event-wrap {
+                        max-width: 90%;
+                        padding: 20px;
+                    }
+                    .fh5co-heading h2 {
+                        font-size: 28px;
+                    }
+                    #fh5co-event {
+                        padding-top: 30px;
                     }
                 }
             </style>
         {% endblock %}
-
-        <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
-        <!--[if lt IE 9]>
-        <script src="{{ asset('js/respond.min.js') }}"></script>
-        <![endif]-->
-
-        {% block javascripts_head %}{% endblock %}
     </head>
     <body>
-        <div class="fh5co-loader"></div>
         <div id="page">
-            {% block body %}
-                <nav class="fh5co-nav" role="navigation">
-                    <div class="container">
-                        <div class="fh5co-logo">
-                            <a href="{{ path('app_home') }}">Eventora</a>
-                        </div>
-                        <div class="menu-toggle">
-                            <i class="icon-menu"></i>
-                        </div>
-                        <div class="menu-1">
-                            <ul>
-                                <li><a href="{{ path('app_home') }}">Home</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#">Service</a></li>
-                                        <li><a href="#">Partenaire</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                                <li class="active"><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="#">Talk with Evi</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                    <ul class="dropdown">
-                                        {% if app.user %}
-                                            <li><a href="{{ path('app_home') }}">Paramètres</a></li>
-                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_home') }}">Historique</a></li>
-                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
+                    </div>
+                    <div class="menu-toggle">☰</div>
+                    <div class="menu-1">
+                        <ul>
+                            <li><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Service</a></li>
+                                    <li><a href="#">Partenaire</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                            <li class="active"><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="#">Talk with Evi</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
                                         {% else %}
-                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                            <i class="icon-user"></i>
                                         {% endif %}
-                                    </ul>
-                                </li>
-                            </ul>
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="fh5co-event">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
+                            <span>Votre Avis Compte</span>
+                            <h2>Soumettre un Feedback</h2>
                         </div>
                     </div>
-                </nav>
-
-                <div id="fh5co-event" class="fh5co-bg" style="background-image:url({{ asset('images/img_bg_3.jpg') }});">
-                    <div class="overlay"></div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                                <span>Votre Avis Compte</span>
-                                <h2>Soumettre un Feedback</h2>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="display-t">
-                                <div class="display-tc">
-                                    <div class="col-md-10 col-md-offset-1">
-                                        <div class="col-md-6 col-md-offset-3 text-center">
-                                            <div class="event-wrap animate-box">
-                                                <h3>Remplissez le Formulaire</h3>
-                                                {% for message in app.flashes('success') %}
-                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                                        {{ message }}
-                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                {% endfor %}
-                                                {% for message in app.flashes('error') %}
-                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                        {{ message }}
-                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                {% endfor %}
-                                                {{ form_start(form, {'attr': {'class': 'form'}}) }}
-                                                    <div class="form-group">
-                                                        {{ form_label(form.Vote, 'Note (1 à 5 étoiles)') }}
-                                                        <div class="star-rating-container">
-                                                            {{ form_widget(form.Vote, {'attr': {'class': 'form-control star-rating'}}) }}
-                                                            <div class="stars">
-                                                                <span class="star" data-value="1">★</span>
-                                                                <span class="star" data-value="2">★</span>
-                                                                <span class="star" data-value="3">★</span>
-                                                                <span class="star" data-value="4">★</span>
-                                                                <span class="star" data-value="5">★</span>
-                                                            </div>
+                    <div class="row">
+                        <div class="display-t">
+                            <div class="display-tc">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <div class="col-md-8 col-md-offset-2 text-center">
+                                        <div class="event-wrap animate-box">
+                                            <h3>Remplissez le Formulaire</h3>
+                                            {% for message in app.flashes('success') %}
+                                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                            {% endfor %}
+                                            {% for message in app.flashes('error') %}
+                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                            {% endfor %}
+                                            {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'feedback-form'}}) }}
+                                                <div class="form-group">
+                                                    {{ form_label(form.Vote, 'Note (1 à 5 étoiles)') }}
+                                                    <div class="star-rating-container">
+                                                        {{ form_widget(form.Vote, {'attr': {'class': 'form-control star-rating'}}) }}
+                                                        <div class="stars">
+                                                            <span class="star" data-value="1">★</span>
+                                                            <span class="star" data-value="2">★</span>
+                                                            <span class="star" data-value="3">★</span>
+                                                            <span class="star" data-value="4">★</span>
+                                                            <span class="star" data-value="5">★</span>
                                                         </div>
-                                                        {{ form_errors(form.Vote) }}
                                                     </div>
-                                                    <div class="form-group">
-                                                        {{ form_label(form.Description, 'Votre expérience') }}
-                                                        {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
-                                                        {{ form_errors(form.Description) }}
-                                                    </div>
-                                                    <div class="form-group">
-                                                        {{ form_label(form.souvenirsFile, 'Uploader une image (optionnel)') }}
-                                                        {{ form_widget(form.souvenirsFile, {'attr': {'class': 'form-control'}}) }}
-                                                        {{ form_errors(form.souvenirsFile) }}
-                                                    </div>
-                                                    <div class="form-group form-check">
-                                                        {{ form_widget(form.Recommend, {'attr': {'class': 'form-check-input'}}) }}
-                                                        {{ form_label(form.Recommend, 'Recommanderiez-vous cet événement ?', {'label_attr': {'class': 'form-check-label'}}) }}
-                                                        {{ form_errors(form.Recommend) }}
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
-                                                        <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
-                                                    </div>
-                                                {{ form_end(form) }}
-                                            </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.Description, 'Votre expérience') }}
+                                                    {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.souvenirsFile, 'Uploader une image (optionnel)') }}
+                                                    {{ form_widget(form.souvenirsFile, {'attr': {'class': 'form-control'}}) }}
+                                                </div>
+                                                <div class="form-group form-check">
+                                                    {{ form_widget(form.Recommend, {'attr': {'class': 'form-check-input'}}) }}
+                                                    {{ form_label(form.Recommend, 'Recommanderiez-vous notre service ?', {'label_attr': {'class': 'form-check-label'}}) }}
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
+                                                    <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
+                                                </div>
+                                            {{ form_end(form) }}
                                         </div>
                                     </div>
                                 </div>
@@ -430,89 +431,144 @@
                         </div>
                     </div>
                 </div>
-
-                <footer id="fh5co-footer" role="contentinfo">
-                    <div class="container">
-                        <div class="row copyright">
-                            <div class="col-md-12 text-center">
-                                <p>
-                                    <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                                    <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            {% endblock %}
-
-            <div class="gototop js-top">
-                <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
             </div>
 
-            {% block javascripts %}
-                <script src="{{ asset('js/jquery.min.js') }}"></script>
-                <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
-                <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
-                <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-                <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
-                <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-                <script src="{{ asset('js/simplyCountdown.js') }}"></script>
-                <script src="{{ asset('js/main.js') }}"></script>
-                <script>
-                    $(document).ready(function() {
-                        $('.menu-toggle').click(function() {
-                            $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                        });
+            <footer id="fh5co-footer" role="contentinfo">
+                <div class="container">
+                    <div class="row copyright">
+                        <div class="col-md-12 text-center">
+                            <p>
+                                <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                                <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
 
-                        $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                            if ($(window).width() <= 768) {
-                                e.preventDefault();
-                                $(this).parent().toggleClass('active');
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script>
+            if (typeof jQuery === 'undefined') {
+                console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
+            } else {
+                console.log("jQuery est chargé avec succès");
+                jQuery(document).ready(function($) {
+                    // Menu hamburger
+                    $('.menu-toggle').click(function() {
+                        console.log("Clic sur menu-toggle détecté");
+                        $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                    });
+
+                    // Dropdowns sur mobile
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                        if ($(window).width() <= 768) {
+                            console.log("Clic sur dropdown détecté");
+                            e.preventDefault();
+                            $(this).parent().toggleClass('active');
+                        }
+                    });
+
+                    // Dropdowns sur desktop avec survol
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
+                        function() {
+                            console.log("Survol détecté sur un élément has-dropdown");
+                            $(this).find('.dropdown').css({
+                                'display': 'block',
+                                'position': 'absolute',
+                                'top': '100%',
+                                'right': '0',
+                                'visibility': 'visible',
+                                'opacity': '1',
+                                'z-index': '1001'
+                            });
+                        },
+                        function() {
+                            console.log("Fin du survol");
+                            $(this).find('.dropdown').css({
+                                'display': 'none',
+                                'visibility': 'hidden',
+                                'opacity': '0'
+                            });
+                        }
+                    );
+
+                    // Gestion des étoiles
+                    const select = $('.star-rating');
+                    const stars = $('.star');
+                    let selectedValue = parseInt(select.val()) || 0;
+
+                    function updateStars(value) {
+                        stars.each(function() {
+                            const starValue = parseInt($(this).attr('data-value'));
+                            if (starValue <= value) {
+                                $(this).addClass('filled');
+                            } else {
+                                $(this).removeClass('filled');
+                            }
+                        });
+                    }
+
+                    stars.each(function() {
+                        $(this).on('click', function() {
+                            const value = parseInt($(this).attr('data-value'));
+                            selectedValue = value;
+                            select.val(value);
+                            updateStars(value);
+                        });
+                        $(this).on('mouseover', function() {
+                            const value = parseInt($(this).attr('data-value'));
+                            updateStars(value);
+                        });
+                        $(this).on('mouseout', function() {
+                            updateStars(selectedValue);
+                        });
+                    });
+
+                    if (select.val()) {
+                        selectedValue = parseInt(select.val());
+                        updateStars(selectedValue);
+                    }
+
+                    // Soumission AJAX
+                    $('#feedback-form').on('submit', function(event) {
+                        event.preventDefault();
+                        const form = this;
+                        const formData = new FormData(form);
+
+                        $.ajax({
+                            url: form.action,
+                            method: form.method,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                            success: function(data) {
+                                if (data.success) {
+                                    alert('Feedback soumis avec succès !');
+                                    form.reset();
+                                    stars.removeClass('filled');
+                                } else {
+                                    if (data.errors) {
+                                        for (const field in data.errors) {
+                                            data.errors[field].forEach(error => {
+                                                alert(`Erreur dans ${field} : ${error}`);
+                                            });
+                                        }
+                                    } else {
+                                        alert('Une erreur est survenue lors de la soumission.');
+                                    }
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Erreur AJAX :', error);
+                                alert('Une erreur est survenue lors de la communication avec le serveur.');
                             }
                         });
                     });
-
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const select = document.querySelector('.star-rating');
-                        const stars = document.querySelectorAll('.star');
-                        let selectedValue = parseInt(select.value) || 0;
-
-                        function updateStars(value) {
-                            stars.forEach(star => {
-                                const starValue = parseInt(star.getAttribute('data-value'));
-                                if (starValue <= value) {
-                                    star.classList.add('filled');
-                                } else {
-                                    star.classList.remove('filled');
-                                }
-                            });
-                        }
-
-                        stars.forEach(star => {
-                            star.addEventListener('click', function () {
-                                const value = parseInt(this.getAttribute('data-value'));
-                                selectedValue = value;
-                                select.value = value;
-                                updateStars(value);
-                            });
-
-                            star.addEventListener('mouseover', function () {
-                                const value = parseInt(this.getAttribute('data-value'));
-                                updateStars(value);
-                            });
-
-                            star.addEventListener('mouseout', function () {
-                                updateStars(selectedValue);
-                            });
-                        });
-
-                        if (select.value) {
-                            selectedValue = parseInt(select.value);
-                            updateStars(selectedValue);
-                        }
-                    });
-                </script>
-            {% endblock %}
-        </div>
+                });
+            }
+        </script>
     </body>
 </html>
