@@ -16,7 +16,10 @@ class UserReclamationController extends AbstractController
     #[Route('/new', name: 'app_reclamation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_MEMBRE');
+        // Autoriser les utilisateurs avec ROLE_MEMBRE ou ROLE_ADMIN
+        if (!$this->isGranted('ROLE_MEMBRE') && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Vous devez être un membre ou un administrateur pour soumettre une réclamation.');
+        }
     
         $reclamation = new Reclamation();
         $form = $this->createForm(ReclamationType::class, $reclamation);

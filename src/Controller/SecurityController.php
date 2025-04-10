@@ -99,8 +99,8 @@ class SecurityController extends AbstractController
     {
         if ($security->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = $this->getUser();
-            if (in_array('ROLE_ADMIN', $user->getRoles())) {
-                return $this->redirectToRoute('admin_dashboard');
+            if (in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_MEMBRE', $user->getRoles())) {
+                return $this->redirectToRoute('app_home_page');
             }
             return $this->redirectToRoute('app_home_page');
         }
