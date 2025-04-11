@@ -98,44 +98,341 @@
                     </div>
                 </header>
                 
-                <div class="card-container">
-                    {% for service in GServices %}
-                        <div class="card">
-                            <div class="content">
-                                <div class="back">
-                                    <div class="back-content">
-                                        <!-- Affichage de la description -->
-                                        <div class="back-details">
-                                            <p><strong>Description:</strong> {{ service.description|length > 50 ? service.description|slice(0, 50) ~ '...' : service.description }}</p>
-                                        </div>
-                                                                                <a href= class="reserve-btn">Réserver</a>
-
-                                    </div>
+               <div class="card-container">
+        {% for service in GServices %}
+            <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                <div class="content">
+                    <div class="back">
+                        <div class="back-content">
+                            <div class="back-details">
+                                <p><strong>Description:</strong> {{ service.description }}</p>
+                            </div>
+                            <button class="reserve-btn" data-service-id="{{ service.id }}" data-service-title="{{ service.titre }}" data-service-price="{{ service.prix }}" data-service-image="{{ asset(service.image) }}">
+                                <i class="fas fa-calendar-check"></i> Réserver
+                            </button>
+                        </div>
+                    </div>
+                    <div class="front">
+                        <div class="img">
+                            <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img">
+                            <div class="circle" id="right"></div>
+                            <div class="circle" id="bottom"></div>
+                        </div>
+                        <div class="front-content">
+                            <div class="badges">
+                                <small class="badge location"><i class="fas fa-map-marker-alt"></i> {{ service.location }}</small>
+                                <small class="badge type-service"><i class="fas fa-concierge-bell"></i> {{ service.type_service }}</small>
+                            </div>
+                            <div class="description">
+                                <div class="title">
+                                    <p class="title"><strong>{{ service.titre }}</strong></p>
                                 </div>
-
-                                <div class="front">
-                                    <div class="img">
-                                        <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img">
-                                    </div>
-                                    <div class="front-content">
-                                        <small class="badge">{{ service.location }}</small>
-                                        <small class="badge">{{ service.type_service }}</small>
-                                        <div class="description">
-                                            <div class="title">
-                                                <p class="title">
-                                                    <strong>{{ service.titre }}</strong>
-                                                </p>
-                                            </div>
-                                            <p class="card-footer">
-                                                {{ service.prix }}  
-                                            </p>
-                                        </div>
-                                        <!-- Bouton Réserver -->
-                                    </div>
-                                </div>
+                                <p class="card-footer">{{ service.prix }} </p>
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+
+<style>
+/* Style de base pour le conteneur des cartes */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Style pour chaque carte */
+.card {
+    width: 100%;
+    height: 420px;
+    perspective: 1200px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+.service-img {
+            width: 100px; /* Taille réduite pour éviter des images trop grandes */
+            height: 100px;
+            object-fit: cover; /* Redimensionne sans déformer */
+            border-radius: 5px;
+            display: block;
+        }
+
+/* Contenu de la carte */
+.content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-radius: 16px;
+}
+
+.card:hover .content {
+    transform: rotateY(180deg);
+}
+
+/* Face avant */
+.front {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, #ffffff, #f1f5f9);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    backface-visibility: hidden;
+    transform: rotateY(0deg);
+}
+
+/* Face arrière */
+.back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, #f1f5f9, #ffffff);
+    color: #1a202c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+/* Conteneur des détails à l'arrière */
+.back-details {
+    max-height: 180px;
+    overflow-y: auto;
+    text-align: left;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    scrollbar-width: thin;
+    scrollbar-color: #4a90e2 #e2e8f0;
+    transition: max-height 0.5s ease;
+}
+
+.back-details.expanded {
+    max-height: 300px;
+}
+
+.back-details::-webkit-scrollbar {
+    width: 6px;
+}
+
+.back-details::-webkit-scrollbar-track {
+    background: #e2e8f0;
+}
+
+.back-details::-webkit-scrollbar-thumb {
+    background: #4a90e2;
+    border-radius: 3px;
+}
+
+/* Bouton pour toggler la description */
+.toggle-details {
+    background: none;
+    border: none;
+    color: #4a90e2;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 12px;
+    text-decoration: underline;
+}
+
+.toggle-details:hover {
+    color: #2b6cb0;
+}
+
+/* Contenu de la face avant */
+.front-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* Badges */
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge.location {
+    background-color: #4a90e2;
+}
+
+.badge.type-service {
+    background-color: #20c997;
+}
+
+/* Titre */
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 12px 0;
+}
+
+/* Footer */
+.card-footer {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-top: auto;
+}
+
+/* Image */
+.img {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    height: 180px;
+}
+
+.service-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.card:hover .service-img {
+    transform: scale(1.1);
+}
+
+/* Cercles décoratifs */
+.circle {
+    position: absolute;
+    background-color: #ff6b6b;
+    border-radius: 50%;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+.circle#right {
+    right: 10%;
+    top: 10%;
+    width: 40px;
+    height: 40px;
+}
+
+.circle#bottom {
+    bottom: 10%;
+    left: 10%;
+    width: 50px;
+    height: 50px;
+}
+
+.card:hover .circle {
+    opacity: 0.5;
+}
+
+/* Bouton Réserver */
+.reserve-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #20c997;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 8px;
+    margin-top: 12px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.reserve-btn:hover {
+    background-color: #18a77b;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-container {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        padding: 16px;
+    }
+
+    .card {
+        height: 380px;
+    }
+
+    .title {
+        font-size: 1.3rem;
+    }
+
+    .img {
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        height: 350px;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+
+    .reserve-btn {
+        font-size: 0.85rem;
+        padding: 8px 16px;
+    }
+}
+</style>
+
+<script>
+// Script pour toggler la description
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.toggle-details').forEach(button => {
+        button.addEventListener('click', () => {
+            const details = button.closest('.back-content').querySelector('.back-details');
+            details.classList.toggle('expanded');
+            button.textContent = details.classList.contains('expanded') ? 'Voir moins' : 'Voir plus';
+        });
+    });
+});
+</script>
                 </div>
             {% endblock %}
             
@@ -164,184 +461,5 @@
             {% endblock %}
         </div>
     </body>
-    <style>
-        /* Style de base pour le conteneur des cartes */
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            padding: 20px;
-            gap: 20px;
-        }
-
-        /* Style pour chaque carte */
-        .card {
-            width: 300px;
-            height: 400px;
-            perspective: 1000px; /* Pour l'effet de rotation 3D */
-        }
-
-        /* Contenu de la carte */
-        .content {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-            border-radius: 10px;
-        }
-
-        /* Lorsque la carte est survolée, elle effectue une rotation */
-        .card:hover .content {
-            transform: rotateY(180deg);
-        }
-
-        /* Face avant de la carte */
-        .front {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            backface-visibility: hidden; /* Masquer la face arrière quand elle est retournée */
-            transform: rotateY(0deg); /* Face avant visible par défaut */
-        }
-
-        /* Face arrière de la carte */
-        .back {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            color: black; /* Texte en noir */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            border-radius: 10px;
-            backface-visibility: hidden; /* Masquer quand elle n'est pas tournée */
-            transform: rotateY(180deg); /* Face arrière tournée de 180° par défaut */
-            padding: 20px; /* Ajout d'un padding pour l'espace intérieur */
-            box-sizing: border-box; /* Inclut le padding dans les dimensions */
-            background-color: rgba(255, 255, 255, 0.9); /* Fond légèrement transparent pour contraste */
-        }
-
-        /* Conteneur des détails à l'arrière */
-        .back-details {
-            max-height: 200px; /* Hauteur initiale limitée */
-            overflow: hidden; /* Cache le texte qui dépasse */
-            transition: max-height 0.5s ease; /* Transition fluide pour l'expansion */
-            position: relative;
-            text-align: left; /* Alignement à gauche pour lisibilité */
-            word-wrap: break-word; /* Empêche le débordement horizontal */
-        }
-
-        /* Effet de fade-out en bas */
-        .back-details::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 50px; /* Hauteur du dégradé */
-            background: linear-gradient(to top, rgba(255, 255, 255, 0.9), transparent); /* Dégradé vers le bas */
-            pointer-events: none; /* Permet de cliquer à travers */
-        }
-
-        /* Expansion au survol */
-        .back:hover .back-details {
-            max-height: 300px; /* Hauteur maximale augmentée au survol */
-        }
-
-        /* Contenu de la face avant (images et texte) */
-        .front-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%; /* Occupe toute la hauteur disponible */
-        }
-
-        /* Badge indiquant le type du service */
-        .badge {
-            font-size: 14px;
-            font-weight: bold;
-            color: #20c997;
-            background-color: #e7f7f1;
-            padding: 5px 10px;
-            border-radius: 50px;
-            margin-bottom: 10px;
-        }
-
-        /* Titre du service */
-        .front-content .title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-            margin: 0;
-        }
-
-        /* Description en bas de la carte */
-        .card-footer {
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Style pour le bouton Réserver */
-        .reserve-btn {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: #20c997; /* Couleur verte assortie au badge */
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 5px;
-            margin-top: 10px; /* Espacement au-dessus du bouton */
-            transition: background-color 0.3s ease; /* Transition fluide */
-        }
-
-        .reserve-btn:hover {
-            background-color: #18a77b; /* Couleur plus foncée au survol */
-            text-decoration: none;
-            color: white;
-        }
-
-        .front .img {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .front .circle {
-            position: absolute;
-            background-color: #ff5733;
-            border-radius: 50%;
-            opacity: 0.2;
-        }
-
-        .front .circle#right {
-            right: 10%;
-            top: 10%;
-            width: 50px;
-            height: 50px;
-        }
-
-        .front .circle#bottom {
-            bottom: 10%;
-            left: 10%;
-            width: 60px;
-            height: 60px;
-        }
-    </style>
+   
 </html>

@@ -1,20 +1,246 @@
-{% extends 'base.html.twig' %}
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% block title %}eventora{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
-{% block title %}Hello SponsorController!{% endblock %}
+        {% block stylesheets %}
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+            <!-- Animate.css -->
+            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+            <!-- Icomoon Icon Fonts -->
+            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+            <!-- Bootstrap -->
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <!-- Magnific Popup -->
+            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+            <!-- Owl Carousel -->
+            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+            <!-- Theme style -->
+            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+        {% endblock %}
 
-{% block body %}
+        <!-- Modernizr JS -->
+        <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
+        <!-- FOR IE9 below -->
+        <script src="{{ asset('js/respond.min.js') }}"></script>
+    
+        {% block javascripts_head %}{% endblock %}
+    </head>
+    <body>
+        <div class="fh5co-loader"></div>
+        <div id="page">
+            {% block body %}
+                <nav class="fh5co-nav" role="navigation">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <div id="fh5co-logo"><a href="{{ path('app_home') }}">Eventora<strong></strong></a></div>
+                            </div>
+                            <div class="col-xs-10 text-right menu-1">
+                                <ul>
+                                    <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                                    <li class="has-dropdown">
+                                        <a href="#">Services</a>
+                                        <ul class="dropdown">
+                                            <li><a href="{{ path('user_services') }}">Service</a></li>
+                                            <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-dropdown">
+                                        <a href="#">Reclamation</a>
+                                        <ul class="dropdown">
+                                            <li><a href="#">Reclamation</a></li>
+                                            <li><a href="#">Feedback</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-dropdown">
+                                        <a href="#">Reservations</a>
+                                        <ul class="dropdown">
+                                            <li><a href="#">Reservation personalisé</a></li>
+                                            <li><a href="#">Reservation</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-dropdown">
+                                        <a href="#">Packs</a>
+                                        <ul class="dropdown">
+                                            <li><a href="#"></a></li>
+                                            <li><a href="#"></a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Talk with Evi</a></li>
+                                    <li><a href="#">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                
+                <header id="fh5co-header" class="fh5co-cover" role="banner" style="background-image:url({{ asset('images/gallery-6.jpg') }});" data-stellar-background-ratio="0.5">
+                    <div class="overlay"></div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2 text-center">
+                                <div class="display-t">
+                                    <div class="display-tc animate-box" data-animate-effect="fadeIn">
+                                        <h1>Wait For Our Event</h1>
+                                        <div class="simply-countdown simply-countdown-one"></div>
+                                        <p><a href="#" class="btn btn-default btn-sm">Save the date</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                
+  <div class="card-container">
+    {% for sponsor in Sponsor %}
+        <div class="business-card">
+            <div class="card-inner">
+                <div class="card-front">
+                    <h3>{{ sponsor.nomPartenaire }}</h3>
+                    <p>{{ sponsor.typePartenaire|default('Partenaire') }}</p>
+                </div>
+                <div class="card-back">
+                    <p>{{ sponsor.emailPartenaire }}</p>
+                    <p>{{ sponsor.telephonePartenaire }}</p>
+                    <p>{{ sponsor.adressePartenaire }}</p>
+                    <p><a href="{{ sponsor.siteWeb }}" target="_blank">{{ sponsor.siteWeb|default('Non spécifié') }}</a></p>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>Aucun partenaire trouvé.</p>
+    {% endfor %}
+</div>
+
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    perspective: 1200px; /* Perspective plus prononcée pour l'effet 3D */
+}
+
+.business-card {
+    width: 260px;
+    height: 160px;
+    position: relative;
+    cursor: pointer;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), box-shadow 0.3s; /* Animation plus dynamique */
+    transform-style: preserve-3d;
+}
+
+.business-card:hover .card-inner {
+    transform: rotateY(180deg) scale(1.05); /* Rotation + léger zoom */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Ombre au survol */
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 0.95em;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-front {
+    background: linear-gradient(135deg, #ff6f61, #ffb88c); /* Dégradé corail/orange */
+    text-align: center;
+}
+
+.card-back {
+    background: #2c3e50; /* Bleu nuit élégant */
+    transform: rotateY(180deg);
+    text-align: center;
+}
+
+.card-front h3 {
+    margin: 0 0 8px;
+    font-size: 1.3em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-front p {
+    margin: 0;
+    font-size: 0.9em;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.card-back p {
+    margin: 4px 0;
+    font-size: 0.85em;
+    color: #ecf0f1;
+}
+
+.card-back a {
+    color: #ff6f61; /* Couleur corail pour les liens */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.card-back a:hover {
+    text-decoration: underline;
+    color: #ffb88c;
+}
+
+p {
+    margin: 4px 0;
+}
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/asus/Desktop/EventoraAppWEB/src/Controller/SponsorController.php</code></li>
-        <li>Your template at <code>C:/Users/asus/Desktop/EventoraAppWEB/templates/sponsor/index.html.twig</code></li>
-    </ul>
 </div>
-{% endblock %}
+            {% endblock %}
+            
+            {% block javascripts %}
+                <!-- Charger d'abord jQuery -->
+                <script src="{{ asset('js/jquery.min.js') }}"></script>
+                <!-- Ensuite, Waypoints.js -->
+                <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
+                <!-- Ensuite Stellar.js -->
+                <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
+                <!-- Ensuite les autres scripts -->
+                <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+                <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
+                <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+                <script src="{{ asset('js/simplyCountdown.js') }}"></script>
+                <script src="{{ asset('js/main.js') }}"></script>
+                <script>
+                    var eventDate = new Date('2025-12-31'); // Date mise à jour dynamiquement
+                    simplyCountdown('.simply-countdown-one', {
+                        year: eventDate.getFullYear(),
+                        month: eventDate.getMonth() + 1,
+                        day: eventDate.getDate(),
+                        enableUtc: false
+                    });
+                </script>
+            {% endblock %}
+        </div>
+    </body>
+   
+</html>

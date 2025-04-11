@@ -19,7 +19,7 @@ final class ServiceController extends AbstractController
          $imageDirectory = $this->getParameter('kernel.project_dir') . '/public/service/';
 
          // Récupérer toutes les images dans le répertoire
-         $imageFiles = glob($imageDirectory . '*.jpg');  // Récupère toutes les images .jpg
+         $imageFiles = glob($imageDirectory . '*.png');  // Récupère toutes les images .jpg
          
          // Si on trouve des images
          if (!empty($imageFiles)) {
