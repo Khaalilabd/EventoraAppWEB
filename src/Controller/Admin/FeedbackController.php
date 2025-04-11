@@ -19,12 +19,14 @@ class FeedbackController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // Récupérer les paramètres de tri depuis la requête
+        // Récupérer les paramètres de tri/filtrage depuis la requête
         $sortBy = $request->query->get('sort_by', 'date');
         $sortOrder = $request->query->get('sort_order', 'desc');
+        $selectedUser = $request->query->get('user_filter', null);
+        $selectedDate = $request->query->get('date_filter', null);
 
         // Validation des paramètres de tri
-        $validSortFields = ['membre.email', 'vote', 'date', 'recommend'];
+        $validSortFields = ['membre.email', 'Vote', 'date', 'recommend'];
         $validSortOrders = ['asc', 'desc'];
 
         if (!in_array($sortBy, $validSortFields)) {
@@ -34,16 +36,29 @@ class FeedbackController extends AbstractController
             $sortOrder = 'desc';
         }
 
-        // Construire la requête de tri
+        // Construire la requête de base
         $queryBuilder = $feedbackRepository->createQueryBuilder('f')
             ->leftJoin('f.membre', 'm');
 
+        // Filtrer par utilisateur si sélectionné
+        if ($selectedUser) {
+            $queryBuilder->andWhere('m.email = :email')
+                         ->setParameter('email', $selectedUser);
+        }
+
+        // Filtrer par date si sélectionnée
+        if ($selectedDate) {
+            $queryBuilder->andWhere('DATE(f.date) = :selected_date')
+                         ->setParameter('selected_date', $selectedDate);
+        }
+
+        // Appliquer le tri
         switch ($sortBy) {
             case 'membre.email':
                 $queryBuilder->orderBy('m.email', $sortOrder);
                 break;
-            case 'vote':
-                $queryBuilder->orderBy('f.vote', $sortOrder);
+            case 'Vote':
+                $queryBuilder->orderBy('f.Vote', $sortOrder);
                 break;
             case 'date':
                 $queryBuilder->orderBy('f.date', $sortOrder);
@@ -55,13 +70,24 @@ class FeedbackController extends AbstractController
 
         $feedbacks = $queryBuilder->getQuery()->getResult();
 
+        // Récupérer la liste des utilisateurs uniques pour le menu déroulant
+        $users = $feedbackRepository->createQueryBuilder('f')
+            ->leftJoin('f.membre', 'm')
+            ->select('DISTINCT m.email')
+            ->where('m.email IS NOT NULL')
+            ->orderBy('m.email', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $userEmails = array_column($users, 'email');
+
         // Traiter chaque feedback pour encoder le BLOB souvenirs en base64
         $processedFeedbacks = [];
         foreach ($feedbacks as $feedback) {
             $processedFeedback = [
                 'ID' => $feedback->getId(),
                 'membre' => $feedback->getMembre(),
-                'vote' => $feedback->getVote(),
+                'Vote' => $feedback->getVote(),
                 'description' => $feedback->getDescription(),
                 'date' => $feedback->getDate(),
                 'recommend' => $feedback->getRecommend(),
@@ -70,20 +96,15 @@ class FeedbackController extends AbstractController
 
             $souvenirs = $feedback->getSouvenirs();
             if ($souvenirs) {
-                // Gérer le cas où souvenirs est un resource
                 if (is_resource($souvenirs)) {
                     $souvenirsData = stream_get_contents($souvenirs);
                     if ($souvenirsData === false) {
-                        continue; // Passer au feedback suivant si la lecture échoue
+                        continue;
                     }
                 } else {
-                    $souvenirsData = $souvenirs; // Supposer que c'est déjà une chaîne
+                    $souvenirsData = $souvenirs;
                 }
-
-                // Encoder en base64
                 $base64 = base64_encode($souvenirsData);
-
-                // Détecter le type MIME
                 $finfo = new \finfo(FILEINFO_MIME_TYPE);
                 $mimeType = $finfo->buffer($souvenirsData);
                 $processedFeedback['souvenirsBase64'] = 'data:' . $mimeType . ';base64,' . $base64;
@@ -96,6 +117,9 @@ class FeedbackController extends AbstractController
             'feedbacks' => $processedFeedbacks,
             'sort_by' => $sortBy,
             'sort_order' => $sortOrder,
+            'selected_user' => $selectedUser,
+            'selected_date' => $selectedDate,
+            'users' => $userEmails,
         ]);
     }
 
@@ -104,8 +128,38 @@ class FeedbackController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
+        $processedFeedback = [
+            'ID' => $feedback->getId(),
+            'membre' => $feedback->getMembre(),
+            'Vote' => $feedback->getVote(),
+            'description' => $feedback->getDescription(),
+            'date' => $feedback->getDate(),
+            'recommend' => $feedback->getRecommend(),
+            'souvenirsBase64' => null,
+        ];
+
+        $souvenirs = $feedback->getSouvenirs();
+        if ($souvenirs) {
+            if (is_resource($souvenirs)) {
+                $souvenirsData = stream_get_contents($souvenirs);
+                if ($souvenirsData === false) {
+                    $this->addFlash('error', 'Impossible de lire l\'image associée au feedback.');
+                } else {
+                    $base64 = base64_encode($souvenirsData);
+                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                    $mimeType = $finfo->buffer($souvenirsData);
+                    $processedFeedback['souvenirsBase64'] = 'data:' . $mimeType . ';base64,' . $base64;
+                }
+            } else {
+                $base64 = base64_encode($souvenirs);
+                $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                $mimeType = $finfo->buffer($souvenirs);
+                $processedFeedback['souvenirsBase64'] = 'data:' . $mimeType . ';base64,' . $base64;
+            }
+        }
+
         return $this->render('admin/feedback/show.html.twig', [
-            'feedback' => $feedback,
+            'feedback' => $processedFeedback,
         ]);
     }
 

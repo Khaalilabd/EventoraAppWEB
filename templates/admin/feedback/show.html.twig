@@ -184,6 +184,14 @@
                             <p class="text-sm mb-2"><strong>Description :</strong> {{ feedback.description }}</p>
                             <p class="text-sm mb-2"><strong>Date :</strong> {{ feedback.date ? feedback.date|date('Y-m-d') : 'Non définie' }}</p>
                             <p class="text-sm mb-2"><strong>Recommandé :</strong> {{ feedback.recommend|default('Non défini') }}</p>
+                            {% if feedback.souvenirsBase64 %}
+                                <p class="text-sm mb-2">
+                                    <strong>Image :</strong>
+                                    <img src="{{ feedback.souvenirsBase64 }}" alt="Feedback image" class="feedback-detail-image">
+                                </p>
+                            {% else %}
+                                <p class="text-sm mb-2"><strong>Image :</strong> Aucune image associée</p>
+                            {% endif %}
                         </div>
                         <div class="card-footer p-3">
                             <a href="{{ path('admin_feedback') }}" class="btn btn-sm btn-secondary">Retour à la liste</a>
@@ -211,6 +219,14 @@
         }
         .star-rating-display .star.filled {
             color: #ffd700;
+        }
+        /* Style pour l'image dans les détails */
+        .feedback-detail-image {
+            max-width: 300px; /* Limite la taille pour éviter que l'image soit trop grande */
+            height: auto;
+            border-radius: 5px;
+            margin-top: 5px;
+            display: block;
         }
     </style>
 {% endblock %}
