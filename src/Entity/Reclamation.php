@@ -25,6 +25,9 @@ class Reclamation
     #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'id', nullable: false)]
     private ?Membre $membre = null;
 
+    #[ORM\Column(type: 'string', length: 50, nullable: false, options: ['default' => 'En_Attente'])]
+    private ?string $statut = null;
+
     // Constantes pour les valeurs possibles de Type
     public const TYPE_PACKS = 'Packs';
     public const TYPE_SERVICE = 'Service';
@@ -39,6 +42,20 @@ class Reclamation
         self::TYPE_PROBLEME_TECHNIQUE,
         self::TYPE_PLAINTE_AGENT,
         self::TYPE_AUTRE,
+    ];
+
+    // Constantes pour les valeurs possibles de Statut (correspondant à l'ENUM dans la base de données)
+    public const STATUT_EN_ATTENTE = 'En_Attente';
+    public const STATUT_EN_COURS = 'En_Cours';
+    public const STATUT_RESOLU = 'Resolue';
+    public const STATUT_REJETE = 'Rejetée';
+
+    // Liste des statuts valides
+    public const STATUTS = [
+        self::STATUT_EN_ATTENTE,
+        self::STATUT_EN_COURS,
+        self::STATUT_RESOLU,
+        self::STATUT_REJETE,
     ];
 
     // Getters et setters
@@ -91,6 +108,23 @@ class Reclamation
     public function setMembre(?Membre $membre): self
     {
         $this->membre = $membre;
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): self
+    {
+        if ($statut === null) {
+            throw new \InvalidArgumentException("Le statut ne peut pas être NULL.");
+        }
+        if (!in_array($statut, self::STATUTS, true)) {
+            throw new \InvalidArgumentException("Statut invalide : $statut. Les valeurs autorisées sont : " . implode(', ', self::STATUTS));
+        }
+        $this->statut = $statut;
         return $this;
     }
 }

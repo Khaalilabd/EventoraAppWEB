@@ -31,21 +31,16 @@ class ReclamationsController extends AbstractController
     public function editStatus(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $form = $this->createForm(ReclamationStatusType::class, $reclamation);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $newStatut = $reclamation->getStatut();
-                $entityManager->persist($reclamation);
-                $entityManager->flush();
-                $this->addFlash('success', 'Statut mis à jour avec succès. Nouveau statut : ' . ($newStatut ?? 'non défini'));
-                return $this->redirectToRoute('admin_reclamations', [], Response::HTTP_SEE_OTHER);
-            } else {
-                // Ajouter des détails sur les erreurs pour déboguer
-                $errors = $form->getErrors(true);
-                $this->addFlash('error', 'Erreur dans le formulaire : ' . $errors->__toString());
-            }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($reclamation);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Statut mis à jour avec succès. Nouveau statut : ' . $reclamation->getStatut());
+            return $this->redirectToRoute('admin_reclamations', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('admin/reclamations/edit_status.html.twig', [

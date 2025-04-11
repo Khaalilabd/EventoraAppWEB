@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title %}Soumettre une Réclamation - Eventora{% endblock %}</title>
+        <title>{% block title %}Soumettre un Feedback - Eventora{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
@@ -67,14 +67,14 @@
                 }
                 .user-circle {
                     display: inline-block;
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
+                    width: 32px;
+                    height: 32px;
+                    line-height: 32px;
                     text-align: center;
                     border-radius: 50%;
                     background-color: #f0f0f0;
                     color: #333;
-                    font-size: 20px;
+                    font-size: 16px;
                     vertical-align: middle;
                     margin-right: 8px;
                 }
@@ -234,6 +234,33 @@
                     font-size: 36px;
                     margin: 0;
                 }
+                .event-wrap .form-check-label {
+                    color: #fff;
+                    margin-left: 10px;
+                }
+                .event-wrap .form-check-input {
+                    transform: scale(1.5);
+                }
+                .star-rating-container {
+                    display: flex;
+                    justify-content: center;
+                    font-size: 30px;
+                    gap: 10px;
+                }
+                .star-rating-container select {
+                    display: none;
+                }
+                .star-rating-container .stars {
+                    display: flex;
+                }
+                .star-rating-container .star {
+                    cursor: pointer;
+                    color: #ddd !important;
+                    transition: color 0.2s ease;
+                }
+                .star-rating-container .star.filled {
+                    color: #ffd700 !important;
+                }
                 @media (max-width: 768px) {
                     .menu-toggle {
                         display: block;
@@ -280,7 +307,7 @@
                         font-size: 28px;
                     }
                     #fh5co-event {
-                        padding weißtop: 30px;
+                        padding-top: 30px;
                     }
                 }
             </style>
@@ -304,8 +331,8 @@
                                     <li><a href="#">Partenaire</a></li>
                                 </ul>
                             </li>
-                            <li class="active"><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                            <li class="active"><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
                             <li><a href="#">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
@@ -323,6 +350,9 @@
                                         <li><a href="{{ path('app_home') }}">Paramètres</a></li>
                                         <li><a href="{{ path('app_home') }}">Notifications</a></li>
                                         <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
                                         <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
                                     {% else %}
                                         <li><a href="{{ path('app_auth') }}">Connexion</a></li>
@@ -340,7 +370,7 @@
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
                             <span>Votre Avis Compte</span>
-                            <h2>Soumettre une Réclamation</h2>
+                            <h2>Soumettre un Feedback</h2>
                         </div>
                     </div>
                     <div class="row">
@@ -366,18 +396,31 @@
                                                     </button>
                                                 </div>
                                             {% endfor %}
-                                            {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'reclamation-form'}}) }}
+                                            {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'feedback-form'}}) }}
                                                 <div class="form-group">
-                                                    {{ form_label(form.titre) }}
-                                                    {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_label(form.Vote, 'Note (1 à 5 étoiles)') }}
+                                                    <div class="star-rating-container">
+                                                        {{ form_widget(form.Vote, {'attr': {'class': 'form-control star-rating'}}) }}
+                                                        <div class="stars">
+                                                            <span class="star" data-value="1">★</span>
+                                                            <span class="star" data-value="2">★</span>
+                                                            <span class="star" data-value="3">★</span>
+                                                            <span class="star" data-value="4">★</span>
+                                                            <span class="star" data-value="5">★</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    {{ form_label(form.description) }}
-                                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                    {{ form_label(form.Description, 'Votre expérience') }}
+                                                    {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
                                                 </div>
                                                 <div class="form-group">
-                                                    {{ form_label(form.Type) }}
-                                                    {{ form_widget(form.Type, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_label(form.souvenirsFile, 'Uploader une image (optionnel)') }}
+                                                    {{ form_widget(form.souvenirsFile, {'attr': {'class': 'form-control'}}) }}
+                                                </div>
+                                                <div class="form-group form-check">
+                                                    {{ form_widget(form.Recommend, {'attr': {'class': 'form-check-input'}}) }}
+                                                    {{ form_label(form.Recommend, 'Recommanderiez-vous notre service ?', {'label_attr': {'class': 'form-check-label'}}) }}
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
@@ -407,7 +450,6 @@
             </footer>
         </div>
 
-        <!-- Charger jQuery depuis un CDN -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script>
             if (typeof jQuery === 'undefined') {
@@ -454,8 +496,45 @@
                         }
                     );
 
+                    // Gestion des étoiles
+                    const select = $('.star-rating');
+                    const stars = $('.star');
+                    let selectedValue = parseInt(select.val()) || 0;
+
+                    function updateStars(value) {
+                        stars.each(function() {
+                            const starValue = parseInt($(this).attr('data-value'));
+                            if (starValue <= value) {
+                                $(this).addClass('filled');
+                            } else {
+                                $(this).removeClass('filled');
+                            }
+                        });
+                    }
+
+                    stars.each(function() {
+                        $(this).on('click', function() {
+                            const value = parseInt($(this).attr('data-value'));
+                            selectedValue = value;
+                            select.val(value);
+                            updateStars(value);
+                        });
+                        $(this).on('mouseover', function() {
+                            const value = parseInt($(this).attr('data-value'));
+                            updateStars(value);
+                        });
+                        $(this).on('mouseout', function() {
+                            updateStars(selectedValue);
+                        });
+                    });
+
+                    if (select.val()) {
+                        selectedValue = parseInt(select.val());
+                        updateStars(selectedValue);
+                    }
+
                     // Soumission AJAX
-                    $('#reclamation-form').on('submit', function(event) {
+                    $('#feedback-form').on('submit', function(event) {
                         event.preventDefault();
                         const form = this;
                         const formData = new FormData(form);
@@ -470,8 +549,9 @@
                             headers: { 'X-Requested-With': 'XMLHttpRequest' },
                             success: function(data) {
                                 if (data.success) {
-                                    alert('Réclamation soumise avec succès !');
+                                    alert('Feedback soumis avec succès !');
                                     form.reset();
+                                    stars.removeClass('filled');
                                 } else {
                                     if (data.errors) {
                                         for (const field in data.errors) {
