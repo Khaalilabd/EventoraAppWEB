@@ -55,8 +55,45 @@ class FeedbackController extends AbstractController
 
         $feedbacks = $queryBuilder->getQuery()->getResult();
 
+        // Traiter chaque feedback pour encoder le BLOB souvenirs en base64
+        $processedFeedbacks = [];
+        foreach ($feedbacks as $feedback) {
+            $processedFeedback = [
+                'ID' => $feedback->getId(),
+                'membre' => $feedback->getMembre(),
+                'vote' => $feedback->getVote(),
+                'description' => $feedback->getDescription(),
+                'date' => $feedback->getDate(),
+                'recommend' => $feedback->getRecommend(),
+                'souvenirsBase64' => null,
+            ];
+
+            $souvenirs = $feedback->getSouvenirs();
+            if ($souvenirs) {
+                // Gérer le cas où souvenirs est un resource
+                if (is_resource($souvenirs)) {
+                    $souvenirsData = stream_get_contents($souvenirs);
+                    if ($souvenirsData === false) {
+                        continue; // Passer au feedback suivant si la lecture échoue
+                    }
+                } else {
+                    $souvenirsData = $souvenirs; // Supposer que c'est déjà une chaîne
+                }
+
+                // Encoder en base64
+                $base64 = base64_encode($souvenirsData);
+
+                // Détecter le type MIME
+                $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                $mimeType = $finfo->buffer($souvenirsData);
+                $processedFeedback['souvenirsBase64'] = 'data:' . $mimeType . ';base64,' . $base64;
+            }
+
+            $processedFeedbacks[] = $processedFeedback;
+        }
+
         return $this->render('admin/feedback/index.html.twig', [
-            'feedbacks' => $feedbacks,
+            'feedbacks' => $processedFeedbacks,
             'sort_by' => $sortBy,
             'sort_order' => $sortOrder,
         ]);
@@ -77,7 +114,6 @@ class FeedbackController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // Créer le formulaire sans passer l'option 'data'
         $form = $this->createForm(FeedbackType::class, $feedback);
         $form->handleRequest($request);
 
