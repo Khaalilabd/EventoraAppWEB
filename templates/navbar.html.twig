@@ -1,0 +1,57 @@
+{# templates/navbar.html.twig #}
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('app_home') }}">Eventora</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}" href="{{ path('app_home') }}">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Services
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                        <li><a class="dropdown-item" href="#">Service</a></li>
+                        <li><a class="dropdown-item" href="#">Partenaire</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_reclamation_new' ? 'active' : '' }}" href="{{ path('app_reclamation_new') }}">Reclamation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_feedback_new' ? 'active' : '' }}" href="{{ path('app_feedback_new') }}">Feedback</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Talk with Evi</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if app.user and app.user.image %}
+                            <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
+                        {% else %}
+                            <i class="fas fa-user-circle"></i>
+                        {% endif %}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        {% if app.user %}
+                            <li><a class="dropdown-item" href="{{ path('app_home') }}">Paramètres</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_home') }}">Notifications</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_home') }}">Historique</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="{{ path('app_auth') }}">Connexion</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_auth') }}">Inscription</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

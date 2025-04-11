@@ -86,4 +86,8 @@ class MembreType extends AbstractType
             'is_edit' => false, // Option pour différencier l'ajout et la modification
         ]);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> Eventora

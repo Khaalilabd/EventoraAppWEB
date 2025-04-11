@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% block title %}Soumettre une Réclamation - Eventora{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
+
+        {% block stylesheets %}
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <style>
+                body {
+                    background-image: url({{ asset('images/img_bg_3.jpg') }});
+                    background-size: cover;
+                    background-position: center;
+                    background-attachment: fixed;
+                    min-height: 100vh;
+                    margin: 0;
+                    padding: 0;
+                    position: relative;
+                }
+                body::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.4);
+                    z-index: -1;
+                }
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                }
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                }
+                .fh5co-logo a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 24px;
+                    color: #333;
+                    text-decoration: none;
+                }
+                .user-circle {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 20px;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                }
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 15px;
+                    position: relative;
+                }
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #007bff;
+                }
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #007bff !important;
+                    font-weight: 600;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 150px;
+                    z-index: 1001;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block !important;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #007bff;
+                }
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                    padding: 10px;
+                }
+                .event-wrap {
+                    background: rgba(0, 123, 255, 0.2);
+                    padding: 40px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                    max-width: 700px;
+                    margin: 0 auto;
+                }
+                .event-wrap h3 {
+                    color: #fff;
+                    margin-bottom: 30px;
+                    font-size: 24px;
+                    text-transform: uppercase;
+                }
+                .event-wrap .form-group {
+                    margin-bottom: 20px;
+                }
+                .event-wrap .form-group label {
+                    color: #fff;
+                    font-weight: 500;
+                    margin-bottom: 5px;
+                    display: block;
+                }
+                .event-wrap .form-control {
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: #fff;
+                    border-radius: 5px;
+                    padding: 10px;
+                }
+                .event-wrap .form-control::placeholder {
+                    color: rgba(255, 255, 255, 0.7);
+                }
+                .event-wrap .form-control:focus {
+                    border-color: #007bff;
+                    box-shadow: none;
+                }
+                .event-wrap .form-control select {
+                    color: #fff;
+                    background: rgba(255, 255, 255, 0.1);
+                }
+                .event-wrap .form-control select option {
+                    color: #333;
+                    background: #fff;
+                }
+                .event-wrap .btn {
+                    margin-top: 10px;
+                    padding: 10px;
+                    border-radius: 5px;
+                    font-size: 16px;
+                }
+                .event-wrap .btn-primary {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                }
+                .event-wrap .btn-secondary {
+                    background-color: #6c757d;
+                    border-color: #6c757d;
+                }
+                #fh5co-footer {
+                    background: rgba(255, 255, 255, 0.9);
+                    padding: 20px 0;
+                }
+                #fh5co-event {
+                    margin-top: 60px;
+                    flex: 1 0 auto;
+                    padding-top: 50px;
+                }
+                .fh5co-heading {
+                    margin-bottom: 40px;
+                }
+                .fh5co-heading span {
+                    color: #fff;
+                    font-size: 18px;
+                    display: block;
+                    margin-bottom: 10px;
+                }
+                .fh5co-heading h2 {
+                    color: #fff;
+                    font-size: 36px;
+                    margin: 0;
+                }
+                @media (max-width: 768px) {
+                    .menu-toggle {
+                        display: block;
+                    }
+                    .fh5co-nav .menu-1 ul {
+                        display: none;
+                        flex-direction: column;
+                        position: absolute;
+                        top: 60px;
+                        left: 0;
+                        width: 100%;
+                        background-color: #fff;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        padding: 20px 0;
+                    }
+                    .fh5co-nav .menu-1 ul.active {
+                        display: flex;
+                    }
+                    .fh5co-nav .menu-1 ul li {
+                        margin: 10px 0;
+                        text-align: center;
+                    }
+                    .user-circle {
+                        margin-right: 0;
+                        margin-bottom: 5px;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                        position: static;
+                        display: none;
+                        box-shadow: none;
+                        background-color: #f8f9fa;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                        display: none !important;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                        display: block !important;
+                    }
+                    .event-wrap {
+                        max-width: 90%;
+                        padding: 20px;
+                    }
+                    .fh5co-heading h2 {
+                        font-size: 28px;
+                    }
+                    #fh5co-event {
+                        padding weißtop: 30px;
+                    }
+                }
+            </style>
+        {% endblock %}
+    </head>
+    <body>
+        <div id="page">
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
+                    </div>
+                    <div class="menu-toggle">☰</div>
+                    <div class="menu-1">
+                        <ul>
+                            <li><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Service</a></li>
+                                    <li><a href="#">Partenaire</a></li>
+                                </ul>
+                            </li>
+                            <li class="active"><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="#">Talk with Evi</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        {% else %}
+                                            <i class="icon-user"></i>
+                                        {% endif %}
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="fh5co-event">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
+                            <span>Votre Avis Compte</span>
+                            <h2>Soumettre une Réclamation</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="display-t">
+                            <div class="display-tc">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <div class="col-md-8 col-md-offset-2 text-center">
+                                        <div class="event-wrap animate-box">
+                                            <h3>Remplissez le Formulaire</h3>
+                                            {% for message in app.flashes('success') %}
+                                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                            {% endfor %}
+                                            {% for message in app.flashes('error') %}
+                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                            {% endfor %}
+                                            {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'reclamation-form'}}) }}
+                                                <div class="form-group">
+                                                    {{ form_label(form.titre) }}
+                                                    {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.description) }}
+                                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.Type) }}
+                                                    {{ form_widget(form.Type, {'attr': {'class': 'form-control'}}) }}
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
+                                                    <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
+                                                </div>
+                                            {{ form_end(form) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer id="fh5co-footer" role="contentinfo">
+                <div class="container">
+                    <div class="row copyright">
+                        <div class="col-md-12 text-center">
+                            <p>
+                                <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                                <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Charger jQuery depuis un CDN -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script>
+            if (typeof jQuery === 'undefined') {
+                console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
+            } else {
+                console.log("jQuery est chargé avec succès");
+                jQuery(document).ready(function($) {
+                    // Menu hamburger
+                    $('.menu-toggle').click(function() {
+                        console.log("Clic sur menu-toggle détecté");
+                        $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                    });
+
+                    // Dropdowns sur mobile
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                        if ($(window).width() <= 768) {
+                            console.log("Clic sur dropdown détecté");
+                            e.preventDefault();
+                            $(this).parent().toggleClass('active');
+                        }
+                    });
+
+                    // Dropdowns sur desktop avec survol
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
+                        function() {
+                            console.log("Survol détecté sur un élément has-dropdown");
+                            $(this).find('.dropdown').css({
+                                'display': 'block',
+                                'position': 'absolute',
+                                'top': '100%',
+                                'right': '0',
+                                'visibility': 'visible',
+                                'opacity': '1',
+                                'z-index': '1001'
+                            });
+                        },
+                        function() {
+                            console.log("Fin du survol");
+                            $(this).find('.dropdown').css({
+                                'display': 'none',
+                                'visibility': 'hidden',
+                                'opacity': '0'
+                            });
+                        }
+                    );
+
+                    // Soumission AJAX
+                    $('#reclamation-form').on('submit', function(event) {
+                        event.preventDefault();
+                        const form = this;
+                        const formData = new FormData(form);
+
+                        $.ajax({
+                            url: form.action,
+                            method: form.method,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                            success: function(data) {
+                                if (data.success) {
+                                    alert('Réclamation soumise avec succès !');
+                                    form.reset();
+                                } else {
+                                    if (data.errors) {
+                                        for (const field in data.errors) {
+                                            data.errors[field].forEach(error => {
+                                                alert(`Erreur dans ${field} : ${error}`);
+                                            });
+                                        }
+                                    } else {
+                                        alert('Une erreur est survenue lors de la soumission.');
+                                    }
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Erreur AJAX :', error);
+                                alert('Une erreur est survenue lors de la communication avec le serveur.');
+                            }
+                        });
+                    });
+                });
+            }
+        </script>
+    </body>
+</html>

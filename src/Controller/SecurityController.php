@@ -21,6 +21,18 @@ use Symfony\Component\Mime\Email;
 
 class SecurityController extends AbstractController
 {
+    #[Route('/', name: 'app_home')]
+    public function home(): Response
+    {
+        return $this->redirectToRoute('app_home_page');
+    }
+
+    #[Route('/home', name: 'app_home_page')]
+    public function homePage(): Response
+    {
+        return $this->render('home/home.html.twig');
+    }
+
     #[Route('/auth', name: 'app_auth', methods: ['GET', 'POST'])]
     public function auth(
         AuthenticationUtils $authenticationUtils,
@@ -47,17 +59,15 @@ class SecurityController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $membre);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                try {
-                    // Hacher le mot de passe
-                    $plainPassword = $form->get('motDePasse')->getData();
-                    if (!$plainPassword) {
-                        throw new \Exception('Le mot de passe ne peut pas être vide.');
-                    }
-                    $hashedPassword = $userPasswordHasher->hashPassword($membre, $plainPassword);
-                    $membre->setMotDePasse($hashedPassword);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $plainPassword = $form->get('motDePasse')->getData();
+                $hashedPassword = $userPasswordHasher->hashPassword($membre, $plainPassword);
+                $membre->setMotDePasse($hashedPassword);
+                $membre->setRole('MEMBRE');
+                $membre->setIsConfirmed(false);
 
+<<<<<<< HEAD
                     // Définir un rôle par défaut
                     $membre->setRole('MEMBRE');
                     $membre->setIsConfirmed(false);
@@ -86,7 +96,25 @@ class SecurityController extends AbstractController
                 // Afficher les erreurs de validation
                 foreach ($form->getErrors(true) as $error) {
                     $this->addFlash('error', $error->getMessage());
+=======
+                $imageFile = $form->get('image')->getData();
+                if ($imageFile) {
+                    $newFilename = uniqid() . '.' . $imageFile->guessExtension();
+                    $imageFile->move(
+                        $this->getParameter('images_directory'),
+                        $newFilename
+                    );
+                    $membre->setImage($newFilename);
+>>>>>>> Eventora
                 }
+
+                $entityManager->persist($membre);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Votre compte a été créé avec succès !');
+                return $this->redirectToRoute('app_auth');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erreur lors de l\'inscription : ' . $e->getMessage());
             }
         }
 
@@ -106,10 +134,14 @@ class SecurityController extends AbstractController
     {
         if ($security->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = $this->getUser();
-            if (in_array('ROLE_ADMIN', $user->getRoles())) {
-                return $this->redirectToRoute('admin_dashboard');
+            if (in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_MEMBRE', $user->getRoles())) {
+                return $this->redirectToRoute('app_home_page');
             }
+<<<<<<< HEAD
             return $this->redirectToRoute('admin_dashboard');
+=======
+            return $this->redirectToRoute('app_home_page');
+>>>>>>> Eventora
         }
         return $this->redirectToRoute('app_auth');
     }
