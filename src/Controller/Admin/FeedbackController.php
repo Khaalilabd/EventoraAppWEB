@@ -140,7 +140,7 @@ class FeedbackController extends AbstractController
             $entityManager->remove($feedback);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Feedback supprimé avec succès.');
+            $this->addFlash('success', 'Feedbacks supprimé avec succès.');
         }
 
         return $this->redirectToRoute('admin_feedback', [], Response::HTTP_SEE_OTHER);
