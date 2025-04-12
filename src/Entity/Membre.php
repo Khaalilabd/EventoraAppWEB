@@ -19,28 +19,28 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Nom')]
-    private ?string $nom = null;
+    private string $nom = ''; // Changement : string au lieu de ?string, initialisé à ''
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Prénom')]
-    private ?string $prenom = null;
+    private string $prenom = ''; // Changement : string au lieu de ?string, initialisé à ''
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Email', unique: true)]
-    private ?string $email = null;
+    private string $email = ''; // Changement : string au lieu de ?string, initialisé à ''
 
     #[ORM\Column(type: 'string', nullable: false, name: 'CIN')]
-    private ?string $cin = null;
+    private string $cin = ''; // Changement : string au lieu de ?string, initialisé à ''
 
     #[ORM\Column(type: 'string', nullable: false, name: 'NumTel')]
-    private ?string $numTel = null;
+    private string $numTel = ''; // Changement : string au lieu de ?string, initialisé à ''
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Adresse')]
-    private ?string $adresse = null;
+    private string $adresse = ''; // Changement : string au lieu de ?string, initialisé à ''
 
     #[ORM\Column(type: 'string', nullable: false, name: 'motDePasse')]
-    private ?string $motDePasse = null;
+    private string $motDePasse = ''; // Changement : string au lieu de ?string, initialisé à ''
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Role')]
-    private ?string $role = null;
+    private string $role = ''; // Changement : string au lieu de ?string, initialisé à ''
 
     #[ORM\Column(type: 'string', nullable: true, name: 'image')]
     private ?string $image = null;
@@ -53,6 +53,15 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean', nullable: true, name: 'isConfirmed')]
     private ?bool $isConfirmed = false;
+
+    #[ORM\Column(type: 'date', nullable: true)]
+    private ?\DateTimeInterface $dateOfBirth = null;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private ?string $gender = null;
+
+    #[ORM\Column(type: 'string', length: 180, nullable: true, unique: true)]
+    private ?string $username = null;
 
     #[ORM\OneToMany(targetEntity: Feedback::class, mappedBy: 'membre')]
     private Collection $feedbacks;
@@ -69,7 +78,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     // Implémentation des méthodes de UserInterface
     public function getRoles(): array
     {
-        return ['ROLE_' . strtoupper($this->role)]; // Ex: ROLE_ADMIN, ROLE_AGENT, ROLE_MEMBRE
+        return ['ROLE_' . strtoupper($this->role)];
     }
 
     public function getPassword(): ?string
@@ -84,10 +93,10 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // Si vous stockez des données sensibles temporairement, supprimez-les ici
     }
 
-    // Getters et setters
+    // Getters et setters existants...
+
     public function getId(): ?int
     {
         return $this->id;
@@ -99,7 +108,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getNom(): ?string
+    public function getNom(): string
     {
         return $this->nom;
     }
@@ -110,7 +119,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getPrenom(): string
     {
         return $this->prenom;
     }
@@ -121,7 +130,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -132,7 +141,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCin(): ?string
+    public function getCin(): string
     {
         return $this->cin;
     }
@@ -143,7 +152,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getNumTel(): ?string
+    public function getNumTel(): string
     {
         return $this->numTel;
     }
@@ -154,7 +163,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdresse(): ?string
+    public function getAdresse(): string
     {
         return $this->adresse;
     }
@@ -165,7 +174,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMotDePasse(): ?string
+    public function getMotDePasse(): string
     {
         return $this->motDePasse;
     }
@@ -176,7 +185,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRole(): ?string
+    public function getRole(): string
     {
         return $this->role;
     }
@@ -228,6 +237,39 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsConfirmed(?bool $isConfirmed): self
     {
         $this->isConfirmed = $isConfirmed;
+        return $this;
+    }
+
+    public function getDateOfBirth(): ?\DateTimeInterface
+    {
+        return $this->dateOfBirth;
+    }
+
+    public function setDateOfBirth(?\DateTimeInterface $dateOfBirth): self
+    {
+        $this->dateOfBirth = $dateOfBirth;
+        return $this;
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?string $gender): self
+    {
+        $this->gender = $gender;
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(?string $username): self
+    {
+        $this->username = $username;
         return $this;
     }
 

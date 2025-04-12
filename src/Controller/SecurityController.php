@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -34,10 +33,8 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/auth', name: 'app_auth', methods: ['GET', 'POST'])]
-    public function auth(
-        AuthenticationUtils $authenticationUtils,
-        CsrfTokenManagerInterface $csrfTokenManager
-    ): Response {
+    public function auth(AuthenticationUtils $authenticationUtils): Response
+    {
         $formConnexion = $this->createForm(LoginFormType::class);
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -45,7 +42,6 @@ class SecurityController extends AbstractController
             'registration_form' => $this->createForm(RegistrationFormType::class)->createView(),
             'login_form' => $formConnexion->createView(),
             'error' => $error,
-            'csrf_token' => $csrfTokenManager->getToken('authenticate')->getValue(),
         ]);
     }
 
@@ -67,36 +63,7 @@ class SecurityController extends AbstractController
                 $membre->setRole('MEMBRE');
                 $membre->setIsConfirmed(false);
 
-<<<<<<< HEAD
-                    // Définir un rôle par défaut
-                    $membre->setRole('MEMBRE');
-                    $membre->setIsConfirmed(false);
-
-                    // Gérer l'upload de l'image
-                    $imageFile = $form->get('image')->getData();
-                    if ($imageFile) {
-                        $newFilename = uniqid() . '.' . $imageFile->guessExtension();
-                        $imageFile->move(
-                            $this->getParameter('images_directory'),
-                            $newFilename
-                        );
-                        $membre->setImage($newFilename);
-                    }
-
-                    // Enregistrer dans la base de données
-                    $entityManager->persist($membre);
-                    $entityManager->flush();
-
-                    $this->addFlash('success', 'Votre compte a été créé avec succès !');
-                    return $this->redirectToRoute('app_auth');
-                } catch (\Exception $e) {
-                    $this->addFlash('error', 'Erreur lors de l\'inscription : ' . $e->getMessage());
-                }
-            } else {
-                // Afficher les erreurs de validation
-                foreach ($form->getErrors(true) as $error) {
-                    $this->addFlash('error', $error->getMessage());
-=======
+                // Gérer l'upload de l'image
                 $imageFile = $form->get('image')->getData();
                 if ($imageFile) {
                     $newFilename = uniqid() . '.' . $imageFile->guessExtension();
@@ -105,9 +72,9 @@ class SecurityController extends AbstractController
                         $newFilename
                     );
                     $membre->setImage($newFilename);
->>>>>>> Eventora
                 }
 
+                // Enregistrer dans la base de données
                 $entityManager->persist($membre);
                 $entityManager->flush();
 
@@ -115,6 +82,11 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('app_auth');
             } catch (\Exception $e) {
                 $this->addFlash('error', 'Erreur lors de l\'inscription : ' . $e->getMessage());
+            }
+        } elseif ($form->isSubmitted()) {
+            // Afficher les erreurs de validation
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
             }
         }
 
@@ -134,14 +106,10 @@ class SecurityController extends AbstractController
     {
         if ($security->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = $this->getUser();
-            if (in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_MEMBRE', $user->getRoles())) {
-                return $this->redirectToRoute('app_home_page');
+            if (in_array('ROLE_ADMIN', $user->getRoles())) {
+                return $this->redirectToRoute('admin_dashboard');
             }
-<<<<<<< HEAD
-            return $this->redirectToRoute('admin_dashboard');
-=======
             return $this->redirectToRoute('app_home_page');
->>>>>>> Eventora
         }
         return $this->redirectToRoute('app_auth');
     }
@@ -164,20 +132,17 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Récupérer l'email saisi dans le formulaire
             $email = $form->get('email')->getData();
             $logger->info('Email saisi dans le formulaire : ' . $email);
 
-            // Rechercher l'utilisateur avec cet email
             $membre = $entityManager->getRepository(Membre::class)->findOneBy(['email' => $email]);
 
             if ($membre) {
                 $logger->info('Utilisateur trouvé : ' . $membre->getEmail());
-                // Générer un token simplifié (alphanumérique, 32 caractères)
                 $token = substr(str_shuffle('abcdefghijklmnopqrstuvwxyz0123456789'), 0, 32);
                 $logger->info('Token généré : ' . $token);
                 $membre->setToken($token);
-                $membre->setTokenExpiration(new \DateTime('+1 hour')); // Expire dans 1 heure
+                $membre->setTokenExpiration(new \DateTime('+1 hour'));
                 $entityManager->persist($membre);
 
                 try {
@@ -185,21 +150,15 @@ class SecurityController extends AbstractController
                     $logger->info('Token enregistré avec succès.');
                 } catch (\Exception $e) {
                     $logger->error('Erreur lors de l\'enregistrement du token : ' . $e->getMessage());
-                    $this->addFlash('error', 'Erreur lors de l\'enregistrement du token : ' . $e->getMessage());
+                    $this->addFlash('error', 'Erreur lors de l\'enregistrement du token.');
                     return $this->redirectToRoute('app_auth');
                 }
 
-                // Vérifier que le token est bien enregistré dans la base de données
-                $membreAfterFlush = $entityManager->getRepository(Membre::class)->findOneBy(['email' => $email]);
-                $logger->info('Token après flush : ' . ($membreAfterFlush->getToken() ?? 'NULL'));
-                $logger->info('Date d\'expiration après flush : ' . ($membreAfterFlush->getTokenExpiration() ? $membreAfterFlush->getTokenExpiration()->format('Y-m-d H:i:s') : 'NULL'));
-
-                // Envoyer un email avec le lien de réinitialisation
                 $resetLink = $this->generateUrl('app_reset_password', ['token' => $token], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
                 $logger->info('Lien de réinitialisation généré : ' . $resetLink);
                 $emailMessage = (new Email())
-                    ->from('hediasnoussi2@gmail.com') // Expéditeur fixé à hediasnoussi2@gmail.com
-                    ->to($email) // Destinataire : l'email saisi dans le formulaire
+                    ->from($this->getParameter('mailer_from'))
+                    ->to($email)
                     ->subject('Réinitialisation de votre mot de passe')
                     ->html("Cliquez sur ce lien pour réinitialiser votre mot de passe : <a href='$resetLink'>$resetLink</a>");
 
@@ -209,7 +168,7 @@ class SecurityController extends AbstractController
                     $this->addFlash('success', 'Un email de réinitialisation a été envoyé à ' . $email . '.');
                 } catch (\Exception $e) {
                     $logger->error('Erreur lors de l\'envoi de l\'email : ' . $e->getMessage());
-                    $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email : ' . $e->getMessage());
+                    $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email.');
                 }
 
                 return $this->redirectToRoute('app_auth');
@@ -234,28 +193,16 @@ class SecurityController extends AbstractController
     ): Response {
         $logger->info('Token reçu dans l\'URL : ' . $token);
 
-        // Rechercher l'utilisateur avec le token
         $membre = $entityManager->getRepository(Membre::class)->findOneBy(['token' => $token]);
-        
+
         if (!$membre) {
             $logger->error('Aucun utilisateur trouvé avec le token : ' . $token);
             $this->addFlash('error', 'Token invalide ou expiré.');
             return $this->redirectToRoute('app_auth');
         }
 
-        // Vérifier si le token correspond
-        $storedToken = $membre->getToken();
-        $logger->info('Token stocké dans la base de données : ' . ($storedToken ?? 'NULL'));
-        $logger->info('Comparaison des tokens : URL=[' . $token . '], DB=[' . ($storedToken ?? 'NULL') . ']');
-
         $tokenExpiration = $membre->getTokenExpiration();
         $logger->info('Date d\'expiration du token : ' . ($tokenExpiration ? $tokenExpiration->format('Y-m-d H:i:s') : 'NULL'));
-
-        if ($storedToken !== $token) {
-            $logger->error('Les tokens ne correspondent pas : URL=[' . $token . '], DB=[' . ($storedToken ?? 'NULL') . ']');
-            $this->addFlash('error', 'Token invalide ou expiré.');
-            return $this->redirectToRoute('app_auth');
-        }
 
         if ($tokenExpiration && $tokenExpiration < new \DateTime()) {
             $logger->error('Token expiré : Date d\'expiration=' . $tokenExpiration->format('Y-m-d H:i:s'));
@@ -271,7 +218,7 @@ class SecurityController extends AbstractController
             $hashedPassword = $userPasswordHasher->hashPassword($membre, $newPassword);
             $membre->setMotDePasse($hashedPassword);
             $membre->setToken(null);
-            $membre->setTokenExpiration(null); // Réinitialiser l'expiration
+            $membre->setTokenExpiration(null);
             $entityManager->persist($membre);
             $entityManager->flush();
 

@@ -127,6 +127,16 @@
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
                     color: #007bff;
                 }
+                /* Style de l'icône Paramètres */
+                .settings-icon {
+                    font-size: 20px;
+                    color: #333;
+                    padding: 5px;
+                    transition: color 0.3s ease;
+                }
+                .settings-icon:hover {
+                    color: #007bff;
+                }
                 /* Menu hamburger pour mobile */
                 .menu-toggle {
                     display: none;
@@ -254,7 +264,7 @@
                                     </a>
                                     <ul class="dropdown">
                                         {% if app.user %}
-                                            <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
                                             <li><a href="{{ path('app_home') }}">Notifications</a></li>
                                             <li><a href="{{ path('app_home') }}">Historique</a></li>
                                             {% if is_granted('ROLE_ADMIN') %}
@@ -267,6 +277,9 @@
                                         {% endif %}
                                     </ul>
                                 </li>
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}" class="settings-icon" title="Paramètres"><i class="icon-cog"></i></a></li>
+                                {% endif %}
                             </ul>
                         </div>
                     </div>
@@ -281,7 +294,9 @@
                                     <div class="display-tc animate-box" data-animate-effect="fadeIn">
                                         <h1>Wait For Our Event</h1>
                                         <div class="simply-countdown simply-countdown-one"></div>
-                                        <p><a href="#" class="btn btn-default btn-sm">Save the date</a></p>
+                                        <p>
+                                            <a href="#" class="btn btn-default btn-sm">Save the date</a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

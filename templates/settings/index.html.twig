@@ -1,0 +1,330 @@
+{% extends 'home/home.html.twig' %}
+
+{% block title %}Paramètres - Eventora{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Palette de couleurs moderne */
+        :root {
+            --primary-color: #5a67d8; /* Indigo doux */
+            --secondary-color: #edf2f7; /* Fond gris clair */
+            --accent-color: #ed64a6; /* Rose pour les accents */
+            --text-color: #2d3748; /* Texte sombre */
+            --text-muted: #718096; /* Texte secondaire */
+            --success-color: #48bb78; /* Vert succès */
+            --error-color: #f56565; /* Rouge erreur */
+            --input-bg: #fff; /* Fond des champs */
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Conteneur principal */
+        .settings-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: var(--secondary-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .settings-container h2 {
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 600;
+            font-size: 26px;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        /* Sections */
+        .settings-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .settings-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-section h3 {
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        /* Groupes de formulaire */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px;
+            color: var(--text-color);
+            background-color: var(--input-bg);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 6px rgba(90, 103, 216, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+        }
+
+        /* Photo de profil */
+        .profile-picture {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-picture:hover {
+            transform: translateY(-2px);
+        }
+
+        .profile-picture img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .profile-picture img:hover {
+            border-color: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        .profile-picture .custom-file-upload {
+            color: var(--primary-color);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .profile-picture .custom-file-upload:hover {
+            color: var(--accent-color);
+        }
+
+        .profile-picture input[type="file"] {
+            display: none;
+        }
+
+        /* Messages de succès et d'erreur */
+        .alert-success {
+            background-color: var(--success-color);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .alert-error {
+            background-color: var(--error-color);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-15px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Erreurs de formulaire */
+        .form-error {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 5px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Bouton d'enregistrement */
+        .form-group input[type="submit"] {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .form-group input[type="submit"]:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="settings-container">
+        <h2>Paramètres du compte</h2>
+
+        {% for flash_message in app.flashes('success') %}
+            <div class="alert-success">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        {% for flash_message in app.flashes('error') %}
+            <div class="alert-error">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+
+        <div class="settings-section">
+            <h3>Informations de base</h3>
+            <div class="profile-picture">
+                {% if app.user.image %}
+                    <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile Picture">
+                {% else %}
+                    <img src="{{ asset('images/default-profile.png') }}" alt="Profile Picture">
+                {% endif %}
+                {{ form_start(imageForm, {'attr': {'id': 'imageForm'}}) }}
+                <label for="form_image" class="custom-file-upload">
+                    Modifier la photo de profil
+                </label>
+                {{ form_widget(imageForm.image, {'attr': {'id': 'form_image'}}) }}
+                {{ form_widget(imageForm.submit) }}
+                {{ form_end(imageForm) }}
+            </div>
+            {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_label(form.nom) }}
+                {{ form_widget(form.nom) }}
+                {% if form.nom.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form.nom.vars.errors[0].message }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.prenom) }}
+                {{ form_widget(form.prenom) }}
+                {% if form.prenom.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form.prenom.vars.errors[0].message }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.dateOfBirth) }}
+                {{ form_widget(form.dateOfBirth) }}
+                {% if form.dateOfBirth.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form.dateOfBirth.vars.errors[0].message }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.gender) }}
+                {{ form_widget(form.gender) }}
+                {% if form.gender.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form.gender.vars.errors[0].message }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.email) }}
+                {{ form_widget(form.email) }}
+                {% if form.email.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form.email.vars.errors[0].message }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Informations du compte</h3>
+            <div class="form-group">
+                {{ form_label(form.username) }}
+                {{ form_widget(form.username) }}
+                {% if form.username.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form.username.vars.errors[0].message }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.motDePasse) }}
+                {{ form_widget(form.motDePasse) }}
+                {% if form.motDePasse.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form.motDePasse.vars.errors[0].message }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            {{ form_widget(form.save) }}
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Soumettre automatiquement le formulaire de photo après sélection
+        document.getElementById('form_image').addEventListener('change', function() {
+            if (this.files.length > 0) {
+                document.getElementById('imageForm').submit();
+            }
+        });
+    </script>
+{% endblock %}
