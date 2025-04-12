@@ -10,21 +10,31 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\GServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route("/admin/service")]
 class ServicesController extends AbstractController
 {
     #[Route('/', name: 'admin_services', methods: ['GET'])]
-    public function index(GServiceRepository $GServiceRepository): Response
+    public function index(GServiceRepository $GServiceRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $GServices = $GServiceRepository->findAll();
+
+        // Créer une requête pour récupérer tous les services
+        $query = $GServiceRepository->createQueryBuilder('s')->getQuery();
+
+        // Paginer les résultats avec 3 éléments par page
+        $GServices = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            3 // 3 éléments par page
+        );
 
         return $this->render('admin/service/index.html.twig', [
             'GServices' => $GServices,
         ]);
     }
+
 
     #[Route('/{id}/edit', name: 'admin_service_edit', methods: ['GET', 'POST'])]
 public function edit(Request $request, GService $GService, EntityManagerInterface $entityManager): Response

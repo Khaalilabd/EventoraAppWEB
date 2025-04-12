@@ -22,7 +22,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href=>
+                    <a class="nav-link" href="#">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-calendar-check text-dark"></i>
                         </div>
@@ -39,7 +39,7 @@
                     <div class="collapse" id="reclamationsMenu">
                         <ul class="navbar-nav ms-3">
                             <li class="nav-item">
-                                <a class="nav-link" href=>
+                                <a class="nav-link" href="#">
                                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                                         <i class="fas fa-exclamation-circle text-dark"></i>
                                     </div>
@@ -47,7 +47,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href=>
+                                <a class="nav-link" href="#">
                                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                                         <i class="fas fa-comment-dots text-dark"></i>
                                     </div>
@@ -67,7 +67,7 @@
                     <div class="collapse" id="usersMenu">
                         <ul class="navbar-nav ms-3">
                             <li class="nav-item">
-                                <a class="nav-link" href=>
+                                <a class="nav-link" href="#">
                                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                                         <i class="fas fa-user-friends text-dark"></i>
                                     </div>
@@ -75,7 +75,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href=>
+                                <a class="nav-link" href="#">
                                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                                         <i class="fas fa-user-shield text-dark"></i>
                                     </div>
@@ -86,41 +86,41 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href=>
+                    <a class="nav-link" href="#">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-box text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Packs</span>
                     </a>
                 </li>
-               <li class="nav-item">
-    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="false">
-        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-            <i class="fas fa-concierge-bell text-dark"></i>
-        </div>
-        <span class="nav-link-text ms-1">Services</span>
-    </a>
-    <div class="collapse" id="servicesMenu">
-        <ul class="navbar-nav ms-3">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('admin_services') }}">
-                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-tools text-dark"></i>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="false">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-concierge-bell text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Services</span>
+                    </a>
+                    <div class="collapse" id="servicesMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('admin_services') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-tools text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Services</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('admin_sponsors') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-handshake text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Partenaires</span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                    <span class="nav-link-text ms-1">Services</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('admin_sponsors') }}">
-                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-handshake text-dark"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Partenaires</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</li>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_logout') }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -132,8 +132,8 @@
             </ul>
         </div>
     </aside>
-<style>
- 
+
+    <style>
         /* Sidebar Styling */
         .sidenav {
             background-color: #f8f9fa;
@@ -216,7 +216,200 @@
             height: 1px;
             background-color: #ddd;
         }
-</style>
+
+        /* Conteneur global */
+        .table-container {
+            max-width: 100%;
+            overflow-x: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style général du tableau */
+        .modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        /* En-têtes */
+        .modern-table thead {
+            background-color: #4a90e2;
+            color: #fff;
+        }
+
+        .modern-table th {
+            padding: 15px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Corps du tableau */
+        .modern-table tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+        .modern-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .modern-table tbody tr:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        /* Cellules */
+        .modern-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        /* Style pour les liens de site web */
+        .site-link {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .site-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Cellule des actions */
+        .action-cell {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Boutons d'action */
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Bouton d'édition */
+        .edit-btn {
+            background-color: transparent;
+            border: 1px solid #4a90e2;
+            color: #4a90e2;
+        }
+
+        .edit-btn:hover {
+            background-color: #4a90e2;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Bouton de suppression */
+        .delete-btn {
+            background-color: transparent;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+
+        .delete-btn:hover {
+            background-color: #dc3545;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style des boutons de tri */
+        .sort-btn {
+            background: none;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0;
+            color: inherit;
+            text-align: left;
+        }
+
+        .sort-btn:hover {
+            color: #d1e7ff;
+        }
+
+        .sort-icon {
+            margin-left: 5px;
+            font-size: 0.8em;
+        }
+
+        .sort-asc .sort-icon::after {
+            content: '↑';
+        }
+
+        .sort-desc .sort-icon::after {
+            content: '↓';
+        }
+
+        /* Style du champ de recherche */
+        .input-group {
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group-text {
+            background-color: #f8f9fa;
+            border: none;
+            color: #4a90e2;
+        }
+
+        #searchInput {
+            border: none;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            box-shadow: inset 0 0 5px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .modern-table th,
+            .modern-table td {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+
+            .action-cell {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .action-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .input-group {
+                max-width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
@@ -251,11 +444,17 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card mb-4 shadow-sm border-radius-xl">
-                        <div class="card-header p-3 d-flex justify-content-between">
-                            <h6 class="font-weight-bolder mb-0">Liste des partenaire</h6>
-                            <a href="{{ path('admin_sponsors_create') }}" class="btn btn-sm btn-outline-success">
-                                <i class="fas fa-plus"></i> Ajouter un service
-                            </a>
+                        <div class="card-header p-3 d-flex justify-content-between align-items-center">
+                            <h6 class="font-weight-bolder mb-0">Liste des Partenaires</h6>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="input-group" style="max-width: 300px;">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un partenaire...">
+                                </div>
+                                <a href="{{ path('admin_sponsors_create') }}" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-plus"></i> Ajouter un partenaire
+                                </a>
+                            </div>
                         </div>
                         <div class="card-body p-3">
                             {# Affichage des messages flash #}
@@ -274,386 +473,69 @@
 
                             {% if Sponsor is defined and Sponsor is not empty %}
                                 <div class="table-responsive">
-                                   <div class="table-container">
-   <div class="table-container">
-    <table class="modern-table">
-        <thead>
-            <tr>
-                <th>
-                    <button class="sort-btn" data-sort="id_partenaire">ID Partenaire <span class="sort-icon">↕</span></button>
-                </th>
-                <th>
-                    <button class="sort-btn" data-sort="nom_partenaire">Nom Partenaire <span class="sort-icon">↕</span></button>
-                </th>
-                <th>
-                    <button class="sort-btn" data-sort="email_partenaire">Email Partenaire <span class="sort-icon">↕</span></button>
-                </th>
-                <th>
-                    <button class="sort-btn" data-sort="telephone_partenaire">Téléphone Partenaire <span class="sort-icon">↕</span></button>
-                </th>
-                <th>
-                    <button class="sort-btn" data-sort="adresse_partenaire">Adresse Partenaire <span class="sort-icon">↕</span></button>
-                </th>
-                <th>
-                    <button class="sort-btn" data-sort="site_web">Site Web <span class="sort-icon">↕</span></button>
-                </th>
-                <th>
-                    <button class="sort-btn" data-sort="type_partenaire">Type Partenaire <span class="sort-icon">↕</span></button>
-                </th>
-                <th>Actions</th> <!-- Pas de tri pour la colonne Actions -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for Sponsor in Sponsor %}
-                <tr>
-                    <td data-label="id_partenaire">{{ Sponsor.id_partenaire }}</td>
-                    <td data-label="nom_partenaire">{{ Sponsor.nom_partenaire }}</td>
-                    <td data-label="email_partenaire">{{ Sponsor.email_partenaire }}</td>
-                    <td data-label="telephone_partenaire">{{ Sponsor.telephone_partenaire }}</td>
-                    <td data-label="adresse_partenaire">{{ Sponsor.adresse_partenaire|length > 30 ? Sponsor.adresse_partenaire|slice(0, 30) ~ '...' : Sponsor.adresse_partenaire }}</td>
-                    <td data-label="site_web">
-                        <a href="{{ Sponsor.site_web }}" target="_blank" class="site-link">
-                            {{ Sponsor.site_web|length > 25 ? Sponsor.site_web|slice(0, 25) ~ '...' : Sponsor.site_web }}
-                        </a>
-                    </td>
-                    <td data-label="type_partenaire">{{ Sponsor.type_partenaire }}</td>
-                    <td class="action-cell">
-                        <a href="{{ path('admin_sponsors_edit', {'id_partenaire': Sponsor.id_partenaire}) }}" class="action-btn edit-btn">
-                            <i class="fas fa-edit"></i> Modifier
-                        </a>
-                        <form method="post" action="{{ path('admin_sponsors_delete', {'id_partenaire': Sponsor.id_partenaire}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce partenaire ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Sponsor.id_partenaire) }}">
-                            <button class="action-btn delete-btn">
-                                <i class="fas fa-trash"></i> Supprimer
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-<!-- Ajout du CSS pour les boutons de tri -->
-<style>
-.sort-btn {
-    background: none;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0;
-    color: inherit;
-    text-align: left;
-}
-
-.sort-btn:hover {
-    color: #007bff;
-}
-
-.sort-icon {
-    margin-left: 5px;
-    font-size: 0.8em;
-}
-
-.sort-asc .sort-icon::after {
-    content: '↑';
-}
-
-.sort-desc .sort-icon::after {
-    content: '↓';
-}
-</style>
-
-<!-- Ajout du JavaScript pour gérer le tri -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const table = document.querySelector('.modern-table');
-    const headers = table.querySelectorAll('.sort-btn');
-    let currentSortColumn = null;
-    let isAsc = true;
-
-    headers.forEach(header => {
-        header.addEventListener('click', () => {
-            const sortKey = header.getAttribute('data-sort');
-            if (currentSortColumn === sortKey) {
-                isAsc = !isAsc;
-            } else {
-                isAsc = true;
-                headers.forEach(h => {
-                    h.classList.remove('sort-asc', 'sort-desc');
-                    h.querySelector('.sort-icon').innerHTML = '↕';
-                });
-            }
-            currentSortColumn = sortKey;
-
-            // Mettre à jour l'icône de tri
-            header.classList.add(isAsc ? 'sort-asc' : 'sort-desc');
-            header.classList.remove(isAsc ? 'sort-desc' : 'sort-asc');
-
-            // Trier les lignes
-            sortTable(sortKey, isAsc);
-        });
-    });
-
-    function sortTable(column, asc) {
-        const tbody = table.querySelector('tbody');
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-
-        rows.sort((a, b) => {
-            let aValue = a.querySelector(`td[data-label="${column}"]`).textContent.trim();
-            let bValue = b.querySelector(`td[data-label="${column}"]`).textContent.trim();
-
-            // Gestion des nombres pour ID Partenaire
-            if (column === 'id_partenaire') {
-                aValue = parseInt(aValue) || 0;
-                bValue = parseInt(bValue) || 0;
-                return asc ? aValue - bValue : bValue - aValue;
-            }
-
-            // Tri alphabétique pour les autres colonnes
-            return asc
-                ? aValue.localeCompare(bValue)
-                : bValue.localeCompare(aValue);
-        });
-
-        // Réinsérer les lignes triées
-        tbody.innerHTML = '';
-        rows.forEach(row => tbody.appendChild(row));
-    }
-});
-</script>
-<style>
-/* Conteneur global */
-.table-container {
-    max-width: 100%;
-    overflow-x: auto;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Style général du tableau */
-.modern-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-/* En-têtes */
-.modern-table thead {
-    background-color: #4a90e2;
-    color: #fff;
-}
-
-.modern-table th {
-    padding: 10px;
-    text-align: center;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-/* Corps du tableau */
-.modern-table tbody tr {
-    transition: background-color 0.3s ease;
-}
-
-.modern-table tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
-}
-
-.modern-table tbody tr:hover {
-    background-color: #e9ecef;
-    transform: translateY(-1px);
-}
-
-/* Cellules */
-.modern-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #e9ecef;
-    color: #333;
-    font-size: 0.8rem;
-}
-
-/* Style pour les liens de site web */
-.site-link {
-    color: #4a90e2;
-    text-decoration: none;
-}
-
-.site-link:hover {
-    text-decoration: underline;
-}
-
-/* Cellule des actions */
-.action-cell {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Boutons d'action */
-.action-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 10px;
-    font-size: 0.8rem;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-/* Bouton d'édition */
-.edit-btn {
-    background-color: transparent;
-    border: 1px solid #4a90e2;
-    color: #4a90e2;
-}
-
-.edit-btn:hover {
-    background-color: #4a90e2;
-    color: #fff;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
-}
-
-/* Bouton de suppression */
-.delete-btn {
-    background-color: transparent;
-    border: 1px solid #dc3545;
-    color: #dc3545;
-}
-
-.delete-btn:hover {
-    background-color: #dc3545;
-    color: #fff;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .modern-table th,
-    .modern-table td {
-        padding: 8px;
-        font-size: 0.75rem;
-    }
-
-    .action-cell {
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .action-btn {
-        width: 100%;
-        text-align: center;
-        padding: 5px 8px;
-    }
-}
-</style>
-</div>
-
-
-<style>
-    /* Style général du tableau */
-    .table {
-        border-collapse: collapse;
-        width: 100%;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-    }
-
-    /* Style pour les en-têtes du tableau */
-    .table thead {
-        background-color: #FF9800; /* Orange */
-        color: white;
-    }
-
-    .table th {
-        text-align: left;
-        padding: 12px 15px;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        font-weight: bold;
-    }
-
-    /* Style pour les cellules du tableau */
-    .table td {
-        padding: 10px 15px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-        color: #555;
-    }
-
-    /* Ajouter un effet au survol des lignes du tableau */
-    .table tr:hover {
-        background-color: #f1f1f1;
-        cursor: pointer;
-        transform: scale(1.02); /* Agrandir la ligne au survol */
-        transition: all 0.3s ease;
-    }
-
-    /* Style des boutons d'action */
-    .action-btn {
-        font-size: 0.85rem;
-        padding: 8px 15px;
-        border-radius: 4px;
-        transition: background-color 0.3s, transform 0.2s;
-    }
-
-    /* Bouton de modification (édition) */
-    .btn-outline-primary {
-        border: 1px solid #007bff;
-        color: #007bff;
-    }
-
-    .btn-outline-primary:hover {
-        background-color: #007bff;
-        color: white;
-        transform: scale(1.05); /* Zoom au survol */
-    }
-
-    /* Bouton de suppression */
-    .btn-outline-danger {
-        border: 1px solid #dc3545;
-        color: #dc3545;
-    }
-
-    .btn-outline-danger:hover {
-        background-color: #dc3545;
-        color: white;
-        transform: scale(1.05); /* Zoom au survol */
-    }
-
-    /* Ombre au survol pour les boutons */
-    .action-btn:hover {
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Ombre autour des boutons */
-    }
-
-    /* Style de la cellule contenant les boutons d'action */
-    .text-center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        
-    }
-
-</style>
-
+                                    <div class="table-container">
+                                        <table class="modern-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="id_partenaire">ID Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="nom_partenaire">Nom Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="email_partenaire">Email Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="telephone_partenaire">Téléphone Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="adresse_partenaire">Adresse Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="site_web">Site Web <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="type_partenaire">Type Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for Sponsor in Sponsor %}
+                                                    <tr>
+                                                        <td data-label="id_partenaire">{{ Sponsor.id_partenaire }}</td>
+                                                        <td data-label="nom_partenaire">{{ Sponsor.nom_partenaire }}</td>
+                                                        <td data-label="email_partenaire">{{ Sponsor.email_partenaire }}</td>
+                                                        <td data-label="telephone_partenaire">{{ Sponsor.telephone_partenaire }}</td>
+                                                        <td data-label="adresse_partenaire">{{ Sponsor.adresse_partenaire|length > 30 ? Sponsor.adresse_partenaire|slice(0, 30) ~ '...' : Sponsor.adresse_partenaire }}</td>
+                                                        <td data-label="site_web">
+                                                            <a href="{{ Sponsor.site_web }}" target="_blank" class="site-link">
+                                                                {{ Sponsor.site_web|length > 25 ? Sponsor.site_web|slice(0, 25) ~ '...' : Sponsor.site_web }}
+                                                            </a>
+                                                        </td>
+                                                        <td data-label="type_partenaire">{{ Sponsor.type_partenaire }}</td>
+                                                        <td class="action-cell">
+                                                            <a href="{{ path('admin_sponsors_edit', {'id_partenaire': Sponsor.id_partenaire}) }}" class="action-btn edit-btn">
+                                                                <i class="fas fa-edit"></i> Modifier
+                                                            </a>
+                                                            <form method="post" action="{{ path('admin_sponsors_delete', {'id_partenaire': Sponsor.id_partenaire}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce partenaire ?');">
+                                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Sponsor.id_partenaire) }}">
+                                                                <button class="action-btn delete-btn">
+                                                                    <i class="fas fa-trash"></i> Supprimer
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             {% else %}
                                 <div class="text-center p-4">
                                     <i class="fas fa-exclamation-circle text-muted" style="font-size: 2rem;"></i>
-                                    <p class="text-muted mt-2">Aucune partenaire trouvée.</p>
+                                    <p class="text-muted mt-2">Aucun partenaire trouvé.</p>
                                 </div>
                             {% endif %}
                         </div>
@@ -662,4 +544,89 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </div>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const table = document.querySelector('.modern-table');
+            const tbody = table.querySelector('tbody');
+            const rows = tbody.querySelectorAll('tr');
+
+            // Recherche dynamique
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    let match = false;
+
+                    cells.forEach(cell => {
+                        if (cell.textContent.toLowerCase().includes(searchTerm)) {
+                            match = true;
+                        }
+                    });
+
+                    row.style.display = match ? '' : 'none';
+                });
+            });
+
+            // Tri du tableau
+            const headers = table.querySelectorAll('.sort-btn');
+            let currentSortColumn = null;
+            let isAsc = true;
+
+            headers.forEach(header => {
+                header.addEventListener('click', () => {
+                    const sortKey = header.getAttribute('data-sort');
+                    if (currentSortColumn === sortKey) {
+                        isAsc = !isAsc;
+                    } else {
+                        isAsc = true;
+                        headers.forEach(h => {
+                            h.classList.remove('sort-asc', 'sort-desc');
+                            h.querySelector('.sort-icon').innerHTML = '↕';
+                        });
+                    }
+                    currentSortColumn = sortKey;
+
+                    // Mettre à jour l'icône de tri
+                    header.classList.add(isAsc ? 'sort-asc' : 'sort-desc');
+                    header.classList.remove(isAsc ? 'sort-desc' : 'sort-asc');
+
+                    // Trier les lignes
+                    sortTable(sortKey, isAsc);
+                });
+            });
+
+            function sortTable(column, asc) {
+                const rowsArray = Array.from(rows);
+
+                rowsArray.sort((a, b) => {
+                    let aValue = a.querySelector(`td[data-label="${column}"]`).textContent.trim();
+                    let bValue = b.querySelector(`td[data-label="${column}"]`).textContent.trim();
+
+                    // Gestion des valeurs vides
+                    if (!aValue && !bValue) return 0;
+                    if (!aValue) return asc ? 1 : -1;
+                    if (!bValue) return asc ? -1 : 1;
+
+                    // Gestion des nombres pour ID Partenaire
+                    if (column === 'id_partenaire') {
+                        aValue = parseInt(aValue) || 0;
+                        bValue = parseInt(bValue) || 0;
+                        return asc ? aValue - bValue : bValue - aValue;
+                    }
+
+                    // Tri alphabétique pour les autres colonnes
+                    return asc
+                        ? aValue.localeCompare(bValue)
+                        : bValue.localeCompare(aValue);
+                });
+
+                // Réinsérer les lignes triées
+                tbody.innerHTML = '';
+                rowsArray.forEach(row => tbody.appendChild(row));
+            }
+        });
+    </script>
 {% endblock %}
