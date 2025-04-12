@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-
 use App\Repository\GServiceRepository;
 
 #[ORM\Entity(repositoryClass: GServiceRepository::class)]
@@ -16,6 +15,33 @@ class GService
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
+
+    #[ORM\ManyToOne(targetEntity: Sponsor::class, inversedBy: 'gServices')]
+    #[ORM\JoinColumn(name: 'id_partenaire', referencedColumnName: 'id_partenaire')]
+    private ?Sponsor $sponsor = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private ?string $titre = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private ?string $location = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private ?string $type_service = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    private ?string $prix = null;
+
+    #[ORM\ManyToMany(targetEntity: Reservationpersonnalise::class, mappedBy: 'services')]
+    private Collection $reservations;
+
+    public function __construct()
+    {
+        $this->reservations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -28,10 +54,6 @@ class GService
         return $this;
     }
 
-    #[ORM\ManyToOne(targetEntity: Sponsor::class, inversedBy: 'gServices')]
-    #[ORM\JoinColumn(name: 'id_partenaire', referencedColumnName: 'id_partenaire')]
-    private ?Sponsor $sponsor = null;
-
     public function getSponsor(): ?Sponsor
     {
         return $this->sponsor;
@@ -42,9 +64,6 @@ class GService
         $this->sponsor = $sponsor;
         return $this;
     }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $titre = null;
 
     public function getTitre(): ?string
     {
@@ -57,9 +76,6 @@ class GService
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $location = null;
-
     public function getLocation(): ?string
     {
         return $this->location;
@@ -71,22 +87,16 @@ class GService
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $type_service = null;
-
-    public function getType_service(): ?string
+    public function getTypeService(): ?string
     {
         return $this->type_service;
     }
 
-    public function setType_service(string $type_service): self
+    public function setTypeService(string $type_service): self
     {
         $this->type_service = $type_service;
         return $this;
     }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $description = null;
 
     public function getDescription(): ?string
     {
@@ -99,9 +109,6 @@ class GService
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $prix = null;
-
     public function getPrix(): ?string
     {
         return $this->prix;
@@ -113,16 +120,25 @@ class GService
         return $this;
     }
 
-    public function getTypeService(): ?string
+    /**
+     * @return Collection|Reservationpersonnalise[]
+     */
+    public function getReservations(): Collection
     {
-        return $this->type_service;
+        return $this->reservations;
     }
 
-    public function setTypeService(string $type_service): static
+    public function addReservation(Reservationpersonnalise $reservation): self
     {
-        $this->type_service = $type_service;
-
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+        }
         return $this;
     }
 
+    public function removeReservation(Reservationpersonnalise $reservation): self
+    {
+        $this->reservations->removeElement($reservation);
+        return $this;
+    }
 }

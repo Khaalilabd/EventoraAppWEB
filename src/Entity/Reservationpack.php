@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: 'App\Repository\ReservationpackRepository')]
 #[ORM\Table(name: 'reservationpack')]
@@ -13,26 +14,27 @@ class Reservationpack
     #[ORM\Column(type: 'integer', name: 'IDReservationPack')]
     private ?int $IDReservationPack = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $nom = null;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $prenom = null;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $email = null;
-
-    #[ORM\Column(type: 'string', length: 50)]
-    private ?string $numtel = null;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description = null;
-
     #[ORM\ManyToOne(targetEntity: Pack::class)]
     #[ORM\JoinColumn(name: 'IDPack', referencedColumnName: 'id', nullable: false)]
+    #[Assert\NotBlank(message: "Vous devez choisir un pack.")]
     private ?Pack $pack = null;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'string', length: 255, name: 'Nom')]
+    private ?string $nom = null;
+
+    #[ORM\Column(type: 'string', length: 255, name: 'Prenom')]
+    private ?string $prenom = null;
+
+    #[ORM\Column(type: 'string', length: 255, name: 'Email')]
+    private ?string $email = null;
+
+    #[ORM\Column(type: 'string', length: 255, name: 'Numtel')]
+    private ?string $numtel = null;
+
+    #[ORM\Column(type: 'string', length: 255, name: 'Description')]
+    private ?string $description = null;
+
+    #[ORM\Column(type: 'date', name: 'Date')]
     private ?\DateTimeInterface $date = null;
 
     public function getIDReservationPack(): ?int
@@ -117,7 +119,6 @@ class Reservationpack
         return $this;
     }
 
-    // Méthode pour accéder directement à IDPack si nécessaire
     public function getIDPack(): ?int
     {
         return $this->pack ? $this->pack->getId() : null;
