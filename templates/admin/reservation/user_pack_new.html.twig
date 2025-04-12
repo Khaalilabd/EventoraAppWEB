@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% block title %}Créer une Réservation Pack - Eventora{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
+
+        {% block stylesheets %}
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+            <style>
+                body {
+                    background-image: url({{ asset('images/img_bg_3.jpg') }});
+                    background-size: cover;
+                    background-position: center;
+                    background-attachment: fixed;
+                    min-height: 100vh;
+                    margin: 0;
+                    padding: 0;
+                    position: relative;
+                }
+                body::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.4);
+                    z-index: -1;
+                }
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                }
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                }
+                .fh5co-logo a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 24px;
+                    color: #333;
+                    text-decoration: none;
+                }
+                .user-circle {
+                    display: inline-block;
+                    width: 32px;
+                    height: 32px;
+                    line-height: 32px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 16px;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                }
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 15px;
+                    position: relative;
+                }
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #007bff;
+                }
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #007bff !important;
+                    font-weight: 600;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 150px;
+                    z-index: 1001;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block !important;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #007bff;
+                }
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                    padding: 10px;
+                }
+                .event-wrap {
+                    background: rgba(0, 123, 255, 0.2);
+                    padding: 40px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                    max-width: 700px;
+                    margin: 0 auto;
+                }
+                .event-wrap h3 {
+                    color: #fff;
+                    margin-bottom: 30px;
+                    font-size: 24px;
+                    text-transform: uppercase;
+                }
+                .event-wrap .form-group {
+                    margin-bottom: 20px;
+                }
+                .event-wrap .form-group label {
+                    color: #fff;
+                    font-weight: 500;
+                    margin-bottom: 5px;
+                    display: block;
+                }
+                .event-wrap .form-control {
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: #fff;
+                    border-radius: 5px;
+                    padding: 10px;
+                }
+                .event-wrap .form-control::placeholder {
+                    color: rgba(255, 255, 255, 0.7);
+                }
+                .event-wrap .form-control:focus {
+                    border-color: #007bff;
+                    box-shadow: none;
+                }
+                .event-wrap .form-control.is-invalid {
+                    border-color: #dc3545;
+                }
+                .event-wrap .text-danger {
+                    font-size: 14px;
+                    margin-top: 5px;
+                    color: #ff4d4d;
+                }
+                .event-wrap .form-check-label {
+                    color: #fff;
+                    margin-left: 10px;
+                }
+                .event-wrap .form-check-input {
+                    transform: scale(1.5);
+                }
+                .event-wrap .radio-container {
+                    max-height: 200px;
+                    overflow-y: auto;
+                    padding: 10px;
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 5px;
+                    background: rgba(255, 255, 255, 0.05);
+                }
+                .event-wrap .radio-container .form-check {
+                    margin-bottom: 10px;
+                }
+                .event-wrap .btn {
+                    margin-top: 10px;
+                    padding: 10px;
+                    border-radius: 5px;
+                    font-size: 16px;
+                }
+                .event-wrap .btn-primary {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                }
+                .event-wrap .btn-secondary {
+                    background-color: #6c757d;
+                    border-color: #6c757d;
+                }
+                #fh5co-footer {
+                    background: rgba(255, 255, 255, 0.9);
+                    padding: 20px 0;
+                }
+                #fh5co-event {
+                    margin-top: 60px;
+                    flex: 1 0 auto;
+                    padding-top: 50px;
+                }
+                .fh5co-heading {
+                    margin-bottom: 40px;
+                }
+                .fh5co-heading span {
+                    color: #fff;
+                    font-size: 18px;
+                    display: block;
+                    margin-bottom: 10px;
+                }
+                .fh5co-heading h2 {
+                    color: #fff;
+                    font-size: 36px;
+                    margin: 0;
+                }
+                @media (max-width: 768px) {
+                    .menu-toggle {
+                        display: block;
+                    }
+                    .fh5co-nav .menu-1 ul {
+                        display: none;
+                        flex-direction: column;
+                        position: absolute;
+                        top: 60px;
+                        left: 0;
+                        width: 100%;
+                        background-color: #fff;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        padding: 20px 0;
+                    }
+                    .fh5co-nav .menu-1 ul.active {
+                        display: flex;
+                    }
+                    .fh5co-nav .menu-1 ul li {
+                        margin: 10px 0;
+                        text-align: center;
+                    }
+                    .user-circle {
+                        margin-right: 0;
+                        margin-bottom: 5px;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                        position: static;
+                        display: none;
+                        box-shadow: none;
+                        background-color: #f8f9fa;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                        display: none !important;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                        display: block !important;
+                    }
+                    .event-wrap {
+                        max-width: 90%;
+                        padding: 20px;
+                    }
+                    .fh5co-heading h2 {
+                        font-size: 28px;
+                    }
+                    #fh5co-event {
+                        padding-top: 30px;
+                    }
+                }
+            </style>
+        {% endblock %}
+    </head>
+    <body>
+        <div id="page">
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
+                    </div>
+                    <div class="menu-toggle">☰</div>
+                    <div class="menu-1">
+                        <ul>
+                            <li><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Service</a></li>
+                                    <li><a href="#">Partenaire</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dropdown active">
+                                <a href="#">Reservations</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Reservations personnalisées</a></li>
+                                    <li class="active"><a href="{{ path('admin_reservations_user_pack_new') }}">Reservation packs</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Reclamation</a></li>
+                            <li><a href="#">Feedback</a></li>
+                            <li><a href="#">Talk with Evi</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        {% else %}
+                                            <i class="icon-user"></i>
+                                        {% endif %}
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
+                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="fh5co-event">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
+                            <span>Votre Événement Parfait</span>
+                            <h2>Créer une Réservation Pack</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="display-t">
+                            <div class="display-tc">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <div class="col-md-8 col-md-offset-2 text-center">
+                                        <div class="event-wrap animate-box">
+                                            <h3>Remplissez le Formulaire</h3>
+                                            {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'pack-reservation-form'}}) }}
+                                                <div class="form-group">
+                                                    {{ form_label(form.nom, 'Nom') }}
+                                                    {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.nom) }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.prenom, 'Prénom') }}
+                                                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.prenom) }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.email, 'Email') }}
+                                                    {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.email) }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.numtel, 'Numéro de téléphone') }}
+                                                    {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.numtel) }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.description, 'Description de l\'événement') }}
+                                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.description) }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.date, 'Date de l\'événement') }}
+                                                    {{ form_widget(form.date, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.date) }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.pack, 'Sélectionnez un Pack') }}
+                                                    <div class="radio-container">
+                                                        {{ form_widget(form.pack) }}
+                                                    </div>
+                                                    <div class="text-danger">{{ form_errors(form.pack) }}</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary btn-block">Créer la Réservation</button>
+                                                    <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
+                                                </div>
+                                            {{ form_end(form) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Modal -->
+            {% if app.flashes('success')|length > 0 %}
+                <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="successModalLabel">Succès</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {% for message in app.flashes('success') %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Error Modal -->
+            {% if app.flashes('error')|length > 0 %}
+                <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="errorModalLabel">Erreur</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {% for message in app.flashes('error') %}
+                                    <p>{{ message|raw }}</p>
+                                {% endfor %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+          
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+<script>
+    if (typeof jQuery === 'undefined') {
+        console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
+    } else {
+        console.log("jQuery est chargé avec succès");
+        jQuery(document).ready(function($) {
+            // Menu hamburger
+            $('.menu-toggle').click(function() {
+                console.log("Clic sur menu-toggle détecté");
+                $('.fh5co-nav .menu-1 ul').toggleClass('active');
+            });
+
+            // Dropdowns sur mobile
+            $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                if ($(window).width() <= 768) {
+                    console.log("Clic sur dropdown détecté");
+                    e.preventDefault();
+                    $(this).parent().toggleClass('active');
+                }
+            });
+
+            // Dropdowns sur desktop avec survol
+            $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
+                function() {
+                    console.log("Survol détecté sur un élément has-dropdown");
+                    $(this).find('.dropdown').css({
+                        'display': 'block',
+                        'position': 'absolute',
+                        'top': '100%',
+                        'right': '0',
+                        'visibility': 'visible',
+                        'opacity': '1',
+                        'z-index': '1001'
+                    });
+                },
+                function() {
+                    console.log("Fin du survol");
+                    $(this).find('.dropdown').css({
+                        'display': 'none',
+                        'visibility': 'hidden',
+                        'opacity': '0'
+                    });
+                }
+            );
+
+            // Flatpickr pour le champ date
+            const datePicker = flatpickr("#{{ form.date.vars.id }}", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                locale: "fr",
+                allowInput: true, // Allow manual input
+                onChange: function(selectedDates, dateStr, instance) {
+                    const input = instance.element;
+                    if (selectedDates.length === 0) {
+                        input.classList.add('is-invalid');
+                        $(input).next('.text-danger').text('La date est requise.');
+                    } else {
+                        input.classList.remove('is-invalid');
+                        $(input).next('.text-danger').text('');
+                    }
+                },
+                onClose: function(selectedDates, dateStr, instance) {
+                    const input = instance.element;
+                    if (selectedDates.length === 0) {
+                        input.classList.add('is-invalid');
+                        $(input).next('.text-danger').text('La date est requise.');
+                    }
+                }
+            });
+
+            // Ajouter la classe is-invalid si des erreurs existent lors du chargement de la page
+            $('.form-control').each(function() {
+                const errorDiv = $(this).next('.text-danger');
+                if (errorDiv.length > 0 && errorDiv.text().trim() !== '') {
+                    $(this).addClass('is-invalid');
+                }
+            });
+
+            // Validation côté client avant soumission du formulaire
+            $('#pack-reservation-form').on('submit', function(e) {
+                let isValid = true;
+                const dateInput = $('#{{ form.date.vars.id }}');
+                const dateValue = dateInput.val();
+
+                if (!dateValue) {
+                    dateInput.addClass('is-invalid');
+                    dateInput.next('.text-danger').text('La date est requise.');
+                    isValid = false;
+                } else {
+                    // Vérifier le format de la date (YYYY-MM-DD)
+                    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                    if (!dateRegex.test(dateValue)) {
+                        dateInput.addClass('is-invalid');
+                        dateInput.next('.text-danger').text('La date doit être au format YYYY-MM-DD (ex. 2025-04-11).');
+                        isValid = false;
+                    } else {
+                        // Vérifier si la date est aujourd'hui ou dans le futur
+                        const selectedDate = new Date(dateValue);
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour comparer uniquement la date
+                        if (selectedDate < today) {
+                            dateInput.addClass('is-invalid');
+                            dateInput.next('.text-danger').text('La date doit être aujourd\'hui ou dans le futur.');
+                            isValid = false;
+                        } else {
+                            dateInput.removeClass('is-invalid');
+                            dateInput.next('.text-danger').text('');
+                        }
+                    }
+                }
+
+                if (!isValid) {
+                    e.preventDefault(); // Empêche la soumission du formulaire si la validation échoue
+                }
+            });
+
+            // Afficher les modals si des messages flash existent
+            {% if app.flashes('success')|length > 0 %}
+                $('#successModal').modal('show');
+            {% endif %}
+            {% if app.flashes('error')|length > 0 %}
+                $('#errorModal').modal('show');
+            {% endif %}
+        });
+    }
+</script>
+          <footer id="fh5co-footer" role="contentinfo">
+                <div class="container">
+                    <div class="row copyright">
+                        <div class="col-md-12 text-center">
+                            <p>
+                                <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                                <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+    </body>
+</html>

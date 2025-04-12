@@ -34,7 +34,7 @@ class Reservationpack
     #[ORM\Column(type: 'string', length: 255, name: 'Description')]
     private ?string $description = null;
 
-    #[ORM\Column(type: 'date', name: 'Date')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $date = null;
 
     public function getIDReservationPack(): ?int

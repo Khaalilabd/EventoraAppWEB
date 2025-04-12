@@ -43,10 +43,8 @@ class Reservationpersonnalise
     #[Assert\NotBlank(message: "La description est requise.")]
     private ?string $Description = null;
 
-    #[ORM\Column(type: 'date', nullable: false)]
-    #[Assert\NotBlank(message: "La date est requise.")]
-    #[Assert\GreaterThanOrEqual("today", message: "La date doit être aujourd'hui ou dans le futur.")]
-    private ?\DateTimeInterface $Date = null;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToMany(targetEntity: GService::class, inversedBy: 'reservations')]
     #[ORM\JoinTable(name: 'reservation_personalise_service')]
@@ -128,15 +126,14 @@ class Reservationpersonnalise
         $this->Description = $Description;
         return $this;
     }
-
     public function getDate(): ?\DateTimeInterface
     {
-        return $this->Date;
+        return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $Date): self
+    public function setDate(\DateTimeInterface $date): self
     {
-        $this->Date = $Date;
+        $this->date = $date;
         return $this;
     }
 
