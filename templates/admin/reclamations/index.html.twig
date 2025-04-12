@@ -28,6 +28,17 @@
             background-color: #ffca2c;
         }
 
+        /* Nouvelle classe pour le bouton orange */
+        .card-header .btn-orange {
+            background-color: #ff6200;
+            color: #fff;
+            border: none;
+        }
+
+        .card-header .btn-orange:hover {
+            background-color: #ff8c00;
+        }
+
         /* Style du tableau */
         .table-container {
             width: 100%;
@@ -83,30 +94,32 @@
         }
 
         .badge-en_cours {
-            background-color: #fd7e14; /* Orange pour "EN_COURS" */
+            background-color:rgb(20, 55, 253); /* Orange pour "En_Cours" */
         }
 
         .badge-en_attente {
-            background-color: #ffc107; /* Jaune pour "EN_ATTENTE" */
+            background-color: #ffc107; /* Jaune pour "En_Attente" */
             color: #333;
         }
 
         .badge-resolue {
-            background-color: #28a745; /* Vert pour "RESOLUE" */
+            background-color: #28a745; /* Vert pour "Resolue" */
         }
 
         .badge-rejetee {
-            background-color: #dc3545; /* Rouge pour "REJETEE" */
+            background-color: #dc3545; /* Rouge pour "Rejetée" */
         }
 
         /* Style du dropdown pour les actions */
         .action-toggle {
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.5rem; /* Ajuste la taille pour rendre le : plus visible */
             color: #ff6200;
             border: none;
             background: none;
             padding: 0;
+            line-height: 1;
+            font-weight: bold; /* Rend le caractère plus épais */
         }
 
         .dropdown-menu {
@@ -290,7 +303,7 @@
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <ol class="breadcrumb Precis bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Pages</a></li>
                         <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Réclamations</li>
                     </ol>
@@ -322,7 +335,7 @@
                         <h5 class="card-header d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
                                 <span>Liste des Réclamations</span>
-                                <!-- Search Bar -->
+                                <!-- Barre de Recherche -->
                                 <div class="navbar-nav align-items-center ms-3">
                                     <div class="nav-item d-flex align-items-center">
                                         <i class="bx bx-search fs-4 lh-0"></i>
@@ -341,15 +354,17 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
-                                <!-- Export Dropdown -->
+                                <!-- Bouton Ajouter une Réclamation -->
+                                <a href="{{ path('admin_reclamations') }}" class="btn btn-orange me-2">Ajouter une Réclamation</a>
+                                <!-- Menu Déroulant d'Exportation -->
                                 <div class="dropdown">
                                     <button type="button" class="btn dropdown-toggle btn-yellow" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bx bx-export me-1"></i> Exporter
+                                        Exporter
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="">Exporter en CSV</a></li>
-                                        <li><a class="dropdown-item" href="">Exporter en PDF</a></li>
-                                        <li><a class="dropdown-item" href="">Exporter en Excel</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('admin_reclamations') }}">Exporter en CSV</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('admin_reclamations') }}">Exporter en PDF</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('admin_reclamations') }}">Exporter en Excel</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -384,7 +399,7 @@
                                                 <td>{{ reclamation.description|length > 50 ? reclamation.description|slice(0, 50) ~ '...' : reclamation.description }}</td>
                                                 <td>{{ reclamation.type }}</td>
                                                 <td>
-                                                    <span class="badge badge-{{ reclamation.statut|lower|replace({'en_cours': 'en_cours', 'en_attente': 'en_attente', 'resolue': 'resolue', 'rejetee': 'rejetee'}) }}">
+                                                    <span class="badge badge-{{ reclamation.statut|lower|replace({'en_attente': 'en_attente', 'en_cours': 'en_cours', 'resolue': 'resolue', 'rejetée': 'rejetee'}) }}">
                                                         {{ reclamation.statut }}
                                                     </span>
                                                 </td>
@@ -406,12 +421,9 @@
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <form method="post" action="{{ path('admin_reclamations_delete', {'id': reclamation.id}) }}" style="display:inline;" onsubmit="return confirm('Confirmer la suppression ?');">
-                                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
-                                                                    <button class="dropdown-item" type="submit">
-                                                                        <i class="bx bx-trash me-1"></i> Supprimer
-                                                                    </button>
-                                                                </form>
+                                                                <a class="dropdown-item delete-reclamation" href="{{ path('admin_reclamations_delete', {'id': reclamation.id}) }}" data-token="{{ csrf_token('delete' ~ reclamation.id) }}">
+                                                                    <i class="bx bx-trash me-1"></i> Supprimer
+                                                                </a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -455,4 +467,38 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.delete-reclamation').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    if (confirm('Confirmer la suppression ?')) {
+                        const url = this.getAttribute('href');
+                        const token = this.getAttribute('data-token');
+
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: '_token=' + encodeURIComponent(token)
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // Supprimer la ligne du tableau
+                                link.closest('tr').remove();
+                            } else {
+                                alert('Erreur lors de la suppression.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erreur:', error);
+                            alert('Une erreur est survenue.');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
