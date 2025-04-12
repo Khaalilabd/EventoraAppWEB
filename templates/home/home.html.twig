@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>{% block title %}Eventora{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
@@ -22,16 +22,198 @@
             <!-- Owl Carousel -->
             <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
-            <!-- Font Awesome for cart icon -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
             <!-- Theme style -->
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <!-- Custom styles -->
+            <style>
+                /* Navigation fixe */
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                }
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                }
+                .fh5co-logo a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 24px;
+                    color: #333;
+                    text-decoration: none;
+                }
+                .user-circle {
+                    display: inline-block;
+                    width: 32px;
+                    height: 32px;
+                    line-height: 32px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 16px;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                }
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 15px;
+                }
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #007bff;
+                }
+                /* Correction de la couleur du lien actif */
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #007bff !important;
+                    font-weight: 600;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 150px;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #007bff;
+                }
+                /* Menu hamburger pour mobile */
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                }
+                /* Style des boutons */
+                .btn-default {
+                    font-family: 'Work Sans', sans-serif;
+                    background-color: #fff;
+                    border: 1px solid #007bff;
+                    color: #007bff;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    transition: all 0.3s ease;
+                }
+                .btn-default:hover {
+                    background-color: #007bff;
+                    color: #fff;
+                    transform: scale(1.05);
+                }
+                /* Ajustement du header pour la navigation fixe */
+                #fh5co-header {
+                    margin-top: 60px;
+                }
+                /* Typographie cohérente */
+                h1, h2, h3, h4, h5, h6 {
+                    font-family: 'Work Sans', sans-serif;
+                }
+                .fh5co-heading h2 {
+                    font-weight: 600;
+                    color: #333;
+                }
+                .fh5co-heading span {
+                    font-family: 'Sacramento', cursive;
+                    color: #007bff;
+                }
+                /* Responsivité */
+                @media (max-width: 768px) {
+                    .menu-toggle {
+                        display: block;
+                    }
+                    .fh5co-nav .menu-1 ul {
+                        display: none;
+                        flex-direction: column;
+                        position: absolute;
+                        top: 60px;
+                        left: 0;
+                        width: 100%;
+                        background-color: #fff;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        padding: 20px 0;
+                    }
+                    .fh5co-nav .menu-1 ul.active {
+                        display: flex;
+                    }
+                    .fh5co-nav .menu-1 ul li {
+                        margin: 10px 0;
+                        text-align: center;
+                    }
+                    .user-circle {
+                        margin-right: 0;
+                        margin-bottom: 5px;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                        position: static;
+                        display: none;
+                        box-shadow: none;
+                        background-color: #f8f9fa;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                        display: none;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                        display: block;
+                    }
+                }
+            </style>
         {% endblock %}
 
         <!-- Modernizr JS -->
         <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
+        <!--[if lt IE 9]>
         <script src="{{ asset('js/respond.min.js') }}"></script>
-        
+        <![endif]-->
+
         {% block javascripts_head %}{% endblock %}
     </head>
     <body>
@@ -40,45 +222,59 @@
             {% block body %}
                 <nav class="fh5co-nav" role="navigation">
                     <div class="container">
-                        <div class="row">
-                            <div class="col-xs-2">
-                                <div id="fh5co-logo"><a href="{{ path('app_home') }}">Eventora<strong></strong></a></div>
-                            </div>
-                            <div class="col-xs-10 text-right menu-1">
-                                <ul>
-                                    <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Services</a>
-                                        <ul class="dropdown">
-                                            <li><a href="{{ path('user_services') }}">Service</a></li>
-                                            <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Reclamation</a>
-                                        <ul class="dropdown">
-                                            <li><a href=>Reclamation</a></li>
-                                            <li><a href=>Feedback</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Reservations</a>
-                                        <ul class="dropdown">
-                                            <li><a href=>Reservation personnalisée</a></li>
-                                            <li><a href=>Reservation</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Packs</a>
-                                        <ul class="dropdown">
-                                            <li><a href=>Packs</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href=>Talk with Evi</a></li>
-                                    <li><a href=>Contact</a></li>
-                                    
-                                </ul>
-                            </div>
+                        <div class="fh5co-logo">
+                            <a href="{{ path('app_home') }}">Eventora</a>
+                        </div>
+                        <div class="menu-toggle">
+                            <i class="icon-menu"></i>
+                        </div>
+                        <div class="menu-1">
+                            <ul>
+                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                                 <li class="has-dropdown">
+                                    <a href="#">Réservation</a>
+                                    <ul class="dropdown">
+                                        <li><a href="#"> Personalisée</a></li>
+                                        <li><a href="#"> Packs </a></li>
+                                    </ul>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="#">Services</a>
+                                    <ul class="dropdown">
+                                        <li><a href="#">Service</a></li>
+                                        <li><a href="#">Partenaire</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                                <li><a href="#">Talk with Evi</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">
+                                        <span class="user-circle">
+                                            {% if app.user and app.user.image %}
+                                                <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <i class="icon-user"></i>
+                                            {% endif %}
+                                        </span>
+                                        Contact
+                                    </a>
+                                    <ul class="dropdown">
+                                        {% if app.user %}
+                                            <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                            <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                        {% else %}
+                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </nav>
@@ -576,41 +772,4 @@
             {% endblock %}
         </div>
     </body>
-</html> 
-
-<style>
-    /* Cart Icon Styling */
-    .cart {
-        position: relative;
-        display: inline-block;
-    }
-
-    .cart-link {
-        color: #fff; /* Matches your nav text */
-        font-size: 1.2em;
-        padding: 10px;
-        display: flex;
-        align-items: center;
-        transition: color 0.3s ease;
-    }
-
-    .cart-link:hover {
-        color: #ff6200; /* Orange to match admin theme */
-        text-decoration: none;
-    }
-
-    .cart-count {
-        position: absolute;
-        top: 0;
-        right: 0;
-        background-color: #ff6200;
-        color: #fff;
-        border-radius: 50%;
-        width: 18px;
-        height: 18px;
-        line-height: 18px;
-        text-align: center;
-        font-size: 0.8em;
-        font-weight: bold;
-    }
-</style>
+</html>

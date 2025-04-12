@@ -16,28 +16,18 @@ class MembreRepository extends ServiceEntityRepository
         parent::__construct($registry, Membre::class);
     }
 
-    //    /**
-    //     * @return Membre[] Returns an array of Membre objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Membre
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Récupère tous les membres ayant un rôle spécifique.
+     *
+     * @param string $role Le rôle à filtrer (ex: "MEMBRE", "ADMIN", "AGENT")
+     * @return Membre[] Liste des membres avec le rôle spécifié
+     */
+    public function findByRole(string $role): array
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.role = :role')
+            ->setParameter('role', $role)
+            ->getQuery()
+            ->getResult();
+    }
 }
