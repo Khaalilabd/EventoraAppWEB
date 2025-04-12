@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Eventora Admin Dashboard{% endblock %}
+{% block title %}Admin Dashboard{% endblock %}
 
 {% block stylesheets %}
     <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800" rel="stylesheet" />
@@ -93,7 +93,6 @@
             background-color: #ddd;
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 768px) {
             .sidenav {
                 width: 200px;
@@ -122,7 +121,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations' ? 'active' : '' }}" href="">
+                    <a class="nav-link" href="#">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-calendar-check text-dark"></i>
                         </div>
@@ -194,7 +193,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
+                    <a class="nav-link" href="#">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-box text-dark"></i>
                         </div>
@@ -202,32 +201,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">
+                    <a class="nav-link" href="#">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-concierge-bell text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Services</span>
                     </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'show' : '' }}" id="servicesMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_services' ? 'active' : '' }}" href="{{ path('admin_services') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-tools text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Services</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="{{ path('admin_sponsors') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-handshake text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Partenaires</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_logout') }}">
