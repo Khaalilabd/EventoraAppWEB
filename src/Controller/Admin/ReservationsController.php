@@ -203,41 +203,49 @@ public function detailsPack(int $id, ReservationpackRepository $reservationpackR
 }
 
 
-    #[Route('/{type}/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
-    public function delete(
-        Request $request,
-        string $type,
-        int $id,
-        ReservationpackRepository $reservationPackRepository,
-        ReservationpersonnaliseRepository $reservationPersonnaliseRepository,
-        EntityManagerInterface $entityManager
-    ): Response {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+#[Route('/{type}/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
+public function delete(
+    Request $request,
+    string $type,
+    int $id,
+    ReservationpackRepository $reservationPackRepository,
+    ReservationpersonnaliseRepository $reservationPersonnaliseRepository,
+    EntityManagerInterface $entityManager
+): Response {
+    $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        if ($type === 'pack') {
-            $reservation = $reservationPackRepository->find($id);
-            if (!$reservation) {
-                throw $this->createNotFoundException('Réservation Pack non trouvée.');
-            }
-            $idField = $reservation->getIDReservationPack();
-        } elseif ($type === 'personnalise') {
-            $reservation = $reservationPersonnaliseRepository->find($id);
-            if (!$reservation) {
-                throw $this->createNotFoundException('Réservation Personnalisée non trouvée.');
-            }
-            $idField = $reservation->getIdReservationPersonalise();
-        } else {
-            throw $this->createNotFoundException('Type de réservation invalide.');
+    if ($type === 'pack') {
+        $reservation = $reservationPackRepository->find($id);
+        if (!$reservation) {
+            throw $this->createNotFoundException('Réservation Pack non trouvée.');
         }
-
-        if ($this->isCsrfTokenValid('delete' . $idField, $request->request->get('_token'))) {
-            $entityManager->remove($reservation);
-            $entityManager->flush();
-            $this->addFlash('success', 'Réservation supprimée avec succès.');
-        } else {
-            $this->addFlash('error', 'Token CSRF invalide.');
+        $idField = $reservation->getIDReservationPack();
+    } elseif ($type === 'personnalise') {
+        $reservation = $reservationPersonnaliseRepository->find($id);
+        if (!$reservation) {
+            throw $this->createNotFoundException('Réservation Personnalisée non trouvée.');
         }
-
-        return $this->redirectToRoute('admin_reservations', [], Response::HTTP_SEE_OTHER);
+        $idField = $reservation->getIdReservationPersonalise();
+    } else {
+        throw $this->createNotFoundException('Type de réservation invalide.');
     }
+
+    if ($this->isCsrfTokenValid('delete' . $idField, $request->request->get('_token'))) {
+        $entityManager->remove($reservation);
+        $entityManager->flush();
+        $this->addFlash('success', 'Réservation supprimée avec succès.');
+    } else {
+        $this->addFlash('error', 'Token CSRF invalide.');
+    }
+
+    // Redirect based on the type of reservation
+    if ($type === 'pack') {
+        return $this->redirectToRoute('admin_reservations_pack', [], Response::HTTP_SEE_OTHER);
+    } elseif ($type === 'personnalise') {
+        return $this->redirectToRoute('admin_reservations_personnalise', [], Response::HTTP_SEE_OTHER);
+    }
+
+    // Fallback in case type is invalid (though this shouldn't happen due to earlier validation)
+    return $this->redirectToRoute('admin_reservations', [], Response::HTTP_SEE_OTHER);
+}
 }

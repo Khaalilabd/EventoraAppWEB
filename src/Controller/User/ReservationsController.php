@@ -33,13 +33,8 @@ class ReservationsController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', 'Réservation Pack ajoutée avec succès.');
                 return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
-            } else {
-                $errors = [];
-                foreach ($form->getErrors(true) as $error) {
-                    $errors[] = $error->getMessage();
-                }
-                $this->addFlash('error', implode('<br>', $errors));
             }
+            // If the form is invalid, do NOT redirect; let the form re-render with errors
         }
     
         return $this->render('admin/reservation/user_pack_new.html.twig', [
@@ -62,13 +57,8 @@ class ReservationsController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', 'Réservation Personnalisée ajoutée avec succès.');
                 return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
-            } else {
-                $errors = [];
-                foreach ($form->getErrors(true) as $error) {
-                    $errors[] = $error->getMessage();
-                }
-                $this->addFlash('error', implode('<br>', $errors));
             }
+            // If the form is invalid, do NOT redirect; let the form re-render with errors
         }
 
         return $this->render('admin/reservation/user_personnalise_new.html.twig', [

@@ -190,6 +190,14 @@
                     border-color: #007bff;
                     box-shadow: none;
                 }
+                .event-wrap .form-control.is-invalid {
+                    border-color: #dc3545;
+                }
+                .event-wrap .text-danger {
+                    font-size: 14px;
+                    margin-top: 5px;
+                    color: #ff4d4d;
+                }
                 .event-wrap .form-check-label {
                     color: #fff;
                     margin-left: 10px;
@@ -372,42 +380,49 @@
                                         <div class="event-wrap animate-box">
                                             <h3>Remplissez le Formulaire</h3>
                                             {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'personnalise-reservation-form'}}) }}
+                                                <!-- Display global form errors (if any) -->
+                                                {% if form_errors(form) %}
+                                                    <div class="alert alert-danger">
+                                                        {{ form_errors(form) }}
+                                                    </div>
+                                                {% endif %}
+
                                                 <div class="form-group">
                                                     {{ form_label(form.nom, 'Nom') }}
-                                                    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
-                                                    {{ form_errors(form.nom) }}
+                                                    {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.nom) }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.prenom, 'Prénom') }}
-                                                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
-                                                    {{ form_errors(form.prenom) }}
+                                                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.prenom) }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.email, 'Email') }}
-                                                    {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-                                                    {{ form_errors(form.email) }}
+                                                    {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.email) }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.numtel, 'Numéro de téléphone') }}
-                                                    {{ form_widget(form.numtel, {'attr': {'class': 'form-control'}}) }}
-                                                    {{ form_errors(form.numtel) }}
+                                                    {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'pattern': '[0-9]{8}'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.numtel) }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.description, 'Description de l\'événement') }}
                                                     {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
-                                                    {{ form_errors(form.description) }}
+                                                    <div class="text-danger">{{ form_errors(form.description) }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.date, 'Date de l\'événement') }}
-                                                    {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
-                                                    {{ form_errors(form.date) }}
+                                                    {{ form_widget(form.date, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.date) }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.services, 'Sélectionnez les Services (au moins un)') }}
                                                     <div class="checkbox-container">
                                                         {{ form_widget(form.services) }}
                                                     </div>
-                                                    {{ form_errors(form.services) }}
+                                                    <div class="text-danger">{{ form_errors(form.services) }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-primary btn-block">Créer la Réservation</button>
@@ -423,188 +438,141 @@
                 </div>
             </div>
 
-            <!-- Success Modal -->
-            {% if app.flashes('success')|length > 0 %}
-                <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="successModalLabel">Succès</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                {% for message in app.flashes('success') %}
-                                    <p>{{ message }}</p>
-                                {% endfor %}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
-            <!-- Error Modal -->
-            {% if app.flashes('error')|length > 0 %}
-                <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="errorModalLabel">Erreur</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                {% for message in app.flashes('error') %}
-                                    <p>{{ message }}</p>
-                                {% endfor %}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
             
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
-<script>
-    if (typeof jQuery === 'undefined') {
-        console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
-    } else {
-        console.log("jQuery est chargé avec succès");
-        jQuery(document).ready(function($) {
-            // Menu hamburger
-            $('.menu-toggle').click(function() {
-                console.log("Clic sur menu-toggle détecté");
-                $('.fh5co-nav .menu-1 ul').toggleClass('active');
-            });
-
-            // Dropdowns sur mobile
-            $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                if ($(window).width() <= 768) {
-                    console.log("Clic sur dropdown détecté");
-                    e.preventDefault();
-                    $(this).parent().toggleClass('active');
-                }
-            });
-
-            // Dropdowns sur desktop avec survol
-            $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
-                function() {
-                    console.log("Survol détecté sur un élément has-dropdown");
-                    $(this).find('.dropdown').css({
-                        'display': 'block',
-                        'position': 'absolute',
-                        'top': '100%',
-                        'right': '0',
-                        'visibility': 'visible',
-                        'opacity': '1',
-                        'z-index': '1001'
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+        <script>
+            if (typeof jQuery === 'undefined') {
+                console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
+            } else {
+                console.log("jQuery est chargé avec succès");
+                jQuery(document).ready(function($) {
+                    // Menu hamburger
+                    $('.menu-toggle').click(function() {
+                        console.log("Clic sur menu-toggle détecté");
+                        $('.fh5co-nav .menu-1 ul').toggleClass('active');
                     });
-                },
-                function() {
-                    console.log("Fin du survol");
-                    $(this).find('.dropdown').css({
-                        'display': 'none',
-                        'visibility': 'hidden',
-                        'opacity': '0'
+
+                    // Dropdowns sur mobile
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                        if ($(window).width() <= 768) {
+                            console.log("Clic sur dropdown détecté");
+                            e.preventDefault();
+                            $(this).parent().toggleClass('active');
+                        }
                     });
-                }
-            );
 
-          // Flatpickr pour le champ date
-            const datePicker = flatpickr("#{{ form.date.vars.id }}", {
-                dateFormat: "Y-m-d",
-                minDate: "today",
-                locale: "fr",
-                allowInput: true, // Allow manual input
-                onChange: function(selectedDates, dateStr, instance) {
-                    const input = instance.element;
-                    if (selectedDates.length === 0) {
-                        input.classList.add('is-invalid');
-                        $(input).next('.text-danger').text('La date est requise.');
-                    } else {
-                        input.classList.remove('is-invalid');
-                        $(input).next('.text-danger').text('');
-                    }
-                },
-                onClose: function(selectedDates, dateStr, instance) {
-                    const input = instance.element;
-                    if (selectedDates.length === 0) {
-                        input.classList.add('is-invalid');
-                        $(input).next('.text-danger').text('La date est requise.');
-                    }
-                }
-            });
+                    // Dropdowns sur desktop avec survol
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
+                        function() {
+                            console.log("Survol détecté sur un élément has-dropdown");
+                            $(this).find('.dropdown').css({
+                                'display': 'block',
+                                'position': 'absolute',
+                                'top': '100%',
+                                'right': '0',
+                                'visibility': 'visible',
+                                'opacity': '1',
+                                'z-index': '1001'
+                            });
+                        },
+                        function() {
+                            console.log("Fin du survol");
+                            $(this).find('.dropdown').css({
+                                'display': 'none',
+                                'visibility': 'hidden',
+                                'opacity': '0'
+                            });
+                        }
+                    );
 
-            // Ajouter la classe is-invalid si des erreurs existent lors du chargement de la page
-            $('.form-control').each(function() {
-                const errorDiv = $(this).next('.text-danger');
-                if (errorDiv.length > 0 && errorDiv.text().trim() !== '') {
-                    $(this).addClass('is-invalid');
-                }
-            });
+                    // Flatpickr pour le champ date
+                    const datePicker = flatpickr("#{{ form.date.vars.id }}", {
+                        dateFormat: "Y-m-d",
+                        minDate: "today",
+                        locale: "fr",
+                        allowInput: true, // Allow manual input
+                        onChange: function(selectedDates, dateStr, instance) {
+                            const input = instance.element;
+                            if (selectedDates.length === 0) {
+                                input.classList.add('is-invalid');
+                                $(input).next('.text-danger').text('La date est requise.');
+                            } else {
+                                input.classList.remove('is-invalid');
+                                $(input).next('.text-danger').text('');
+                            }
+                        },
+                        onClose: function(selectedDates, dateStr, instance) {
+                            const input = instance.element;
+                            if (selectedDates.length === 0) {
+                                input.classList.add('is-invalid');
+                                $(input).next('.text-danger').text('La date est requise.');
+                            }
+                        }
+                    });
 
-            // Validation côté client avant soumission du formulaire
-            $('#pack-reservation-form').on('submit', function(e) {
-                let isValid = true;
-                const dateInput = $('#{{ form.date.vars.id }}');
-                const dateValue = dateInput.val();
+                    // Ajouter la classe is-invalid si des erreurs existent lors du chargement de la page
+                    $('.form-control').each(function() {
+                        const errorDiv = $(this).next('.text-danger');
+                        if (errorDiv.length > 0 && errorDiv.text().trim() !== '') {
+                            $(this).addClass('is-invalid');
+                        }
+                    });
 
-                if (!dateValue) {
-                    dateInput.addClass('is-invalid');
-                    dateInput.next('.text-danger').text('La date est requise.');
-                    isValid = false;
-                } else {
-                    // Vérifier le format de la date (YYYY-MM-DD)
-                    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-                    if (!dateRegex.test(dateValue)) {
-                        dateInput.addClass('is-invalid');
-                        dateInput.next('.text-danger').text('La date doit être au format YYYY-MM-DD (ex. 2025-04-11).');
-                        isValid = false;
-                    } else {
-                        // Vérifier si la date est aujourd'hui ou dans le futur
-                        const selectedDate = new Date(dateValue);
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour comparer uniquement la date
-                        if (selectedDate < today) {
+                    // Validation côté client avant soumission du formulaire
+                    $('#personnalise-reservation-form').on('submit', function(e) {
+                        let isValid = true;
+                        const dateInput = $('#{{ form.date.vars.id }}');
+                        const dateValue = dateInput.val();
+
+                        if (!dateValue) {
                             dateInput.addClass('is-invalid');
-                            dateInput.next('.text-danger').text('La date doit être aujourd\'hui ou dans le futur.');
+                            dateInput.next('.text-danger').text('La date est requise.');
                             isValid = false;
                         } else {
-                            dateInput.removeClass('is-invalid');
-                            dateInput.next('.text-danger').text('');
+                            // Vérifier le format de la date (YYYY-MM-DD)
+                            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                            if (!dateRegex.test(dateValue)) {
+                                dateInput.addClass('is-invalid');
+                                dateInput.next('.text-danger').text('La date doit être au format YYYY-MM-DD (ex. 2025-04-11).');
+                                isValid = false;
+                            } else {
+                                // Vérifier si la date est aujourd'hui ou dans le futur
+                                const selectedDate = new Date(dateValue);
+                                const today = new Date();
+                                today.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour comparer uniquement la date
+                                if (selectedDate < today) {
+                                    dateInput.addClass('is-invalid');
+                                    dateInput.next('.text-danger').text('La date doit être aujourd\'hui ou dans le futur.');
+                                    isValid = false;
+                                } else {
+                                    dateInput.removeClass('is-invalid');
+                                    dateInput.next('.text-danger').text('');
+                                }
+                            }
                         }
-                    }
-                }
 
-                if (!isValid) {
-                    e.preventDefault(); // Empêche la soumission du formulaire si la validation échoue
-                }
-            });
+                        // Vérifier si au moins un service est sélectionné
+                        const servicesChecked = $('input[name="{{ form.services.vars.full_name }}[]"]:checked').length;
+                        const servicesContainer = $('#{{ form.services.vars.id }}').closest('.form-group');
+                        if (servicesChecked === 0) {
+                            servicesContainer.find('.text-danger').text('Veuillez sélectionner au moins un service.');
+                            isValid = false;
+                        } else {
+                            servicesContainer.find('.text-danger').text('');
+                        }
 
-            // Afficher les modals si des messages flash existent
-            {% if app.flashes('success')|length > 0 %}
-                $('#successModal').modal('show');
-            {% endif %}
-            {% if app.flashes('error')|length > 0 %}
-                $('#errorModal').modal('show');
-            {% endif %}
-        });
-    }
-</script>
-
+                        if (!isValid) {
+                            e.preventDefault(); // Empêche la soumission du formulaire si la validation échoue
+                        }
+                    });
+                });
+            }
+        </script>
         <footer id="fh5co-footer" role="contentinfo">
                 <div class="container">
                     <div class="row copyright">
