@@ -46,7 +46,11 @@ class Reservationpack
     {
         return $this->IDReservationPack;
     }
-
+// Added method to get the ID of the associated Membre
+public function getIdMembre(): ?int
+{
+    return $this->membre ? $this->membre->getId() : null;
+}
     public function getNom(): ?string
     {
         return $this->nom;
