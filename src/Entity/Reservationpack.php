@@ -19,6 +19,11 @@ class Reservationpack
     #[Assert\NotBlank(message: "Vous devez choisir un pack.")]
     private ?Pack $pack = null;
 
+    #[ORM\ManyToOne(targetEntity: Membre::class)]
+    #[ORM\JoinColumn(name: 'idMembre', referencedColumnName: 'id', nullable: false)]
+    #[Assert\NotBlank(message: "Un membre doit être associé à la réservation.")]
+    private ?Membre $membre = null;
+
     #[ORM\Column(type: 'string', length: 255, name: 'Nom')]
     private ?string $nom = null;
 
@@ -105,6 +110,17 @@ class Reservationpack
     public function setPack(?Pack $pack): self
     {
         $this->pack = $pack;
+        return $this;
+    }
+
+    public function getMembre(): ?Membre
+    {
+        return $this->membre;
+    }
+
+    public function setMembre(?Membre $membre): self
+    {
+        $this->membre = $membre;
         return $this;
     }
 

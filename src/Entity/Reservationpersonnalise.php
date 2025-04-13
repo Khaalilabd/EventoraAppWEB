@@ -18,6 +18,11 @@ class Reservationpersonnalise
     #[ORM\Column(type: 'integer', name: 'IDReservationPersonalise')]
     private ?int $IDReservationPersonalise = null;
 
+    #[ORM\ManyToOne(targetEntity: Membre::class)]
+    #[ORM\JoinColumn(name: 'idMembre', referencedColumnName: 'id', nullable: false)]
+    #[Assert\NotBlank(message: "Un membre doit être associé à la réservation.")]
+    private ?Membre $membre = null;
+
     #[ORM\Column(type: 'string', nullable: false)]
     #[Assert\NotBlank(message: "Le nom est requis.")]
     private ?string $Nom = null;
@@ -69,6 +74,17 @@ class Reservationpersonnalise
     public function setIDReservationPersonalise(int $IDReservationPersonalise): self
     {
         $this->IDReservationPersonalise = $IDReservationPersonalise;
+        return $this;
+    }
+
+    public function getMembre(): ?Membre
+    {
+        return $this->membre;
+    }
+
+    public function setMembre(?Membre $membre): self
+    {
+        $this->membre = $membre;
         return $this;
     }
 
@@ -126,6 +142,7 @@ class Reservationpersonnalise
         $this->Description = $Description;
         return $this;
     }
+
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
