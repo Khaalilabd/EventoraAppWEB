@@ -5,326 +5,610 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        /* Palette de couleurs moderne */
+        /* Palette de couleurs (inchangée) */
         :root {
-            --primary-color: #5a67d8; /* Indigo doux */
-            --secondary-color: #edf2f7; /* Fond gris clair */
-            --accent-color: #ed64a6; /* Rose pour les accents */
-            --text-color: #2d3748; /* Texte sombre */
-            --text-muted: #718096; /* Texte secondaire */
-            --success-color: #48bb78; /* Vert succès */
-            --error-color: #f56565; /* Rouge erreur */
-            --input-bg: #fff; /* Fond des champs */
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --primary-color: #D66F6F; /* Deep Pink pour les accents et boutons */
+            --secondary-color: #FFF7F7; /* Very Light Pink pour le fond principal */
+            --text-color: #333; /* Gris foncé pour le texte principal (lisibilité) */
+            --text-muted: #666; /* Texte secondaire (légèrement plus clair) */
+            --shadow: 0 2px 4px rgba(139, 46, 46, 0.1); /* Ombre avec Dark Reddish Tone */
+            --hover-shadow: 0 4px 12px rgba(139, 46, 46, 0.15);
+            --accent-color: #F5BFBF; /* Medium Pink pour les survols */
+            --error-color: #8B2E2E; /* Dark Reddish Tone pour les erreurs */
+            --sidebar-color: #8B2E2E; /* Dark Reddish Tone pour la sidebar */
         }
 
-        /* Conteneur principal */
-        .settings-container {
-            max-width: 700px;
-            margin: 40px auto;
-            padding: 30px;
+        body {
+            font-family: 'Roboto', sans-serif;
             background-color: var(--secondary-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            animation: fadeIn 0.6s ease-out;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth; /* Défilement fluide global */
+            overflow-x: hidden; /* Évite les débordements horizontaux */
+        }
+
+        /* Conteneur principal avec sidebar */
+        .settings-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-color);
+            color: #fff;
+            padding: 30px 20px;
+            border-bottom-right-radius: 40px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) var(--sidebar-color);
+            animation: slideInLeft 0.7s ease-in-out; /* Animation plus douce */
+            flex-shrink: 0;
+            transition: transform 0.3s ease-in-out; /* Transition fluide pour transformations */
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: var(--accent-color);
+            border-radius: 3px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background-color: var(--sidebar-color);
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .sidebar h2 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar h2:hover {
+            transform: scale(1.03); /* Réduction de l'échelle pour une animation plus subtile */
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out forwards;
+            animation-delay: calc(0.1s * var(--index));
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .settings-container h2 {
-            font-family: 'Work Sans', sans-serif;
-            font-weight: 600;
-            font-size: 26px;
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out, padding-left 0.3s ease-in-out;
+        }
+
+        .sidebar ul li a:hover,
+        .sidebar ul li.active a {
+            color: var(--accent-color);
+            font-weight: 500;
+            transform: translateX(5px);
+        }
+
+        .sidebar ul li.active a {
+            border-left: 3px solid #fff;
+            padding-left: 10px;
+        }
+
+        /* Contenu principal */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--text-muted) var(--secondary-color);
+            animation: slideInRight 0.7s ease-in-out; /* Animation plus douce */
+            min-height: 100vh;
+            background-color: var(--secondary-color);
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .main-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background-color: var(--text-muted);
+            border-radius: 3px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background-color: var(--secondary-color);
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .main-content h1 {
+            font-size: 24px;
+            font-weight: 500;
             color: var(--text-color);
-            margin-bottom: 30px;
-            text-align: center;
-            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            position: relative;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .main-content h1::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.4s ease-in-out; /* Transition plus fluide */
+        }
+
+        .main-content h1:hover::after {
+            width: 100px;
         }
 
         /* Sections */
         .settings-section {
-            margin-bottom: 30px;
-            padding: 25px;
             background-color: #fff;
-            border-radius: 10px;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
             box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.7s ease-in-out forwards; /* Animation plus douce */
+            animation-delay: calc(0.2s * var(--index));
+            transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .settings-section:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--hover-shadow);
+            transform: translateY(-5px);
         }
 
         .settings-section h3 {
-            font-family: 'Work Sans', sans-serif;
-            font-weight: 500;
             font-size: 18px;
+            font-weight: 500;
             color: var(--text-color);
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 5px;
-            display: inline-block;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s ease-in-out;
         }
 
-        /* Groupes de formulaire */
+        .settings-section h3::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            bottom: 0;
+            left: 0;
+            transition: width 0.4s ease-in-out;
+        }
+
+        .settings-section h3:hover::after {
+            width: 100%;
+        }
+
+        /* Formulaires */
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .form-group label {
-            font-family: 'Work Sans', sans-serif;
             font-size: 14px;
             font-weight: 500;
             color: var(--text-muted);
             margin-bottom: 8px;
             display: block;
+            transition: color 0.3s ease-in-out;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-family: 'Work Sans', sans-serif;
+            padding: 10px;
+            border: 1px solid var(--text-muted);
+            border-radius: 4px;
             font-size: 14px;
             color: var(--text-color);
-            background-color: var(--input-bg);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: #fff;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 6px rgba(90, 103, 216, 0.2);
+            box-shadow: 0 0 8px rgba(214, 111, 111, 0.2);
+            transform: scale(1.01);
         }
 
-        .form-group input::placeholder {
-            color: #a0aec0;
+        /* Bouton de soumission */
+        .form-group input[type="submit"] {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-group input[type="submit"]::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 100%;
+            background-color: rgba(255, 255, 253, 0.2);
+            top: 0;
+            left: -100%;
+            transition: width 0.4s ease-in-out, left 0.4s ease-in-out;
+        }
+
+        .form-group input[type="submit"]:hover {
+            background-color: #c55e5e;
+            transform: translateY(-2px);
+        }
+
+        .form-group input[type="submit"]:hover::after {
+            width: 200%;
+            left: 100%;
         }
 
         /* Photo de profil */
         .profile-picture {
             display: flex;
             align-items: center;
-            margin-bottom: 25px;
-            padding: 15px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease-in-out;
         }
 
         .profile-picture:hover {
-            transform: translateY(-2px);
+            transform: scale(1.02);
         }
 
         .profile-picture img {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             margin-right: 15px;
             object-fit: cover;
             border: 2px solid var(--primary-color);
-            transition: border-color 0.3s ease, transform 0.3s ease;
+            transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
 
         .profile-picture img:hover {
             border-color: var(--accent-color);
-            transform: scale(1.05);
+            transform: rotate(5deg);
         }
 
         .profile-picture .custom-file-upload {
             color: var(--primary-color);
-            font-family: 'Work Sans', sans-serif;
             font-size: 14px;
-            font-weight: 500;
             text-decoration: none;
-            transition: color 0.3s ease;
+            position: relative;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .profile-picture .custom-file-upload::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            background-color: var(--primary-color);
+            bottom: -2px;
+            left: 0;
+            transition: width 0.3s ease-in-out;
         }
 
         .profile-picture .custom-file-upload:hover {
             color: var(--accent-color);
         }
 
+        .profile-picture .custom-file-upload:hover::after {
+            width: 100%;
+        }
+
         .profile-picture input[type="file"] {
             display: none;
         }
 
-        /* Messages de succès et d'erreur */
+        /* Messages flash */
         .alert-success {
-            background-color: var(--success-color);
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 8px;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 4px;
             margin-bottom: 20px;
-            font-family: 'Work Sans', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            animation: slideIn 0.5s ease-out;
+            opacity: 0;
+            animation: slideIn 0.5s ease-in-out forwards;
+            transition: opacity 0.3s ease-in-out;
         }
 
         .alert-error {
             background-color: var(--error-color);
             color: #fff;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 4px;
             margin-bottom: 20px;
-            font-family: 'Work Sans', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            animation: slideIn 0.5s ease-out;
+            opacity: 0;
+            animation: slideIn 0.5s ease-in-out forwards;
+            transition: opacity 0.3s ease-in-out;
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-15px); }
+            from { opacity: 0; transform: translateX(-20px); }
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* Erreurs de formulaire */
+        /* Style pour les erreurs */
         .form-error {
             color: var(--error-color);
             font-size: 12px;
             margin-top: 5px;
-            font-family: 'Work Sans', sans-serif;
-            font-weight: 500;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Bouton d'enregistrement */
-        .form-group input[type="submit"] {
-            background-color: var(--primary-color);
-            color: #fff;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Work Sans', sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            display: inline-block;
-        }
-
-        .form-group input[type="submit"]:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-2px);
+            transition: opacity 0.3s ease-in-out;
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <div class="settings-container">
-        <h2>Paramètres du compte</h2>
-
-        {% for flash_message in app.flashes('success') %}
-            <div class="alert-success">
-                {{ flash_message }}
-            </div>
-        {% endfor %}
-        {% for flash_message in app.flashes('error') %}
-            <div class="alert-error">
-                {{ flash_message }}
-            </div>
-        {% endfor %}
-
-        <div class="settings-section">
-            <h3>Informations de base</h3>
-            <div class="profile-picture">
-                {% if app.user.image %}
-                    <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile Picture">
-                {% else %}
-                    <img src="{{ asset('images/default-profile.png') }}" alt="Profile Picture">
-                {% endif %}
-                {{ form_start(imageForm, {'attr': {'id': 'imageForm'}}) }}
-                <label for="form_image" class="custom-file-upload">
-                    Modifier la photo de profil
-                </label>
-                {{ form_widget(imageForm.image, {'attr': {'id': 'form_image'}}) }}
-                {{ form_widget(imageForm.submit) }}
-                {{ form_end(imageForm) }}
-            </div>
-            {{ form_start(form) }}
-            <div class="form-group">
-                {{ form_label(form.nom) }}
-                {{ form_widget(form.nom) }}
-                {% if form.nom.vars.errors|length > 0 %}
-                    <div class="form-error">{{ form.nom.vars.errors[0].message }}</div>
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.prenom) }}
-                {{ form_widget(form.prenom) }}
-                {% if form.prenom.vars.errors|length > 0 %}
-                    <div class="form-error">{{ form.prenom.vars.errors[0].message }}</div>
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.dateOfBirth) }}
-                {{ form_widget(form.dateOfBirth) }}
-                {% if form.dateOfBirth.vars.errors|length > 0 %}
-                    <div class="form-error">{{ form.dateOfBirth.vars.errors[0].message }}</div>
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.gender) }}
-                {{ form_widget(form.gender) }}
-                {% if form.gender.vars.errors|length > 0 %}
-                    <div class="form-error">{{ form.gender.vars.errors[0].message }}</div>
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.email) }}
-                {{ form_widget(form.email) }}
-                {% if form.email.vars.errors|length > 0 %}
-                    <div class="form-error">{{ form.email.vars.errors[0].message }}</div>
-                {% endif %}
-            </div>
+    <div class="settings-wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Settings</h2>
+            <ul>
+                {% set menu_items = [
+                    'Notifications',
+                    'General',
+                    'Privacy and Security',
+                    'Interface',
+                    'Chat Settings',
+                    'Advance Settings'
+                ] %}
+                {% for item in menu_items %}
+                    <li style="--index: {{ loop.index }}" {% if item == 'Privacy and Security' %}class="active"{% endif %}>
+                        <a href="#">{{ item }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
 
-        <div class="settings-section">
-            <h3>Informations du compte</h3>
-            <div class="form-group">
-                {{ form_label(form.username) }}
-                {{ form_widget(form.username) }}
-                {% if form.username.vars.errors|length > 0 %}
-                    <div class="form-error">{{ form.username.vars.errors[0].message }}</div>
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.motDePasse) }}
-                {{ form_widget(form.motDePasse) }}
-                {% if form.motDePasse.vars.errors|length > 0 %}
-                    <div class="form-error">{{ form.motDePasse.vars.errors[0].message }}</div>
-                {% endif %}
-            </div>
-        </div>
+        <!-- Contenu principal -->
+        <div class="main-content">
+            <h1>Privacy and Security:</h1>
 
-        <div class="form-group text-center">
-            {{ form_widget(form.save) }}
+            {% for flash_message in app.flashes('success') %}
+                <div class="alert-success">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            {% for flash_message in app.flashes('error') %}
+                <div class="alert-error">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+
+            <!-- Section 1: Informations de base -->
+            <div class="settings-section" style="--index: 1">
+                <h3>Your account</h3>
+                <div class="profile-picture">
+                    {% if app.user.image %}
+                        <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Photo de profil">
+                    {% else %}
+                        <img src="{{ asset('images/default-profile.png') }}" alt="Photo de profil par défaut">
+                    {% endif %}
+                    {{ form_start(imageForm, {'attr': {'id': 'imageForm'}}) }}
+                    <label for="imageForm_image" class="custom-file-upload">
+                        Modifier la photo de profil
+                    </label>
+                    {{ form_widget(imageForm.image, {'attr': {'id': 'imageForm_image'}}) }}
+                    {{ form_widget(imageForm.submit, {'attr': {'style': 'display: none;'}}) }}
+                    {{ form_end(imageForm) }}
+                </div>
+
+                {{ form_start(form, {'attr': {'is_edit': true}}) }}
+                <div class="form-group">
+                    {{ form_label(form.nom) }}
+                    {{ form_widget(form.nom) }}
+                    {% if form.nom.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.nom.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.prenom) }}
+                    {{ form_widget(form.prenom) }}
+                    {% if form.prenom.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.prenom.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.dateOfBirth) }}
+                    {{ form_widget(form.dateOfBirth) }}
+                    {% if form.dateOfBirth.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.dateOfBirth.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.gender) }}
+                    {{ form_widget(form.gender) }}
+                    {% if form.gender.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.gender.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.email) }}
+                    {{ form_widget(form.email) }}
+                    {% if form.email.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.email.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+                <!-- Ajout des champs CIN, Numéro de Téléphone, Adresse, Rôle, et Compte Confirmé -->
+                <div class="form-group">
+                    {{ form_label(form.cin) }}
+                    {{ form_widget(form.cin) }}
+                    {% if form.cin.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.cin.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.numTel) }}
+                    {{ form_widget(form.numTel) }}
+                    {% if form.numTel.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.numTel.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.adresse) }}
+                    {{ form_widget(form.adresse) }}
+                    {% if form.adresse.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.adresse.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.role) }}
+                    {{ form_widget(form.role) }}
+                    {% if form.role.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.role.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.isConfirmed) }}
+                    {{ form_widget(form.isConfirmed) }}
+                    {% if form.isConfirmed.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.isConfirmed.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Section 2: Sécurité et accès -->
+            <div class="settings-section" style="--index: 2">
+                <h3>Security and account access</h3>
+                <div class="form-group">
+                    {{ form_label(form.username) }}
+                    {{ form_widget(form.username) }}
+                    {% if form.username.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.username.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.motDePasse) }}
+                    {{ form_widget(form.motDePasse) }}
+                    {% if form.motDePasse.vars.errors|length > 0 %}
+                        <div class="form-error">{{ form.motDePasse.vars.errors[0].message }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_widget(form.save) }}
+            </div>
+
+            {{ form_end(form) }}
         </div>
-        {{ form_end(form) }}
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Soumettre automatiquement le formulaire de photo après sélection
-        document.getElementById('form_image').addEventListener('change', function() {
-            if (this.files.length > 0) {
-                document.getElementById('imageForm').submit();
+        document.addEventListener('DOMContentLoaded', function () {
+            // Soumettre automatiquement le formulaire de photo après sélection
+            const imageInput = document.getElementById('imageForm_image');
+            if (imageInput) {
+                imageInput.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        const imageForm = document.getElementById('imageForm');
+                        if (imageForm) {
+                            imageForm.submit();
+                        }
+                    }
+                });
             }
+
+            // Effet de scroll pour la sidebar (optimisé)
+            const sidebar = document.querySelector('.sidebar');
+            let isScrolling = false;
+            sidebar.addEventListener('scroll', function() {
+                if (!isScrolling) {
+                    isScrolling = true;
+                    requestAnimationFrame(() => {
+                        const items = document.querySelectorAll('.sidebar ul li');
+                        items.forEach(item => {
+                            item.style.transform = `translateY(-${sidebar.scrollTop * 0.05}px)`; /* Réduit l'effet pour plus de fluidité */
+                        });
+                        isScrolling = false;
+                    });
+                }
+            });
+
+            // Animation au survol des sections
+            const sections = document.querySelectorAll('.settings-section');
+            sections.forEach(section => {
+                section.addEventListener('mouseenter', function() {
+                    this.style.transition = 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out';
+                });
+            });
+
+            // Ajuster dynamiquement la hauteur de la sidebar (avec débounce)
+            let resizeTimeout;
+            function adjustSidebarHeight() {
+                const mainContent = document.querySelector('.main-content');
+                const sidebar = document.querySelector('.sidebar');
+                const contentHeight = mainContent.scrollHeight;
+                sidebar.style.height = `${Math.max(contentHeight, window.innerHeight)}px`;
+            }
+
+            function debounceResize() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(adjustSidebarHeight, 100); /* Débouncing pour éviter les recalculs excessifs */
+            }
+
+            window.addEventListener('resize', debounceResize);
+            adjustSidebarHeight();
         });
     </script>
 {% endblock %}

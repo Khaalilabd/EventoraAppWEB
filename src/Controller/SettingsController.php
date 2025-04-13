@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Membre;
+use App\Form\MembreType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -42,58 +43,16 @@ class SettingsController extends AbstractController
             ]));
         }
 
-        // Formulaire principal pour les autres champs
-        $form = $this->createFormBuilder($membre)
-            ->add('nom', null, [
-                'label' => 'Nom',
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(['message' => 'Le nom est obligatoire.']),
-                ],
-                'empty_data' => '', // Valeur par défaut si le champ est vide
-            ])
-            ->add('prenom', null, [
-                'label' => 'Prénom',
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(['message' => 'Le prénom est obligatoire.']),
-                ],
-                'empty_data' => '',
-            ])
-            ->add('dateOfBirth', null, [
-                'label' => 'Date de naissance',
-                'required' => false,
-            ])
-            ->add('gender', null, [
-                'label' => 'Genre',
-                'required' => false,
-            ])
-            ->add('email', null, [
-                'label' => 'Email',
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(['message' => 'L\'email est obligatoire.']),
-                    new Assert\Email(['message' => 'Veuillez entrer un email valide.']),
-                ],
-                'empty_data' => '',
-            ])
-            ->add('username', null, [
-                'label' => "Nom d'utilisateur",
-                'required' => false,
-            ])
-            ->add('motDePasse', null, [
-                'label' => 'Mot de passe',
-                'required' => false,
-            ])
-            ->add('save', SubmitType::class, ['label' => 'Enregistrer'])
-            ->getForm();
-
+        // Utiliser MembreType pour le formulaire principal
+        $form = $this->createForm(MembreType::class, $membre, ['is_edit' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('motDePasse')->getData()) {
+            // Gestion du mot de passe si modifié
+            $motDePasse = $form->get('motDePasse')->getData();
+            if ($motDePasse) {
                 $membre->setMotDePasse(
-                    $passwordHasher->hashPassword($membre, $form->get('motDePasse')->getData())
+                    $passwordHasher->hashPassword($membre, $motDePasse)
                 );
             }
 

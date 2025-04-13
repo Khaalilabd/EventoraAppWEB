@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use App\Repository\MembreRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MembreRepository::class)]
 #[ORM\Table(name: 'membres')]
@@ -19,28 +20,28 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Nom')]
-    private string $nom = ''; // Changement : string au lieu de ?string, initialisé à ''
+    private string $nom = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Prénom')]
-    private string $prenom = ''; // Changement : string au lieu de ?string, initialisé à ''
+    private string $prenom = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Email', unique: true)]
-    private string $email = ''; // Changement : string au lieu de ?string, initialisé à ''
+    private string $email = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'CIN')]
-    private string $cin = ''; // Changement : string au lieu de ?string, initialisé à ''
+    private string $cin = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'NumTel')]
-    private string $numTel = ''; // Changement : string au lieu de ?string, initialisé à ''
+    private string $numTel = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Adresse')]
-    private string $adresse = ''; // Changement : string au lieu de ?string, initialisé à ''
+    private string $adresse = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'motDePasse')]
-    private string $motDePasse = ''; // Changement : string au lieu de ?string, initialisé à ''
+    private string $motDePasse = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Role')]
-    private string $role = ''; // Changement : string au lieu de ?string, initialisé à ''
+    private string $role = '';
 
     #[ORM\Column(type: 'string', nullable: true, name: 'image')]
     private ?string $image = null;
@@ -58,6 +59,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $dateOfBirth = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Assert\Choice(choices: ['Homme', 'Femme'], message: 'Veuillez choisir un genre valide (Homme ou Femme).')]
     private ?string $gender = null;
 
     #[ORM\Column(type: 'string', length: 180, nullable: true, unique: true)]
@@ -94,8 +96,6 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
     }
-
-    // Getters et setters existants...
 
     public function getId(): ?int
     {
