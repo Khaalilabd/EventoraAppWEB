@@ -212,7 +212,7 @@
                                                     <td class="ps-3 py-2">{{ reservation.numtel }}</td>
                                                     <td class="ps-3 py-2">{{ reservation.date|date('d/m/Y') }}</td>
                                                     <td class="ps-3 py-2 text-center">
-                                                        <a href="{{ path('admin_reservations_edit', {'type': 'pack', 'id': reservation.IDReservationPack}) }}" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></a>
+                                                        <a href="{{ path('admin_reservations_pack_edit', {'type': 'pack', 'id': reservation.IDReservationPack}) }}" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></a>
                                                         <form method="post" action="{{ path('admin_reservations_delete', {'type': 'pack', 'id': reservation.IDReservationPack}) }}" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer cette réservation ?');">
                                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.IDReservationPack) }}">
                                                             <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
@@ -265,7 +265,7 @@
                                                     <td class="ps-3 py-2">{{ reservation.numtel }}</td>
                                                     <td class="ps-3 py-2">{{ reservation.date|date('d/m/Y') }}</td>
                                                     <td class="ps-3 py-2 text-center">
-                                                        <a href="{{ path('admin_reservations_edit', {'type': 'personnalise', 'id': reservation.idReservationPersonalise}) }}" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></a>
+                                                        <a href="{{ path('admin_reservations_personnalise_edit', {'type': 'personnalise', 'id': reservation.idReservationPersonalise}) }}" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></a>
                                                         <form method="post" action="{{ path('admin_reservations_delete', {'type': 'personnalise', 'id': reservation.idReservationPersonalise}) }}" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer cette réservation ?');">
                                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.idReservationPersonalise) }}">
                                                             <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
