@@ -2,36 +2,100 @@
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
-use App\Repository\ReservationpackRepository;
-
-#[ORM\Entity(repositoryClass: ReservationpackRepository::class)]
+#[ORM\Entity(repositoryClass: 'App\Repository\ReservationpackRepository')]
 #[ORM\Table(name: 'reservationpack')]
 class Reservationpack
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', name: 'IDReservationPack')]
     private ?int $IDReservationPack = null;
+
+    #[ORM\ManyToOne(targetEntity: Pack::class)]
+    #[ORM\JoinColumn(name: 'IDPack', referencedColumnName: 'id', nullable: false)]
+    #[Assert\NotBlank(message: "Vous devez choisir un pack.")]
+    private ?Pack $pack = null;
+
+    #[ORM\Column(type: 'string', length: 255, name: 'Nom')]
+    private ?string $nom = null;
+
+    #[ORM\Column(type: 'string', length: 255, name: 'Prenom')]
+    private ?string $prenom = null;
+
+    #[ORM\Column(type: 'string', length: 255, name: 'Email')]
+    private ?string $email = null;
+
+    #[ORM\Column(type: 'string', length: 255, name: 'Numtel')]
+    private ?string $numtel = null;
+
+    #[ORM\Column(type: 'string', length: 255, name: 'Description')]
+    private ?string $description = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
     public function getIDReservationPack(): ?int
     {
         return $this->IDReservationPack;
     }
 
-    public function setIDReservationPack(int $IDReservationPack): self
+    public function getNom(): ?string
     {
-        $this->IDReservationPack = $IDReservationPack;
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
         return $this;
     }
 
-    #[ORM\ManyToOne(targetEntity: Pack::class, inversedBy: 'reservationpacks')]
-    #[ORM\JoinColumn(name: 'IDPack', referencedColumnName: 'id')]
-    private ?Pack $pack = null;
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    public function getNumtel(): ?string
+    {
+        return $this->numtel;
+    }
+
+    public function setNumtel(string $numtel): self
+    {
+        $this->numtel = $numtel;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
 
     public function getPack(): ?Pack
     {
@@ -44,88 +108,19 @@ class Reservationpack
         return $this;
     }
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Nom = null;
-
-    public function getNom(): ?string
-    {
-        return $this->Nom;
-    }
-
-    public function setNom(string $Nom): self
-    {
-        $this->Nom = $Nom;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Prenom = null;
-
-    public function getPrenom(): ?string
-    {
-        return $this->Prenom;
-    }
-
-    public function setPrenom(string $Prenom): self
-    {
-        $this->Prenom = $Prenom;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Email = null;
-
-    public function getEmail(): ?string
-    {
-        return $this->Email;
-    }
-
-    public function setEmail(string $Email): self
-    {
-        $this->Email = $Email;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Numtel = null;
-
-    public function getNumtel(): ?string
-    {
-        return $this->Numtel;
-    }
-
-    public function setNumtel(string $Numtel): self
-    {
-        $this->Numtel = $Numtel;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $Description = null;
-
-    public function getDescription(): ?string
-    {
-        return $this->Description;
-    }
-
-    public function setDescription(string $Description): self
-    {
-        $this->Description = $Description;
-        return $this;
-    }
-
-    #[ORM\Column(type: 'date', nullable: false)]
-    private ?\DateTimeInterface $Date = null;
-
     public function getDate(): ?\DateTimeInterface
     {
-        return $this->Date;
+        return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $Date): self
+    public function setDate(\DateTimeInterface $date): self
     {
-        $this->Date = $Date;
+        $this->date = $date;
         return $this;
     }
 
+    public function getIDPack(): ?int
+    {
+        return $this->pack ? $this->pack->getId() : null;
+    }
 }
