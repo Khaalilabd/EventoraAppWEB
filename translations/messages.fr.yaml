@@ -1,0 +1,27 @@
+settings: Paramètres
+languages: Langages
+french: Français
+english: Anglais
+home: Accueil
+notifications: Notifications
+privacy_and_security: Confidentialité et sécurité
+chat_settings: Paramètres de chat
+advance_settings: Paramètres avancés
+your_account: Votre compte
+security_and_account_access: Sécurité et accès au compte
+profile_picture: Photo de profil
+default_profile_picture: Photo de profil par défaut
+edit_profile_picture: Modifier la photo de profil
+first_name: Nom
+last_name: Prénom
+date_of_birth: Date de naissance
+gender: Genre
+email: Email
+cin: CIN
+phone_number: Numéro de téléphone
+address: Adresse
+role: Rôle
+account_confirmed: Compte confirmé
+username: Nom d'utilisateur
+password: Mot de passe
+save_changes: Enregistrer les modifications
