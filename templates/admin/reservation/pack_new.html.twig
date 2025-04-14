@@ -130,51 +130,69 @@
                             <h6 class="font-weight-bolder mb-0">Formulaire de Réservation Pack</h6>
                         </div>
                         <div class="card-body p-3">
-                            {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                            {% for message in app.flashes('error') %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+
+                            {% if form_errors(form) %}
+                                <div class="alert alert-danger">
+                                    {{ form_errors(form) }}
+                                </div>
+                            {% endif %}
+
+                            {{ form_start(form, {'action': path('admin_reservations_pack_new'), 'method': 'POST', 'attr': {'class': 'row g-3'}}) }}
                                 <div class="col-md-6">
-                                    {{ form_label(form.nom, 'Nom') }}
+                                    {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
                                     {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
-                                    {{ form_errors(form.nom) }}
+                                    <div class="text-danger">{{ form_errors(form.nom) }}</div>
                                 </div>
                                 <div class="col-md-6">
-                                    {{ form_label(form.prenom, 'Prénom') }}
+                                    {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
                                     {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
-                                    {{ form_errors(form.prenom) }}
+                                    <div class="text-danger">{{ form_errors(form.prenom) }}</div>
                                 </div>
                                 <div class="col-md-6">
-                                    {{ form_label(form.email, 'Email') }}
+                                    {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
                                     {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-                                    {{ form_errors(form.email) }}
+                                    <div class="text-danger">{{ form_errors(form.email) }}</div>
                                 </div>
                                 <div class="col-md-6">
-                                    {{ form_label(form.numtel, 'Numéro de téléphone') }}
+                                    {{ form_label(form.numtel, 'Numéro de téléphone', {'label_attr': {'class': 'form-label'}}) }}
                                     {{ form_widget(form.numtel, {'attr': {'class': 'form-control'}}) }}
-                                    {{ form_errors(form.numtel) }}
+                                    <div class="text-danger">{{ form_errors(form.numtel) }}</div>
                                 </div>
                                 <div class="col-12">
-                                    {{ form_label(form.description, 'Description') }}
+                                    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
                                     {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '3'}}) }}
-                                    {{ form_errors(form.description) }}
+                                    <div class="text-danger">{{ form_errors(form.description) }}</div>
                                 </div>
                                 <div class="col-md-6">
-                                    {{ form_label(form.date, 'Date') }}
+                                    {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
                                     {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
-                                    {{ form_errors(form.date) }}
+                                    <div class="text-danger">{{ form_errors(form.date) }}</div>
                                 </div>
                                 <div class="col-12">
-                                    {{ form_label(form.pack, 'Sélectionner un Pack') }}
+                                    {{ form_label(form.pack, 'Sélectionner un Pack', {'label_attr': {'class': 'form-label'}}) }}
                                     <div class="d-flex flex-column">
                                         {% for choice in form.pack %}
                                             <div class="form-check mb-2">
                                                 {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
                                                 <label class="form-check-label" for="{{ choice.vars.id }}">
-                                                    {{ choice.vars.label }} 
-                                            
+                                                    {{ choice.vars.label }}
                                                 </label>
                                             </div>
                                         {% endfor %}
                                     </div>
-                                    {{ form_errors(form.pack) }}
+                                    <div class="text-danger">{{ form_errors(form.pack) }}</div>
                                 </div>
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>

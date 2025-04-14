@@ -18,8 +18,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use Symfony\Component\Validator\Constraints\DateTime; // Add this for date format validation
-use Symfony\Component\Validator\Constraints\Type; // Add this for type validation
 
 class ReservationPackType extends AbstractType
 {
@@ -27,6 +25,7 @@ class ReservationPackType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
+                'label' => 'Nom',
                 'constraints' => [
                     new NotBlank(['message' => 'Le nom est requis.']),
                     new Length([
@@ -36,6 +35,7 @@ class ReservationPackType extends AbstractType
                 ],
             ])
             ->add('prenom', TextType::class, [
+                'label' => 'Prénom',
                 'constraints' => [
                     new NotBlank(['message' => 'Le prénom est requis.']),
                     new Length([
@@ -45,6 +45,7 @@ class ReservationPackType extends AbstractType
                 ],
             ])
             ->add('email', EmailType::class, [
+                'label' => 'Email',
                 'constraints' => [
                     new NotBlank(['message' => 'L\'email est requis.']),
                     new Email(['message' => 'L\'email n\'est pas valide.']),
@@ -55,6 +56,7 @@ class ReservationPackType extends AbstractType
                 ],
             ])
             ->add('numtel', TelType::class, [
+                'label' => 'Numéro de téléphone',
                 'constraints' => [
                     new NotBlank(['message' => 'Le numéro de téléphone est requis.']),
                     new Length([
@@ -68,14 +70,24 @@ class ReservationPackType extends AbstractType
                 ],
             ])
             ->add('description', TextareaType::class, [
-                'required' => false, // Description is optional
+                'label' => 'Description',
+                'required' => false,
             ])
             ->add('date', DateType::class, [
+                'label' => 'Date',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'html5' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'La date est requise.']),
+                    new GreaterThanOrEqual([
+                        'value' => 'today',
+                        'message' => 'La date doit être aujourd\'hui ou dans le futur.',
+                    ]),
+                ],
             ])
             ->add('pack', EntityType::class, [
+                'label' => 'Pack',
                 'class' => Pack::class,
                 'choice_label' => 'nomPack',
                 'expanded' => true,
@@ -83,6 +95,7 @@ class ReservationPackType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'Vous devez sélectionner un pack.']),
                 ],
+                'placeholder' => 'Sélectionnez un pack',
             ]);
     }
 

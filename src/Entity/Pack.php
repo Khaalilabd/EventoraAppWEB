@@ -7,49 +7,76 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\PackRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PackRepository::class)]
 #[ORM\Table(name: 'pack')]
+#[UniqueEntity(fields: ['nomPack'], message: 'Ce nom de pack existe déjà.')]
 class Pack
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255, name: 'nomPack')]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, name: 'nomPack')]
+    #[Assert\NotBlank(message: 'Le nom du pack ne peut pas être vide.')]
     private ?string $nomPack = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
+    #[Assert\NotBlank(message: 'La description ne peut pas être vide.')]
     private ?string $description = null;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: false)]
-    private ?string $prix = null;
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
+    #[Assert\NotBlank(message: 'Le prix ne peut pas être vide.')]
+    #[Assert\GreaterThanOrEqual(0, message: 'Le prix doit être supérieur ou égal à 0.')]
+    private ?float $prix = null;
 
-    #[ORM\Column(type: 'string', name: 'location')]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, name: 'location')]
+    #[Assert\NotBlank(message: 'Le lieu ne peut pas être vide.')]
+    #[Assert\Choice(
+        choices: ['HOTEL', 'MAISON_D_HOTE', 'ESPACE_VERT', 'SALLE_DE_FETE', 'AUTRE'],
+        message: 'Veuillez sélectionner un lieu valide.'
+    )]
     private ?string $location = null;
 
-    #[ORM\ManyToOne(targetEntity: Typepack::class, inversedBy: 'packs')]
-    #[ORM\JoinColumn(name: 'type', referencedColumnName: 'id', nullable: false)]
-    private ?Typepack $typepack = null;
+    // On remplace la relation ManyToOne par une simple colonne de type chaîne
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, name: 'type')]
+    #[Assert\NotBlank(message: 'Le type ne peut pas être vide.')]
+    private ?string $type = null;
 
-    #[ORM\Column(type: 'integer', name: 'nbrGuests')]
+    #[ORM\Column(type: Types::INTEGER, nullable: false, name: 'nbrGuests')]
+    #[Assert\NotBlank(message: 'Le nombre d\'invités ne peut pas être vide.')]
+    #[Assert\GreaterThanOrEqual(1, message: 'Le nombre d\'invités doit être au moins 1.')]
     private ?int $nbrGuests = null;
 
-    #[ORM\Column(type: 'string', length: 255, name: 'image_path')]
-    private ?string $image_path = null;
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, name: 'image_path')]
+    private ?string $imagePath = null;
 
     #[ORM\OneToMany(targetEntity: Reservationpack::class, mappedBy: 'pack')]
     private Collection $reservationpacks;
 
+    private array $services = [];
+
+    // Propriété non persistante pour stocker le Typepack chargé manuellement
+    private ?Typepack $typepack = null;
+
     public function __construct()
     {
         $this->reservationpacks = new ArrayCollection();
+        $this->services = [];
+        $this->imagePath = '/Uploads/images/default.jpg';
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getNomPack(): ?string
@@ -74,12 +101,12 @@ class Pack
         return $this;
     }
 
-    public function getPrix(): ?string
+    public function getPrix(): ?float
     {
         return $this->prix;
     }
 
-    public function setPrix(string $prix): self
+    public function setPrix(float $prix): self
     {
         $this->prix = $prix;
         return $this;
@@ -96,6 +123,19 @@ class Pack
         return $this;
     }
 
+    // Méthode pour accéder à la colonne type (chaîne)
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    // Méthode pour définir la colonne type (chaîne)
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+        return $this;
+    }
+
     public function getTypepack(): ?Typepack
     {
         return $this->typepack;
@@ -103,9 +143,6 @@ class Pack
 
     public function setTypepack(?Typepack $typepack): self
     {
-        if ($typepack && $typepack->getId() === null) {
-            throw new \InvalidArgumentException('Typepack must have a valid ID.');
-        }
         $this->typepack = $typepack;
         return $this;
     }
@@ -121,14 +158,14 @@ class Pack
         return $this;
     }
 
-    public function getImage_path(): ?string
+    public function getImagePath(): ?string
     {
-        return $this->image_path;
+        return $this->imagePath;
     }
 
-    public function setImage_path(string $image_path): self
+    public function setImagePath(?string $imagePath): self
     {
-        $this->image_path = $image_path;
+        $this->imagePath = $imagePath ?? '/Uploads/images/default.jpg';
         return $this;
     }
 
@@ -162,14 +199,14 @@ class Pack
         return $this;
     }
 
-    public function getImagePath(): ?string
+    public function getServices(): array
     {
-        return $this->image_path;
+        return $this->services;
     }
 
-    public function setImagePath(string $image_path): self
+    public function setServices(array $services): self
     {
-        $this->image_path = $image_path;
+        $this->services = $services;
         return $this;
     }
 }
