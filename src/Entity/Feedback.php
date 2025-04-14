@@ -41,11 +41,6 @@ class Feedback
     /**
      * @var UploadedFile|null
      */
-    #[Assert\Image(
-        maxSize: '5M',
-        mimeTypes: ['image/jpeg', 'image/png'],
-        mimeTypesMessage: 'Veuillez uploader une image valide (JPEG ou PNG).'
-    )]
     private $souvenirsFile;
 
     // Getters et setters
@@ -120,7 +115,6 @@ class Feedback
         return $this;
     }
 
-    // Gestion de l'upload de fichier
     public function getSouvenirsFile(): ?UploadedFile
     {
         return $this->souvenirsFile;

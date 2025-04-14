@@ -19,11 +19,13 @@ class FeedbackController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // Récupérer les paramètres de tri/filtrage depuis la requête
+        // Récupérer les paramètres de tri/filtrage et pagination depuis la requête
         $sortBy = $request->query->get('sort_by', 'date');
         $sortOrder = $request->query->get('sort_order', 'desc');
         $selectedUser = $request->query->get('user_filter', null);
         $selectedDate = $request->query->get('date_filter', null);
+        $page = $request->query->getInt('page', 1); // Page actuelle (par défaut : 1)
+        $limit = 5; // Nombre de feedbacks par page
 
         // Validation des paramètres de tri
         $validSortFields = ['membre.email', 'Vote', 'date', 'recommend'];
@@ -36,9 +38,11 @@ class FeedbackController extends AbstractController
             $sortOrder = 'desc';
         }
 
-        // Construire la requête de base
+        // Construire la requête de base pour les feedbacks paginés
         $queryBuilder = $feedbackRepository->createQueryBuilder('f')
-            ->leftJoin('f.membre', 'm');
+            ->leftJoin('f.membre', 'm')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
 
         // Filtrer par utilisateur si sélectionné
         if ($selectedUser) {
@@ -69,6 +73,24 @@ class FeedbackController extends AbstractController
         }
 
         $feedbacks = $queryBuilder->getQuery()->getResult();
+
+        // Calculer le nombre total de feedbacks pour la pagination
+        $countQueryBuilder = $feedbackRepository->createQueryBuilder('f')
+            ->leftJoin('f.membre', 'm')
+            ->select('COUNT(f.ID)');
+
+        if ($selectedUser) {
+            $countQueryBuilder->andWhere('m.email = :email')
+                             ->setParameter('email', $selectedUser);
+        }
+
+        if ($selectedDate) {
+            $countQueryBuilder->andWhere('DATE(f.date) = :selected_date')
+                             ->setParameter('selected_date', $selectedDate);
+        }
+
+        $totalFeedbacks = $countQueryBuilder->getQuery()->getSingleScalarResult();
+        $totalPages = ceil($totalFeedbacks / $limit);
 
         // Récupérer la liste des utilisateurs uniques pour le menu déroulant
         $users = $feedbackRepository->createQueryBuilder('f')
@@ -120,6 +142,8 @@ class FeedbackController extends AbstractController
             'selected_user' => $selectedUser,
             'selected_date' => $selectedDate,
             'users' => $userEmails,
+            'current_page' => $page,
+            'total_pages' => $totalPages,
         ]);
     }
 

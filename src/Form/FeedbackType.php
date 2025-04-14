@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Validator\Constraints\File;
 
 class FeedbackType extends AbstractType
 {
@@ -38,9 +39,16 @@ class FeedbackType extends AbstractType
             ])
             ->add('souvenirsFile', FileType::class, [
                 'label' => 'Uploader une image (optionnel)',
-                'mapped' => true,
+                'mapped' => false, // Changement ici
                 'required' => false,
                 'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPEG ou PNG).',
+                    ])
+                ],
             ])
             ->add('date', DateType::class, [
                 'label' => 'Date',
@@ -60,21 +68,17 @@ class FeedbackType extends AbstractType
                 'mapped' => false,
             ]);
 
-        // Événement pour initialiser la valeur du champ Recommend
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $feedback = $event->getData();
             $form = $event->getForm();
 
-            // Vérifier que $feedback est une instance de Feedback
             if (!$feedback instanceof Feedback) {
                 return;
             }
 
-            // Initialiser la valeur du champ Recommend en fonction de la propriété recommend
             $form->get('Recommend')->setData($feedback->getRecommend() === 'Oui');
         });
 
-        // Événement pour transformer la case à cocher en "Oui" ou "Non"
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
             $feedback = $event->getData();
