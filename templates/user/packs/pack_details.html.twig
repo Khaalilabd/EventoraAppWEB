@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Eventora - {{ pack.nomPack }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
+
+        <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond:400,500,500i,600,600i,700,700i" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,600" rel="stylesheet">
+        <!-- Animate.css -->
+        <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+        <!-- Icomoon Icon Fonts -->
+        <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+        <!-- Magnific Popup -->
+        <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+        <!-- Owl Carousel -->
+        <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+
+        <style>
+            /* Background gradient for the entire page, matching the packs list page */
+            body {
+                background: linear-gradient(to bottom right, #2a1f30, #383d44);
+                font-family: 'Work Sans', sans-serif;
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Main content wrapper */
+            .pack-content {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 100px 20px 40px; /* Top padding to avoid navbar overlap */
+                box-sizing: border-box;
+            }
+
+            /* Pack details container */
+            .pack-details-container {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 30px;
+                background: #fff;
+                border-radius: 15px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .pack-details-container:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Header styling */
+            .pack-details-container h1 {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 2.8rem;
+                font-weight: 700;
+                color: #2a1f30; /* Darker color to match the theme */
+                margin-bottom: 0.5rem;
+                text-align: center;
+                letter-spacing: 1px;
+            }
+
+            /* Pack type */
+            .pack-details-container .pack-type {
+                font-family: 'Work Sans', sans-serif;
+                font-size: 1.1rem;
+                color: #777;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+
+            /* Image styling with subtle overlay */
+            .pack-image-wrapper {
+                position: relative;
+                margin-bottom: 2rem;
+            }
+
+            .pack-details-container img {
+                width: 100%;
+                max-height: 450px;
+                object-fit: cover;
+                border-radius: 10px;
+                display: block;
+            }
+
+            .pack-image-wrapper::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+                border-radius: 10px;
+            }
+
+            /* Details list */
+            .pack-details-list {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* Two-column layout */
+                gap: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .pack-details-list p {
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.1rem;
+                color: #555;
+                margin: 0;
+                padding: 0.5rem 0;
+                display: flex;
+                align-items: center;
+            }
+
+            .pack-details-list p strong {
+                font-weight: 600;
+                color: #222;
+                margin-right: 0.5rem;
+                flex-shrink: 0;
+            }
+
+            /* Back button */
+            .back-button {
+                display: inline-block;
+                margin-top: 2rem;
+                padding: 12px 30px;
+                background: linear-gradient(135deg, #007bff, #0056b3);
+                color: #fff;
+                text-decoration: none;
+                border-radius: 25px;
+                font-family: 'Work Sans', sans-serif;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: background 0.3s ease, transform 0.3s ease;
+                text-align: center;
+            }
+
+            .back-button:hover {
+                background: linear-gradient(135deg, #0056b3, #003d82);
+                transform: scale(1.05);
+            }
+
+            /* Ensure footer sticks to bottom */
+            #fh5co-footer {
+                margin-top: auto;
+            }
+
+            /* Responsive adjustments */
+            @media screen and (max-width: 960px) {
+                .pack-details-container {
+                    max-width: 700px;
+                    padding: 25px;
+                }
+
+                .pack-details-container h1 {
+                    font-size: 2.5rem;
+                }
+
+                .pack-details-container img {
+                    max-height: 400px;
+                }
+
+                .pack-details-list {
+                    grid-template-columns: 1fr; /* Single column on smaller screens */
+                    gap: 1rem;
+                }
+            }
+
+            @media screen and (max-width: 640px) {
+                .pack-details-container {
+                    margin: 80px 15px 20px;
+                    padding: 20px;
+                }
+
+                .pack-details-container h1 {
+                    font-size: 2rem;
+                }
+
+                .pack-details-container img {
+                    max-height: 300px;
+                }
+
+                .pack-details-list p {
+                    font-size: 1rem;
+                }
+
+                .back-button {
+                    padding: 10px 25px;
+                    font-size: 0.9rem;
+                }
+            }
+        </style>
+
+        <!-- Modernizr JS -->
+        <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
+        <!-- FOR IE9 below -->
+        <!--[if lt IE 9]>
+        <script src="{{ asset('js/respond.min.js') }}"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="fh5co-loader"></div>
+        <div id="page">
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <div id="fh5co-logo"><a href="{{ path('app_home') }}">Eventora<strong></strong></a></div>
+                        </div>
+                        <div class="col-xs-10 text-right menu-1">
+                            <ul>
+                                <li><a href="{{ path('app_home') }}">Home</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">Services</a>
+                                    <ul class="dropdown">
+                                        <li><a href="#">Service</a></li>
+                                        <li><a href="#">Partenaire</a></li>
+                                    </ul>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="#">Reclamation</a>
+                                    <ul class="dropdown">
+                                        <li><a href="#">Reclamation</a></li>
+                                        <li><a href="#">Feedback</a></li>
+                                    </ul>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="#">Reservations</a>
+                                    <ul class="dropdown">
+                                        <li><a href="#">Reservation personalisé</a></li>
+                                        <li><a href="#">Reservation</a></li>
+                                    </ul>
+                                </li>
+                                <li class="active">
+                                    <a href="{{ path('user_packs') }}">Packs</a>
+                                </li>
+                                <li><a href="#">Talk with Evi</a></li>
+                                <li><a href="#">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Re-added pack details content -->
+            <div class="pack-content">
+                <div class="pack-details-container">
+                    <h1>{{ pack.nomPack }}</h1>
+                    <div class="pack-type">{{ pack.type }}</div>
+                    <div class="pack-image-wrapper">
+                        <img src="{{ asset(pack.imagePath ?: 'images/default-pack.jpg') }}" alt="{{ pack.nomPack }}">
+                    </div>
+                    <div class="pack-details-list">
+                        <p><strong>Description:</strong> {{ pack.description }}</p>
+                        <p><strong>Prix:</strong> {{ pack.prix }} €</p>
+                        <p><strong>Lieu:</strong> {{ pack.location }}</p>
+                        <p><strong>Invités:</strong> {{ pack.nbrGuests }}</p>
+                    </div>
+                    <a href="{{ path('user_packs') }}" class="back-button">Back to Packs</a>
+                </div>
+            </div>
+
+            <footer id="fh5co-footer" role="contentinfo">
+                <div class="container">
+                    <div class="row copyright">
+                        <div class="col-md-12 text-center">
+                            <p>
+                                <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                                <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <div class="gototop js-top">
+            <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
+        </div>
+
+        <!-- Charger d'abord jQuery -->
+        <script src="{{ asset('js/jquery.min.js') }}"></script>
+
+        <!-- Ensuite, Waypoints.js -->
+        <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
+
+        <!-- Ensuite Stellar.js -->
+        <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
+
+        <!-- Ensuite les autres scripts -->
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+        <script src="{{ asset('js/simplyCountdown.js') }}"></script>
+        <script src="{{ asset('js/main.js') }}"></script>
+
+        <!-- Removed the simplyCountdown script since it's not needed -->
+    </body>
+</html>

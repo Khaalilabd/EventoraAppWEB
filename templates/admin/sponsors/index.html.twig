@@ -1,0 +1,632 @@
+{% extends 'admin/dashboard.html.twig' %}
+
+{% block title %}Gestion des sponsors{% endblock %}
+
+{% block body %}
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+        <div class="sidenav-header">
+            <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
+                <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+                <span class="ms-2 font-weight-bold text-dark">Eventora Dashboard</span>
+            </a>
+        </div>
+        <hr class="horizontal dark mt-0">
+        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('admin_dashboard') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-tachometer-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-calendar-check text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Réservations</span>
+                    </a>
+                </li>
+             <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reclamationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-exclamation-triangle text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Réclamations</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'show' : '' }}" id="reclamationsMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reclamations' ? 'active' : '' }}" href="{{ path('admin_reclamations') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-exclamation-circle text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Réclamations</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="{{ path('admin_feedback') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-comment-dots text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Feedback</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="false">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-users text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Utilisateurs</span>
+                    </a>
+                    <div class="collapse" id="usersMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-user-friends text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Membres</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-user-shield text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Modérateurs</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-box text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Packs</span>
+                    </a>
+                </li>
+                 <li class="nav-item">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="false">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-concierge-bell text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Services</span>
+                </a>
+                <div class="collapse" id="servicesMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('admin_services') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-tools text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Services</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('admin_sponsors') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-handshake text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Partenaires</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_logout') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-sign-out-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Déconnexion</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <style>
+        /* Sidebar Styling */
+        .sidenav {
+            background-color: #f8f9fa;
+            width: 250px;
+            height: 100vh;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sidenav-header {
+            padding: 15px;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            color: #333;
+        }
+
+        .navbar-brand:hover {
+            color: #ff6200;
+        }
+
+        .navbar-nav .nav-link {
+            padding: 12px 15px;
+            color: #555;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: #ff6200;
+            color: #fff;
+        }
+
+        .navbar-nav .nav-link.active {
+            background-color: #ff6200;
+            color: #fff;
+        }
+
+        .navbar-nav .nav-link .icon {
+            width: 30px;
+            height: 30px;
+            background-color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover .icon,
+        .navbar-nav .nav-link.active .icon {
+            background-color: #ff6200;
+        }
+
+        .navbar-nav .nav-link .icon i {
+            font-size: 16px;
+        }
+
+        .navbar-nav .dropdown-toggle::after {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-nav .dropdown-toggle[aria-expanded="true"]::after {
+            transform: rotate(180deg);
+        }
+
+        .collapse {
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .collapse .nav-link {
+            padding-left: 40px;
+            font-size: 0.9em;
+        }
+
+        .navbar-nav .collapse .nav-link:hover {
+            background-color: #ff8c00;
+        }
+
+        hr.horizontal {
+            border: 0;
+            height: 1px;
+            background-color: #ddd;
+        }
+
+        /* Conteneur global */
+        .table-container {
+            max-width: 100%;
+            overflow-x: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style général du tableau */
+        .modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        /* En-têtes */
+        .modern-table thead {
+            background-color: #4a90e2;
+            color: #fff;
+        }
+
+        .modern-table th {
+            padding: 15px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Corps du tableau */
+        .modern-table tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+        .modern-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .modern-table tbody tr:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        /* Cellules */
+        .modern-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        /* Style pour les liens de site web */
+        .site-link {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .site-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Cellule des actions */
+        .action-cell {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Boutons d'action */
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Bouton d'édition */
+        .edit-btn {
+            background-color: transparent;
+            border: 1px solid #4a90e2;
+            color: #4a90e2;
+        }
+
+        .edit-btn:hover {
+            background-color: #4a90e2;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Bouton de suppression */
+        .delete-btn {
+            background-color: transparent;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+
+        .delete-btn:hover {
+            background-color: #dc3545;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style des boutons de tri */
+        .sort-btn {
+            background: none;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0;
+            color: inherit;
+            text-align: left;
+        }
+
+        .sort-btn:hover {
+            color: #d1e7ff;
+        }
+
+        .sort-icon {
+            margin-left: 5px;
+            font-size: 0.8em;
+        }
+
+        .sort-asc .sort-icon::after {
+            content: '↑';
+        }
+
+        .sort-desc .sort-icon::after {
+            content: '↓';
+        }
+
+        /* Style du champ de recherche */
+        .input-group {
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group-text {
+            background-color: #f8f9fa;
+            border: none;
+            color: #4a90e2;
+        }
+
+        #searchInput {
+            border: none;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            box-shadow: inset 0 0 5px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .modern-table th,
+            .modern-table td {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+
+            .action-cell {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .action-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .input-group {
+                max-width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
+            <div class="container-fluid py-1 px-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Pages</a></li>
+                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Partenaires</li>
+                    </ol>
+                    <h6 class="font-weight-bolder mb-0">Gestion des Partenaires</h6>
+                </nav>
+                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                        <div class="input-group">
+                            <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" placeholder="Rechercher...">
+                        </div>
+                    </div>
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item d-flex align-items-center">
+                            <a href="#" class="nav-link text-body font-weight-bold px-0">
+                                <i class="fa fa-user me-sm-1"></i>
+                                <span class="d-sm-inline d-none">{{ app.user.email ?? 'Utilisateur' }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-4 shadow-sm border-radius-xl">
+                        <div class="card-header p-3 d-flex justify-content-between align-items-center">
+                            <h6 class="font-weight-bolder mb-0">Liste des Partenaires</h6>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="input-group" style="max-width: 300px;">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                    <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un partenaire...">
+                                </div>
+                                <a href="{{ path('admin_sponsors_create') }}" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-plus"></i> Ajouter un partenaire
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-3">
+                            {# Affichage des messages flash #}
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                            {% for message in app.flashes('error') %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+
+                            {% if Sponsor is defined and Sponsor is not empty %}
+                                <div class="table-responsive">
+                                    <div class="table-container">
+                                        <table class="modern-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="id_partenaire">ID Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="nom_partenaire">Nom Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="email_partenaire">Email Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="telephone_partenaire">Téléphone Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="adresse_partenaire">Adresse Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="site_web">Site Web <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>
+                                                        <button class="sort-btn" data-sort="type_partenaire">Type Partenaire <span class="sort-icon">↕</span></button>
+                                                    </th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for Sponsor in Sponsor %}
+                                                    <tr>
+                                                        <td data-label="id_partenaire">{{ Sponsor.id_partenaire }}</td>
+                                                        <td data-label="nom_partenaire">{{ Sponsor.nom_partenaire }}</td>
+                                                        <td data-label="email_partenaire">{{ Sponsor.email_partenaire }}</td>
+                                                        <td data-label="telephone_partenaire">{{ Sponsor.telephone_partenaire }}</td>
+                                                        <td data-label="adresse_partenaire">{{ Sponsor.adresse_partenaire|length > 30 ? Sponsor.adresse_partenaire|slice(0, 30) ~ '...' : Sponsor.adresse_partenaire }}</td>
+                                                        <td data-label="site_web">
+                                                            <a href="{{ Sponsor.site_web }}" target="_blank" class="site-link">
+                                                                {{ Sponsor.site_web|length > 25 ? Sponsor.site_web|slice(0, 25) ~ '...' : Sponsor.site_web }}
+                                                            </a>
+                                                        </td>
+                                                        <td data-label="type_partenaire">{{ Sponsor.type_partenaire }}</td>
+                                                        <td class="action-cell">
+                                                            <a href="{{ path('admin_sponsors_edit', {'id_partenaire': Sponsor.id_partenaire}) }}" class="action-btn edit-btn">
+                                                                <i class="fas fa-edit"></i> Modifier
+                                                            </a>
+                                                            <form method="post" action="{{ path('admin_sponsors_delete', {'id_partenaire': Sponsor.id_partenaire}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce partenaire ?');">
+                                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Sponsor.id_partenaire) }}">
+                                                                <button class="action-btn delete-btn">
+                                                                    <i class="fas fa-trash"></i> Supprimer
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="text-center p-4">
+                                    <i class="fas fa-exclamation-circle text-muted" style="font-size: 2rem;"></i>
+                                    <p class="text-muted mt-2">Aucun partenaire trouvé.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const table = document.querySelector('.modern-table');
+            const tbody = table.querySelector('tbody');
+            const rows = tbody.querySelectorAll('tr');
+
+            // Recherche dynamique
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    let match = false;
+
+                    cells.forEach(cell => {
+                        if (cell.textContent.toLowerCase().includes(searchTerm)) {
+                            match = true;
+                        }
+                    });
+
+                    row.style.display = match ? '' : 'none';
+                });
+            });
+
+            // Tri du tableau
+            const headers = table.querySelectorAll('.sort-btn');
+            let currentSortColumn = null;
+            let isAsc = true;
+
+            headers.forEach(header => {
+                header.addEventListener('click', () => {
+                    const sortKey = header.getAttribute('data-sort');
+                    if (currentSortColumn === sortKey) {
+                        isAsc = !isAsc;
+                    } else {
+                        isAsc = true;
+                        headers.forEach(h => {
+                            h.classList.remove('sort-asc', 'sort-desc');
+                            h.querySelector('.sort-icon').innerHTML = '↕';
+                        });
+                    }
+                    currentSortColumn = sortKey;
+
+                    // Mettre à jour l'icône de tri
+                    header.classList.add(isAsc ? 'sort-asc' : 'sort-desc');
+                    header.classList.remove(isAsc ? 'sort-desc' : 'sort-asc');
+
+                    // Trier les lignes
+                    sortTable(sortKey, isAsc);
+                });
+            });
+
+            function sortTable(column, asc) {
+                const rowsArray = Array.from(rows);
+
+                rowsArray.sort((a, b) => {
+                    let aValue = a.querySelector(`td[data-label="${column}"]`).textContent.trim();
+                    let bValue = b.querySelector(`td[data-label="${column}"]`).textContent.trim();
+
+                    // Gestion des valeurs vides
+                    if (!aValue && !bValue) return 0;
+                    if (!aValue) return asc ? 1 : -1;
+                    if (!bValue) return asc ? -1 : 1;
+
+                    // Gestion des nombres pour ID Partenaire
+                    if (column === 'id_partenaire') {
+                        aValue = parseInt(aValue) || 0;
+                        bValue = parseInt(bValue) || 0;
+                        return asc ? aValue - bValue : bValue - aValue;
+                    }
+
+                    // Tri alphabétique pour les autres colonnes
+                    return asc
+                        ? aValue.localeCompare(bValue)
+                        : bValue.localeCompare(aValue);
+                });
+
+                // Réinsérer les lignes triées
+                tbody.innerHTML = '';
+                rowsArray.forEach(row => tbody.appendChild(row));
+            }
+        });
+    </script>
+{% endblock %}

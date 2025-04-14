@@ -18,38 +18,38 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Nom')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'Nom')]
     private ?string $nom = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Prénom')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'Prénom')]
     private ?string $prenom = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Email')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'Email')]
     private ?string $email = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'CIN')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'CIN')]
     private ?string $cin = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'NumTel')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'NumTel')]
     private ?string $numTel = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Adresse')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'Adresse')]
     private ?string $adresse = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'motDePasse')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'motDePasse')]
     private ?string $motDePasse = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Role')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: false, name: 'Role')]
     private ?string $role = null;
 
-    #[ORM\Column(type: 'string', nullable: true, name: 'image')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: true, name: 'image')]
     private ?string $image = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $token = null;
 
-    #[ORM\Column(type: 'boolean', nullable: true, name: 'isConfirmed')] // Correction ici
-    private ?bool $isConfirmed = false; // Valeur par défaut à false (0)
+    #[ORM\Column(type: 'boolean', nullable: true, name: 'isConfirmed')]
+    private ?bool $isConfirmed = false;
 
     #[ORM\OneToMany(targetEntity: Feedback::class, mappedBy: 'membre')]
     private Collection $feedbacks;
@@ -57,12 +57,18 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'membre')]
     private Collection $reclamations;
 
-    
+    #[ORM\OneToMany(targetEntity: Reservationpack::class, mappedBy: 'membre')]
+    private Collection $reservationpacks;
+
+    #[ORM\OneToMany(targetEntity: Reservationpersonnalise::class, mappedBy: 'membre')]
+    private Collection $reservationpersonnalises;
 
     public function __construct()
     {
         $this->feedbacks = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
+        $this->reservationpacks = new ArrayCollection();
+        $this->reservationpersonnalises = new ArrayCollection();
     }
 
     // Implémentation des méthodes de UserInterface
@@ -260,6 +266,60 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeReclamation(Reclamation $reclamation): self
     {
         $this->reclamations->removeElement($reclamation);
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservationpack>
+     */
+    public function getReservationpacks(): Collection
+    {
+        return $this->reservationpacks;
+    }
+
+    public function addReservationpack(Reservationpack $reservationpack): self
+    {
+        if (!$this->reservationpacks->contains($reservationpack)) {
+            $this->reservationpacks[] = $reservationpack;
+            $reservationpack->setMembre($this);
+        }
+        return $this;
+    }
+
+    public function removeReservationpack(Reservationpack $reservationpack): self
+    {
+        if ($this->reservationpacks->removeElement($reservationpack)) {
+            if ($reservationpack->getMembre() === $this) {
+                $reservationpack->setMembre(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservationpersonnalise>
+     */
+    public function getReservationpersonnalises(): Collection
+    {
+        return $this->reservationpersonnalises;
+    }
+
+    public function addReservationpersonnalise(Reservationpersonnalise $reservationpersonnalise): self
+    {
+        if (!$this->reservationpersonnalises->contains($reservationpersonnalise)) {
+            $this->reservationpersonnalises[] = $reservationpersonnalise;
+            $reservationpersonnalise->setMembre($this);
+        }
+        return $this;
+    }
+
+    public function removeReservationpersonnalise(Reservationpersonnalise $reservationpersonnalise): self
+    {
+        if ($this->reservationpersonnalises->removeElement($reservationpersonnalise)) {
+            if ($reservationpersonnalise->getMembre() === $this) {
+                $reservationpersonnalise->setMembre(null);
+            }
+        }
         return $this;
     }
 }

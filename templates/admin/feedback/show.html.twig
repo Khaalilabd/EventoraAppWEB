@@ -93,34 +93,34 @@
                         <span class="nav-link-text ms-1">Packs</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="false">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-concierge-bell text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Services</span>
-                    </a>
-                    <div class="collapse" id="servicesMenu">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-handshake text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Partenaires</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-tools text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Services</span>
-                                </a>
-                            </li>
-                        </ul>
+                  <li class="nav-item">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="false">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-concierge-bell text-dark"></i>
                     </div>
-                </li>
+                    <span class="nav-link-text ms-1">Services</span>
+                </a>
+                <div class="collapse" id="servicesMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('admin_services') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-tools text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Services</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('admin_sponsors') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-handshake text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Partenaires</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_logout') }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -177,13 +177,21 @@
                                 <strong>Note :</strong>
                                 <span class="star-rating-display">
                                     {% for i in 1..5 %}
-                                        <span class="star {% if i <= feedback.vote %}filled{% endif %}">★</span>
+                                        <span class="star {% if i <= feedback.Vote %}filled{% endif %}">★</span>
                                     {% endfor %}
                                 </span>
                             </p>
                             <p class="text-sm mb-2"><strong>Description :</strong> {{ feedback.description }}</p>
                             <p class="text-sm mb-2"><strong>Date :</strong> {{ feedback.date ? feedback.date|date('Y-m-d') : 'Non définie' }}</p>
                             <p class="text-sm mb-2"><strong>Recommandé :</strong> {{ feedback.recommend|default('Non défini') }}</p>
+                            {% if feedback.souvenirsBase64 %}
+                                <p class="text-sm mb-2">
+                                    <strong>Image :</strong>
+                                    <img src="{{ feedback.souvenirsBase64 }}" alt="Feedback image" class="feedback-detail-image">
+                                </p>
+                            {% else %}
+                                <p class="text-sm mb-2"><strong>Image :</strong> Aucune image associée</p>
+                            {% endif %}
                         </div>
                         <div class="card-footer p-3">
                             <a href="{{ path('admin_feedback') }}" class="btn btn-sm btn-secondary">Retour à la liste</a>
@@ -211,6 +219,14 @@
         }
         .star-rating-display .star.filled {
             color: #ffd700;
+        }
+        /* Style pour l'image dans les détails */
+        .feedback-detail-image {
+            max-width: 300px; /* Limite la taille pour éviter que l'image soit trop grande */
+            height: auto;
+            border-radius: 5px;
+            margin-top: 5px;
+            display: block;
         }
     </style>
 {% endblock %}
