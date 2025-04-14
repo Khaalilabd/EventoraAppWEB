@@ -264,7 +264,7 @@
                                     </a>
                                     <ul class="dropdown">
                                         {% if app.user %}
-                                            <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
                                             <li><a href="{{ path('app_home') }}">Notifications</a></li>
                                             <li><a href="{{ path('app_home') }}">Historique</a></li>
                                             {% if is_granted('ROLE_ADMIN') %}
