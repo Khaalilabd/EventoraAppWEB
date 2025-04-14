@@ -144,6 +144,9 @@ class Pack
     public function setTypepack(?Typepack $typepack): self
     {
         $this->typepack = $typepack;
+        if ($typepack !== null) {
+            $this->type = $typepack->getType();
+        }
         return $this;
     }
 

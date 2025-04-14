@@ -217,7 +217,9 @@
                                     <div class="form-group">
                                         {{ form_label(form.prix, 'Prix (en dt)', {'label_attr': {'class': 'form-label'}}) }}
                                         {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
-                                        <div class="error-message text-danger mt-1"></div>
+                                        <div class="error-message text-danger mt-1">
+                                            {{ form_errors(form.prix) }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -226,7 +228,9 @@
                                     <div class="form-group">
                                         {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
                                         {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '4'}}) }}
-                                        <div class="error-message text-danger mt-1"></div>
+                                        <div class="error-message text-danger mt-1">
+                                            {{ form_errors(form.description) }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -235,14 +239,18 @@
                                     <div class="form-group">
                                         {{ form_label(form.location, 'Lieu', {'label_attr': {'class': 'form-label'}}) }}
                                         {{ form_widget(form.location, {'attr': {'class': 'form-control'}}) }}
-                                        <div class="error-message text-danger mt-1"></div>
+                                        <div class="error-message text-danger mt-1">
+                                            {{ form_errors(form.location) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         {{ form_label(form.nbrGuests, 'Nombre d\'Invités', {'label_attr': {'class': 'form-label'}}) }}
                                         {{ form_widget(form.nbrGuests, {'attr': {'class': 'form-control'}}) }}
-                                        <div class="error-message text-danger mt-1"></div>
+                                        <div class="error-message text-danger mt-1">
+                                            {{ form_errors(form.nbrGuests) }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -262,18 +270,20 @@
                                             </label>
                                             {{ form_widget(form.image_path, {'attr': {'class': 'form-control-file', 'id': 'pack_image_path'}}) }}
                                         </div>
-                                        <div class="error-message text-danger mt-1"></div>
+                                        <div class="error-message text-danger mt-1">
+                                            {{ form_errors(form.image_path) }}
+                                        </div>
                                     </div>
                                 </div>
-                              <div class="col-md-6 mb-3">
-    <div class="form-group">
-        {{ form_label(form.type, 'Type de Pack', {'label_attr': {'class': 'form-label'}}) }}
-        {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
-        <div class="error-message text-danger mt-1">
-            {{ form_errors(form.type) }}
-        </div>
-    </div>
-</div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        {{ form_label(form.typepack, 'Type de Pack', {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.typepack, {'attr': {'class': 'form-control'}}) }}
+                                        <div class="error-message text-danger mt-1">
+                                            {{ form_errors(form.typepack) }}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-12 mb-3">
@@ -289,7 +299,9 @@
                                                 </div>
                                             {% endfor %}
                                         </div>
-                                        <div class="error-message text-danger mt-1"></div>
+                                        <div class="error-message text-danger mt-1">
+                                            {{ form_errors(form.services) }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

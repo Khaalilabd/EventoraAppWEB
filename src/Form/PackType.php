@@ -4,15 +4,18 @@ namespace App\Form;
 
 use App\Entity\Pack;
 use App\Entity\GService;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Typepack;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class PackType extends AbstractType
 {
@@ -21,16 +24,15 @@ class PackType extends AbstractType
         $builder
             ->add('nomPack', TextType::class, [
                 'label' => 'Nom du pack',
-                'required' => true,
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
-                'required' => true,
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('prix', NumberType::class, [
                 'label' => 'Prix',
-                'required' => true,
-                'scale' => 2,
+                'attr' => ['class' => 'form-control', 'step' => '0.01'],
             ])
             ->add('location', ChoiceType::class, [
                 'label' => 'Lieu',
@@ -41,42 +43,78 @@ class PackType extends AbstractType
                     'Salle de fête' => 'SALLE_DE_FETE',
                     'Autre' => 'AUTRE',
                 ],
-                'required' => true,
-            ])
-            ->add('type', ChoiceType::class, [
-                'label' => 'Type de pack',
-                'choices' => [
-                    'Anniversaire' => 'Anniversaire',
-                    'Mariage' => 'Mariage',
-                    'Conférence' => 'Conférence',
-                    'Soirée' => 'Soirée',
-                    // Ajoutez d'autres types selon vos besoins
-                ],
-                'required' => true,
-                'placeholder' => 'Sélectionnez un type', // Optionnel
+                'attr' => ['class' => 'form-control'],
+                'placeholder' => 'Sélectionnez un lieu',
             ])
             ->add('nbrGuests', NumberType::class, [
                 'label' => 'Nombre d\'invités',
-                'required' => true,
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('image_path', FileType::class, [
                 'label' => 'Image du pack',
-                'mapped' => false,
+                'attr' => ['class' => 'form-control-file', 'id' => 'pack_image_path'],
                 'required' => false,
+                'mapped' => false, // Géré manuellement dans le contrôleur
+            ])
+            ->add('typepack', EntityType::class, [
+                'class' => Typepack::class,
+                'choice_label' => 'type',
+                'label' => 'Type de pack',
+                'attr' => ['class' => 'form-control'],
+                'placeholder' => 'Sélectionnez un type',
+                'mapped' => false,
             ])
             ->add('services', EntityType::class, [
                 'class' => GService::class,
                 'choice_label' => 'titre',
+                'label' => 'Services',
                 'multiple' => true,
                 'expanded' => true,
-                'required' => false,
             ]);
+
+        // Événement pour synchroniser typepack avec type
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
+            $pack = $event->getData();
+            $form = $event->getForm();
+            $typepack = $form->get('typepack')->getData();
+
+            if ($typepack instanceof Typepack) {
+                $pack->setType($typepack->getType());
+                $pack->setTypepack($typepack);
+            }
+        });
+
+        // Événement pour initialiser typepack à partir de type
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
+            $pack = $event->getData();
+            $form = $event->getForm();
+
+            if ($pack && $pack->getType()) {
+                $typepack = $options['entity_manager']
+                    ->getRepository(Typepack::class)
+                    ->findOneBy(['type' => $pack->getType()]);
+                if ($typepack) {
+                    $pack->setTypepack($typepack);
+                    $form->get('typepack')->setData($typepack);
+                }
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Pack::class,
+            'entity_manager' => null,
+            'service_choices' => [
+                'Photographe' => 'Photographe',
+                'DJ' => 'DJ',
+                'Traiteur' => 'Traiteur',
+                'Décoration' => 'Décoration',
+                'Animateur' => 'Animateur',
+            ],
         ]);
+
+        $resolver->setRequired(['entity_manager']);
     }
 }

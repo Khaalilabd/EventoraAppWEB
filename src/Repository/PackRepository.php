@@ -3,13 +3,15 @@
 namespace App\Repository;
 
 use App\Entity\Pack;
+use App\Entity\Typepack;
 use App\Entity\PackService;
 use App\Entity\GService;
-use App\Entity\Typepack;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Pack>
+ */
 class PackRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -17,56 +19,116 @@ class PackRepository extends ServiceEntityRepository
         parent::__construct($registry, Pack::class);
     }
 
-    /**
-     * Enrichit les packs avec Typepack et services associés.
-     *
-     * @param Pack[] $packs Tableau d'entités Pack à enrichir
-     * @param EntityManagerInterface $entityManager EntityManager pour gérer les entités
-     * @return Pack[] Tableau des packs enrichis
-     */
-    public function enrichPacks(array $packs, EntityManagerInterface $entityManager): array
+    public function findAll(): array
     {
+        $packs = parent::findAll(); // Fetch all Pack entities
+
+        $entityManager = $this->getEntityManager();
         $typepackRepository = $entityManager->getRepository(Typepack::class);
         $packServiceRepository = $entityManager->getRepository(PackService::class);
         $gServiceRepository = $entityManager->getRepository(GService::class);
 
         foreach ($packs as $pack) {
-            // Gérer le Typepack
-            $typepack = $pack->getTypepack();
-            $typeValue = $pack->getType();
+            // Populate typepack
+            $typepack = $typepackRepository->findOneBy(['type' => $pack->getType()]);
+            $pack->setTypepack($typepack);
 
-            if (!$typeValue) {
-                $pack->setType('Anniversaire');
-                $typeValue = 'Anniversaire';
-                $entityManager->persist($pack);
-            }
-
-            if (!$typepack || !$typepack->getId()) {
-                $typepack = $typepackRepository->findOneBy(['type' => $typeValue]);
-                if (!$typepack) {
-                    $typepack = new Typepack();
-                    $typepack->setType($typeValue);
-                    $entityManager->persist($typepack);
-                }
-                $pack->setTypepack($typepack);
-                $entityManager->persist($pack);
-            }
-
-            // Récupérer les services associés
+            // Fetch associated services
             $packServices = $packServiceRepository->findBy(['pack_id' => $pack->getId()]);
             $services = [];
-
             foreach ($packServices as $packService) {
                 $service = $gServiceRepository->findOneBy(['titre' => $packService->getServiceTitre()]);
                 if ($service) {
                     $services[] = $service;
                 }
             }
-
+            // Store services in a transient property
             $pack->setServices($services);
         }
 
-        $entityManager->flush();
+        return $packs;
+    }
+
+    public function find($id, $lockMode = null, $lockVersion = null): ?Pack
+    {
+        $pack = parent::find($id, $lockMode, $lockVersion);
+        if ($pack) {
+            $entityManager = $this->getEntityManager();
+            $typepackRepository = $entityManager->getRepository(Typepack::class);
+            $packServiceRepository = $entityManager->getRepository(PackService::class);
+            $gServiceRepository = $entityManager->getRepository(GService::class);
+
+            // Populate typepack
+            $typepack = $typepackRepository->findOneBy(['type' => $pack->getType()]);
+            $pack->setTypepack($typepack);
+
+            // Fetch associated services
+            $packServices = $packServiceRepository->findBy(['pack_id' => $pack->getId()]);
+            $services = [];
+            foreach ($packServices as $packService) {
+                $service = $gServiceRepository->findOneBy(['titre' => $packService->getServiceTitre()]);
+                if ($service) {
+                    $services[] = $service;
+                }
+            }
+            $pack->setServices($services);
+        }
+        return $pack;
+    }
+
+    /**
+     * Search packs by nomPack, description, prix, location, type, nbrGuests, or service_titre
+     *
+     * @param string $query
+     * @return Pack[]
+     */
+    public function search(string $query): array
+    {
+        $query = trim($query);
+        if (empty($query)) {
+            return $this->findAll();
+        }
+
+        $qb = $this->createQueryBuilder('p');
+        $qb->leftJoin('App\Entity\PackService', 'ps', 'WITH', 'ps.pack_id = p.id')
+           ->where(
+               $qb->expr()->orX(
+                   $qb->expr()->like('p.nomPack', ':query'),
+                   $qb->expr()->like('p.description', ':query'),
+                   $qb->expr()->like('CAST(p.prix AS string)', ':query'),
+                   $qb->expr()->like('p.location', ':query'),
+                   $qb->expr()->like('p.type', ':query'),
+                   $qb->expr()->like('CAST(p.nbrGuests AS string)', ':query'),
+                   $qb->expr()->like('ps.service_titre', ':query')
+               )
+           )
+           ->setParameter('query', '%' . $query . '%')
+           ->groupBy('p.id'); // Ensure unique packs
+
+        $packs = $qb->getQuery()->getResult();
+
+        // Populate typepack and services (as in findAll)
+        $entityManager = $this->getEntityManager();
+        $typepackRepository = $entityManager->getRepository(Typepack::class);
+        $packServiceRepository = $entityManager->getRepository(PackService::class);
+        $gServiceRepository = $entityManager->getRepository(GService::class);
+
+        foreach ($packs as $pack) {
+            // Populate typepack
+            $typepack = $typepackRepository->findOneBy(['type' => $pack->getType()]);
+            $pack->setTypepack($typepack);
+
+            // Fetch associated services
+            $packServices = $packServiceRepository->findBy(['pack_id' => $pack->getId()]);
+            $services = [];
+            foreach ($packServices as $packService) {
+                $service = $gServiceRepository->findOneBy(['titre' => $packService->getServiceTitre()]);
+                if ($service) {
+                    $services[] = $service;
+                }
+            }
+            $pack->setServices($services);
+        }
 
         return $packs;
     }

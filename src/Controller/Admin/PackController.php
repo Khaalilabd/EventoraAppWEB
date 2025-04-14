@@ -12,7 +12,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Pack;
 use App\Entity\PackService;
 use App\Entity\GService;
-use App\Entity\Typepack;
 use App\Form\PackType;
 use App\Repository\PackRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,30 +27,25 @@ final class PackController extends AbstractController
     }
 
     #[Route('/', name: 'admin_packs', methods: ['GET'])]
-    public function index(PackRepository $packRepository, EntityManagerInterface $entityManager): Response
+    public function index(PackRepository $packRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $packs = $packRepository->findAll();
-
-        // Enrichir les packs avec typepack et services
-        $packs = $packRepository->enrichPacks($packs, $entityManager);
 
         return $this->render('admin/Pack/index.html.twig', [
             'packs' => $packs,
         ]);
     }
 
-    #[Route('/new', name: 'admin_packs_create', methods: ['GET', 'POST'])]
+   #[Route('/new', name: 'admin_packs_create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager, PackRepository $packRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-    
+
         $pack = new Pack();
-        // Définir une valeur par défaut pour type si nécessaire
-        $pack->setType('Anniversaire'); // Valeur par défaut
         $form = $this->createForm(PackType::class, $pack);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Check for duplicate nomPack
             $existingPack = $packRepository->findOneBy(['nomPack' => $pack->getNomPack()]);
@@ -61,73 +55,54 @@ final class PackController extends AbstractController
                     'form' => $form->createView(),
                 ]);
             }
-    
-            // Charger ou créer un Typepack correspondant à la valeur de type
-            $typeValue = $pack->getType();
-            if (!$typeValue) {
-                $this->addFlash('error', 'Le type ne peut pas être vide.');
-                return $this->render('admin/Pack/add.html.twig', [
-                    'form' => $form->createView(),
-                ]);
+
+            // Set type based on selected typepack
+            if ($pack->getTypepack()) {
+                $pack->setType($pack->getTypepack()->getType());
             }
-    
-            $typepack = $entityManager->getRepository(Typepack::class)->findOneBy(['type' => $typeValue]);
-            if (!$typepack) {
-                $typepack = new Typepack();
-                $typepack->setType($typeValue);
-                $entityManager->persist($typepack);
-            }
-            
-            $pack->setTypepack($typepack);
-    
+
             // Handle the image upload
             /** @var UploadedFile|null $imageFile */
             $imageFile = $form->get('image_path')->getData();
             if ($imageFile) {
                 $newFilename = $this->uploadImage($imageFile);
-                $pack->setImagePath('/Uploads/images/' . $newFilename);
+                $pack->setImagePath('/uploads/images/' . $newFilename);
             }
-    
+
             // Persist the pack
             $entityManager->persist($pack);
             $entityManager->flush();
-    
+
             // Save selected services in pack_service
             $services = $form->get('services')->getData();
             foreach ($services as $service) {
                 $packService = new PackService();
-                $packService->setPackId($pack->getId()); // Correction ici
-                $packService->setServiceTitre($service->getTitre()); // Note : vérifier la casse
+                $packService->setPack_id($pack->getId());
+                $packService->setService_titre($service->getTitre());
                 $entityManager->persist($packService);
             }
             $entityManager->flush();
-    
+
             $this->addFlash('success', 'Le pack a été ajouté avec succès.');
             return $this->redirectToRoute('admin_packs');
         }
-    
+
         return $this->render('admin/Pack/add.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/{id}/edit', name: 'admin_packs_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Pack $pack, EntityManagerInterface $entityManager, PackRepository $packRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // Précharger le Typepack pour le pack
-        $typeValue = $pack->getType();
-        $typepack = $entityManager->getRepository(Typepack::class)->findOneBy(['type' => $typeValue]);
-        if ($typepack) {
-            $pack->setTypepack($typepack);
-        }
-
         // Preload services for the form
         $currentServices = $entityManager->getRepository(PackService::class)->findBy(['pack_id' => $pack->getId()]);
         $serviceEntities = [];
         foreach ($currentServices as $packService) {
-            $service = $entityManager->getRepository(GService::class)->findOneBy(['titre' => $packService->getServiceTitre()]);
+            $service = $entityManager->getRepository(GService::class)->findOneBy(['titre' => $packService->getService_titre()]);
             if ($service) {
                 $serviceEntities[] = $service;
             }
@@ -148,24 +123,17 @@ final class PackController extends AbstractController
                 ]);
             }
 
-            // Charger ou créer un Typepack correspondant à la valeur de type
-            $typeValue = $pack->getType();
-            $typepack = $entityManager->getRepository(Typepack::class)->findOneBy(['type' => $typeValue]);
-            
-            if (!$typepack) {
-                $typepack = new Typepack();
-                $typepack->setType($typeValue);
-                $entityManager->persist($typepack);
+            // Set type based on selected typepack
+            if ($pack->getTypepack()) {
+                $pack->setType($pack->getTypepack()->getType());
             }
-            
-            $pack->setTypepack($typepack);
 
             // Handle the image upload
             /** @var UploadedFile|null $imageFile */
             $imageFile = $form->get('image_path')->getData();
             if ($imageFile) {
                 $newFilename = $this->uploadImage($imageFile);
-                $pack->setImagePath('/Uploads/images/' . $newFilename);
+                $pack->setImagePath('/uploads/images/' . $newFilename);
             }
 
             // Update pack
@@ -186,8 +154,8 @@ final class PackController extends AbstractController
             $services = $form->get('services')->getData();
             foreach ($services as $service) {
                 $packService = new PackService();
-                $packService->setPackId($pack->getId()); // Correction ici
-                $packService->setServiceTitre($service->getTitre()); // Note : vérifier la casse
+                $packService->setPack_id($pack->getId());
+                $packService->setService_titre($service->getTitre());
                 $entityManager->persist($packService);
             }
 

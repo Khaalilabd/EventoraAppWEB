@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 use App\Repository\PackServiceRepository;
 
 #[ORM\Entity(repositoryClass: PackServiceRepository::class)]
@@ -18,15 +21,31 @@ class PackService
     #[ORM\Id]
     private ?string $service_titre = null;
 
-    public function getPackId(): ?int
+    public function getPack_id(): ?int
     {
         return $this->pack_id;
     }
 
-    public function setPackId(int $pack_id): self
+    public function setPack_id(int $pack_id): self
     {
         $this->pack_id = $pack_id;
         return $this;
+    }
+
+    public function getService_titre(): ?string
+    {
+        return $this->service_titre;
+    }
+
+    public function setService_titre(string $service_titre): self
+    {
+        $this->service_titre = $service_titre;
+        return $this;
+    }
+
+    public function getPackId(): ?int
+    {
+        return $this->pack_id;
     }
 
     public function getServiceTitre(): ?string
@@ -34,9 +53,10 @@ class PackService
         return $this->service_titre;
     }
 
-    public function setServiceTitre(string $service_titre): self
+    public function setServiceTitre(string $service_titre): static
     {
         $this->service_titre = $service_titre;
+
         return $this;
     }
 }
