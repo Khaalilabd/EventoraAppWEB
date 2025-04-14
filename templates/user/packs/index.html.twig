@@ -386,23 +386,50 @@
                                 <li class="has-dropdown">
                                     <a href="#">Reclamation</a>
                                     <ul class="dropdown">
-                                        <li><a href="#">Reclamation</a></li>
-                                        <li><a href="#">Feedback</a></li>
+                                         <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
                                     </ul>
                                 </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Reservations</a>
+                               <li class="has-dropdown">
+                                    <a href="#">Réservation</a>
                                     <ul class="dropdown">
-                                        <li><a href="#">Reservation personalisé</a></li>
-                                        <li><a href="#">Reservation</a></li>
+                                            <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Reservation personnalisée</a></li>
+                                            <li><a href="{{ path('admin_reservations_user_pack_new') }}">Reservation Pack</a></li>
                                     </ul>
                                 </li>
                                 <li class="has-dropdown active">
                                     <a href="{{ path('user_packs') }}">Packs</a>
                                 </li>
+                                
                                 <li><a href="#">Talk with Evi</a></li>
-                                <li><a href="#">Contact</a></li>
+                                 <li class="has-dropdown">
+                                    <a href="#">
+                                        <span class="user-circle">
+                                            {% if app.user and app.user.image %}
+                                                <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <i class="icon-user"></i>
+                                            {% endif %}
+                                        </span>
+                                        Contact
+                                    </a>
+                                    <ul class="dropdown">
+                                        {% if app.user %}
+                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                            <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                        {% else %}
+                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </li>                                
                             </ul>
+                            
                         </div>
                     </div>
                 </div>
