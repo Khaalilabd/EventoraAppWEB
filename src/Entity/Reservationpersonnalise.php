@@ -153,6 +153,11 @@ class Reservationpersonnalise
         $this->date = $date;
         return $this;
     }
+    // Added method to get the ID of the associated Membre
+    public function getIdMembre(): ?int
+    {
+        return $this->membre ? $this->membre->getId() : null;
+    }
 
     /**
      * @return Collection|GService[]
