@@ -606,36 +606,37 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.delete-reclamation').forEach(function (link) {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    if (confirm('Confirmer la suppression ?')) {
-                        const url = this.getAttribute('href');
-                        const token = this.getAttribute groans('data-token');
+    document.querySelectorAll('.delete-reclamation').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (confirm('Confirmer la suppression ?')) {
+                const url = this.getAttribute('href');
+                const token = this.getAttribute('data-token'); // Correction ici
 
-                        fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: '_token=' + encodeURIComponent(token)
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                // Supprimer la ligne du tableau
-                                link.closest('tr').remove();
-                            } else {
-                                alert('Erreur lors de la suppression.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Erreur:', error);
-                            alert('Une erreur est survenue.');
-                        });
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: '_token=' + encodeURIComponent(token)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Supprimer la ligne du tableau
+                        link.closest('tr').remove();
+                        alert('Réclamation supprimée avec succès.');
+                    } else {
+                        alert('Erreur lors de la suppression.');
                     }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Une erreur est survenue.');
                 });
-            });
+            }
         });
+    });
+});
     </script>
 {% endblock %}

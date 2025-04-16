@@ -234,6 +234,12 @@
                     font-size: 36px;
                     margin: 0;
                 }
+                .form-error {
+                    color: #ff4d4d;
+                    font-size: 0.9em;
+                    margin-bottom: 5px;
+                    display: block;
+                }
                 @media (max-width: 768px) {
                     .menu-toggle {
                         display: block;
@@ -280,7 +286,7 @@
                         font-size: 28px;
                     }
                     #fh5co-event {
-                        padding weißtop: 30px;
+                        padding-top: 30px;
                     }
                 }
             </style>
@@ -297,16 +303,14 @@
                     <div class="menu-1">
                         <ul>
                             <li><a href="{{ path('app_home') }}">Home</a></li>
-                             <li class="has-dropdown">
-                                    <a href="#">Réservation</a>
-                                    <ul class="dropdown">
-                                                 <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Personnalisée</a></li>
-                                            <li><a href="{{ path('admin_reservations_user_pack_new') }}">Pack</a></li>
-                                    </ul>
-                                </li>
-                            <li>
-                                                        <a href="{{ path('user_packs') }}">Packs</a></li>
-
+                            <li class="has-dropdown">
+                                <a href="#">Réservation</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Personnalisée</a></li>
+                                    <li><a href="{{ path('admin_reservations_user_pack_new') }}">Pack</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('user_packs') }}">Packs</a></li>
                             <li class="has-dropdown">
                                 <a href="#">Services</a>
                                 <ul class="dropdown">
@@ -321,7 +325,7 @@
                                 <a href="#">
                                     <span class="user-circle">
                                         {% if app.user and app.user.image %}
-                                            <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
                                         {% else %}
                                             <i class="icon-user"></i>
                                         {% endif %}
@@ -378,22 +382,31 @@
                                             {% endfor %}
                                             {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'reclamation-form'}}) }}
                                                 <div class="form-group">
-                                                    {{ form_label(form.titre) }}
-                                                    {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                                                    {% if form.titre.vars.errors|length > 0 %}
+                                                        <span class="form-error">{{ form_errors(form.titre) }}</span>
+                                                    {% endif %}
+                                                    {{ form_label(form.titre, null, {'label_attr': {'render_errors': false}}) }}
+                                                    {{ form_widget(form.titre, {'attr': {'class': 'form-control'}, 'render_errors': false}) }}
                                                 </div>
                                                 <div class="form-group">
-                                                    {{ form_label(form.description) }}
-                                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                    {% if form.description.vars.errors|length > 0 %}
+                                                        <span class="form-error">{{ form_errors(form.description) }}</span>
+                                                    {% endif %}
+                                                    {{ form_label(form.description, null, {'label_attr': {'render_errors': false}}) }}
+                                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}, 'render_errors': false}) }}
                                                 </div>
                                                 <div class="form-group">
-                                                    {{ form_label(form.Type) }}
-                                                    {{ form_widget(form.Type, {'attr': {'class': 'form-control'}}) }}
+                                                    {% if form.Type.vars.errors|length > 0 %}
+                                                        <span class="form-error">{{ form_errors(form.Type) }}</span>
+                                                    {% endif %}
+                                                    {{ form_label(form.Type, null, {'label_attr': {'render_errors': false}}) }}
+                                                    {{ form_widget(form.Type, {'attr': {'class': 'form-control'}, 'render_errors': false}) }}
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
                                                     <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
                                                 </div>
-                                            {{ form_end(form) }}
+                                            {{ form_end(form, {'render_rest': false}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -463,43 +476,6 @@
                             });
                         }
                     );
-
-                    // Soumission AJAX
-                    $('#reclamation-form').on('submit', function(event) {
-                        event.preventDefault();
-                        const form = this;
-                        const formData = new FormData(form);
-
-                        $.ajax({
-                            url: form.action,
-                            method: form.method,
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            dataType: 'json',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                            success: function(data) {
-                                if (data.success) {
-                                    alert('Réclamation soumise avec succès !');
-                                    form.reset();
-                                } else {
-                                    if (data.errors) {
-                                        for (const field in data.errors) {
-                                            data.errors[field].forEach(error => {
-                                                alert(`Erreur dans ${field} : ${error}`);
-                                            });
-                                        }
-                                    } else {
-                                        alert('Une erreur est survenue lors de la soumission.');
-                                    }
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Erreur AJAX :', error);
-                                alert('Une erreur est survenue lors de la communication avec le serveur.');
-                            }
-                        });
-                    });
                 });
             }
         </script>
