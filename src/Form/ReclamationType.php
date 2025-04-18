@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ReclamationType extends AbstractType
 {
@@ -17,11 +18,18 @@ class ReclamationType extends AbstractType
         $builder
             ->add('titre', TextType::class, [
                 'label' => 'Titre de la réclamation',
-                'required' => false, // Désactiver la validation HTML5
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'Le titre ne peut pas être vide.']),
+                    new Assert\Length(['max' => 255, 'maxMessage' => 'Le titre ne peut pas dépasser 255 caractères.']),
+                ],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
-                'required' => false, // Désactiver la validation HTML5
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'La description ne peut pas être vide.']),
+                ],
             ])
             ->add('Type', ChoiceType::class, [
                 'label' => 'Type de réclamation',
@@ -33,7 +41,10 @@ class ReclamationType extends AbstractType
                     'Autre' => Reclamation::TYPE_AUTRE,
                 ],
                 'placeholder' => 'Choisissez un type',
-                'required' => false, // Désactiver la validation HTML5
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'Veuillez sélectionner un type de réclamation.']),
+                ],
             ]);
     }
 

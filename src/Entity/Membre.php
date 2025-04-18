@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use App\Repository\MembreRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MembreRepository::class)]
 #[ORM\Table(name: 'membres')]
@@ -18,38 +19,51 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Nom')] // Correction ici
-    private ?string $nom = null;
+    #[ORM\Column(type: 'string', nullable: false, name: 'Nom')]
+    private string $nom = '';
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Prénom')] // Correction ici
-    private ?string $prenom = null;
+    #[ORM\Column(type: 'string', nullable: false, name: 'Prénom')]
+    private string $prenom = '';
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Email')] // Correction ici
-    private ?string $email = null;
+    #[ORM\Column(type: 'string', nullable: false, name: 'Email', unique: true)]
+    private string $email = '';
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'CIN')] // Correction ici
-    private ?string $cin = null;
+    #[ORM\Column(type: 'string', nullable: false, name: 'CIN')]
+    private string $cin = '';
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'NumTel')] // Correction ici
-    private ?string $numTel = null;
+    #[ORM\Column(type: 'string', nullable: false, name: 'NumTel')]
+    private string $numTel = '';
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Adresse')] // Correction ici
-    private ?string $adresse = null;
+    #[ORM\Column(type: 'string', nullable: false, name: 'Adresse')]
+    private string $adresse = '';
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'motDePasse')] // Correction ici
-    private ?string $motDePasse = null;
+    #[ORM\Column(type: 'string', nullable: false, name: 'motDePasse')]
+    private string $motDePasse = '';
 
-    #[ORM\Column(type: 'string', nullable: false, name: 'Role')] // Correction ici
-    private ?string $role = null;
+    #[ORM\Column(type: 'string', nullable: false, name: 'Role')]
+    private string $role = '';
 
-    #[ORM\Column(type: 'string', nullable: true, name: 'image')] // Correction ici
+    #[ORM\Column(type: 'string', nullable: true, name: 'image')]
     private ?string $image = null;
 
-    #[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $token = null;
 
-    #[ORM\Column(type: 'boolean', nullable: true, name: 'isConfirmed')] // Correction ici
-    private ?bool $isConfirmed = false; // Valeur par défaut à false (0)
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $tokenExpiration = null;
+
+    #[ORM\Column(type: 'boolean', nullable: true, name: 'isConfirmed')]
+    private ?bool $isConfirmed = false;
+
+    #[ORM\Column(type: 'date', nullable: true)]
+    private ?\DateTimeInterface $dateOfBirth = null;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Assert\Choice(choices: ['Homme', 'Femme'], message: 'Veuillez choisir un genre valide (Homme ou Femme).')]
+    private ?string $gender = null;
+
+    #[ORM\Column(type: 'string', length: 180, nullable: true, unique: true)]
+    private ?string $username = null;
 
     #[ORM\OneToMany(targetEntity: Feedback::class, mappedBy: 'membre')]
     private Collection $feedbacks;
@@ -57,18 +71,24 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'membre')]
     private Collection $reclamations;
 
-    
+    #[ORM\OneToMany(targetEntity: Reservationpack::class, mappedBy: 'membre')]
+    private Collection $reservationpacks;
+
+    #[ORM\OneToMany(targetEntity: Reservationpersonnalise::class, mappedBy: 'membre')]
+    private Collection $reservationpersonnalises;
 
     public function __construct()
     {
         $this->feedbacks = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
+        $this->reservationpacks = new ArrayCollection();
+        $this->reservationpersonnalises = new ArrayCollection();
     }
 
     // Implémentation des méthodes de UserInterface
     public function getRoles(): array
     {
-        return ['ROLE_' . strtoupper($this->role)]; // Ex: ROLE_ADMIN, ROLE_AGENT, ROLE_MEMBRE
+        return ['ROLE_' . strtoupper($this->role)];
     }
 
     public function getPassword(): ?string
@@ -78,7 +98,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->email; // Utilisé pour identifier l'utilisateur (email dans votre cas)
+        return $this->email;
     }
 
     public function eraseCredentials(): void
@@ -86,7 +106,6 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         // Si vous stockez des données sensibles temporairement, supprimez-les ici
     }
 
-    // Getters et setters
     public function getId(): ?int
     {
         return $this->id;
@@ -98,7 +117,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getNom(): ?string
+    public function getNom(): string
     {
         return $this->nom;
     }
@@ -109,7 +128,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getPrenom(): string
     {
         return $this->prenom;
     }
@@ -120,7 +139,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -131,7 +150,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCin(): ?string
+    public function getCin(): string
     {
         return $this->cin;
     }
@@ -142,7 +161,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getNumTel(): ?string
+    public function getNumTel(): string
     {
         return $this->numTel;
     }
@@ -153,7 +172,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdresse(): ?string
+    public function getAdresse(): string
     {
         return $this->adresse;
     }
@@ -164,7 +183,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMotDePasse(): ?string
+    public function getMotDePasse(): string
     {
         return $this->motDePasse;
     }
@@ -175,7 +194,7 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRole(): ?string
+    public function getRole(): string
     {
         return $this->role;
     }
@@ -208,6 +227,17 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getTokenExpiration(): ?\DateTimeInterface
+    {
+        return $this->tokenExpiration;
+    }
+
+    public function setTokenExpiration(?\DateTimeInterface $tokenExpiration): self
+    {
+        $this->tokenExpiration = $tokenExpiration;
+        return $this;
+    }
+
     public function isConfirmed(): ?bool
     {
         return $this->isConfirmed;
@@ -216,6 +246,39 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsConfirmed(?bool $isConfirmed): self
     {
         $this->isConfirmed = $isConfirmed;
+        return $this;
+    }
+
+    public function getDateOfBirth(): ?\DateTimeInterface
+    {
+        return $this->dateOfBirth;
+    }
+
+    public function setDateOfBirth(?\DateTimeInterface $dateOfBirth): self
+    {
+        $this->dateOfBirth = $dateOfBirth;
+        return $this;
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?string $gender): self
+    {
+        $this->gender = $gender;
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(?string $username): self
+    {
+        $this->username = $username;
         return $this;
     }
 
@@ -260,6 +323,60 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeReclamation(Reclamation $reclamation): self
     {
         $this->reclamations->removeElement($reclamation);
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservationpack>
+     */
+    public function getReservationpacks(): Collection
+    {
+        return $this->reservationpacks;
+    }
+
+    public function addReservationpack(Reservationpack $reservationpack): self
+    {
+        if (!$this->reservationpacks->contains($reservationpack)) {
+            $this->reservationpacks[] = $reservationpack;
+            $reservationpack->setMembre($this);
+        }
+        return $this;
+    }
+
+    public function removeReservationpack(Reservationpack $reservationpack): self
+    {
+        if ($this->reservationpacks->removeElement($reservationpack)) {
+            if ($reservationpack->getMembre() === $this) {
+                $reservationpack->setMembre(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservationpersonnalise>
+     */
+    public function getReservationpersonnalises(): Collection
+    {
+        return $this->reservationpersonnalises;
+    }
+
+    public function addReservationpersonnalise(Reservationpersonnalise $reservationpersonnalise): self
+    {
+        if (!$this->reservationpersonnalises->contains($reservationpersonnalise)) {
+            $this->reservationpersonnalises[] = $reservationpersonnalise;
+            $reservationpersonnalise->setMembre($this);
+        }
+        return $this;
+    }
+
+    public function removeReservationpersonnalise(Reservationpersonnalise $reservationpersonnalise): self
+    {
+        if ($this->reservationpersonnalises->removeElement($reservationpersonnalise)) {
+            if ($reservationpersonnalise->getMembre() === $this) {
+                $reservationpersonnalise->setMembre(null);
+            }
+        }
         return $this;
     }
 }

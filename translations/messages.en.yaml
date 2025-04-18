@@ -1,0 +1,27 @@
+settings: Settings
+languages: Languages
+french: French
+english: English
+home: Home
+notifications: Notifications
+privacy_and_security: Privacy and Security
+chat_settings: Chat Settings
+advance_settings: Advanced Settings
+your_account: Your Account
+security_and_account_access: Security and Account Access
+profile_picture: Profile Picture
+default_profile_picture: Default Profile Picture
+edit_profile_picture: Edit Profile Picture
+first_name: First Name
+last_name: Last Name
+date_of_birth: Date of Birth
+gender: Gender
+email: Email
+cin: ID Number
+phone_number: Phone Number
+address: Address
+role: Role
+account_confirmed: Account Confirmed
+username: Username
+password: Password
+save_changes: Save Changes

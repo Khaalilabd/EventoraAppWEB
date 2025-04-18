@@ -234,10 +234,13 @@
                                  <li class="has-dropdown">
                                     <a href="#">Réservation</a>
                                     <ul class="dropdown">
-                                        <li><a href="#"> Personalisée</a></li>
-                                        <li><a href="#"> Packs </a></li>
+                                            <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Reservation personnalisée</a></li>
+                                            <li><a href="{{ path('admin_reservations_user_pack_new') }}">Reservation Pack</a></li>
                                     </ul>
                                 </li>
+                                  <li class="has-dropdown">
+                                        <a href="{{ path('user_packs') }}">Packs</a>
+                                    </li>
                                 <li class="has-dropdown">
                                     <a href="#">Services</a>
                                     <ul class="dropdown">
@@ -261,7 +264,7 @@
                                     </a>
                                     <ul class="dropdown">
                                         {% if app.user %}
-                                            <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
                                             <li><a href="{{ path('app_home') }}">Notifications</a></li>
                                             <li><a href="{{ path('app_home') }}">Historique</a></li>
                                             {% if is_granted('ROLE_ADMIN') %}

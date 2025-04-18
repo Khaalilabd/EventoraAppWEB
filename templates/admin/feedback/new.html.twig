@@ -261,6 +261,12 @@
                 .star-rating-container .star.filled {
                     color: #ffd700 !important;
                 }
+                .form-error {
+                    color: #ff4d4d;
+                    font-size: 0.9em;
+                    margin-bottom: 5px;
+                    display: block;
+                }
                 @media (max-width: 768px) {
                     .menu-toggle {
                         display: block;
@@ -324,13 +330,14 @@
                     <div class="menu-1">
                         <ul>
                             <li><a href="{{ path('app_home') }}">Home</a></li>
-                              <li class="has-dropdown">
-                                    <a href="#">Réservation</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#"> Personalisée</a></li>
-                                        <li><a href="#"> Packs </a></li>
-                                    </ul>
-                                </li>
+                            <li class="has-dropdown">
+                                <a href="#">Réservation</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Personnalisée</a></li>
+                                    <li><a href="#">Packs</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('user_packs') }}">Packs</a></li>
                             <li class="has-dropdown">
                                 <a href="#">Services</a>
                                 <ul class="dropdown">
@@ -345,7 +352,7 @@
                                 <a href="#">
                                     <span class="user-circle">
                                         {% if app.user and app.user.image %}
-                                            <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
                                         {% else %}
                                             <i class="icon-user"></i>
                                         {% endif %}
@@ -405,9 +412,12 @@
                                             {% endfor %}
                                             {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'feedback-form'}}) }}
                                                 <div class="form-group">
-                                                    {{ form_label(form.Vote, 'Note (1 à 5 étoiles)') }}
+                                                    {% if form.Vote.vars.errors|length > 0 %}
+                                                        <span class="form-error">{{ form_errors(form.Vote) }}</span>
+                                                    {% endif %}
+                                                    {{ form_label(form.Vote, 'Note (1 à 5 étoiles)', {'label_attr': {'render_errors': false}}) }}
                                                     <div class="star-rating-container">
-                                                        {{ form_widget(form.Vote, {'attr': {'class': 'form-control star-rating'}}) }}
+                                                        {{ form_widget(form.Vote, {'attr': {'class': 'form-control star-rating'}, 'render_errors': false}) }}
                                                         <div class="stars">
                                                             <span class="star" data-value="1">★</span>
                                                             <span class="star" data-value="2">★</span>
@@ -418,22 +428,32 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    {{ form_label(form.Description, 'Votre expérience') }}
-                                                    {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                    {% if form.Description.vars.errors|length > 0 %}
+                                                        <span class="form-error">{{ form_errors(form.Description) }}</span>
+                                                    {% endif %}
+                                                    {{ form_label(form.Description, 'Votre expérience', {'label_attr': {'render_errors': false}}) }}
+                                                    {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'rows': '5'}, 'render_errors': false}) }}
                                                 </div>
                                                 <div class="form-group">
-                                                    {{ form_label(form.souvenirsFile, 'Uploader une image (optionnel)') }}
-                                                    {{ form_widget(form.souvenirsFile, {'attr': {'class': 'form-control'}}) }}
+                                                    {% if form.souvenirsFile.vars.errors|length > 0 %}
+                                                        <span class="form-error">{{ form_errors(form.souvenirsFile) }}</span>
+                                                    {% endif %}
+                                                    {{ form_label(form.souvenirsFile, 'Uploader une image (optionnel)', {'label_attr': {'render_errors': false}}) }}
+                                                    {{ form_widget(form.souvenirsFile, {'attr': {'class': 'form-control'}, 'render_errors': false}) }}
+                                                </div>
+                                                <div class="form-group">
+                                                    {{ form_label(form.date, 'Date', {'label_attr': {'render_errors': false}}) }}
+                                                    {{ form_widget(form.date, {'attr': {'class': 'form-control', 'readonly': true}, 'render_errors': false}) }}
                                                 </div>
                                                 <div class="form-group form-check">
-                                                    {{ form_widget(form.Recommend, {'attr': {'class': 'form-check-input'}}) }}
-                                                    {{ form_label(form.Recommend, 'Recommanderiez-vous notre service ?', {'label_attr': {'class': 'form-check-label'}}) }}
+                                                    {{ form_widget(form.Recommend, {'attr': {'class': 'form-check-input'}, 'render_errors': false}) }}
+                                                    {{ form_label(form.Recommend, 'Recommanderiez-vous notre service ?', {'label_attr': {'class': 'form-check-label', 'render_errors': false}}) }}
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
                                                     <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
                                                 </div>
-                                            {{ form_end(form) }}
+                                            {{ form_end(form, {'render_rest': false}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -539,44 +559,6 @@
                         selectedValue = parseInt(select.val());
                         updateStars(selectedValue);
                     }
-
-                    // Soumission AJAX
-                    $('#feedback-form').on('submit', function(event) {
-                        event.preventDefault();
-                        const form = this;
-                        const formData = new FormData(form);
-
-                        $.ajax({
-                            url: form.action,
-                            method: form.method,
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            dataType: 'json',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                            success: function(data) {
-                                if (data.success) {
-                                    alert('Feedback soumis avec succès !');
-                                    form.reset();
-                                    stars.removeClass('filled');
-                                } else {
-                                    if (data.errors) {
-                                        for (const field in data.errors) {
-                                            data.errors[field].forEach(error => {
-                                                alert(`Erreur dans ${field} : ${error}`);
-                                            });
-                                        }
-                                    } else {
-                                        alert('Une erreur est survenue lors de la soumission.');
-                                    }
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Erreur AJAX :', error);
-                                alert('Une erreur est survenue lors de la communication avec le serveur.');
-                            }
-                        });
-                    });
                 });
             }
         </script>

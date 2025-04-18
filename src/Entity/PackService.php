@@ -10,12 +10,16 @@ use App\Repository\PackServiceRepository;
 
 #[ORM\Entity(repositoryClass: PackServiceRepository::class)]
 #[ORM\Table(name: 'pack_service')]
+#[ORM\UniqueConstraint(name: 'pack_service_pk', columns: ['pack_id', 'service_titre'])]
 class PackService
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
     private ?int $pack_id = null;
+
+    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Id]
+    private ?string $service_titre = null;
 
     public function getPack_id(): ?int
     {
@@ -27,9 +31,6 @@ class PackService
         $this->pack_id = $pack_id;
         return $this;
     }
-
-    #[ORM\Column(type: 'string', nullable: false)]
-    private ?string $service_titre = null;
 
     public function getService_titre(): ?string
     {
@@ -58,5 +59,4 @@ class PackService
 
         return $this;
     }
-
 }
