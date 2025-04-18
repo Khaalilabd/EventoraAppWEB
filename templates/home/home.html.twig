@@ -17,6 +17,10 @@
             <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
             <!-- Bootstrap -->
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            {# navbar #}
+            <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+            {# slider #}
+            <link rel="stylesheet" href="{{ asset('css/slider.css') }}">
             <!-- Magnific Popup -->
             <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
             <!-- Owl Carousel -->
@@ -24,188 +28,7 @@
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
             <!-- Theme style -->
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
-            <!-- Custom styles -->
-            <style>
-                /* Navigation fixe */
-                .fh5co-nav {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    z-index: 1000;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                }
-                .fh5co-nav .container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px 15px;
-                }
-                .fh5co-logo a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-weight: 700;
-                    font-size: 24px;
-                    color: #333;
-                    text-decoration: none;
-                }
-                .user-circle {
-                    display: inline-block;
-                    width: 32px;
-                    height: 32px;
-                    line-height: 32px;
-                    text-align: center;
-                    border-radius: 50%;
-                    background-color: #f0f0f0;
-                    color: #333;
-                    font-size: 16px;
-                    vertical-align: middle;
-                    margin-right: 8px;
-                }
-                .user-circle img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 50%;
-                }
-                .fh5co-nav .menu-1 {
-                    display: block;
-                }
-                .fh5co-nav .menu-1 ul {
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    margin: 0;
-                    padding: 0;
-                    list-style: none;
-                }
-                .fh5co-nav .menu-1 ul li {
-                    margin: 0 15px;
-                }
-                .fh5co-nav .menu-1 ul li a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-size: 16px;
-                    color: #333;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    transition: color 0.3s ease;
-                }
-                .fh5co-nav .menu-1 ul li a:hover {
-                    color: #007bff;
-                }
-                /* Correction de la couleur du lien actif */
-                .fh5co-nav .menu-1 ul li.active a {
-                    color: #007bff !important;
-                    font-weight: 600;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown {
-                    position: relative;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    right: 0;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    list-style: none;
-                    padding: 10px 0;
-                    min-width: 150px;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                    margin: 0;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                    padding: 10px 20px;
-                    display: block;
-                    font-size: 14px;
-                    text-transform: none;
-                    color: #333;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                    color: #007bff;
-                }
-                /* Menu hamburger pour mobile */
-                .menu-toggle {
-                    display: none;
-                    font-size: 24px;
-                    cursor: pointer;
-                    color: #333;
-                }
-                /* Style des boutons */
-                .btn-default {
-                    font-family: 'Work Sans', sans-serif;
-                    background-color: #fff;
-                    border: 1px solid #007bff;
-                    color: #007bff;
-                    padding: 10px 20px;
-                    border-radius: 5px;
-                    transition: all 0.3s ease;
-                }
-                .btn-default:hover {
-                    background-color: #007bff;
-                    color: #fff;
-                    transform: scale(1.05);
-                }
-                /* Ajustement du header pour la navigation fixe */
-                #fh5co-header {
-                    margin-top: 60px;
-                }
-                /* Typographie cohérente */
-                h1, h2, h3, h4, h5, h6 {
-                    font-family: 'Work Sans', sans-serif;
-                }
-                .fh5co-heading h2 {
-                    font-weight: 600;
-                    color: #333;
-                }
-                .fh5co-heading span {
-                    font-family: 'Sacramento', cursive;
-                    color: #007bff;
-                }
-                /* Responsivité */
-                @media (max-width: 768px) {
-                    .menu-toggle {
-                        display: block;
-                    }
-                    .fh5co-nav .menu-1 ul {
-                        display: none;
-                        flex-direction: column;
-                        position: absolute;
-                        top: 60px;
-                        left: 0;
-                        width: 100%;
-                        background-color: #fff;
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                        padding: 20px 0;
-                    }
-                    .fh5co-nav .menu-1 ul.active {
-                        display: flex;
-                    }
-                    .fh5co-nav .menu-1 ul li {
-                        margin: 10px 0;
-                        text-align: center;
-                    }
-                    .user-circle {
-                        margin-right: 0;
-                        margin-bottom: 5px;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                        position: static;
-                        display: none;
-                        box-shadow: none;
-                        background-color: #f8f9fa;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block;
-                    }
-                }
-            </style>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />            <!-- Custom styles -->
         {% endblock %}
 
         <!-- Modernizr JS -->
@@ -218,87 +41,143 @@
     </head>
     <body>
         <div class="fh5co-loader"></div>
-        <div id="page">
             {% block body %}
-                <nav class="fh5co-nav" role="navigation">
-                    <div class="container">
-                        <div class="fh5co-logo">
-                            <a href="{{ path('app_home') }}">Eventora</a>
-                        </div>
-                        <div class="menu-toggle">
-                            <i class="icon-menu"></i>
-                        </div>
-                        <div class="menu-1">
-                            <ul>
-                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                                 <li class="has-dropdown">
-                                    <a href="#">Réservation</a>
-                                    <ul class="dropdown">
-                                            <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Reservation personnalisée</a></li>
-                                            <li><a href="{{ path('admin_reservations_user_pack_new') }}">Reservation Pack</a></li>
-                                    </ul>
-                                </li>
-                                  <li class="has-dropdown">
-                                        <a href="{{ path('user_packs') }}">Packs</a>
-                                    </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#">Service</a></li>
-                                        <li><a href="#">Partenaire</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="#">Talk with Evi</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                    <ul class="dropdown">
-                                        {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_home') }}">Historique</a></li>
-                                            {% if is_granted('ROLE_ADMIN') %}
-                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                            {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                        {% else %}
-                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
+            <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Réservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Reservation personnalisée</a></li>
+                                <li><a href="{{ path('admin_reservations_user_pack_new') }}">Reservation Pack</a></li>
                             </ul>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="{{ path('user_packs') }}">Packs</a>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="#">Talk with Evi</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="page">
+        <header id="fh5co-header" class="fh5co-cover" role="banner">
+        <div class="slider-container">
+            <!-- Contrôles radio pour le slider -->
+            <input type="radio" name="slider" id="slide1" checked aria-label="Slide 1" />
+            <input type="radio" name="slider" id="slide2" aria-label="Slide 2" />
+            <input type="radio" name="slider" id="slide3" aria-label="Slide 3" />
+            <input type="radio" name="slider" id="slide4" aria-label="Slide 4" />
+            <input type="radio" name="slider" id="slide5" aria-label="Slide 5" />
+    
+            <!-- Wrapper du slider -->
+            <div class="slider-wrapper" role="region" aria-label="Carousel">
+                <div class="slider-inner">
+                    <article class="slide">
+                        <img src="{{ asset('/images/event.jpg') }}" alt="Malacca landscape" />
+                        <div class="info top-left">
+                            <h3>Malacca</h3>
+                            <p>Discover the vibrant culture of Malacca.</p>
                         </div>
-                    </div>
-                </nav>
-
-                <header id="fh5co-header" class="fh5co-cover" role="banner" style="background-image:url({{ asset('images/event.jpg') }});" data-stellar-background-ratio="0.5">
-                    <div class="overlay"></div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-8 col-md-offset-2 text-center">
-                                <div class="display-t">
-                                    <div class="display-tc animate-box" data-animate-effect="fadeIn">
-                                        <h1>Wait For Our Event</h1>
-                                        <div class="simply-countdown simply-countdown-one"></div>
-                                        <p><a href="#" class="btn btn-default btn-sm">Save the date</a></p>
-                                    </div>
-                                </div>
-                            </div>
+                    </article>
+                    <article class="slide">
+                        <img src="{{ asset('/images/videoframe_2219.png') }}" alt="Cameron Highland scenery" />
+                        <div class="info bottom-right">
+                            <h3>Cameron Highland</h3>
+                            <p>Experience the serene beauty of Cameron Highland.</p>
                         </div>
-                    </div>
-                </header>
-
+                    </article>
+                    <article class="slide">
+                        <img src="{{ asset('/images/videoframe_7324.png') }}" alt="New Delhi cityscape" />
+                        <div class="info bottom-left">
+                            <h3>New Delhi</h3>
+                            <p>Explore the historic charm of New Delhi.</p>
+                        </div>
+                    </article>
+                    <article class="slide">
+                        <img src="{{ asset('/images/videoframe_8977.png') }}" alt="Ladakh mountains" />
+                        <div class="info top-right">
+                            <h3>Ladakh</h3>
+                            <p>Adventure awaits in the rugged terrains of Ladakh.</p>
+                        </div>
+                    </article>
+                    <article class="slide">
+                        <img src="{{ asset('/images/wedding.jpg') }}" alt="Nubra Valley desert" />
+                        <div class="info bottom-left">
+                            <h3>Nubra Valley</h3>
+                            <p>Marvel at the unique landscapes of Nubra Valley.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+    
+            <!-- Contrôles précédent/suivant -->
+            <div class="slider-prev-next-control">
+                <label for="slide1" class="prev" aria-label="Previous slide"></label>
+                <label for="slide2" class="prev" aria-label="Previous slide"></label>
+                <label for="slide3" class="prev" aria-label="Previous slide"></label>
+                <label for="slide4" class="prev" aria-label="Previous slide"></label>
+                <label for="slide5" class="prev" aria-label="Previous slide"></label>
+                <label for="slide1" class="next" aria-label="Next slide"></label>
+                <label for="slide2" class="next" aria-label="Next slide"></label>
+                <label for="slide3" class="next" aria-label="Next slide"></label>
+                <label for="slide4" class="next" aria-label="Next slide"></label>
+                <label for="slide5" class="next" aria-label="Next slide"></label>
+            </div>
+    
+            <!-- Contrôles des points -->
+            <div class="slider-dot-control">
+                <label for="slide1" aria-label="Go to slide 1"></label>
+                <label for="slide2" aria-label="Go to slide 2"></label>
+                <label for="slide3" aria-label="Go to slide 3"></label>
+                <label for="slide4" aria-label="Go to slide 4"></label>
+                <label for="slide5" aria-label="Go to slide 5"></label>
+            </div>
+        </div>
+    </header>
                 <div id="fh5co-couple">
                     <div class="container">
                         <div class="row">
@@ -459,8 +338,8 @@
                         <div class="row row-bottom-padded-md">
                             <div class="col-md-12">
                                 <ul id="fh5co-gallery-list">
-                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(images/gallery-1.jpg); "> 
-                                        <a href="images/gallery-1.jpg">
+                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(/images/gallery-1.jpg); "> 
+                                        <a href="/images/gallery-1.jpg">
                                             <div class="case-studies-summary">
                                                 <span>14 Photos</span>
                                                 <h2>Two Glas of Juice</h2>
@@ -737,7 +616,7 @@
             <div class="gototop js-top">
                 <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
             </div>
-
+        </div>
             {% block javascripts %}
                 <script src="{{ asset('js/jquery.min.js') }}"></script>
                 <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>

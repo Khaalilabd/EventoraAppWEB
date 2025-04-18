@@ -23,82 +23,87 @@
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
             <!-- Theme style -->
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+             {# navbar #}
+             <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
         {% endblock %}
 
         <!-- Modernizr JS -->
         <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
         <!-- FOR IE9 below -->
         <script src="{{ asset('js/respond.min.js') }}"></script>
-    
         {% block javascripts_head %}{% endblock %}
     </head>
     <body>
         <div class="fh5co-loader"></div>
-        <div id="page">
             {% block body %}
-                <nav class="fh5co-nav" role="navigation">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xs-2">
-                                <div id="fh5co-logo"><a href="{{ path('app_home') }}">Eventora<strong></strong></a></div>
-                            </div>
-                            <div class="col-xs-10 text-right menu-1">
-                                <ul>
-                                    <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Services</a>
-                                        <ul class="dropdown">
-                                            <li><a href="{{ path('user_services') }}">Service</a></li>
-                                            <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Reclamation</a>
-                                        <ul class="dropdown">
-                                            <li><a href="#">Reclamation</a></li>
-                                            <li><a href="#">Feedback</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Reservations</a>
-                                        <ul class="dropdown">
-                                            <li><a href="#">Reservation personalisé</a></li>
-                                            <li><a href="#">Reservation</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Packs</a>
-                                        <ul class="dropdown">
-                                            <li><a href="#"></a></li>
-                                            <li><a href="#"></a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Talk with Evi</a></li>
-                                    <li><a href="#">Contact</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-                
-                <header id="fh5co-header" class="fh5co-cover" role="banner" style="background-image:url({{ asset('images/gallery-6.jpg') }});" data-stellar-background-ratio="0.5">
-                    <div class="overlay"></div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-8 col-md-offset-2 text-center">
-                                <div class="display-t">
-                                    <div class="display-tc animate-box" data-animate-effect="fadeIn">
-                                        <h1>Wait For Our Event</h1>
-                                        <div class="simply-countdown simply-countdown-one"></div>
-                                        <p><a href="#" class="btn btn-default btn-sm">Save the date</a></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Réservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Reservation personnalisée</a></li>
+                                <li><a href="{{ path('admin_reservations_user_pack_new') }}">Reservation Pack</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="{{ path('user_packs') }}">Packs</a>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="#">Talk with Evi</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="page">
+
+                <header id="fh5co-header" class="fh5co-cover" role="banner" >
+                    
                 </header>
-                
-               <div class="card-container">
+    <section id="services-section">
+            <div class="card-container">
         {% for service in GServices %}
             <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
                 <div class="content">
@@ -135,6 +140,7 @@
             </div>
         {% endfor %}
     </div>
+    </section>
     
 
 <style>
@@ -435,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
                 </div>
             {% endblock %}
-            
+        </div>
             {% block javascripts %}
                 <!-- Charger d'abord jQuery -->
                 <script src="{{ asset('js/jquery.min.js') }}"></script>
