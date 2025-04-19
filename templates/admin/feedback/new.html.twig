@@ -189,6 +189,9 @@
                     border-color: #007bff;
                     box-shadow: none;
                 }
+                .event-wrap .form-control.is-invalid {
+                    border-color: #ff4d4d;
+                }
                 .event-wrap .form-control select {
                     color: #fff;
                     background: rgba(255, 255, 255, 0.1);
@@ -261,10 +264,10 @@
                 .star-rating-container .star.filled {
                     color: #ffd700 !important;
                 }
-                .form-error {
+                .text-danger {
+                    font-size: 14px;
+                    margin-top: 5px;
                     color: #ff4d4d;
-                    font-size: 0.9em;
-                    margin-bottom: 5px;
                     display: block;
                 }
                 @media (max-width: 768px) {
@@ -333,7 +336,7 @@
                             <li class="has-dropdown">
                                 <a href="#">Réservation</a>
                                 <ul class="dropdown">
-                                    <li><a href="#">Personnalisée</a></li>
+                                    <li><a href="#">Personalisée</a></li>
                                     <li><a href="#">Packs</a></li>
                                 </ul>
                             </li>
@@ -410,50 +413,41 @@
                                                     </button>
                                                 </div>
                                             {% endfor %}
-                                            {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'feedback-form'}}) }}
+                                            {{ form_start(form, {'attr': {'class': 'form', 'id': 'feedback-form'}}) }}
                                                 <div class="form-group">
-                                                    {% if form.Vote.vars.errors|length > 0 %}
-                                                        <span class="form-error">{{ form_errors(form.Vote) }}</span>
-                                                    {% endif %}
-                                                    {{ form_label(form.Vote, 'Note (1 à 5 étoiles)', {'label_attr': {'render_errors': false}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.Vote) }}</div>
+                                                    {{ form_label(form.Vote, 'Note (1 à 5 étoiles)') }}
                                                     <div class="star-rating-container">
-                                                        {{ form_widget(form.Vote, {'attr': {'class': 'form-control star-rating'}, 'render_errors': false}) }}
+                                                        {{ form_widget(form.Vote, {'attr': {'class': 'form-control star-rating', 'name': 'feedback[Vote]'}}) }}
                                                         <div class="stars">
-                                                            <span class="star" data-value="1">★</span>
-                                                            <span class="star" data-value="2">★</span>
-                                                            <span class="star" data-value="3">★</span>
-                                                            <span class="star" data-value="4">★</span>
-                                                            <span class="star" data-value="5">★</span>
+                                                            <span class="star" data-value="1" aria-label="1 étoile">★</span>
+                                                            <span class="star" data-value="2" aria-label="2 étoiles">★</span>
+                                                            <span class="star" data-value="3" aria-label="3 étoiles">★</span>
+                                                            <span class="star" data-value="4" aria-label="4 étoiles">★</span>
+                                                            <span class="star" data-value="5" aria-label="5 étoiles">★</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    {% if form.Description.vars.errors|length > 0 %}
-                                                        <span class="form-error">{{ form_errors(form.Description) }}</span>
-                                                    {% endif %}
-                                                    {{ form_label(form.Description, 'Votre expérience', {'label_attr': {'render_errors': false}}) }}
-                                                    {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'rows': '5'}, 'render_errors': false}) }}
+                                                    <div class="text-danger">{{ form_errors(form.Description) }}</div>
+                                                    {{ form_label(form.Description, 'Votre expérience') }}
+                                                    {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Décrivez votre expérience en détail...', 'name': 'feedback[Description]'}}) }}
                                                 </div>
                                                 <div class="form-group">
-                                                    {% if form.souvenirsFile.vars.errors|length > 0 %}
-                                                        <span class="form-error">{{ form_errors(form.souvenirsFile) }}</span>
-                                                    {% endif %}
-                                                    {{ form_label(form.souvenirsFile, 'Uploader une image (optionnel)', {'label_attr': {'render_errors': false}}) }}
-                                                    {{ form_widget(form.souvenirsFile, {'attr': {'class': 'form-control'}, 'render_errors': false}) }}
-                                                </div>
-                                                <div class="form-group">
-                                                    {{ form_label(form.date, 'Date', {'label_attr': {'render_errors': false}}) }}
-                                                    {{ form_widget(form.date, {'attr': {'class': 'form-control', 'readonly': true}, 'render_errors': false}) }}
+                                                    <div class="text-danger">{{ form_errors(form.souvenirsFile) }}</div>
+                                                    {{ form_label(form.souvenirsFile, 'Uploader une image (optionnel)') }}
+                                                    {{ form_widget(form.souvenirsFile, {'attr': {'class': 'form-control', 'name': 'feedback[souvenirsFile]'}}) }}
                                                 </div>
                                                 <div class="form-group form-check">
-                                                    {{ form_widget(form.Recommend, {'attr': {'class': 'form-check-input'}, 'render_errors': false}) }}
-                                                    {{ form_label(form.Recommend, 'Recommanderiez-vous notre service ?', {'label_attr': {'class': 'form-check-label', 'render_errors': false}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.Recommend) }}</div>
+                                                    {{ form_widget(form.Recommend, {'attr': {'class': 'form-check-input', 'name': 'feedback[Recommend]'}}) }}
+                                                    {{ form_label(form.Recommend, 'Recommanderiez-vous notre service ?', {'label_attr': {'class': 'form-check-label'}}) }}
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
                                                     <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
                                                 </div>
-                                            {{ form_end(form, {'render_rest': false}) }}
+                                            {{ form_end(form) }}
                                         </div>
                                     </div>
                                 </div>
@@ -545,6 +539,7 @@
                             selectedValue = value;
                             select.val(value);
                             updateStars(value);
+                            console.log('Étoile sélectionnée : ' + value);
                         });
                         $(this).on('mouseover', function() {
                             const value = parseInt($(this).attr('data-value'));
@@ -559,6 +554,86 @@
                         selectedValue = parseInt(select.val());
                         updateStars(selectedValue);
                     }
+
+                    // Soumission AJAX
+                    $('#feedback-form').on('submit', function(event) {
+                        event.preventDefault();
+                        const form = this;
+                        const formData = new FormData(form);
+
+                        // Réinitialiser les erreurs et styles
+                        $('.form-control').removeClass('is-invalid');
+                        $('.text-danger').empty();
+
+                        // Journaliser les données envoyées
+                        for (var pair of formData.entries()) {
+                            console.log('Donnée envoyée : ' + pair[0] + ': ' + pair[1]);
+                        }
+
+                        console.log('Envoi de la requête AJAX', {
+                            url: form.action,
+                            method: form.method,
+                        });
+
+                        $.ajax({
+                            url: form.action,
+                            method: form.method,
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                            success: function(data) {
+                                console.log('Réponse AJAX reçue', data);
+                                if (data.success) {
+                                    alert('Feedback soumis avec succès !');
+                                    form.reset();
+                                    stars.removeClass('filled');
+                                    selectedValue = 0;
+                                } else {
+                                    // Afficher les erreurs sous les champs concernés
+                                    if (data.errors) {
+                                        for (const field in data.errors) {
+                                            const errorMessage = data.errors[field][0];
+                                            const $field = $(`[name="feedback[${field}]"]`);
+                                            if ($field.length) {
+                                                $field.addClass('is-invalid');
+                                                $field.closest('.form-group').find('.text-danger').text(errorMessage);
+                                            } else {
+                                                console.warn(`Champ ${field} non trouvé dans le formulaire.`);
+                                            }
+                                        }
+                                    }
+                                    alert(data.message || 'Veuillez corriger les erreurs dans le formulaire.');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Erreur AJAX :', {
+                                    status: status,
+                                    error: error,
+                                    response: xhr.responseText,
+                                });
+                                try {
+                                    const data = JSON.parse(xhr.responseText);
+                                    if (data.errors) {
+                                        for (const field in data.errors) {
+                                            const errorMessage = data.errors[field][0];
+                                            const $field = $(`[name="feedback[${field}]"]`);
+                                            if ($field.length) {
+                                                $field.addClass('is-invalid');
+                                                $field.closest('.form-group').find('.text-danger').text(errorMessage);
+                                            } else {
+                                                console.warn(`Champ ${field} non trouvé dans le formulaire.`);
+                                            }
+                                        }
+                                    }
+                                    alert(data.message || 'Erreur de communication avec le serveur.');
+                                } catch (e) {
+                                    alert('Erreur de communication avec le serveur. Veuillez réessayer.');
+                                }
+                            }
+                        });
+                    });
                 });
             }
         </script>

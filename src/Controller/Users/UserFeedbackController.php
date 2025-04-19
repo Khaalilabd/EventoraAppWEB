@@ -29,9 +29,15 @@ class UserFeedbackController extends AbstractController
         $this->logger->info('Début de la méthode new pour feedback', [
             'isAjax' => $request->isXmlHttpRequest(),
             'method' => $request->getMethod(),
+            'headers' => $request->headers->all(),
+            'request_data' => $request->request->all(),
+            'files' => $request->files->all(),
         ]);
 
         if (!$this->isGranted('ROLE_MEMBRE') && !$this->isGranted('ROLE_ADMIN')) {
+            $this->logger->warning('Accès refusé : utilisateur non autorisé', [
+                'roles' => $this->getUser() ? $this->getUser()->getRoles() : 'aucun utilisateur',
+            ]);
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'success' => false,
@@ -43,6 +49,7 @@ class UserFeedbackController extends AbstractController
 
         $user = $this->getUser();
         if (!$user) {
+            $this->logger->warning('Utilisateur non connecté');
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'success' => false,
@@ -55,6 +62,9 @@ class UserFeedbackController extends AbstractController
 
         $membre = $entityManager->getRepository(Membre::class)->findOneBy(['email' => $user->getEmail()]);
         if (!$membre) {
+            $this->logger->warning('Aucun membre correspondant trouvé', [
+                'email' => $user->getEmail(),
+            ]);
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'success' => false,
@@ -66,76 +76,75 @@ class UserFeedbackController extends AbstractController
         }
 
         $feedback = new Feedback();
+        $feedback->setMembre($membre);
         $form = $this->createForm(FeedbackType::class, $feedback);
         $form->handleRequest($request);
 
         if ($request->isXmlHttpRequest()) {
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    try {
-                        $feedback->setMembre($membre);
-                        $feedback->setDate(new \DateTime());
+            $this->logger->info('Requête AJAX reçue', [
+                'form_submitted' => $form->isSubmitted(),
+                'form_valid' => $form->isValid(),
+                'form_data' => $request->request->all(),
+                'files' => $request->files->all(),
+            ]);
 
-                        $souvenirsFile = $form->get('souvenirsFile')->getData();
-                        if ($souvenirsFile) {
-                            $this->logger->info('Image uploadée', [
-                                'filename' => $souvenirsFile->getClientOriginalName(),
-                                'size' => $souvenirsFile->getSize(),
-                                'mimeType' => $souvenirsFile->getMimeType(),
-                            ]);
-
-                            $binaryContent = file_get_contents($souvenirsFile->getPathname());
-                            $feedback->setSouvenirs($binaryContent);
-                        }
-
-                        $entityManager->persist($feedback);
-                        $entityManager->flush();
-
-                        $this->logger->info('Feedback enregistré avec succès', [
-                            'feedback_id' => $feedback->getID(),
+            if ($form->isSubmitted() && $form->isValid()) {
+                try {
+                    $souvenirsFile = $form->get('souvenirsFile')->getData();
+                    if ($souvenirsFile) {
+                        $this->logger->info('Image uploadée', [
+                            'filename' => $souvenirsFile->getClientOriginalName(),
+                            'size' => $souvenirsFile->getSize(),
+                            'mimeType' => $souvenirsFile->getMimeType(),
                         ]);
 
-                        return new JsonResponse(['success' => true]);
-                    } catch (\Exception $e) {
-                        $this->logger->error('Erreur lors de la soumission du feedback', [
-                            'exception' => $e->getMessage(),
-                            'stack_trace' => $e->getTraceAsString(),
-                        ]);
-
-                        return new JsonResponse([
-                            'success' => false,
-                            'errors' => ['souvenirsFile' => ['Erreur lors de l\'upload : ' . $e->getMessage()]]
-                        ], 500);
+                        $binaryContent = file_get_contents($souvenirsFile->getPathname());
+                        $feedback->setSouvenirs($binaryContent);
                     }
+
+                    $entityManager->persist($feedback);
+                    $entityManager->flush();
+
+                    $this->logger->info('Feedback enregistré avec succès', [
+                        'feedback_id' => $feedback->getID(),
+                    ]);
+
+                    return new JsonResponse(['success' => true, 'message' => 'Feedback soumis avec succès !']);
+                } catch (\Exception $e) {
+                    $this->logger->error('Erreur lors de la soumission du feedback', [
+                        'exception' => $e->getMessage(),
+                        'stack_trace' => $e->getTraceAsString(),
+                    ]);
+
+                    return new JsonResponse([
+                        'success' => false,
+                        'message' => 'Erreur serveur lors de la soumission : ' . $e->getMessage(),
+                    ], 500);
                 }
-
-                $errors = [];
-                foreach ($form->getErrors(true) as $error) {
-                    $fieldName = $error->getOrigin()->getName();
-                    $errors[$fieldName][] = $error->getMessage();
-                }
-
-                $this->logger->error('Erreurs de validation du formulaire', [
-                    'errors' => $errors,
-                    'form_data' => $request->request->all(),
-                    'files' => $request->files->all(),
-                ]);
-
-                return new JsonResponse(['success' => false, 'errors' => $errors]);
             }
 
-            $this->logger->warning('Requête AJAX invalide');
+            $errors = [];
+            foreach ($form->getErrors(true) as $error) {
+                $fieldName = $error->getOrigin() ? $error->getOrigin()->getName() : 'general';
+                $errors[$fieldName] = [$error->getMessage()];
+            }
+
+            $this->logger->warning('Erreurs de validation détectées', [
+                'errors' => $errors,
+                'form_data' => $request->request->all(),
+                'files' => $request->files->all(),
+            ]);
+
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Requête invalide.'
+                'errors' => $errors,
+                'message' => 'Veuillez corriger les erreurs dans le formulaire.',
+                'form_data' => $request->request->all(),
             ], 400);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $feedback->setMembre($membre);
-                $feedback->setDate(new \DateTime());
-
                 $souvenirsFile = $form->get('souvenirsFile')->getData();
                 if ($souvenirsFile) {
                     $binaryContent = file_get_contents($souvenirsFile->getPathname());

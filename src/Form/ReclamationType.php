@@ -18,7 +18,8 @@ class ReclamationType extends AbstractType
         $builder
             ->add('titre', TextType::class, [
                 'label' => 'Titre de la réclamation',
-                'required' => true,
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
                 'constraints' => [
                     new Assert\NotBlank(['message' => 'Le titre ne peut pas être vide.']),
                     new Assert\Length(['max' => 255, 'maxMessage' => 'Le titre ne peut pas dépasser 255 caractères.']),
@@ -26,7 +27,8 @@ class ReclamationType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
-                'required' => true,
+                'required' => false,
+                'attr' => ['class' => 'form-control', 'rows' => '5'],
                 'constraints' => [
                     new Assert\NotBlank(['message' => 'La description ne peut pas être vide.']),
                 ],
@@ -41,7 +43,8 @@ class ReclamationType extends AbstractType
                     'Autre' => Reclamation::TYPE_AUTRE,
                 ],
                 'placeholder' => 'Choisissez un type',
-                'required' => true,
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
                 'constraints' => [
                     new Assert\NotBlank(['message' => 'Veuillez sélectionner un type de réclamation.']),
                 ],

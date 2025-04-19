@@ -28,6 +28,9 @@ class UserReclamationController extends AbstractController
     {
         // Autoriser les utilisateurs avec ROLE_MEMBRE ou ROLE_ADMIN
         if (!$this->isGranted('ROLE_MEMBRE') && !$this->isGranted('ROLE_ADMIN')) {
+            $this->logger->warning('Accès refusé : utilisateur non autorisé', [
+                'roles' => $this->getUser() ? $this->getUser()->getRoles() : 'aucun utilisateur',
+            ]);
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'success' => false,
@@ -40,6 +43,7 @@ class UserReclamationController extends AbstractController
         // Vérifier si l'utilisateur est connecté
         $user = $this->getUser();
         if (!$user) {
+            $this->logger->warning('Utilisateur non connecté');
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse([
                     'success' => false,
@@ -112,7 +116,8 @@ class UserReclamationController extends AbstractController
 
                 return new JsonResponse([
                     'success' => false,
-                    'errors' => $errors
+                    'errors' => $errors,
+                    'message' => 'Veuillez corriger les erreurs dans le formulaire.'
                 ], 400);
             }
 

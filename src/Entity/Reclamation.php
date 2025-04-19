@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 class Reclamation
@@ -14,43 +13,23 @@ class Reclamation
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank(message: "Le titre ne peut pas être vide.")]
-    #[Assert\Length(
-        max: 255,
-        maxMessage: "Le titre ne peut pas dépasser {{ limit }} caractères."
-    )]
     private ?string $titre = null;
 
     #[ORM\Column(type: 'text')]
-    #[Assert\NotBlank(message: "La description ne peut pas être vide.")]
-    #[Assert\Length(
-        min: 10,
-        max: 1000,
-        minMessage: "La description doit contenir au moins {{ limit }} caractères.",
-        maxMessage: "La description ne peut pas dépasser {{ limit }} caractères."
-    )]
     private ?string $description = null;
 
     #[ORM\Column(type: 'string', length: 50, options: ['default' => 'Autre'])]
-    #[Assert\NotBlank(message: "Le type ne peut pas être vide.")]
-    #[Assert\Choice(
-        choices: self::TYPES,
-        message: "Le type '{{ value }}' n'est pas valide. Choisissez parmi : {{ choices }}."
-    )]
     private ?string $Type = null;
 
     #[ORM\ManyToOne(targetEntity: Membre::class)]
     #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'id', nullable: false)]
-    #[Assert\NotNull(message: "Le membre doit être spécifié.")]
     private ?Membre $membre = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: false, options: ['default' => 'En_Attente'])]
-    #[Assert\NotBlank(message: "Le statut ne peut pas être vide.")]
-    #[Assert\Choice(
-        choices: self::STATUTS,
-        message: "Le statut '{{ value }}' n'est pas valide. Choisissez parmi : {{ choices }}."
-    )]
     private ?string $statut = null;
+
+    #[ORM\Column(type: 'date', nullable: false)]
+    private ?\DateTimeInterface $date = null;
 
     // Constantes pour les valeurs possibles de Type
     public const TYPE_PACKS = 'Packs';
@@ -81,6 +60,11 @@ class Reclamation
         self::STATUT_RESOLU,
         self::STATUT_REJETE,
     ];
+
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+    }
 
     // Getters et setters
     public function getId(): ?int
@@ -117,7 +101,10 @@ class Reclamation
 
     public function setType(string $Type): self
     {
-        $this->Type = $Type; // La validation est gérée par Assert\Choice
+        if (!in_array($Type, self::TYPES, true)) {
+            throw new \InvalidArgumentException("Type invalide : $Type. Les valeurs autorisées sont : " . implode(', ', self::TYPES));
+        }
+        $this->Type = $Type;
         return $this;
     }
 
@@ -139,7 +126,24 @@ class Reclamation
 
     public function setStatut(string $statut): self
     {
-        $this->statut = $statut; // La validation est gérée par Assert\Choice
+        if ($statut === null) {
+            throw new \InvalidArgumentException("Le statut ne peut pas être NULL.");
+        }
+        if (!in_array($statut, self::STATUTS, true)) {
+            throw new \InvalidArgumentException("Statut invalide : $statut. Les valeurs autorisées sont : " . implode(', ', self::STATUTS));
+        }
+        $this->statut = $statut;
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
         return $this;
     }
 }

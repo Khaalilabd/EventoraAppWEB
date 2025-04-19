@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
@@ -53,11 +54,38 @@ class ReclamationsController extends AbstractController
     public function delete(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         if ($this->isCsrfTokenValid('delete'.$reclamation->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($reclamation);
-            $entityManager->flush();
-            $this->addFlash('success', 'Réclamation supprimée avec succès.');
+            try {
+                $entityManager->remove($reclamation);
+                $entityManager->flush();
+
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse([
+                        'success' => true,
+                        'message' => 'Réclamation supprimée avec succès.'
+                    ]);
+                }
+
+                $this->addFlash('success', 'Réclamation supprimée avec succès.');
+            } catch (\Exception $e) {
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse([
+                        'success' => false,
+                        'message' => 'Erreur lors de la suppression : ' . $e->getMessage()
+                    ], 500);
+                }
+
+                $this->addFlash('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+            }
         } else {
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Token CSRF invalide.'
+                ], 400);
+            }
+
             $this->addFlash('error', 'Token CSRF invalide.');
         }
 

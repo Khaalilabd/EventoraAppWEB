@@ -19,20 +19,36 @@ class Feedback
 
     #[ORM\ManyToOne(targetEntity: Membre::class, inversedBy: 'feedbacks')]
     #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'id', nullable: false)]
+    #[Assert\NotNull(message: "Un membre doit être associé au feedback.")]
     private ?Membre $membre = null;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    #[Assert\Range(min: 1, max: 5, notInRangeMessage: 'Le vote doit être entre 1 et 5.')]
+    #[Assert\NotBlank(message: "Le vote est obligatoire.")]
+    #[Assert\Range(
+        min: 1,
+        max: 5,
+        notInRangeMessage: "Le vote doit être entre 1 et 5."
+    )]
     private ?int $Vote = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    #[Assert\NotBlank(message: 'La description ne peut pas être vide.')]
+    #[Assert\NotBlank(message: "Il faut une description valide ou le champ est vide.")]
+    #[Assert\Length(
+        min: 10,
+        max: 1000,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "La description ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $Description = null;
 
     #[ORM\Column(type: 'blob', nullable: true)]
     private $Souvenirs = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
+    #[Assert\Choice(
+        choices: ['Oui', 'Non'],
+        message: "La recommandation doit être 'Oui' ou 'Non'."
+    )]
     private ?string $Recommend = null;
 
     #[ORM\Column(type: 'date', nullable: false)]
@@ -40,10 +56,19 @@ class Feedback
 
     /**
      * @var UploadedFile|null
+     * @Assert\File(
+     *     maxSize="5M",
+     *     mimeTypes={"image/jpeg", "image/png"},
+     *     mimeTypesMessage="Veuillez uploader une image valide (JPEG ou PNG)."
+     * )
      */
     private $souvenirsFile;
 
-    // Getters et setters
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+    }
+
     public function getID(): ?int
     {
         return $this->ID;
