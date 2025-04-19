@@ -381,7 +381,7 @@
                 </div>
                 <div class="menu-1">
                     <ul>
-                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                        <li ><a href="{{ path('app_home') }}">Home</a></li>
                         <li class="has-dropdown">
                             <a href="#">Réservation</a>
                             <ul class="dropdown">
@@ -395,13 +395,13 @@
                         <li class="has-dropdown">
                             <a href="#">Services</a>
                             <ul class="dropdown">
-                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li class="active"><a href="{{ path('user_services') }}">Service</a></li>
                                 <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
                             </ul>
                         </li>
                         <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                         <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                        <li><a href="#">Talk with Evi</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
                         <li class="has-dropdown">
                             <a href="#">
                                 <span class="user-circle">
