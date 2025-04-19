@@ -1,0 +1,249 @@
+/* Import Google Fonts for professional typography */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Card Container */
+.sponsor-card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    justify-content: center;
+    padding: 48px;
+    max-width: 2600px;
+    margin: 0 auto;
+}
+
+/* Business Card */
+.sponsor-business-card {
+    width: 600px;
+    height: 360px;
+    perspective: 2000px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sponsor-business-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Card Inner */
+.sponsor-card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Rotation Animation on Hover */
+.sponsor-business-card:hover .sponsor-card-inner {
+    animation: rotateInPlace 0.6s ease-in-out forwards;
+}
+
+/* Keyframe for 360-degree rotation */
+@keyframes rotateInPlace {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+}
+
+/* Card Front and Back */
+.sponsor-card-front,
+.sponsor-card-back {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    padding: 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* Card Front */
+.sponsor-card-front {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    color: #1f2937;
+    align-items: center;
+    text-align: center;
+    border: 2px solid #e5e7eb;
+    opacity: 1;
+}
+
+.sponsor-card-front::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0.3;
+}
+
+/* Card Back */
+.sponsor-card-back {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    color: #ffffff;
+    align-items: flex-start;
+    text-align: left;
+    opacity: 0;
+}
+
+/* Show back on hover */
+.sponsor-business-card:hover .sponsor-card-front {
+    opacity: 0;
+}
+
+.sponsor-business-card:hover .sponsor-card-back {
+    opacity: 1;
+}
+
+/* Typography */
+.sponsor-card-front h3 {
+    margin: 0;
+    font-size: 2.6em;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: 0.8px;
+}
+
+.sponsor-card-front p {
+    margin: 10px 0 0;
+    font-size: 1.8em;
+    font-weight: 400;
+    color: #4b5563;
+}
+
+.sponsor-card-back p {
+    margin: 10px 0;
+    font-size: 1.6em;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #f8fafc;
+    width: 100%;
+}
+
+.sponsor-card-back i {
+    font-size: 1.8em;
+    color: #ffd700;
+    width: 36px;
+    text-align: center;
+}
+
+.sponsor-card-back a {
+    color: #ffd700;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.sponsor-card-back a:hover {
+    color: #facc15;
+    text-decoration: underline;
+}
+
+/* No Sponsor Message */
+.no-sponsor {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 2.2em;
+    color: #6b7280;
+    font-family: 'Roboto', sans-serif;
+    padding: 40px;
+    width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 2560px) {
+    .sponsor-card-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 1920px) {
+    .sponsor-card-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1280px) {
+    .sponsor-card-container {
+        grid-template-columns: 1fr;
+        padding: 24px;
+    }
+
+    .sponsor-business-card {
+        width: 520px;
+        height: 312px;
+    }
+
+    .sponsor-card-front h3 {
+        font-size: 2.2em;
+    }
+
+    .sponsor-card-front p {
+        font-size: 1.6em;
+    }
+
+    .sponsor-card-back p {
+        font-size: 1.4em;
+    }
+
+    .sponsor-card-back i {
+        font-size: 1.6em;
+        width: 32px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sponsor-business-card {
+        width: 100%;
+        max-width: 440px;
+        height: 264px;
+    }
+
+    .sponsor-card-front h3 {
+        font-size: 1.8em;
+    }
+
+    .sponsor-card-front p {
+        font-size: 1.4em;
+    }
+
+    .sponsor-card-back p {
+        font-size: 1.2em;
+    }
+
+    .sponsor-card-back i {
+        font-size: 1.4em;
+        width: 28px;
+    }
+}
+
+/* AOS Animation */
+[data-aos="zoom-in"] {
+    opacity: 0;
+    transform: scale(0.9);
+    transition-property: opacity, transform;
+}
+
+[data-aos="zoom-in"].aos-animate {
+    opacity: 1;
+    transform: scale(1);
+}
