@@ -3,114 +3,153 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Reclamation;
-use App\Form\ReclamationStatusType;
+use App\Entity\ReclamationRep;
+use App\Form\ReclamationType;
+use App\Form\ReclamationRepType;
 use App\Repository\ReclamationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter;
 
 #[Route('/admin/reclamations')]
 class ReclamationsController extends AbstractController
 {
     #[Route('/', name: 'admin_reclamations', methods: ['GET'])]
-    public function index(ReclamationRepository $reclamationRepository): Response
+    public function index(Request $request, ReclamationRepository $reclamationRepository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $reclamations = $reclamationRepository->findAll();
+        $page = $request->query->getInt('page', 1);
+        $limit = 4; // Nombre de réclamations par page (changé de 10 à 8)
+        $searchTerm = $request->query->get('search', '');
+        $statusFilter = $request->query->get('status_filter', '');
+        $sortBy = $request->query->get('sort_by', 'date');
+        $sortOrder = $request->query->get('sort_order', 'desc');
+
+        // Construction de la requête
+        $queryBuilder = $reclamationRepository->createQueryBuilder('r')
+            ->leftJoin('r.membre', 'm')
+            ->orderBy("r.$sortBy", $sortOrder);
+
+        // Filtre par statut
+        if ($statusFilter === 'non_traitees') {
+            $queryBuilder->andWhere('r.statut IN (:statuses)')
+                ->setParameter('statuses', [Reclamation::STATUT_EN_ATTENTE, Reclamation::STATUT_EN_COURS]);
+        } elseif ($statusFilter === 'traitees') {
+            $queryBuilder->andWhere('r.statut IN (:statuses)')
+                ->setParameter('statuses', [Reclamation::STATUT_RESOLU, Reclamation::STATUT_REJETE]);
+        }
+
+        // Recherche par titre ou description
+        if ($searchTerm) {
+            $queryBuilder->andWhere('r.titre LIKE :search OR r.description LIKE :search')
+                ->setParameter('search', '%' . $searchTerm . '%');
+        }
+
+        // Pagination
+        $totalReclamations = count($queryBuilder->getQuery()->getResult());
+        $totalPages = ceil($totalReclamations / $limit);
+
+        $reclamations = $queryBuilder
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        // Liste des options de filtrage
+        $statuses = [
+            '' => 'Toutes',
+            'non_traitees' => 'Non Traitées',
+            'traitees' => 'Traitées',
+        ];
 
         return $this->render('admin/reclamations/index.html.twig', [
             'reclamations' => $reclamations,
+            'current_page' => $page,
+            'total_pages' => $totalPages,
+            'searchTerm' => $searchTerm,
+            'status_filter' => $statusFilter,
+            'sort_by' => $sortBy,
+            'sort_order' => $sortOrder,
+            'statuses' => $statuses,
         ]);
     }
 
-    #[Route('/{id}/edit-status', name: 'admin_reclamations_edit_status', methods: ['GET', 'POST'])]
-    public function editStatus(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    #[Route('/new', name: 'admin_reclamations_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        $form = $this->createForm(ReclamationStatusType::class, $reclamation);
+        $reclamation = new Reclamation();
+        $form = $this->createForm(ReclamationType::class, $reclamation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($reclamation);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Statut mis à jour avec succès. Nouveau statut : ' . $reclamation->getStatut());
+            $this->addFlash('success', 'Réclamation créée avec succès.');
             return $this->redirectToRoute('admin_reclamations', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/reclamations/edit_status.html.twig', [
+        return $this->render('admin/reclamations/create.html.twig', [
             'reclamation' => $reclamation,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'admin_reclamations_delete', methods: ['POST'])]
+    #[Route('/{id}/show', name: 'admin_reclamations_show_qr', methods: ['GET'])]
+    public function showQr(Reclamation $reclamation): Response
+    {
+        return $this->render('admin/reclamations/show.html.twig', [
+            'reclamation' => $reclamation,
+        ]);
+    }
+
+    #[Route('/{id}/traiter', name: 'admin_reclamations_traiter', methods: ['GET', 'POST'])]
+    public function traiter(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    {
+        $reclamationRep = new ReclamationRep();
+        $reclamationRep->setReclamation($reclamation);
+        $form = $this->createForm(ReclamationRepType::class, $reclamationRep, [
+            'reclamation' => $reclamation,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($reclamationRep);
+            $entityManager->persist($reclamation);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Réclamation traitée avec succès.');
+            return $this->redirectToRoute('admin_reclamations', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/reclamations/traiter.html.twig', [
+            'reclamation' => $reclamation,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/{id}', name: 'admin_reclamations_delete', methods: ['POST'])]
     public function delete(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        if ($this->isCsrfTokenValid('delete' . $reclamation->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($reclamation);
+            $entityManager->flush();
 
-        if ($this->isCsrfTokenValid('delete'.$reclamation->getId(), $request->request->get('_token'))) {
-            try {
-                $entityManager->remove($reclamation);
-                $entityManager->flush();
-
-                if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse([
-                        'success' => true,
-                        'message' => 'Réclamation supprimée avec succès.'
-                    ]);
-                }
-
-                $this->addFlash('success', 'Réclamation supprimée avec succès.');
-            } catch (\Exception $e) {
-                if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse([
-                        'success' => false,
-                        'message' => 'Erreur lors de la suppression : ' . $e->getMessage()
-                    ], 500);
-                }
-
-                $this->addFlash('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['success' => true, 'message' => 'Réclamation supprimée avec succès.']);
             }
+
+            $this->addFlash('success', 'Réclamation supprimée avec succès.');
         } else {
             if ($request->isXmlHttpRequest()) {
-                return new JsonResponse([
-                    'success' => false,
-                    'message' => 'Token CSRF invalide.'
-                ], 400);
+                return new JsonResponse(['success' => false, 'message' => 'Token CSRF invalide.'], 400);
             }
 
             $this->addFlash('error', 'Token CSRF invalide.');
         }
 
         return $this->redirectToRoute('admin_reclamations', [], Response::HTTP_SEE_OTHER);
-    }
-
-    #[Route('/{id}/qr', name: 'admin_reclamations_show_qr', methods: ['GET'])]
-    public function showQr(Reclamation $reclamation): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        return $this->render('admin/reclamations/show_qr.html.twig', [
-            'reclamation' => $reclamation,
-        ]);
-    }
-
-    #[Route('/{id}/generate-qr', name: 'admin_reclamations_generate_qr', methods: ['GET'])]
-    public function generateQr(Reclamation $reclamation): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $qrCode = QrCode::create("Réclamation #{$reclamation->getId()} - {$reclamation->getTitre()}")
-            ->setSize(200)
-            ->setMargin(10);
-        $writer = new PngWriter();
-        $result = $writer->write($qrCode);
-
-        return new Response($result->getString(), Response::HTTP_OK, ['Content-Type' => 'image/png']);
     }
 }

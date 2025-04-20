@@ -14,15 +14,10 @@ class ReclamationStatusType extends AbstractType
     {
         $builder
             ->add('statut', ChoiceType::class, [
-                'choices' => [
-                    'En attente' => Reclamation::STATUT_EN_ATTENTE, // Affiche "En attente", stocke "En_Attente"
-                    'En cours' => Reclamation::STATUT_EN_COURS,     // Affiche "En cours", stocke "En_Cours"
-                    'Résolu' => Reclamation::STATUT_RESOLU,         // Affiche "Résolu", stocke "Resolue"
-                    'Rejeté' => Reclamation::STATUT_REJETE,         // Affiche "Rejeté", stocke "Rejetée"
-                ],
+                'choices' => array_combine(Reclamation::STATUTS, Reclamation::STATUTS),
                 'label' => 'Statut',
-                'attr' => ['class' => 'form-select'],
                 'required' => true,
+                'attr' => ['class' => 'form-control'],
             ]);
     }
 

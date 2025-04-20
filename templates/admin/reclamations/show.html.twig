@@ -1,6 +1,6 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Réclamations{% endblock %}
+{% block title %}Détails de la Réclamation{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -14,8 +14,8 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             background-color: #fff;
-            min-height: 300px;
             width: 100%;
+            margin: 0 auto;
         }
         .reclamation-card:hover {
             transform: translateY(-5px);
@@ -69,141 +69,41 @@
             padding: 8px 12px;
             font-size: 0.9rem;
         }
-        .description-truncated {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Barre latérale de tri complètement à droite */
-        .filter-sidebar {
-            position: fixed;
-            top: 80px;
-            right: 0;
-            width: 300px;
-            height: calc(100vh - 80px);
-            background-color: #f8f9fa;
-            border-radius: 12px 0 0 12px;
-            box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        .filter-sidebar.collapsed {
-            transform: translateX(100%);
-        }
-        .filter-toggle-btn {
-            background-color: #ff6200;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        .filter-toggle-btn:hover { background-color: #e65a00; }
-        .filter-content { margin-top: 15px; }
-
-        /* Bouton pour réafficher le menu */
-        .filter-toggle-icon {
-            position: fixed;
-            top: 100px;
-            right: 10px;
-            background-color: #ff6200;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
-            z-index: 1001;
-            display: none;
-        }
-        .filter-toggle-icon:hover { background-color: #e65a00; }
-        .filter-toggle-icon.visible { display: flex; }
-
-        /* Ajustement des boutons Croissant/Décroissant */
-        .btn-group .btn {
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-        .btn-group .btn i { font-size: 1rem; }
-        .btn-group .btn.active { background-color: #ff6200; color: #fff; }
-        .btn-group .btn:hover { background-color: #ff8c00; color: #fff; }
 
         /* Contenu principal */
         .reclamation-content {
-            margin-right: 320px;
             padding: 0 15px;
         }
 
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .pagination .page-item .page-link {
-            color: #ff6200;
-            border: none;
-            margin: 0 5px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        .pagination .page-item.active .page-link {
-            background-color: #ff6200;
-            color: #fff;
-        }
-        .pagination .page-link:hover {
-            background-color: #ff8c00;
-            color: #fff;
-        }
-        .pagination .page-item.disabled .page-link { color: #ccc; }
-
         /* Ajustement pour la sidebar principale à gauche */
-        .reclamation-container { margin-left: 270px; }
+        .reclamation-container {
+            margin-left: 270px;
+        }
 
         /* Responsive Design */
         @media (max-width: 992px) {
-            .reclamation-container { margin-left: 0; }
-            .reclamation-content { margin-right: 0; }
-            .filter-sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                top: 0;
-                border-radius: 12px;
-                margin-top: 20px;
+            .reclamation-container {
+                margin-left: 0;
             }
-            .filter-sidebar.collapsed {
-                transform: translateX(0);
-                height: 50px;
-                overflow: hidden;
+            .reclamation-content {
+                margin-right: 0;
             }
-            .filter-sidebar.collapsed .filter-content { display: none; }
-            .filter-toggle-icon { display: none; }
         }
         @media (max-width: 768px) {
-            .reclamation-card { min-height: 250px; }
-            .card-body { padding: 15px; font-size: 0.9rem; }
-            .card-header { font-size: 1rem; }
-            .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
+            .reclamation-card {
+                min-height: 250px;
+            }
+            .card-body {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+            .card-header {
+                font-size: 1rem;
+            }
+            .btn-sm {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 {% endblock %}
@@ -393,18 +293,16 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Pages</a></li>
-                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Réclamations</li>
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_reclamations') }}">Réclamations</a></li>
+                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Détails</li>
                     </ol>
-                    <h6 class="font-weight-bolder mb-0">
-                        Liste des Réclamations
-                        <a href="{{ path('admin_reclamations_new') }}" class="btn btn-sm btn-success ms-2">Ajouter une Réclamation</a>
-                    </h6>
+                    <h6 class="font-weight-bolder mb-0">Détails de la Réclamation #{{ reclamation.id }}</h6>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                         <div class="input-group">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Rechercher..." id="searchReclamation">
+                            <input type="text" class="form-control" placeholder="Rechercher..." disabled>
                         </div>
                     </div>
                     <ul class="navbar-nav justify-content-end">
@@ -420,155 +318,42 @@
         </nav>
 
         <div class="container-fluid py-4">
-            <!-- Contenu principal : Les cartes de réclamations -->
             <div class="reclamation-content">
-                <!-- Liste des réclamations -->
-                <div class="row" id="reclamationList">
-                    {% if reclamations|length > 0 %}
-                        {% for reclamation in reclamations %}
-                            <div class="col-lg-6 col-md-6 col-sm-12 mb-4 reclamation-card-container">
-                                <div class="card reclamation-card h-100">
-                                    <div class="card-header">
-                                        <h6 class="mb-0">Réclamation #{{ reclamation.id }}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="text-sm mb-2"><strong>Titre :</strong> {{ reclamation.titre }}</p>
-                                        <p class="text-sm mb-2"><strong>Description :</strong> <span class="description-truncated">{{ reclamation.description }}</span></p>
-                                        <p class="text-sm mb-2"><strong>Type :</strong> {{ reclamation.Type }}</p>
-                                        <p class="text-sm mb-2">
-                                            <strong>Statut :</strong>
-                                            <span class="badge badge-{{ reclamation.statut|lower|replace({'en_attente': 'en_attente', 'en_cours': 'en_cours', 'resolue': 'resolue', 'rejetée': 'rejetée'}) }}">
-                                                {{ reclamation.statut }}
-                                            </span>
-                                        </p>
-                                        <p class="text-sm mb-2"><strong>Date :</strong> {{ reclamation.date|date('Y-m-d') }}</p>
-                                        <p class="text-sm mb-2"><strong>Utilisateur :</strong> {{ reclamation.membre.email }}</p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a href="{{ path('admin_reclamations_show_qr', {'id': reclamation.id}) }}" class="btn btn-sm btn-info">Détails</a>
-                                        {% if reclamation.statut in ['En_Attente', 'En_Cours'] %}
-                                            <a href="{{ path('admin_reclamations_traiter', {'id': reclamation.id}) }}" class="btn btn-sm btn-primary">Traiter</a>
-                                        {% endif %}
-                                        <a href="#" class="btn btn-sm btn-danger" onclick="if(confirm('Voulez-vous vraiment supprimer cette réclamation ?')) { document.getElementById('delete-form-{{ reclamation.id }}').submit(); } return false;">Supprimer</a>
-                                        <form id="delete-form-{{ reclamation.id }}" method="post" action="{{ path('admin_reclamations_delete', {'id': reclamation.id}) }}" style="display: none;">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
-                                        </form>
-                                    </div>
-                                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 col-sm-12 mx-auto">
+                        <div class="card reclamation-card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Réclamation #{{ reclamation.id }}</h6>
                             </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="col-12">
-                            <div class="alert alert-info text-center" role="alert">
-                                Aucune réclamation trouvée.
+                            <div class="card-body">
+                                <p class="text-sm mb-2"><strong>Titre :</strong> {{ reclamation.titre }}</p>
+                                <p class="text-sm mb-2"><strong>Description :</strong> {{ reclamation.description }}</p>
+                                <p class="text-sm mb-2"><strong>Type :</strong> {{ reclamation.Type }}</p>
+                                <p class="text-sm mb-2">
+                                    <strong>Statut :</strong>
+                                    <span class="badge badge-{{ reclamation.statut|lower|replace({'en_attente': 'en_attente', 'en_cours': 'en_cours', 'resolue': 'resolue', 'rejetée': 'rejetée'}) }}">
+                                        {{ reclamation.statut }}
+                                    </span>
+                                </p>
+                                <p class="text-sm mb-2"><strong>Date :</strong> {{ reclamation.date|date('Y-m-d') }}</p>
+                                <p class="text-sm mb-2"><strong>Utilisateur :</strong> {{ reclamation.membre.email }}</p>
+                                {# Placeholder pour le QR code à implémenter ultérieurement #}
+                                {# <p class="text-sm mb-2"><strong>QR Code :</strong> Non implémenté</p> #}
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ path('admin_reclamations') }}" class="btn btn-sm btn-secondary">Retour</a>
+                                {% if reclamation.statut in ['En_Attente', 'En_Cours'] %}
+                                    <a href="{{ path('admin_reclamations_traiter', {'id': reclamation.id}) }}" class="btn btn-sm btn-primary">Traiter</a>
+                                {% endif %}
+                                <a href="#" class="btn btn-sm btn-danger" onclick="if(confirm('Voulez-vous vraiment supprimer cette réclamation ?')) { document.getElementById('delete-form-{{ reclamation.id }}').submit(); } return false;">Supprimer</a>
+                                <form id="delete-form-{{ reclamation.id }}" method="post" action="{{ path('admin_reclamations_delete', {'id': reclamation.id}) }}" style="display: none;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                                </form>
                             </div>
                         </div>
-                    {% endif %}
-                </div>
-
-                <!-- Pagination -->
-                {% if total_pages > 1 %}
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ path('admin_reclamations', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Previous">
-                                    <span aria-hidden="true">«</span>
-                                </a>
-                            </li>
-                            {% for i in 1..total_pages %}
-                                <li class="page-item {{ current_page == i ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ path('admin_reclamations', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}">{{ i }}</a>
-                                </li>
-                            {% endfor %}
-                            <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ path('admin_reclamations', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Next">
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                {% endif %}
-            </div>
-
-            <!-- Barre latérale de tri à droite -->
-            <div class="filter-sidebar" id="filterSidebar">
-                <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">Masquer</button>
-                <div class="filter-content">
-                    <h6 class="mb-3 text-dark font-weight-bold"><i class="fas fa-filter me-2"></i>Options de Tri et Filtrage</h6>
-                    <form method="get" action="{{ path('admin_reclamations') }}" class="row g-3 align-items-center">
-                        <div class="col-12">
-                            <label for="status_filter" class="form-label text-sm font-weight-bold">Filtrer par Statut</label>
-                            <select name="status_filter" id="status_filter" class="form-select" onchange="this.form.submit()">
-                                {% for value, label in statuses %}
-                                    <option value="{{ value }}" {{ status_filter == value ? 'selected' : '' }}>{{ label }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Date</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('admin_reclamations', {'sort_by': 'date', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'date' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('admin_reclamations', {'sort_by': 'date', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'date' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Type</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('admin_reclamations', {'sort_by': 'Type', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'Type' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('admin_reclamations', {'sort_by': 'Type', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'Type' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-12 d-flex align-items-end">
-                            <a href="{{ path('admin_reclamations') }}" class="btn btn-outline-secondary w-100">
-                                <i class="fas fa-undo me-1"></i> Réinitialiser
-                            </a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-
-            <!-- Bouton flottant pour réafficher le menu -->
-            <button class="filter-toggle-icon" id="filterToggleIcon" onclick="toggleFilterSidebar()">
-                <i class="fas fa-filter"></i>
-            </button>
         </div>
     </main>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        // Recherche en temps réel
-        document.getElementById('searchReclamation').addEventListener('input', function(e) {
-            const searchText = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.reclamation-card-container');
-            cards.forEach(card => {
-                const title = card.querySelector('.card-body p:nth-child(1)').textContent.toLowerCase();
-                const description = card.querySelector('.card-body p:nth-child(2)').textContent.toLowerCase();
-                card.style.display = title.includes(searchText) || description.includes(searchText) ? '' : 'none';
-            });
-        });
-
-        // Toggle pour la barre latérale de tri
-        function toggleFilterSidebar() {
-            const sidebar = document.getElementById('filterSidebar');
-            const btn = sidebar.querySelector('.filter-toggle-btn');
-            const icon = document.getElementById('filterToggleIcon');
-            sidebar.classList.toggle('collapsed');
-            btn.textContent = sidebar.classList.contains('collapsed') ? 'Afficher' : 'Masquer';
-            icon.classList.toggle('visible', sidebar.classList.contains('collapsed'));
-        }
-    </script>
 {% endblock %}

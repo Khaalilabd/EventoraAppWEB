@@ -1,0 +1,49 @@
+{% extends 'admin/dashboard.html.twig' %}
+
+{% block title %}Nouvelle Réclamation{% endblock %}
+
+{% block body %}
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Créer une Nouvelle Réclamation</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                            <div class="mb-3">
+                                {{ form_label(form.titre) }}
+                                {{ form_widget(form.titre) }}
+                                {{ form_errors(form.titre) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.description) }}
+                                {{ form_widget(form.description) }}
+                                {{ form_errors(form.description) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.Type) }}
+                                {{ form_widget(form.Type) }}
+                                {{ form_errors(form.Type) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.membre) }}
+                                {{ form_widget(form.membre) }}
+                                {{ form_errors(form.membre) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.statut) }}
+                                {{ form_widget(form.statut) }}
+                                {{ form_errors(form.statut) }}
+                            </div>
+                            <button type="submit" class="btn btn-orange">Créer</button>
+                        {{ form_end(form) }}
+
+                        <a href="{{ path('admin_reclamations') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
