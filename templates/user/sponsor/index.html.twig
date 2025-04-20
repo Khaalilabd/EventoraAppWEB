@@ -1,0 +1,656 @@
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% block title %}eventora{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
+
+        {% block stylesheets %}
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/sponsors_card.css') }}">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+            <style>
+                /* Page Layout */
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: visible;
+                }
+                /* Navigation fixe */
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background-color: rgba(255, 255, 255, 0.6);
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    backdrop-filter: blur(10px);
+                }
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                }
+                .fh5co-logo a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 24px;
+                    color: #333;
+                    text-decoration: none;
+                }
+                .user-circle {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 20px;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                }
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 15px;
+                    position: relative;
+                }
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #007bff;
+                }
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #007bff;
+                    font-weight: 600;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 150px;
+                    z-index: 1001;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #007bff;
+                }
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                    padding: 10px;
+                }
+                /* Header Styles */
+                #fh5co-header.fh5co-cover {
+                    position: relative;
+                    height: 600px;
+                    min-height: 600px;
+                    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+                    overflow: hidden;
+                    margin-top: 80px;
+                    z-index: 1;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    visibility: visible !important;
+                }
+                #stars, #stars2, #stars3 {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: transparent;
+                }
+                #stars {
+                    width: 1px;
+                    height: 1px;
+                    box-shadow:
+                        123px 456px #FFF, 789px 234px #FFF, 345px 678px #FFF, 901px 123px #FFF, 567px 890px #FFF,
+                        234px 567px #FFF, 678px 901px #FFF, 123px 345px #FFF, 890px 789px #FFF, 456px 234px #FFF;
+                    animation: animStar 50s linear infinite;
+                }
+                #stars:after {
+                    content: " ";
+                    position: absolute;
+                    top: 600px;
+                    width: 1px;
+                    height: 1px;
+                    box-shadow:
+                        123px 456px #FFF, 789px 234px #FFF, 345px 678px #FFF, 901px 123px #FFF, 567px 890px #FFF,
+                        234px 567px #FFF, 678px 901px #FFF, 123px 345px #FFF, 890px 789px #FFF, 456px 234px #FFF;
+                }
+                #stars2 {
+                    width: 2px;
+                    height: 2px;
+                    box-shadow:
+                        456px 789px #FFF, 123px 234px #FFF, 678px 345px #FFF, 901px 567px #FFF, 234px 890px #FFF,
+                        789px 123px #FFF, 345px 678px #FFF, 567px 901px #FFF, 890px 456px #FFF, 123px 789px #FFF;
+                    animation: animStar 100s linear infinite;
+                }
+                #stars2:after {
+                    content: " ";
+                    position: absolute;
+                    top: 600px;
+                    width: 2px;
+                    height: 2px;
+                    box-shadow:
+                        456px 789px #FFF, 123px 234px #FFF, 678px 345px #FFF, 901px 567px #FFF, 234px 890px #FFF,
+                        789px 123px #FFF, 345px 678px #FFF, 567px 901px #FFF, 890px 456px #FFF, 123px 789px #FFF;
+                }
+                #stars3 {
+                    width: 3px;
+                    height: 3px;
+                    box-shadow:
+                        789px 123px #FFF, 234px 456px #FFF, 567px 789px #FFF, 901px 234px #FFF, 345px 678px #FFF,
+                        123px 890px #FFF, 678px 345px #FFF, 456px 901px #FFF, 789px 567px #FFF, 234px 123px #FFF;
+                    animation: animStar 150s linear infinite;
+                }
+                #stars3:after {
+                    content: " ";
+                    position: absolute;
+                    top: 600px;
+                    width: 3px;
+                    height: 3px;
+                    box-shadow:
+                        789px 123px #FFF, 234px 456px #FFF, 567px 789px #FFF, 901px 234px #FFF, 345px 678px #FFF,
+                        123px 890px #FFF, 678px 345px #FFF, 456px 901px #FFF, 789px 567px #FFF, 234px 123px #FFF;
+                }
+                @keyframes animStar {
+                    from { transform: translateY(0px); }
+                    to { transform: translateY(-600px); }
+                }
+                #title {
+                    position: relative;
+                    z-index: 10;
+                    text-align: center;
+                    color: #ffffff;
+                    font-family: 'Ripe Mango', cursive;
+                    font-size: 72px;
+                    line-height: 1.2;
+                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                }
+                #title span {
+                    display: block;
+                }
+                /* Sponsor Cards */
+                .sponsor-card-container {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 32px;
+                    justify-content: center;
+                    padding: 48px;
+                    max-width: 2600px;
+                    margin: 0 auto;
+                    position: relative;
+                    z-index: 2;
+                }
+                .sponsor-business-card {
+                    width: 600px;
+                    height: 360px;
+                    perspective: 2000px;
+                    position: relative;
+                    cursor: pointer;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }
+                .sponsor-business-card:hover {
+                    transform: translateY(-8px);
+                    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+                }
+                .sponsor-card-inner {
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    border-radius: 12px;
+                    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+                }
+                .sponsor-business-card:hover .sponsor-card-inner {
+                    animation: rotateInPlace 0.6s ease-in-out forwards;
+                }
+                @keyframes rotateInPlace {
+                    0% { transform: rotateY(0deg); }
+                    100% { transform: rotateY(360deg); }
+                }
+                .sponsor-card-front,
+                .sponsor-card-back {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 12px;
+                    padding: 40px;
+                    box-sizing: border-box;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    transition: opacity 0.2s ease;
+                }
+                .sponsor-card-front {
+                    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+                    color: #1f2937;
+                    align-items: center;
+                    text-align: center;
+                    border: 2px solid #e5e7eb;
+                    opacity: 1;
+                }
+                .sponsor-card-front::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                    opacity: 0.3;
+                }
+                .sponsor-card-back {
+                    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+                    color: #ffffff;
+                    align-items: flex-start;
+                    text-align: left;
+                    opacity: 0;
+                }
+                .sponsor-business-card:hover .sponsor-card-front {
+                    opacity: 0;
+                }
+                .sponsor-business-card:hover .sponsor-card-back {
+                    opacity: 1;
+                }
+                .sponsor-card-front h3 {
+                    margin: 0;
+                    font-size: 2.6em;
+                    font-weight: 700;
+                    color: #111827;
+                    letter-spacing: 0.8px;
+                }
+                .sponsor-card-front p {
+                    margin: 10px 0 0;
+                    font-size: 1.8em;
+                    font-weight: 400;
+                    color: #4b5563;
+                }
+                .sponsor-card-back p {
+                    margin: 10px 0;
+                    font-size: 1.6em;
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    color: #f8fafc;
+                    width: 100%;
+                }
+                .sponsor-card-back i {
+                    font-size: 1.8em;
+                    color: #ffd700;
+                    width: 36px;
+                    text-align: center;
+                }
+                .sponsor-card-back a {
+                    color: #ffd700;
+                    text-decoration: none;
+                    font-weight: 500;
+                    transition: color 0.3s ease;
+                }
+                .sponsor-card-back a:hover {
+                    color: #facc15;
+                    text-decoration: underline;
+                }
+                .no-sponsor {
+                    grid-column: 1 / -1;
+                    text-align: center;
+                    font-size: 2.2em;
+                    color: #6b7280;
+                    font-family: 'Roboto', sans-serif;
+                    padding: 40px;
+                    width: 100%;
+                }
+                /* Responsive Design */
+                @media (max-width: 2560px) {
+                    .sponsor-card-container {
+                        grid-template-columns: repeat(3, 1fr);
+                    }
+                }
+                @media (max-width: 1920px) {
+                    .sponsor-card-container {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                }
+                @media (max-width: 1280px) {
+                    .sponsor-card-container {
+                        grid-template-columns: 1fr;
+                        padding: 24px;
+                    }
+                    .sponsor-business-card {
+                        width: 520px;
+                        height: 312px;
+                    }
+                    .sponsor-card-front h3 {
+                        font-size: 2.2em;
+                    }
+                    .sponsor-card-front p {
+                        font-size: 1.6em;
+                    }
+                    .sponsor-card-back p {
+                        font-size: 1.4em;
+                    }
+                    .sponsor-card-back i {
+                        font-size: 1.6em;
+                        width: 32px;
+                    }
+                }
+                @media (max-width: 600px) {
+                    .sponsor-business-card {
+                        width: 100%;
+                        max-width: 440px;
+                        height: 264px;
+                    }
+                    .sponsor-card-front h3 {
+                        font-size: 1.8em;
+                    }
+                    .sponsor-card-front p {
+                        font-size: 1.4em;
+                    }
+                    .sponsor-card-back p {
+                        font-size: 1.2em;
+                    }
+                    .sponsor-card-back i {
+                        font-size: 1.4em;
+                        width: 28px;
+                    }
+                    #fh5co-header {
+                        height: 400px;
+                        min-height: 400px;
+                    }
+                    #title {
+                        font-size: 48px;
+                    }
+                }
+                @media (max-width: 768px) {
+                    .menu-toggle {
+                        display: block;
+                    }
+                    .fh5co-nav .menu-1 ul {
+                        display: none;
+                        flex-direction: column;
+                        position: absolute;
+                        top: 60px;
+                        left: 0;
+                        width: 100%;
+                        background-color: #fff;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        padding: 20px 0;
+                    }
+                    .fh5co-nav .menu-1 ul.active {
+                        display: flex;
+                    }
+                    .fh5co-nav .menu-1 ul li {
+                        margin: 10px 0;
+                        text-align: center;
+                    }
+                    .user-circle {
+                        margin-right: 0;
+                        margin-bottom: 5px;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                        position: static;
+                        display: none;
+                        box-shadow: none;
+                        background-color: #f8f9fa;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                        display: none;
+                    }
+                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                        display: block;
+                    }
+                }
+            </style>
+        {% endblock %}
+        <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
+        <script src="{{ asset('js/respond.min.js') }}"></script>
+        {% block javascripts_head %}{% endblock %}
+    </head>
+    <body>
+        <div class="fh5co-loader"></div>
+        <div id="page">
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
+                    </div>
+                    <div class="menu-toggle">
+                        <i class="icon-menu"></i>
+                    </div>
+                    <div class="menu-1">
+                        <ul>
+                            <li ><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Réservation</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Reservation personnalisée</a></li>
+                                    <li><a href="{{ path('admin_reservations_user_pack_new') }}">Reservation Pack</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="{{ path('user_packs') }}">Packs</a>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_services') }}">Service</a></li>
+                                    <li class="active"><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="">Talk with Evi</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        {% else %}
+                                            <i class="icon-user"></i>
+                                        {% endif %}
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
+                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <header id="fh5co-header" class="fh5co-cover" role="banner">
+                <div id="stars"></div>
+                <div id="stars2"></div>
+                <div id="stars3"></div>
+                <div id="title">
+                    <span>Nos</span><br>
+                    <span>Partenaires</span>
+                </div>
+            </header>
+
+            {% if Sponsor is empty %}
+                <p style="color: red; font-size: 1.5em; text-align: center; padding: 20px;">
+                    Debug: No sponsors found in the Sponsor variable. Check your Symfony controller and database query.
+                </p>
+            {% else %}
+                <div class="sponsor-card-container">
+                    {% for sponsor in Sponsor %}
+                        <div class="sponsor-business-card" data-aos="zoom-in" data-aos-delay="{{ loop.index0 * 150 }}">
+                            <div class="sponsor-card-inner">
+                                <div class="sponsor-card-front">
+                                    <h3>{{ sponsor.nomPartenaire }}</h3>
+                                    <p>{{ sponsor.typePartenaire|default('Partenaire') }}</p>
+                                </div>
+                                <div class="sponsor-card-back">
+                                    <p><i class="fas fa-envelope"></i> {{ sponsor.emailPartenaire|default('Non spécifié') }}</p>
+                                    <p><i class="fas fa-phone"></i> {{ sponsor.telephonePartenaire|default('Non spécifié') }}</p>
+                                    <p><i class="fas fa-map-marker-alt"></i> {{ sponsor.adressePartenaire|default('Non spécifié') }}</p>
+                                    <p><a href="{{ sponsor.siteWeb|default('#') }}" target="_blank" class="website-link">
+                                        <i class="fas fa-globe"></i> {{ sponsor.siteWeb|default('Non spécifié') }}
+                                    </a></p>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="no-sponsor">Aucun partenaire trouvé.</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block javascripts %}
+                <script src="{{ asset('js/jquery.min.js') }}"></script>
+                <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
+                <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
+                <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+                <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
+                <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+                <script src="{{ asset('js/simplyCountdown.js') }}"></script>
+                <script src="{{ asset('js/main.js') }}"></script>
+                <script>
+                    var eventDate = new Date('2025-12-31');
+                    simplyCountdown('.simply-countdown-one', {
+                        year: eventDate.getFullYear(),
+                        month: eventDate.getMonth() + 1,
+                        day: eventDate.getDate(),
+                        enableUtc: false
+                    });
+
+                    // Mobile menu toggle
+                    document.querySelector('.menu-toggle').addEventListener('click', function() {
+                        document.querySelector('.menu-1 ul').classList.toggle('active');
+                    });
+
+                    // Dropdown toggle for mobile
+                    document.querySelectorAll('.has-dropdown').forEach(function(dropdown) {
+                        dropdown.addEventListener('click', function(e) {
+                            if (window.innerWidth <= 768) {
+                                e.preventDefault();
+                                this.classList.toggle('active');
+                            }
+                        });
+                    });
+
+                    // Debug header visibility
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const header = document.querySelector('#fh5co-header');
+                        if (!header) {
+                            console.error('Header element (#fh5co-header) not found in DOM');
+                            return;
+                        }
+                        const observer = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (!entry.isIntersecting) {
+                                    console.warn('Header is not visible. Bounding box:', entry.boundingClientRect);
+                                    console.log('Header styles:', window.getComputedStyle(header));
+                                } else {
+                                    console.log('Header is visible');
+                                }
+                            });
+                        }, { threshold: 0.1 });
+                        observer.observe(header);
+
+                        // Log when new sponsors are added
+                        const sponsorContainer = document.querySelector('.sponsor-card-container');
+                        if (sponsorContainer) {
+                            const mutationObserver = new MutationObserver((mutations) => {
+                                mutations.forEach(mutation => {
+                                    if (mutation.addedNodes.length) {
+                                        console.log('New sponsor cards added:', mutation.addedNodes);
+                                        console.log('Header height after addition:', header.offsetHeight);
+                                    }
+                                });
+                            });
+                            mutationObserver.observe(sponsorContainer, { childList: true });
+                        }
+                    });
+                </script>
+                <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+                <script>
+                    AOS.init({
+                        duration: 600,
+                        easing: 'ease-out-cubic',
+                        once: true,
+                        disable: false // Temporarily enable to test header visibility
+                    });
+                </script>
+            {% endblock %}
+        </div>
+    </body>
+</html>

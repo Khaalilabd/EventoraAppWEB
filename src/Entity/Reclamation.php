@@ -3,8 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
+#[ORM\Table(name: "reclamation")]
 class Reclamation
 {
     #[ORM\Id]
@@ -12,24 +16,47 @@ class Reclamation
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 100)]
+    #[Assert\NotBlank(message: "Le titre ne peut pas être vide.")]
+    #[Assert\Length(
+        max: 100,
+        maxMessage: "Le titre ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $titre = null;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: "La description ne peut pas être vide.")]
     private ?string $description = null;
 
     #[ORM\Column(type: 'string', length: 50, options: ['default' => 'Autre'])]
+    #[Assert\NotBlank(message: "Le type ne peut pas être vide.")]
+    #[Assert\Choice(
+        choices: self::TYPES,
+        message: "Le type '{{ value }}' n'est pas valide. Choisissez parmi : {{ choices }}."
+    )]
     private ?string $Type = null;
 
     #[ORM\ManyToOne(targetEntity: Membre::class)]
     #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'id', nullable: false)]
+    #[Assert\NotNull(message: "Le membre doit être spécifié.")]
     private ?Membre $membre = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: false, options: ['default' => 'En_Attente'])]
+    #[Assert\NotBlank(message: "Le statut ne peut pas être vide.")]
+    #[Assert\Choice(
+        choices: self::STATUTS,
+        message: "Le statut '{{ value }}' n'est pas valide. Choisissez parmi : {{ choices }}."
+    )]
     private ?string $statut = null;
 
-    #[ORM\Column(type: 'date', nullable: false)]
+    #[ORM\Column(type: 'date')]
     private ?\DateTimeInterface $date = null;
+
+    #[ORM\Column(type: 'string', length: 500, nullable: true)]
+    private ?string $qrCodeUrl = null;
+
+    #[ORM\OneToMany(mappedBy: 'reclamation', targetEntity: ReclamationRep::class, fetch: 'EXTRA_LAZY')]
+    private Collection $reclamationReps;
 
     // Constantes pour les valeurs possibles de Type
     public const TYPE_PACKS = 'Packs';
@@ -38,7 +65,6 @@ class Reclamation
     public const TYPE_PLAINTE_AGENT = 'Plainte entre un Agent de contrôle';
     public const TYPE_AUTRE = 'Autre';
 
-    // Liste des types valides
     public const TYPES = [
         self::TYPE_PACKS,
         self::TYPE_SERVICE,
@@ -53,7 +79,6 @@ class Reclamation
     public const STATUT_RESOLU = 'Resolue';
     public const STATUT_REJETE = 'Rejetée';
 
-    // Liste des statuts valides
     public const STATUTS = [
         self::STATUT_EN_ATTENTE,
         self::STATUT_EN_COURS,
@@ -63,10 +88,10 @@ class Reclamation
 
     public function __construct()
     {
+        $this->reclamationReps = new ArrayCollection();
         $this->date = new \DateTime();
     }
 
-    // Getters et setters
     public function getId(): ?int
     {
         return $this->id;
@@ -101,9 +126,6 @@ class Reclamation
 
     public function setType(string $Type): self
     {
-        if (!in_array($Type, self::TYPES, true)) {
-            throw new \InvalidArgumentException("Type invalide : $Type. Les valeurs autorisées sont : " . implode(', ', self::TYPES));
-        }
         $this->Type = $Type;
         return $this;
     }
@@ -126,12 +148,6 @@ class Reclamation
 
     public function setStatut(string $statut): self
     {
-        if ($statut === null) {
-            throw new \InvalidArgumentException("Le statut ne peut pas être NULL.");
-        }
-        if (!in_array($statut, self::STATUTS, true)) {
-            throw new \InvalidArgumentException("Statut invalide : $statut. Les valeurs autorisées sont : " . implode(', ', self::STATUTS));
-        }
         $this->statut = $statut;
         return $this;
     }
@@ -144,6 +160,46 @@ class Reclamation
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+        return $this;
+    }
+
+    public function getQrCodeUrl(): ?string
+    {
+        return $this->qrCodeUrl;
+    }
+
+    public function setQrCodeUrl(?string $qrCodeUrl): self
+    {
+        $this->qrCodeUrl = $qrCodeUrl;
+        return $this;
+    }
+
+    /**
+     * @return Collection|ReclamationRep[]
+     */
+    public function getReclamationReps(): Collection
+    {
+        return $this->reclamationReps;
+    }
+
+    public function addReclamationRep(ReclamationRep $reclamationRep): self
+    {
+        if (!$this->reclamationReps->contains($reclamationRep)) {
+            $this->reclamationReps[] = $reclamationRep;
+            $reclamationRep->setReclamation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReclamationRep(ReclamationRep $reclamationRep): self
+    {
+        if ($this->reclamationReps->removeElement($reclamationRep)) {
+            if ($reclamationRep->getReclamation() === $this) {
+                $reclamationRep->setReclamation(null);
+            }
+        }
+
         return $this;
     }
 }
