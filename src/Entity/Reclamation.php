@@ -49,7 +49,7 @@ class Reclamation
     )]
     private ?string $statut = null;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: 'string', length: 500, nullable: true)]

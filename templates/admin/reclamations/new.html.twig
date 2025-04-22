@@ -340,6 +340,9 @@
                                         <li><a href="{{ path('app_home') }}">Paramètres</a></li>
                                         <li><a href="{{ path('app_home') }}">Notifications</a></li>
                                         <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
                                         <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
                                     {% else %}
                                         <li><a href="{{ path('app_auth') }}">Connexion</a></li>

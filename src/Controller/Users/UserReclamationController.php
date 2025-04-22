@@ -71,6 +71,10 @@ class UserReclamationController extends AbstractController
         }
 
         $reclamation = new Reclamation();
+        // Définir les valeurs avant la validation du formulaire
+        $reclamation->setMembre($user);
+        $reclamation->setStatut(Reclamation::STATUT_EN_ATTENTE);
+
         $form = $this->createForm(ReclamationType::class, $reclamation);
         $form->handleRequest($request);
 
@@ -78,8 +82,10 @@ class UserReclamationController extends AbstractController
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
                     try {
-                        $reclamation->setMembre($user);
-                        $reclamation->setStatut(Reclamation::STATUT_EN_ATTENTE);
+                        // Vérifier que la date est bien définie
+                        if (!$reclamation->getDate()) {
+                            $reclamation->setDate(new \DateTime());
+                        }
                         $entityManager->persist($reclamation);
                         $entityManager->flush();
 
@@ -106,7 +112,7 @@ class UserReclamationController extends AbstractController
                 // Récupérer les erreurs de validation
                 $errors = [];
                 foreach ($form->getErrors(true) as $error) {
-                    $fieldName = $error->getOrigin()->getName();
+                    $fieldName = $error->getOrigin() ? $error->getOrigin()->getName() : 'reclamation';
                     $errors[$fieldName][] = $error->getMessage();
                 }
 
@@ -130,8 +136,10 @@ class UserReclamationController extends AbstractController
         // Gestion de la requête classique (non-AJAX)
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $reclamation->setMembre($user);
-                $reclamation->setStatut(Reclamation::STATUT_EN_ATTENTE);
+                // Vérifier que la date est bien définie
+                if (!$reclamation->getDate()) {
+                    $reclamation->setDate(new \DateTime());
+                }
                 $entityManager->persist($reclamation);
                 $entityManager->flush();
 
