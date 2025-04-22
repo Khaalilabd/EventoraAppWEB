@@ -337,10 +337,9 @@
                                 </p>
                                 <p class="text-sm mb-2"><strong>Date :</strong> {{ reclamation.date|date('Y-m-d') }}</p>
                                 <p class="text-sm mb-2"><strong>Utilisateur :</strong> {{ reclamation.membre.email }}</p>
-                                {# Placeholder pour le QR code à implémenter ultérieurement #}
-                                {# <p class="text-sm mb-2"><strong>QR Code :</strong> Non implémenté</p> #}
                             </div>
                             <div class="card-footer">
+                                <a href="{{ path('admin_reclamations_export_pdf', {'id': reclamation.id}) }}" class="btn btn-sm btn-success">Exporter en PDF</a>
                                 <a href="{{ path('admin_reclamations') }}" class="btn btn-sm btn-secondary">Retour</a>
                                 {% if reclamation.statut in ['En_Attente', 'En_Cours'] %}
                                     <a href="{{ path('admin_reclamations_traiter', {'id': reclamation.id}) }}" class="btn btn-sm btn-primary">Traiter</a>
