@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Membre;
+use App\Entity\Reclamation;
 use App\Form\RegistrationFormType;
 use App\Form\LoginFormType;
+use App\Repository\ReclamationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,9 +16,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Core\Security;
+use Psr\Log\LoggerInterface;
 
 class SecurityController extends AbstractController
 {
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     #[Route('/', name: 'app_home')]
     public function home(): Response
     {
@@ -99,8 +109,8 @@ class SecurityController extends AbstractController
     {
         if ($security->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = $this->getUser();
-            if (in_array('ROLE_ADMIN', $user->getRoles()) || in_array('ROLE_MEMBRE', $user->getRoles())) {
-                return $this->redirectToRoute('app_home_page');
+            if (in_array('ROLE_ADMIN', $user->getRoles())) {
+                return $this->redirectToRoute('admin_dashboard');
             }
             return $this->redirectToRoute('app_home_page');
         }
@@ -108,9 +118,83 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
-    public function adminDashboard(): Response
+    public function index(ReclamationRepository $reclamationRepository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        return $this->render('admin/dashboard.html.twig');
+        try {
+            $this->logger->info('Début de la méthode index pour admin_dashboard');
+
+            // Étape 1 : Récupérer le total des réclamations
+            $totalReclamations = 0;
+            try {
+                $totalReclamations = $reclamationRepository->count([]);
+                $this->logger->info('Total réclamations: ' . $totalReclamations);
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors du comptage des réclamations: ' . $e->getMessage());
+            }
+
+            // Étape 2 : Récupérer les réclamations traitées
+            $reclamationsTraitees = 0;
+            $pourcentageTraitees = 0;
+            $pourcentageNonTraitees = 0;
+            try {
+                $reclamationsTraitees = $reclamationRepository->count(['statut' => Reclamation::STATUT_RESOLU]);
+                $pourcentageTraitees = $totalReclamations > 0 ? ($reclamationsTraitees / $totalReclamations) * 100 : 0;
+                $pourcentageNonTraitees = 100 - $pourcentageTraitees;
+                $this->logger->info('Réclamations traitées: ' . $reclamationsTraitees);
+                $this->logger->info('Pourcentage traité: ' . $pourcentageTraitees);
+                $this->logger->info('Pourcentage non traité: ' . $pourcentageNonTraitees);
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors du calcul des réclamations traitées: ' . $e->getMessage());
+            }
+
+            // Étape 3 : Récupérer les réclamations par type
+            $reclamationsParTypeFormatted = [];
+            try {
+                $reclamationsParType = $reclamationRepository->createQueryBuilder('r')
+                    ->select('r.Type as type, COUNT(r.id) as count')
+                    ->groupBy('r.Type')
+                    ->getQuery()
+                    ->getResult();
+                $this->logger->info('Réclamations par type (brut): ' . json_encode($reclamationsParType));
+
+                // S'assurer que tous les types sont inclus
+                $allTypes = Reclamation::TYPES;
+                $reclamationsParTypeFormatted = array_map(function ($type) use ($reclamationsParType) {
+                    $found = array_filter($reclamationsParType, fn($item) => $item['type'] === $type);
+                    return [
+                        'type' => $type,
+                        'count' => !empty($found) ? reset($found)['count'] : 0
+                    ];
+                }, $allTypes);
+                $this->logger->info('Réclamations par type (formaté): ' . json_encode($reclamationsParTypeFormatted));
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors de la récupération des réclamations par type: ' . $e->getMessage());
+            }
+
+            // Étape 4 : Récupérer les réclamations par statut
+            $reclamationsParStatut = [];
+            try {
+                $reclamationsParStatut = $reclamationRepository->createQueryBuilder('r')
+                    ->select('r.statut, COUNT(r.id) as count')
+                    ->groupBy('r.statut')
+                    ->getQuery()
+                    ->getResult();
+                $this->logger->info('Réclamations par statut: ' . json_encode($reclamationsParStatut));
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors de la récupération des réclamations par statut: ' . $e->getMessage());
+            }
+
+            // Rendre le template avec les données, même si certaines requêtes ont échoué
+            return $this->render('admin/dashboard.html.twig', [
+                'total_reclamations' => $totalReclamations,
+                'pourcentage_traitees' => $pourcentageTraitees,
+                'pourcentage_non_traitees' => $pourcentageNonTraitees,
+                'reclamations_par_type' => $reclamationsParTypeFormatted,
+                'reclamations_par_statut' => $reclamationsParStatut,
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur globale dans admin_dashboard: ' . $e->getMessage());
+            throw $this->createNotFoundException('Une erreur est survenue lors du chargement du tableau de bord.');
+        }
     }
 }

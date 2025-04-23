@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin Dashboard - Réclamations{% endblock %}
+{% block title %}Admin Dashboard{% endblock %}
 
 {% block stylesheets %}
     <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800" rel="stylesheet" />
@@ -9,279 +9,110 @@
     <link href="{{ asset('assets/css/soft-ui-dashboard.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/fontawesome/css/all.css') }}" rel="stylesheet" />
     <style>
-        /* Style général */
-        body {
+        /* Sidebar Styling */
+        .sidenav {
             background-color: #f8f9fa;
-            font-family: 'Inter', sans-serif;
-            color: #2d3748;
+            width: 250px;
+            height: 100vh;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
-        /* Barre latérale */
-        .sidenav {
-            background-color: #ffffff;
-            width: 260px;
-            height: 100vh;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-        }
         .sidenav-header {
-            padding: 20px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 15px;
         }
+
         .navbar-brand {
             display: flex;
             align-items: center;
-            color: #2d3748;
-            transition: color 0.3s ease, transform 0.3s ease;
+            color: #333;
         }
+
         .navbar-brand:hover {
             color: #ff6200;
-            transform: scale(1.03);
         }
+
         .navbar-nav .nav-link {
-            padding: 12px 20px;
-            color: #4a5568;
+            padding: 12px 15px;
+            color: #555;
             transition: all 0.3s ease;
-            border-radius: 8px;
-            margin: 5px 10px;
         }
+
         .navbar-nav .nav-link:hover {
             background-color: #ff6200;
             color: #fff;
-            transform: translateX(5px);
         }
+
         .navbar-nav .nav-link.active {
             background-color: #ff6200;
             color: #fff;
-            box-shadow: 0 2px 8px rgba(255, 98, 0, 0.2);
         }
+
         .navbar-nav .nav-link .icon {
-            width: 32px;
-            height: 32px;
-            background-color: #f7fafc;
-            border-radius: 6px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: #fff;
+            transition: background-color 0.3s ease;
         }
+
         .navbar-nav .nav-link:hover .icon,
         .navbar-nav .nav-link.active .icon {
-            background-color: #fff;
-            transform: rotate(360deg);
+            background-color: #ff6200;
         }
+
         .navbar-nav .nav-link .icon i {
             font-size: 16px;
-            color: #4a5568;
         }
-        .navbar-nav .nav-link:hover .icon i,
-        .navbar-nav .nav-link.active .icon i {
-            color: #ff6200;
-        }
+
         .navbar-nav .dropdown-toggle::after {
-            margin-left: 12px;
+            margin-left: 10px;
             transition: transform 0.3s ease;
         }
+
         .navbar-nav .dropdown-toggle[aria-expanded="true"]::after {
             transform: rotate(180deg);
         }
+
         .collapse {
             transition: all 0.3s ease;
         }
+
         .navbar-nav .collapse .nav-link {
-            padding-left: 45px;
-            font-size: 0.95em;
+            padding-left: 40px;
+            font-size: 0.9em;
         }
+
         .navbar-nav .collapse .nav-link:hover {
             background-color: #ff8c00;
-            color: #fff;
         }
+
         hr.horizontal {
             border: 0;
             height: 1px;
-            background-color: #e2e8f0;
-            margin: 10px 0;
+            background-color: #ddd;
         }
+
         @media (max-width: 768px) {
             .sidenav {
-                width: 220px;
+                width: 200px;
             }
         }
 
-        /* Contenu principal */
-        .main-content {
-            margin-left: 260px;
-            width: calc(100% - 260px);
-            min-height: 100vh;
-            padding: 40px;
-            background-color: #f8f9fa;
-        }
-        @media (max-width: 768px) {
-            .main-content {
-                margin-left: 220px;
-                width: calc(100% - 220px);
-                padding: 20px;
-            }
+        /* Custom styles for charts */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
         }
 
-        /* Sections */
-        .module-section {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            padding: 25px;
-            margin-bottom: 40px;
-        }
-        .module-section h4 {
-            color: #2d3748;
-            font-weight: 700;
-            margin-bottom: 25px;
-            border-bottom: 3px solid #ff6200;
-            padding-bottom: 12px;
-            font-size: 1.5em;
+        .gauge-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
         }
 
-        /* Cartes KPI */
-        .kpi-card {
-            background-color: #fff;
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            min-height: 140px;
-            transition: transform 0.4s ease, opacity 0.6s ease, box-shadow 0.4s ease;
-            opacity: 0;
-        }
-        .kpi-card.animate {
-            opacity: 1;
-            transform: translateY(-5px);
-        }
-        .kpi-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-        .kpi-card .card-body {
-            padding: 20px;
-        }
-        .kpi-card .icon {
-            background-color: #ff6200;
-            box-shadow: 0 3px 12px rgba(255, 98, 0, 0.3);
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .kpi-card h5 {
-            color: #2d3748;
-            font-weight: 700;
-            font-size: 1.8em;
-            margin-top: 15px;
-        }
-        .kpi-card span.text-sm {
-            color: #718096;
-            font-size: 0.9em;
-            font-weight: 500;
-        }
-        .kpi-card .trend {
-            color: #718096;
-            font-size: 0.85em;
-            font-weight: 600;
-        }
-        .kpi-card .trend.positive {
-            color: #38a169;
-        }
-        .kpi-card .trend.negative {
-            color: #e53e3e;
-        }
-
-        /* Cartes de graphiques */
-        .chart-card {
-            background-color: #fff;
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            min-height: 350px;
-            transition: opacity 0.6s ease, transform 0.4s ease;
-            opacity: 0;
-        }
-        .chart-card.animate {
-            opacity: 1;
-            transform: translateY(-5px);
-        }
-        .chart-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-        .chart-card .card-header {
-            background-color: transparent;
-            border-bottom: none;
-            padding: 20px;
-        }
-        .chart-card .card-header h6 {
-            color: #2d3748;
-            font-weight: 600;
-            font-size: 1.1em;
-        }
-        .chart-card .card-body {
-            padding: 20px;
-        }
-
-        /* Navbar principale */
-        .navbar-main {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            margin-bottom: 30px;
-            padding: 15px;
-        }
-        .navbar-main .breadcrumb {
-            background-color: transparent;
-            margin-bottom: 0;
-        }
-        .navbar-main .breadcrumb-item a,
-        .navbar-main .breadcrumb-item {
-            color: #718096;
-            font-size: 0.9em;
-        }
-        .navbar-main .breadcrumb-item.active {
-            color: #2d3748;
-            font-weight: 600;
-        }
-        .navbar-main h6 {
-            color: #2d3748;
-            font-weight: 700;
-            font-size: 1.3em;
-        }
-        .navbar-main .input-group {
-            background-color: #edf2f7;
-            border-radius: 10px;
-            max-width: 300px;
-        }
-        .navbar-main .input-group-text {
-            background-color: transparent;
-            border: none;
-            color: #718096;
-        }
-        .navbar-main .form-control {
-            background-color: transparent;
-            border: none;
-            color: #2d3748;
-            font-size: 0.95em;
-        }
-        .navbar-main .form-control::placeholder {
-            color: #a0aec0;
-        }
-        .navbar-main .nav-link {
-            color: #2d3748;
-            font-weight: 600;
-        }
-        .navbar-main .nav-link:hover {
-            color: #ff6200;
+        .progress-bar {
+            transition: width 0.6s ease;
         }
     </style>
 {% endblock %}
@@ -496,100 +327,151 @@
             </nav>
 
             <div class="container-fluid py-4">
-                <!-- Section Réclamations -->
-                <div class="module-section">
-                    <h4 class="mb-4">Réclamations</h4>
-                    <!-- KPI Réclamations -->
-                    <div class="row mb-5">
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
-                            <div class="card kpi-card">
-                                <div class="card-body p-3 position-relative">
-                                    <div class="row align-items-center">
-                                        <div class="col-8 text-start">
-                                            <div class="icon icon-shape shadow text-center border-radius-2xl">
-                                                <i class="fas fa-exclamation-circle text-white text-lg opacity-10"></i>
+                <div class="row">
+                    <div class="col-lg-6 col-12">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="card">
+                                    <span class="mask bg-primary opacity-10 border-radius-md"></span>
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="row">
+                                            <div class="col-8 text-start">
+                                                <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
+                                                    <i class="fas fa-exclamation-circle text-dark text-gradient text-lg opacity-10"></i>
+                                                </div>
+                                                <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ total_reclamations }}</h5>
+                                                <span class="text-white text-sm">Total Réclamations</span>
                                             </div>
-                                            <h5 class="font-weight-bolder mb-0 mt-3">{{ total_reclamations }}</h5>
-                                            <span class="text-sm">Total Réclamations</span>
+                                            <div class="col-4">
+                                                <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">{{ total_variation >= 0 ? '+' ~ total_variation : total_variation }}%</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12 mt-4 mt-md-0">
+                                <div class="card">
+                                    <span class="mask bg-dark opacity-10 border-radius-md"></span>
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="row">
+                                            <div class="col-8 text-start">
+                                                <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
+                                                    <i class="fas fa-hourglass-half text-dark text-gradient text-lg opacity-10"></i>
+                                                </div>
+                                                <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ pending_reclamations }}</h5>
+                                                <span class="text-white text-sm">Réclamations en Attente</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">{{ pending_variation >= 0 ? '+' ~ pending_variation : pending_variation }}%</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
-                            <div class="card kpi-card">
-                                <div class="card-body p-3 position-relative">
-                                    <div class="row align-items-center">
-                                        <div class="col-8 text-start">
-                                            <div class="icon icon-shape shadow text-center border-radius-2xl">
-                                                <i class="fas fa-check-circle text-white text-lg opacity-10"></i>
+                        <div class="row mt-4">
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="card">
+                                    <span class="mask bg-success opacity-10 border-radius-md"></span>
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="row">
+                                            <div class="col-8 text-start">
+                                                <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
+                                                    <i class="fas fa-check-circle text-dark text-gradient text-lg opacity-10"></i>
+                                                </div>
+                                                <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ resolution_rate }}%</h5>
+                                                <span class="text-white text-sm">Taux de Résolution</span>
                                             </div>
-                                            <h5 class="font-weight-bolder mb-0 mt-3">{{ pourcentage_traitees|round(2) }}%</h5>
-                                            <span class="text-sm">Réclamations Traitées</span>
-                                        </div>
-                                        <div class="col-4 text-end">
-                                            <p class="trend positive mb-0">+5%</p>
+                                            <div class="col-4">
+                                                <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">{{ resolution_variation >= 0 ? '+' ~ resolution_variation : resolution_variation }}%</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
-                            <div class="card kpi-card">
-                                <div class="card-body p-3 position-relative">
-                                    <div class="row align-items-center">
-                                        <div class="col-8 text-start">
-                                            <div class="icon icon-shape shadow text-center border-radius-2xl">
-                                                <i class="fas fa-hourglass-half text-white text-lg opacity-10"></i>
+                            <div class="col-lg-6 col-md-6 col-12 mt-4 mt-md-0">
+                                <div class="card">
+                                    <span class="mask bg-warning opacity-10 border-radius-md"></span>
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="row">
+                                            <div class="col-8 text-start">
+                                                <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
+                                                    <i class="fas fa-plus-circle text-dark text-gradient text-lg opacity-10"></i>
+                                                </div>
+                                                <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ new_reclamations_this_month }}</h5>
+                                                <span class="text-white text-sm">Nouvelles Réclamations</span>
                                             </div>
-                                            <h5 class="font-weight-bolder mb-0 mt-3">{{ pourcentage_non_traitees|round(2) }}%</h5>
-                                            <span class="text-sm">Réclamations Non Traitées</span>
-                                        </div>
-                                        <div class="col-4 text-end">
-                                            <p class="trend negative mb-0">-2%</p>
+                                            <div class="col-4">
+                                                <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">{{ total_variation >= 0 ? '+' ~ total_variation : total_variation }}%</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Graphiques Réclamations -->
-                    <div class="row">
-                        <div class="col-lg-4 col-md-12 mb-4">
-                            <div class="card chart-card">
-                                <div class="card-header">
-                                    <h6>Réclamations Traitées vs Non Traitées</h6>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="reclamations-treated-vs-untreated-chart"></canvas>
-                                    <div id="no-treated-data-message" class="text-center text-muted mt-3" style="display: none;">
-                                        Aucune donnée disponible pour les réclamations traitées/non traitées.
-                                    </div>
+                    <div class="col-lg-6 col-12 mt-4 mt-lg-0">
+                        <div class="card h-100">
+                            <div class="card-header pb-0 p-3">
+                                <h6 class="mb-0">Réclamations par Type</h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <div class="chart-container">
+                                    <canvas id="reclamationsByTypeChart"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-12 mb-4">
-                            <div class="card chart-card">
-                                <div class="card-header">
-                                    <h6>Réclamations par Type</h6>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="reclamations-by-type-chart"></canvas>
-                                    <div id="no-type-data-message" class="text-center text-muted mt-3" style="display: none;">
-                                        Aucune donnée disponible pour les réclamations par type.
-                                    </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-6 col-12">
+                        <div class="card h-100">
+                            <div class="card-header pb-0 p-3">
+                                <h6 class="mb-0">Évolution des Réclamations</h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <div class="chart-container">
+                                    <canvas id="reclamationsByMonthChart"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-12 mb-4">
-                            <div class="card chart-card">
-                                <div class="card-header">
-                                    <h6>Réclamations par Statut</h6>
+                    </div>
+                    <div class="col-lg-3 col-12 mt-4 mt-lg-0">
+                        <div class="card h-100">
+                            <div class="card-header pb-0 p-3">
+                                <h6 class="mb-0">Taux de Résolution</h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <div class="gauge-container">
+                                    <canvas id="resolutionRateGauge"></canvas>
                                 </div>
-                                <div class="card-body">
-                                    <canvas id="reclamations-status-distribution-chart"></canvas>
-                                    <div id="no-status-data-message" class="text-center text-muted mt-3" style="display: none;">
-                                        Aucune donnée disponible pour les réclamations par statut.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-12 mt-4 mt-lg-0">
+                        <div class="card h-100">
+                            <div class="card-header pb-0 p-3">
+                                <h6 class="mb-0">Statut des Réclamations</h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <div class="status-progress">
+                                    <div class="mb-3">
+                                        <p class="text-sm font-weight-bold mb-1">En Attente</p>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ status_percentages['En Attente'] }}%" aria-valuenow="{{ status_percentages['En Attente'] }}" aria-valuemin="0" aria-valuemax="100">{{ status_percentages['En Attente'] }}%</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <p class="text-sm font-weight-bold mb-1">En Cours</p>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ status_percentages['En Cours'] }}%" aria-valuenow="{{ status_percentages['En Cours'] }}" aria-valuemin="0" aria-valuemax="100">{{ status_percentages['En Cours'] }}%</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <p class="text-sm font-weight-bold mb-1">Résolue</p>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ status_percentages['Résolue'] }}%" aria-valuenow="{{ status_percentages['Résolue'] }}" aria-valuemin="0" aria-valuemax="100">{{ status_percentages['Résolue'] }}%</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -607,9 +489,8 @@
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}" defer></script>
     <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}" defer></script>
     <script src="{{ asset('assets/js/soft-ui-dashboard.min.js') }}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Gestion des menus déroulants de la barre latérale
         document.querySelectorAll('.dropdown-toggle').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -625,216 +506,121 @@
             });
         });
 
-        // Animations des cartes KPI et graphiques
-        const kpiCards = document.querySelectorAll('.kpi-card');
-        const chartCards = document.querySelectorAll('.chart-card');
-
-        const animateElements = (elements) => {
-            elements.forEach((element, index) => {
-                setTimeout(() => {
-                    element.classList.add('animate');
-                }, index * 150);
-            });
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    if (entry.target.classList.contains('kpi-card')) {
-                        animateElements(kpiCards);
-                    } else if (entry.target.classList.contains('chart-card')) {
-                        animateElements(chartCards);
+        // Réclamations par Type (Histogramme)
+        const reclamationsByTypeCtx = document.getElementById('reclamationsByTypeChart').getContext('2d');
+        new Chart(reclamationsByTypeCtx, {
+            type: 'bar',
+            data: {
+                labels: [{% for type in reclamations_by_type %}'{{ type.Type }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    label: 'Nombre de Réclamations',
+                    data: [{% for type in reclamations_by_type %}{{ type.count }}{% if not loop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: '#007bff',
+                    borderColor: '#007bff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Nombre'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Type'
+                        }
                     }
-                }
-            });
-        }, { threshold: 0.2 });
-
-        kpiCards.forEach(card => observer.observe(card));
-        chartCards.forEach(card => observer.observe(card));
-
-        // Données dynamiques passées depuis le contrôleur
-        const pourcentageTraitees = {{ pourcentage_traitees|default(0)|json_encode|raw }};
-        const pourcentageNonTraitees = {{ pourcentage_non_traitees|default(0)|json_encode|raw }};
-        const reclamationsParType = {{ reclamations_par_type|default([])|json_encode|raw }};
-        const reclamationsParStatut = {{ reclamations_par_statut|default([])|json_encode|raw }};
-
-        // Logs pour débogage
-        console.log('pourcentageTraitees:', pourcentageTraitees);
-        console.log('pourcentageNonTraitees:', pourcentageNonTraitees);
-        console.log('reclamationsParType:', reclamationsParType);
-        console.log('reclamationsParStatut:', reclamationsParStatut);
-
-        // Graphiques Chart.js
-        const ctx1 = document.getElementById('reclamations-treated-vs-untreated-chart').getContext('2d');
-        const ctx2 = document.getElementById('reclamations-by-type-chart').getContext('2d');
-        const ctx3 = document.getElementById('reclamations-status-distribution-chart').getContext('2d');
-
-        // Graphique 1 : Réclamations Traitées vs Non Traitées (Pie Chart)
-        const hasTreatedData = pourcentageTraitees !== 0 || pourcentageNonTraitees !== 0;
-        if (!hasTreatedData) {
-            document.getElementById('no-treated-data-message').style.display = 'block';
-            ctx1.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx1, {
-                type: 'pie',
-                data: {
-                    labels: ['Traitées', 'Non Traitées'],
-                    datasets: [{
-                        data: [pourcentageTraitees, pourcentageNonTraitees],
-                        backgroundColor: ['#ff6200', '#ff8c00'],
-                        borderColor: ['#fff', '#fff'],
-                        borderWidth: 2
-                    }]
                 },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 14, family: 'Inter', weight: 500 },
-                                color: '#2d3748'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#2d3748',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed + '%';
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 1000,
-                        easing: 'easeOutQuart'
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
-            });
-        }
+            }
+        });
 
-        // Graphique 2 : Réclamations par Type (Bar Chart)
-        const typeLabels = reclamationsParType.map(item => item.type);
-        const typeData = reclamationsParType.map(item => item.count);
-        const hasTypeData = typeData.some(count => count > 0);
-
-        if (!hasTypeData) {
-            document.getElementById('no-type-data-message').style.display = 'block';
-            ctx2.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: typeLabels,
-                    datasets: [{
-                        label: 'Nombre de Réclamations',
-                        data: typeData,
-                        backgroundColor: ['#ff6200', '#ff8c00', '#ffb74d', '#ffcc80'],
-                        borderColor: ['#ff6200', '#ff8c00', '#ffb74d', '#ffcc80'],
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        barThickness: 40
-                    }]
+        // Évolution des Réclamations (Graphique linéaire)
+        const reclamationsByMonthCtx = document.getElementById('reclamationsByMonthChart').getContext('2d');
+        new Chart(reclamationsByMonthCtx, {
+            type: 'line',
+            data: {
+                labels: [{% for month in reclamations_by_month %}'{{ month.month }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    label: 'Réclamations',
+                    data: [{% for month in reclamations_by_month %}{{ month.count }}{% if not loop.last %},{% endif %}{% endfor %}],
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Nombre'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Mois'
+                        }
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                color: '#2d3748',
-                                font: { family: 'Inter', size: 12 },
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#edf2f7' },
-                            ticks: {
-                                color: '#2d3748',
-                                font: { family: 'Inter', size: 12 },
-                                stepSize: 1
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: '#2d3748',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y;
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        duration: 1200,
-                        easing: 'easeOutQuart'
+                plugins: {
+                    legend: {
+                        display: false
                     }
                 }
-            });
-        }
+            }
+        });
 
-        // Graphique 3 : Réclamations par Statut (Doughnut Chart)
-        const statusLabels = reclamationsParStatut.map(item => item.statut);
-        const statusData = reclamationsParStatut.map(item => item.count);
-        const hasStatusData = statusData.some(count => count > 0);
-
-        if (!hasStatusData) {
-            document.getElementById('no-status-data-message').style.display = 'block';
-            ctx3.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx3, {
-                type: 'doughnut',
-                data: {
-                    labels: statusLabels,
-                    datasets: [{
-                        data: statusData,
-                        backgroundColor: ['#ff6200', '#ff8c00', '#ffb74d', '#ffcc80'],
-                        borderColor: ['#fff', '#fff', '#fff', '#fff'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 14, family: 'Inter', weight: 500 },
-                                color: '#2d3748'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#2d3748',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed;
-                                }
-                            }
-                        }
+        // Taux de Résolution (Jauge circulaire)
+        const resolutionRateCtx = document.getElementById('resolutionRateGauge').getContext('2d');
+        new Chart(resolutionRateCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Résolu', 'Non Résolu'],
+                datasets: [{
+                    data: [{{ resolution_rate }}, {{ 100 - resolution_rate }}],
+                    backgroundColor: ['#28a745', '#e9ecef'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                cutout: '80%',
+                plugins: {
+                    legend: {
+                        display: false
                     },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 1200,
-                        easing: 'easeOutQuart'
+                    tooltip: {
+                        enabled: false
                     }
                 }
-            });
-        }
+            },
+            plugins: [{
+                id: 'gaugeText',
+                afterDraw(chart) {
+                    const ctx = chart.ctx;
+                    const width = chart.width;
+                    const height = chart.height;
+                    ctx.save();
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.font = 'bold 30px Arial';
+                    ctx.fillStyle = '#28a745';
+                    ctx.fillText('{{ resolution_rate }}%', width / 2, height / 2);
+                    ctx.restore();
+                }
+            }]
+        });
     </script>
 {% endblock %}
