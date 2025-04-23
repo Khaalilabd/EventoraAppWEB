@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 20px auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; }
+        .header { background-color: #007bff; color: white; padding: 15px; text-align: center; border-radius: 8px 8px 0 0; }
+        .header h2 { margin: 0; font-size: 24px; }
+        .content { padding: 20px; }
+        .content p { line-height: 1.6; }
+        .content .alert { color: #ff0000; font-weight: bold; font-size: 16px; }
+        .content ul { list-style: none; padding: 0; }
+        .content ul li { margin-bottom: 10px; }
+        .content ul li strong { color: #007bff; }
+        .footer { text-align: center; font-size: 12px; color: #777; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Nouvelle réclamation soumise</h2>
+        </div>
+        <div class="content">
+            <p>Cher(e) {{ admin.nom }} {{ admin.prenom }},</p>
+            <p class="alert">Une réclamation a été soumise.</p>
+            <p>Voici les détails de la réclamation :</p>
+            <ul>
+                <li><strong>Titre :</strong> {{ reclamation.titre }}</li>
+                <li><strong>Description :</strong> {{ reclamation.description }}</li>
+                <li><strong>Type :</strong> {{ reclamation.Type }}</li>
+                <li><strong>Date :</strong> {{ reclamation.date|date('d/m/Y H:i') }}</li>
+                <li><strong>Statut :</strong> En Attente</li>
+                <li><strong>Soumis par :</strong> {{ membre.nom }} {{ membre.prenom }} ({{ membre.email }})</li>
+            </ul>
+            <p>Veuillez examiner cette réclamation dans le tableau de bord d'administration.</p>
+            <p>Merci pour votre attention.</p>
+        </div>
+        <div class="footer">
+            <p>Eventora © 2025 - Tous droits réservés</p>
+        </div>
+    </div>
+</body>
+</html>

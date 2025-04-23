@@ -85,7 +85,6 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reservationpersonnalises = new ArrayCollection();
     }
 
-    // Implémentation des méthodes de UserInterface
     public function getRoles(): array
     {
         return ['ROLE_' . strtoupper($this->role)];
@@ -103,7 +102,6 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // Si vous stockez des données sensibles temporairement, supprimez-les ici
     }
 
     public function getId(): ?int

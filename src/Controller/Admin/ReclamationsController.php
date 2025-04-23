@@ -137,7 +137,6 @@ class ReclamationsController extends AbstractController
     public function exportPdf(Reclamation $reclamation): Response
     {
         try {
-            // Debug: Afficher le statut
             dump($reclamation->getStatut());
     
             $html = $this->renderView('admin/reclamations/pdf.html.twig', [
