@@ -10,6 +10,7 @@
 * 	Template Style 
 *
 * ======================================================= */
+
 body {
   font-family: "Work Sans", Arial, sans-serif;
   font-weight: 400;
@@ -47,13 +48,13 @@ body {
 }
 
 a {
-  color: #ff0000;
+  color: #934D1A;
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
   transition: 0.5s;
 }
 a:hover, a:active, a:focus {
-  color: #ff0202;
+  color: #934D1A;
   outline: none;
   text-decoration: none;
 }
@@ -107,7 +108,7 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .fh5co-nav a {
   padding: 5px 10px;
-  color: #fff;
+  color: #934D1A;
 }
 @media screen and (max-width: 768px) {
   .fh5co-nav .menu-1, .fh5co-nav .menu-2 {
@@ -134,7 +135,7 @@ h1, h2, h3, h4, h5, h6, figure {
   transition: 0.5s;
 }
 .fh5co-nav ul li a:hover, .fh5co-nav ul li a:focus, .fh5co-nav ul li a:active {
-  color: white;
+  color: #934D1A;
 }
 .fh5co-nav ul li.has-dropdown {
   position: relative;
@@ -296,7 +297,7 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 
 .fh5co-cover {
-  height: 900px;
+  height: 100%;
   position: relative;
   width: 100%;
 }
@@ -1060,7 +1061,7 @@ form label {
 }
 .couple-half h3 {
   font-family: "Sacramento", Arial, serif;
-  color: #ff0000;
+  color: #934D1A;
   font-size: 30px;
 }
 .couple-half .groom, .couple-half .bride {
@@ -1153,7 +1154,7 @@ form label {
   height: 90px;
   font-size: 40px;
   line-height: 40px;
-  color: #ff0000;
+  color: #934D1A;
 }
 .feature-center p, .feature-center h3 {
   margin-bottom: 30px;
@@ -1175,7 +1176,7 @@ form label {
   margin-bottom: 10px;
   line-height: 1.5;
   font-weight: bold;
-  color: #ff0000;
+  color: #934D1A;
   font-family: "Sacramento", Arial, serif;
 }
 @media screen and (max-width: 768px) {
@@ -1210,7 +1211,7 @@ form label {
   display: block;
 }
 #fh5co-testimonial .wrap-testimony .testimony-slide span a.twitter {
-  color: #ff0000;
+  color: #934D1A;
   font-weight: 300;
 }
 #fh5co-testimonial .wrap-testimony .testimony-slide figure {
@@ -1302,7 +1303,7 @@ form label {
   display: table-cell;
   vertical-align: middle;
   font-size: 30px;
-  color: #ff0000;
+  color: #934D1A;
 }
 .feature-left .feature-copy {
   float: left;
@@ -1368,7 +1369,7 @@ form label {
 #fh5co-started .btn {
   height: 54px;
   border: none !important;
-  background: #ff0000;
+  background: #934D1A;
   color: #fff;
   font-size: 16px;
   text-transform: uppercase;
@@ -1412,7 +1413,7 @@ form label {
 }
 .owl-carousel .owl-controls .owl-dot.active span {
   background: transparent;
-  border: 2px solid #ff0000;
+  border: 2px solid #934D1A;
 }
 
 #fh5co-offcanvas {
@@ -1664,21 +1665,21 @@ form label {
 }
 
 .btn-primary {
-  background: #ff0000;
+  background: #934D1A;
   color: #fff;
-  border: 2px solid #ff0000;
+  border: 2px solid #934D1A;
 }
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
-  background: #ff0000 !important;
-  border-color: #ff0000 !important;
+  background: #934D1A !important;
+  border-color: #934D1A !important;
 }
 .btn-primary.btn-outline {
   background: transparent;
-  color: #ff0000;
-  border: 2px solid #ff0000;
+  color: #934D1A;
+  border: 2px solid #934D1A;
 }
 .btn-primary.btn-outline:hover, .btn-primary.btn-outline:focus, .btn-primary.btn-outline:active {
-  background: #ff0000;
+  background: #934D1A;
   color: #fff;
 }
 
@@ -1808,7 +1809,7 @@ form label {
 .form-control:active, .form-control:focus {
   outline: none;
   box-shadow: none;
-  border-color: #ff0000;
+  border-color: #934D1A;
 }
 
 .row-pb-md {

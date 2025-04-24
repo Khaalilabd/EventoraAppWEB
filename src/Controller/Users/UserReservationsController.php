@@ -128,6 +128,7 @@ class UserReservationsController extends AbstractController
 
         return new JsonResponse(['results' => $results]);
     }
+
     #[Route('/personnalise/new', name: 'user_reservation_personnalise_new', methods: ['GET', 'POST'])]
     public function newPersonnalise(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -198,64 +199,6 @@ class UserReservationsController extends AbstractController
 
         return $this->render('admin/reservation/user_personnalise_new.html.twig', [
             'form' => $form->createView(),
-        ]);
-    }
-
-    #[Route('/list', name: 'user_reservations', methods: ['GET'])]
-    public function index(
-        ReservationpackRepository $reservationpackRepository,
-        ReservationpersonnaliseRepository $reservationpersonnaliseRepository,
-        PaginatorInterface $paginator,
-        Request $request
-    ): Response {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        $user = $this->getUser();
-        if (!$user instanceof Membre) {
-            throw $this->createAccessDeniedException('Utilisateur non connecté ou non valide.');
-        }
-
-        $userId = $user->getId();
-
-        $packReservations = $reservationpackRepository->findBy(['membre' => $userId]);
-        $personaliseReservations = $reservationpersonnaliseRepository->findBy(['membre' => $userId]);
-
-        $reservations = [];
-        foreach ($packReservations as $reservation) {
-            $reservations[] = [
-                'type' => 'Pack',
-                'IDReservationPack' => $reservation->getIDReservationPack(),
-                'IDReservationPersonalise' => null,
-                'nom' => $reservation->getNom(),
-                'prenom' => $reservation->getPrenom(),
-                'date' => $reservation->getDate(),
-                'pack' => $reservation->getPack(),
-                'services' => [],
-                'status' => $reservation->getStatus(),
-            ];
-        }
-        foreach ($personaliseReservations as $reservation) {
-            $reservations[] = [
-                'type' => 'Personnalisée',
-                'IDReservationPack' => null,
-                'IDReservationPersonalise' => $reservation->getIDReservationPersonalise(),
-                'nom' => $reservation->getNom(),
-                'prenom' => $reservation->getPrenom(),
-                'date' => $reservation->getDate(),
-                'pack' => null,
-                'services' => $reservation->getServices(),
-                'status' => $reservation->getStatus(),
-            ];
-        }
-
-        $pagination = $paginator->paginate(
-            $reservations,
-            $request->query->getInt('page', 1),
-            6
-        );
-
-        return $this->render('admin/reservation/reservations.html.twig', [
-            'reservations' => $pagination,
         ]);
     }
 
@@ -352,5 +295,4 @@ class UserReservationsController extends AbstractController
             ]
         );
     }
-    
 }

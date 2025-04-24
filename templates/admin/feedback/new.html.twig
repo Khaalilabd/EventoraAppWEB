@@ -18,6 +18,7 @@
             <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
             <style>
                 body {
                     background-image: url({{ asset('images/img_bg_3.jpg') }});
@@ -43,38 +44,43 @@
                     min-height: 100vh;
                     display: flex;
                     flex-direction: column;
+                    padding-top: 70px;
                 }
                 .fh5co-nav {
                     position: fixed;
                     top: 0;
                     width: 100%;
                     z-index: 1000;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    background: rgba(255, 255, 255, 0.9);
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
                 }
                 .fh5co-nav .container {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
                     padding: 10px 15px;
+                    max-width: 1200px;
+                    margin: 0 auto;
                 }
                 .fh5co-logo a {
                     font-family: 'Work Sans', sans-serif;
                     font-weight: 700;
                     font-size: 24px;
-                    color: #333;
+                    color: #934D1A;
                     text-decoration: none;
                 }
                 .user-circle {
                     display: inline-block;
-                    width: 32px;
-                    height: 32px;
-                    line-height: 32px;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
                     text-align: center;
                     border-radius: 50%;
                     background-color: #f0f0f0;
                     color: #333;
-                    font-size: 16px;
+                    font-size: 20px;
                     vertical-align: middle;
                     margin-right: 8px;
                 }
@@ -108,10 +114,10 @@
                     transition: color 0.3s ease;
                 }
                 .fh5co-nav .menu-1 ul li a:hover {
-                    color: #007bff;
+                    color: #934D1A;
                 }
                 .fh5co-nav .menu-1 ul li.active a {
-                    color: #007bff !important;
+                    color: #934D1A !important;
                     font-weight: 600;
                 }
                 .fh5co-nav .menu-1 ul li.has-dropdown {
@@ -329,28 +335,30 @@
                     <div class="fh5co-logo">
                         <a href="{{ path('app_home') }}">Eventora</a>
                     </div>
-                    <div class="menu-toggle">☰</div>
+                    <div class="menu-toggle">
+                        <i class="icon-menu"></i>
+                    </div>
                     <div class="menu-1">
                         <ul>
                             <li><a href="{{ path('app_home') }}">Home</a></li>
                             <li class="has-dropdown">
                                 <a href="#">Réservation</a>
                                 <ul class="dropdown">
-                                    <li><a href="#">Personalisée</a></li>
-                                    <li><a href="#">Packs</a></li>
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
                                 </ul>
                             </li>
                             <li><a href="{{ path('user_packs') }}">Packs</a></li>
                             <li class="has-dropdown">
                                 <a href="#">Services</a>
                                 <ul class="dropdown">
-                                    <li><a href="#">Service</a></li>
-                                    <li><a href="#">Partenaire</a></li>
+                                    <li><a href="{{ path('user_services') }}">Service</a></li>
+                                    <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
                                 </ul>
                             </li>
                             <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                             <li class="active"><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="#">Talk with Evi</a></li>
+                            <li><a href="">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
                                     <span class="user-circle">
@@ -364,7 +372,7 @@
                                 </a>
                                 <ul class="dropdown">
                                     {% if app.user %}
-                                        <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                        <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
                                         <li><a href="{{ path('app_home') }}">Notifications</a></li>
                                         <li><a href="{{ path('app_home') }}">Historique</a></li>
                                         {% if is_granted('ROLE_ADMIN') %}
@@ -463,7 +471,7 @@
                         <div class="col-md-12 text-center">
                             <p>
                                 <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                                <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                                <small class="block">Designed by Nadhem Hmida</small>
                             </p>
                         </div>
                     </div>
@@ -472,6 +480,7 @@
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
         <script>
             if (typeof jQuery === 'undefined') {
                 console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
@@ -484,7 +493,7 @@
                         $('.fh5co-nav .menu-1 ul').toggleClass('active');
                     });
 
-                    // Dropdowns sur mobile
+                    // Gestion des sous-menus sur mobile
                     $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
                         if ($(window).width() <= 768) {
                             console.log("Clic sur dropdown détecté");
@@ -492,30 +501,6 @@
                             $(this).parent().toggleClass('active');
                         }
                     });
-
-                    // Dropdowns sur desktop avec survol
-                    $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
-                        function() {
-                            console.log("Survol détecté sur un élément has-dropdown");
-                            $(this).find('.dropdown').css({
-                                'display': 'block',
-                                'position': 'absolute',
-                                'top': '100%',
-                                'right': '0',
-                                'visibility': 'visible',
-                                'opacity': '1',
-                                'z-index': '1001'
-                            });
-                        },
-                        function() {
-                            console.log("Fin du survol");
-                            $(this).find('.dropdown').css({
-                                'display': 'none',
-                                'visibility': 'hidden',
-                                'opacity': '0'
-                            });
-                        }
-                    );
 
                     // Gestion des étoiles
                     const select = $('.star-rating');

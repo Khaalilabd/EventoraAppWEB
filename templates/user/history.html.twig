@@ -7,409 +7,578 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
-    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
-    <style>
-        body {
-            background: linear-gradient(135deg, #0a1c2e 0%, #1e3a5f 100%);
-            font-family: 'Work Sans', sans-serif;
-            color: #e0e0e0;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        #page {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .fh5co-nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .fh5co-nav .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 15px;
-        }
-        .fh5co-logo a {
-            font-family: 'Work Sans', sans-serif;
-            font-weight: 700;
-            font-size: 24px;
-            color: #333;
-            text-decoration: none;
-        }
-        .user-circle {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            line-height: 32px;
-            text-align: center;
-            border-radius: 50%;
-            background-color: #f0f0f0;
-            color: #333;
-            font-size: 16px;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-        .user-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-        .fh5co-nav .menu-1 {
-            display: block;
-        }
-        .fh5co-nav .menu-1 ul {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-        .fh5co-nav .menu-1 ul li {
-            margin: 0 15px;
-            position: relative;
-        }
-        .fh5co-nav .menu-1 ul li a {
-            font-family: 'Work Sans', sans-serif;
-            font-size: 16px;
-            color: #333;
-            text-transform: uppercase;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .fh5co-nav .menu-1 ul li a:hover {
-            color: #007bff;
-        }
-        .fh5co-nav .menu-1 ul li.active a {
-            color: #007bff !important;
-            font-weight: 600;
-        }
-        .fh5co-nav .menu-1 ul li.has-dropdown {
-            position: relative;
-        }
-        .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            list-style: none;
-            padding: 10px 0;
-            min-width: 150px;
-            z-index: 1001;
-        }
-        .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-            display: block !important;
-        }
-        .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-            margin: 0;
-        }
-        .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-            padding: 10px 20px;
-            display: block;
-            font-size: 14px;
-            text-transform: none;
-            color: #333;
-        }
-        .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-            color: #007bff;
-        }
-        .menu-toggle {
-            display: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #333;
-            padding: 10px;
-        }
-        .content-section {
-            padding: 100px 0 50px;
-            flex: 1 0 auto;
-        }
-        .content-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 1000px;
-            margin: 0 auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            color: #1e3a5f;
-        }
-        .content-card h2 {
-            font-size: 28px;
-            color: #1e3a5f;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .content-card .subtitle {
-            font-size: 16px;
-            color: #666;
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        .nav-tabs {
-            border-bottom: 2px solid #e0e0e0;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: center;
-        }
-        .nav-tabs li {
-            margin: 0 10px;
-        }
-        .nav-tabs li a {
-            color: #1e3a5f;
-            font-size: 16px;
-            padding: 10px 20px;
-            border: none;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        .nav-tabs li.active a {
-            color: #26a69a;
-            border-bottom: 3px solid #26a69a;
-            font-weight: 600;
-        }
-        .nav-tabs li a:hover {
-            color: #26a69a;
-            border-bottom: 3px solid #26a69a;
-        }
-        .table {
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-        .table th {
-            background: #1e3a5f;
-            color: #ffffff;
-            font-weight: 600;
-            padding: 14px;
-            text-align: left;
-            font-size: 14px;
-        }
-        .table td {
-            padding: 14px;
-            border-bottom: 1px solid #e0e0e0;
-            vertical-align: middle;
-            font-size: 14px;
-        }
-        .table-striped tbody tr:nth-of-type(odd) {
-            background: #f8f9fa;
-        }
-        .table tbody tr:hover {
-            background: #e6ecef;
-            transition: background 0.3s ease;
-        }
-        .label {
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            display: inline-block;
-            min-width: 80px;
-            text-align: center;
-        }
-        .label-success {
-            background: #28a745;
-            color: #ffffff;
-        }
-        .label-warning {
-            background: #ffb300;
-            color: #333;
-        }
-        .label-danger {
-            background: #dc3545;
-            color: #ffffff;
-        }
-        .stars {
-            color: #ffb300;
-            font-size: 14px;
-        }
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-        .btn-primary {
-            background: #26a69a;
-            border: none;
-            color: #ffffff;
-        }
-        .btn-primary:hover {
-            background: #00897b;
-            transform: translateY(-2px);
-        }
-        .btn-secondary {
-            background: #6c757d;
-            border: none;
-            color: #ffffff;
-        }
-        .btn-secondary:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-        .reclamation-details, .feedback-details {
-            font-size: 15px;
-        }
-        .reclamation-details p, .feedback-details p {
-            margin: 12px 0;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            border-left: 4px solid #26a69a;
-        }
-        .reclamation-details strong, .feedback-details strong {
-            color: #1e3a5f;
-            margin-right: 8px;
-            font-weight: 600;
-        }
-        .feedback-details img {
-            max-width: 300px;
-            border-radius: 8px;
-            margin-top: 10px;
-            display: block;
-        }
-        .pagination {
-            justify-content: center;
-            margin-top: 25px;
-        }
-        .pagination li {
-            margin: 0 5px;
-        }
-        .pagination li a {
-            color: #1e3a5f;
-            border: 1px solid #e0e0e0;
-            padding: 8px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-        .pagination li.active a {
-            background: #26a69a;
-            color: #ffffff;
-            border-color: #26a69a;
-        }
-        .pagination li a:hover {
-            background: #26a69a;
-            color: #ffffff;
-            border-color: #26a69a;
-        }
-        .pagination li.disabled a {
-            color: #ccc;
-            cursor: not-allowed;
-            border-color: #e0e0e0;
-            background: #f8f9fa;
-        }
-        #fh5co-footer {
-            background: #1e3a5f;
-            padding: 20px 0;
-            color: #e0e0e0;
-            text-align: center;
-        }
-        #fh5co-footer p {
-            margin: 0;
-            font-size: 14px;
-        }
-        #fh5co-footer a {
-            color: #26a69a;
-            text-decoration: none;
-        }
-        #fh5co-footer a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 768px) {
-            .menu-toggle {
+    {% block stylesheets %}
+        <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+        <style>
+            body {
+                background-image: url({{ asset('images/img_bg_3.jpg') }});
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+                min-height: 100vh;
+                margin: 0;
+                padding: 0;
+                position: relative;
+            }
+            body::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: -1;
+            }
+            #page {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                padding-top: 70px;
+            }
+            .fh5co-nav {
+                position: fixed;
+                top: 0;
+                width: 100%;
+                z-index: 1000;
+                background: rgba(255, 255, 255, 0.9);
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .fh5co-nav .container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 15px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            .fh5co-logo a {
+                font-family: 'Work Sans', sans-serif;
+                font-weight: 700;
+                font-size: 24px;
+                color: #934D1A;
+                text-decoration: none;
+            }
+            .user-circle {
+                display: inline-block;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+                border-radius: 50%;
+                background-color: #f0f0f0;
+                color: #333;
+                font-size: 20px;
+                vertical-align: middle;
+                margin-right: 8px;
+            }
+            .user-circle img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+            .fh5co-nav .menu-1 {
                 display: block;
             }
             .fh5co-nav .menu-1 ul {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background-color: #fff;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                padding: 20px 0;
-            }
-            .fh5co-nav .menu-1 ul.active {
                 display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                margin: 0;
+                padding: 0;
+                list-style: none;
             }
             .fh5co-nav .menu-1 ul li {
-                margin: 10px 0;
-                text-align: center;
+                margin: 0 15px;
+                position: relative;
             }
-            .user-circle {
-                margin-right: 0;
-                margin-bottom: 5px;
+            .fh5co-nav .menu-1 ul li a {
+                font-family: 'Work Sans', sans-serif;
+                font-size: 16px;
+                color: #333;
+                text-transform: uppercase;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+            .fh5co-nav .menu-1 ul li a:hover {
+                color: #934D1A;
+            }
+            .fh5co-nav .menu-1 ul li.active a {
+                color: #934D1A !important;
+                font-weight: 600;
+            }
+            .fh5co-nav .menu-1 ul li.has-dropdown {
+                position: relative;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                position: static;
                 display: none;
-                box-shadow: none;
-                background-color: #f8f9fa;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background-color: #fff;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                list-style: none;
+                padding: 10px 0;
+                min-width: 150px;
+                z-index: 1001;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                display: none !important;
-            }
-            .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
                 display: block !important;
             }
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                margin: 0;
+            }
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                padding: 10px 20px;
+                display: block;
+                font-size: 14px;
+                text-transform: none;
+                color: #333;
+            }
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                color: #007bff;
+            }
+            .menu-toggle {
+                display: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: #333;
+                padding: 10px;
+            }
+            .event-wrap {
+                background: rgba(0, 123, 255, 0.2);
+                padding: 40px;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                max-width: 700px;
+                margin: 0 auto;
+            }
+            .event-wrap h3 {
+                color: #fff;
+                margin-bottom: 30px;
+                font-size: 24px;
+                text-transform: uppercase;
+            }
+            .event-wrap .form-group {
+                margin-bottom: 20px;
+            }
+            .event-wrap .form-group label {
+                color: #fff;
+                font-weight: 500;
+                margin-bottom: 5px;
+                display: block;
+            }
+            .event-wrap .form-control {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: #fff;
+                border-radius: 5px;
+                padding: 10px;
+            }
+            .event-wrap .form-control::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+            .event-wrap .form-control:focus {
+                border-color: #007bff;
+                box-shadow: none;
+            }
+            .event-wrap .form-control.is-invalid {
+                border-color: #ff4d4d;
+            }
+            .event-wrap .form-control select {
+                color: #fff;
+                background: rgba(255, 255, 255, 0.1);
+            }
+            .event-wrap .form-control select option {
+                color: #333;
+                background: #fff;
+            }
+            .event-wrap .btn {
+                margin-top: 10px;
+                padding: 10px;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+            .event-wrap .btn-primary {
+                background-color: #007bff;
+                border-color: #007bff;
+            }
+            .event-wrap .btn-secondary {
+                background-color: #6c757d;
+                border-color: #6c757d;
+            }
+            #fh5co-footer {
+                background: rgba(255, 255, 255, 0.9);
+                padding: 20px 0;
+            }
+            #fh5co-event {
+                margin-top: 60px;
+                flex: 1 0 auto;
+                padding-top: 50px;
+            }
+            .fh5co-heading {
+                margin-bottom: 40px;
+            }
+            .fh5co-heading span {
+                color: #fff;
+                font-size: 18px;
+                display: block;
+                margin-bottom: 10px;
+            }
+            .fh5co-heading h2 {
+                color: #fff;
+                font-size: 36px;
+                margin: 0;
+            }
+            .event-wrap .form-check-label {
+                color: #fff;
+                margin-left: 10px;
+            }
+            .event-wrap .form-check-input {
+                transform: scale(1.5);
+            }
+            .star-rating-container {
+                display: flex;
+                justify-content: center;
+                font-size: 30px;
+                gap: 10px;
+            }
+            .star-rating-container select {
+                display: none;
+            }
+            .star-rating-container .stars {
+                display: flex;
+            }
+            .star-rating-container .star {
+                cursor: pointer;
+                color: #ddd !important;
+                transition: color 0.2s ease;
+            }
+            .star-rating-container .star.filled {
+                color: #ffd700 !important;
+            }
+            .text-danger {
+                font-size: 14px;
+                margin-top: 5px;
+                color: #ff4d4d;
+                display: block;
+            }
+            .content-section {
+                padding: 100px 0 50px;
+                flex: 1 0 auto;
+            }
             .content-card {
-                padding: 20px;
-                max-width: 95%;
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 12px;
+                padding: 30px;
+                max-width: 1000px;
+                margin: 0 auto;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                color: #1e3a5f;
             }
             .content-card h2 {
-                font-size: 24px;
+                font-size: 28px;
+                color: #1e3a5f;
+                margin-bottom: 15px;
+                text-align: center;
             }
-            .table {
-                font-size: 13px;
+            .content-card .subtitle {
+                font-size: 16px;
+                color: #666;
+                text-align: center;
+                margin-bottom: 25px;
             }
-            .table th, .table td {
-                padding: 10px;
-                font-size: 13px;
+            .nav-tabs {
+                border-bottom: 2px solid #e0e0e0;
+                margin-bottom: 30px;
+                display: flex;
+                justify-content: center;
             }
-            .table td:nth-child(3) {
-                max-width: 120px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+            .nav-tabs li {
+                margin: 0 10px;
             }
             .nav-tabs li a {
-                font-size: 14px;
-                padding: 8px 15px;
+                color: #1e3a5f;
+                font-size: 16px;
+                padding: 10px 20px;
+                border: none;
+                border-bottom: 3px solid transparent;
+                transition: all 0.3s ease;
+                text-decoration: none;
             }
-            .reclamation-details p, .feedback-details p {
+            .nav-tabs li.active a {
+                color: #007bff;
+                border-bottom: 3px solid #007bff;
+                font-weight: 600;
+            }
+            .nav-tabs li a:hover {
+                color: #007bff;
+                border-bottom: 3px solid #007bff;
+            }
+            .label {
+                padding: 6px 12px;
+                border-radius: 12px;
+                font-size: 13px;
+                display: inline-block;
+                min-width: 80px;
+                text-align: center;
+            }
+            .label-success {
+                background: #28a745;
+                color: #ffffff;
+            }
+            .label-warning {
+                background: #ffb300;
+                color: #333;
+            }
+            .label-danger {
+                background: #dc3545;
+                color: #ffffff;
+            }
+            .stars {
+                color: #ffb300;
                 font-size: 14px;
-                padding: 10px;
+            }
+            .btn {
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 14px;
+                transition: background 0.3s ease, transform 0.2s ease;
+            }
+            .btn-primary {
+                background: #007bff;
+                border: none;
+                color: #ffffff;
+            }
+            .btn-primary:hover {
+                background: #0056b3;
+                transform: translateY(-2px);
+            }
+            .btn-secondary {
+                background: #6c757d;
+                border: none;
+                color: #ffffff;
+            }
+            .btn-secondary:hover {
+                background: #5a6268;
+                transform: translateY(-2px);
+            }
+            .reclamation-details, .feedback-details, .reservation-details {
+                font-size: 15px;
+            }
+            .reclamation-details p, .feedback-details p, .reservation-details p {
+                margin: 12px 0;
+                padding: 12px;
+                background: #f8f9fa;
+                border-radius: 6px;
+                border-left: 4px solid #007bff;
+            }
+            .reclamation-details strong, .feedback-details strong, .reservation-details strong {
+                color: #1e3a5f;
+                margin-right: 8px;
+                font-weight: 600;
             }
             .feedback-details img {
-                max-width: 100%;
+                max-width: 300px;
+                border-radius: 8px;
+                margin-top: 10px;
+                display: block;
             }
-        }
-    </style>
+            .pagination {
+                justify-content: center;
+                margin-top: 25px;
+            }
+            .pagination li {
+                margin: 0 5px;
+            }
+            .pagination li a {
+                color: #1e3a5f;
+                border: 1px solid #e0e0e0;
+                padding: 8px 12px;
+                border-radius: 6px;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                font-size: 14px;
+            }
+            .pagination li.active a {
+                background: #007bff;
+                color: #ffffff;
+                border-color: #007bff;
+            }
+            .pagination li a:hover {
+                background: #007bff;
+                color: #ffffff;
+                border-color: #007bff;
+            }
+            .pagination li.disabled a {
+                color: #ccc;
+                cursor: not-allowed;
+                border-color: #e0e0e0;
+                background: #f8f9fa;
+            }
+            .filter-form {
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .filter-form select {
+                padding: 8px;
+                border-radius: 6px;
+                border: 1px solid #e0e0e0;
+                font-size: 14px;
+                color: #1e3a5f;
+            }
+            .filter-form select:focus {
+                outline: none;
+                border-color: #007bff;
+            }
+            /* Nouveau style pour le tableau */
+            .history-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                background: #ffffff;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+            }
+            .history-table thead {
+                background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            }
+            .history-table th {
+                color: #ffffff;
+                font-weight: 600;
+                padding: 15px;
+                text-align: left;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            .history-table tbody tr {
+                transition: background 0.3s ease;
+            }
+            .history-table tbody tr:nth-child(even) {
+                background: #f8f9fa;
+            }
+            .history-table tbody tr:hover {
+                background: #e3f2fd;
+            }
+            .history-table td {
+                padding: 15px;
+                border-bottom: 1px solid #e0e0e0;
+                color: #333;
+                font-size: 14px;
+                vertical-align: middle;
+            }
+            .history-table td .label {
+                font-weight: 500;
+            }
+            .history-table td .btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            .history-table td .stars {
+                white-space: nowrap;
+            }
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .menu-toggle {
+                    display: block;
+                }
+                .fh5co-nav .menu-1 ul {
+                    display: none;
+                    flex-direction: column;
+                    position: absolute;
+                    top: 60px;
+                    left: 0;
+                    width: 100%;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    padding: 20px 0;
+                }
+                .fh5co-nav .menu-1 ul.active {
+                    display: flex;
+                }
+                .fh5co-nav .menu-1 ul li {
+                    margin: 10px 0;
+                    text-align: center;
+                }
+                .user-circle {
+                    margin-right: 0;
+                    margin-bottom: 5px;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    position: static;
+                    display: none;
+                    box-shadow: none;
+                    background-color: #f8f9fa;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: none !important;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                    display: block !important;
+                }
+                .event-wrap {
+                    max-width: 90%;
+                    padding: 20px;
+                }
+                .fh5co-heading h2 {
+                    font-size: 28px;
+                }
+                #fh5co-event {
+                    padding-top: 30px;
+                }
+                .content-card {
+                    padding: 20px;
+                    max-width: 95%;
+                }
+                .content-card h2 {
+                    font-size: 24px;
+                }
+                .history-table {
+                    font-size: 13px;
+                }
+                .history-table th, .history-table td {
+                    padding: 10px;
+                    font-size: 13px;
+                }
+                .history-table td:nth-child(3), .history-table td:nth-child(4), .history-table td:nth-child(5) {
+                    max-width: 100px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .nav-tabs li a {
+                    font-size: 14px;
+                    padding: 8px 15px;
+                }
+                .reclamation-details p, .feedback-details p, .reservation-details p {
+                    font-size: 14px;
+                    padding: 10px;
+                }
+                .feedback-details img {
+                    max-width: 100%;
+                }
+                .filter-form select {
+                    width: 100%;
+                    font-size: 13px;
+                }
+            }
+        </style>
+    {% endblock %}
 </head>
 <body>
     <div id="page">
@@ -418,15 +587,17 @@
                 <div class="fh5co-logo">
                     <a href="{{ path('app_home') }}">Eventora</a>
                 </div>
-                <div class="menu-toggle">☰</div>
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
                 <div class="menu-1">
                     <ul>
                         <li><a href="{{ path('app_home') }}">Home</a></li>
                         <li class="has-dropdown">
                             <a href="#">Réservation</a>
                             <ul class="dropdown">
-                                <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Personnalisée</a></li>
-                                <li><a href="{{ path('admin_reservations_user_pack_new') }}">Packs</a></li>
+                                <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
                             </ul>
                         </li>
                         <li><a href="{{ path('user_packs') }}">Packs</a></li>
@@ -439,7 +610,7 @@
                         </li>
                         <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                         <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                        <li><a href="#">Talk with Evi</a></li>
+                        <li><a href="">Talk with Evi</a></li>
                         <li class="has-dropdown">
                             <a href="#">
                                 <span class="user-circle">
@@ -455,7 +626,7 @@
                                 {% if app.user %}
                                     <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
                                     <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                    <li class="active"><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                    <li><a href="{{ path('app_home') }}">Historique</a></li>
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                                     {% endif %}
@@ -475,12 +646,13 @@
             <div class="container">
                 <div class="content-card animate-box">
                     <h2>Votre Historique</h2>
-                    <div class="subtitle">Consultez vos réclamations et feedbacks</div>
+                    <div class="subtitle">Consultez vos réclamations, feedbacks et réservations</div>
 
                     <!-- Onglets pour les sections -->
                     <ul class="nav nav-tabs">
                         <li class="{{ section == 'reclamations' ? 'active' : '' }}"><a href="{{ path('app_user_history') }}">Réclamations</a></li>
                         <li class="{{ section == 'feedbacks' ? 'active' : '' }}"><a href="{{ path('app_user_history_feedbacks') }}">Feedbacks</a></li>
+                        <li class="{{ section == 'reservations' ? 'active' : '' }}"><a href="{{ path('app_user_history_reservations') }}">Réservations</a></li>
                     </ul>
 
                     {% if section == 'reclamations' %}
@@ -510,7 +682,7 @@
                                 </div>
                             {% else %}
                                 <div class="table-responsive">
-                                    <table class="table table-striped">
+                                    <table class="history-table">
                                         <thead>
                                             <tr>
                                                 <th>Date</th>
@@ -585,7 +757,7 @@
                                 </div>
                             {% else %}
                                 <div class="table-responsive">
-                                    <table class="table table-striped">
+                                    <table class="history-table">
                                         <thead>
                                             <tr>
                                                 <th>Date</th>
@@ -624,6 +796,95 @@
                                 <!-- Pagination -->
                                 <div class="text-center">
                                     {{ knp_pagination_render(feedbacks) }}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% elseif section == 'reservations' %}
+                        {% if selected_reservation %}
+                            <!-- Détails de la réservation -->
+                            <div class="reservation-details">
+                                <h3>Détails de la Réservation {{ reservation_type == 'pack' ? 'Pack' : 'Personnalisée' }} #{{ selected_reservation.IDReservationPack ?: selected_reservation.IDReservationPersonalise }}</h3>
+                                <p><strong>Nom :</strong> {{ selected_reservation.nom }}</p>
+                                <p><strong>Prénom :</strong> {{ selected_reservation.prenom }}</p>
+                                <p><strong>Date :</strong> {{ selected_reservation.date|date('d/m/Y H:i') }}</p>
+                                <p><strong>Description :</strong> {{ selected_reservation.description }}</p>
+                                <p><strong>Statut :</strong>
+                                    <span class="label {{ selected_reservation.status == 'Validé' ? 'label-success' : (selected_reservation.status == 'Refusé' ? 'label-danger' : 'label-warning') }}">
+                                        {{ selected_reservation.status }}
+                                    </span>
+                                </p>
+                                {% if reservation_type == 'pack' and selected_reservation.pack %}
+                                    <p><strong>Pack :</strong> {{ selected_reservation.pack.nomPack }}</p>
+                                {% elseif reservation_type == 'personnalise' and selected_reservation.services|length > 0 %}
+                                    <p><strong>Services :</strong>
+                                        <ul>
+                                            {% for service in selected_reservation.services %}
+                                                <li>{{ service.nom }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </p>
+                                {% endif %}
+                                <div class="text-center">
+                                    <a href="{{ path('app_user_history_reservations', {'type': reservation_type}) }}" class="btn btn-secondary">Retour à l'historique</a>
+                                    <a href="{{ path(reservation_type == 'pack' ? 'user_reservation_pack_pdf' : 'user_reservation_personnalise_pdf', {'id': selected_reservation.IDReservationPack ?: selected_reservation.IDReservationPersonalise}) }}" class="btn btn-primary">Télécharger PDF</a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <!-- Filtre pour les réservations -->
+                            <div class="filter-form">
+                                <form action="{{ path('app_user_history_reservations') }}" method="get">
+                                    <select name="type" onchange="this.form.submit()">
+                                        <option value="" {% if reservation_type is null %}selected{% endif %}>Tous</option>
+                                        <option value="pack" {% if reservation_type == 'pack' %}selected{% endif %}>Pack</option>
+                                        <option value="personnalise" {% if reservation_type == 'personnalise' %}selected{% endif %}>Personnalisée</option>
+                                    </select>
+                                </form>
+                            </div>
+                            <!-- Liste des réservations -->
+                            {% if reservations|length == 0 %}
+                                <p class="text-center">Aucune réservation trouvée.</p>
+                                <div class="text-center">
+                                    <a href="{{ path('user_reservation_pack_new') }}" class="btn btn-primary">Réserver un pack</a>
+                                    <a href="{{ path('user_reservation_personnalise_new') }}" class="btn btn-primary">Réserver personnalisée</a>
+                                </div>
+                            {% else %}
+                                <div class="table-responsive">
+                                    <table class="history-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Date</th>
+                                                <th>Nom</th>
+                                                <th>Prénom</th>
+                                                <th>Description</th>
+                                                <th>Statut</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for reservation in reservations %}
+                                                <tr class="animate-box" data-animate-effect="fadeIn">
+                                                    <td>{{ reservation.type }}</td>
+                                                    <td>{{ reservation.date|date('d/m/Y H:i') }}</td>
+                                                    <td>{{ reservation.nom }}</td>
+                                                    <td>{{ reservation.prenom }}</td>
+                                                    <td title="{{ reservation.description }}">{{ reservation.description|u.truncate(60, '...') }}</td>
+                                                    <td>
+                                                        <span class="label {{ reservation.status == 'Validé' ? 'label-success' : (reservation.status == 'Refusé' ? 'label-danger' : 'label-warning') }}">
+                                                            {{ reservation.status }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ path('app_reservation_show', {'id': reservation.IDReservationPack ?: reservation.IDReservationPersonalise, 'type': reservation.type == 'Pack' ? 'pack' : 'personnalise'}) }}" class="btn btn-primary btn-sm">Voir</a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Pagination -->
+                                <div class="text-center">
+                                    {{ knp_pagination_render(reservations) }}
                                 </div>
                             {% endif %}
                         {% endif %}

@@ -8,7 +8,7 @@
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
-        {% block stylesheets %}
+         {% block stylesheets %}
             <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
             <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
@@ -18,7 +18,7 @@
             <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
             <style>
                 body {
                     background-image: url({{ asset('images/img_bg_3.jpg') }});
@@ -44,38 +44,43 @@
                     min-height: 100vh;
                     display: flex;
                     flex-direction: column;
+                    padding-top: 70px;
                 }
                 .fh5co-nav {
                     position: fixed;
                     top: 0;
                     width: 100%;
                     z-index: 1000;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    background: rgba(255, 255, 255, 0.9);
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
                 }
                 .fh5co-nav .container {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
                     padding: 10px 15px;
+                    max-width: 1200px;
+                    margin: 0 auto;
                 }
                 .fh5co-logo a {
                     font-family: 'Work Sans', sans-serif;
                     font-weight: 700;
                     font-size: 24px;
-                    color: #333;
+                    color: #934D1A;
                     text-decoration: none;
                 }
                 .user-circle {
                     display: inline-block;
-                    width: 32px;
-                    height: 32px;
-                    line-height: 32px;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
                     text-align: center;
                     border-radius: 50%;
                     background-color: #f0f0f0;
                     color: #333;
-                    font-size: 16px;
+                    font-size: 20px;
                     vertical-align: middle;
                     margin-right: 8px;
                 }
@@ -109,10 +114,10 @@
                     transition: color 0.3s ease;
                 }
                 .fh5co-nav .menu-1 ul li a:hover {
-                    color: #007bff;
+                    color: #934D1A;
                 }
                 .fh5co-nav .menu-1 ul li.active a {
-                    color: #007bff !important;
+                    color: #934D1A !important;
                     font-weight: 600;
                 }
                 .fh5co-nav .menu-1 ul li.has-dropdown {
@@ -191,30 +196,15 @@
                     box-shadow: none;
                 }
                 .event-wrap .form-control.is-invalid {
-                    border-color: #dc3545;
+                    border-color: #ff4d4d;
                 }
-                .event-wrap .text-danger {
-                    font-size: 14px;
-                    margin-top: 5px;
-                    color: #ff4d4d;
-                }
-                .event-wrap .form-check-label {
+                .event-wrap .form-control select {
                     color: #fff;
-                    margin-left: 10px;
+                    background: rgba(255, 255, 255, 0.1);
                 }
-                .event-wrap .form-check-input {
-                    transform: scale(1.5);
-                }
-                .event-wrap .checkbox-container {
-                    max-height: 200px;
-                    overflow-y: auto;
-                    padding: 10px;
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    border-radius: 5px;
-                    background: rgba(255, 255, 255, 0.05);
-                }
-                .event-wrap .checkbox-container .form-check {
-                    margin-bottom: 10px;
+                .event-wrap .form-control select option {
+                    color: #333;
+                    background: #fff;
                 }
                 .event-wrap .btn {
                     margin-top: 10px;
@@ -252,6 +242,39 @@
                     color: #fff;
                     font-size: 36px;
                     margin: 0;
+                }
+                .event-wrap .form-check-label {
+                    color: #fff;
+                    margin-left: 10px;
+                }
+                .event-wrap .form-check-input {
+                    transform: scale(1.5);
+                }
+                .star-rating-container {
+                    display: flex;
+                    justify-content: center;
+                    font-size: 30px;
+                    gap: 10px;
+                }
+                .star-rating-container select {
+                    display: none;
+                }
+                .star-rating-container .stars {
+                    display: flex;
+                }
+                .star-rating-container .star {
+                    cursor: pointer;
+                    color: #ddd !important;
+                    transition: color 0.2s ease;
+                }
+                .star-rating-container .star.filled {
+                    color: #ffd700 !important;
+                }
+                .text-danger {
+                    font-size: 14px;
+                    margin-top: 5px;
+                    color: #ff4d4d;
+                    display: block;
                 }
                 @media (max-width: 768px) {
                     .menu-toggle {
@@ -312,28 +335,30 @@
                     <div class="fh5co-logo">
                         <a href="{{ path('app_home') }}">Eventora</a>
                     </div>
-                    <div class="menu-toggle">☰</div>
+                    <div class="menu-toggle">
+                        <i class="icon-menu"></i>
+                    </div>
                     <div class="menu-1">
                         <ul>
                             <li><a href="{{ path('app_home') }}">Home</a></li>
                             <li class="has-dropdown">
+                                <a href="#">Réservation</a>
+                                <ul class="dropdown">
+                                    <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('user_packs') }}">Packs</a></li>
+                            <li class="has-dropdown">
                                 <a href="#">Services</a>
                                 <ul class="dropdown">
-                                    <li><a href="#">Service</a></li>
-                                    <li><a href="#">Partenaire</a></li>
+                                    <li><a href="{{ path('user_services') }}">Service</a></li>
+                                    <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
                                 </ul>
                             </li>
-                            <li class="has-dropdown active">
-                                <a href="#">Reservations</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservations personnalisées</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation packs</a></li>
-                                    <li class="active"><a href="{{ path('user_reservations') }}">Historique</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Reclamation</a></li>
-                            <li><a href="#">Feedback</a></li>
-                            <li><a href="#">Talk with Evi</a></li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                            <li ><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
                                     <span class="user-circle">
@@ -347,7 +372,7 @@
                                 </a>
                                 <ul class="dropdown">
                                     {% if app.user %}
-                                        <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                        <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
                                         <li><a href="{{ path('app_home') }}">Notifications</a></li>
                                         <li><a href="{{ path('app_home') }}">Historique</a></li>
                                         {% if is_granted('ROLE_ADMIN') %}

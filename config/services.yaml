@@ -1,3 +1,7 @@
+parameters:
+    images_directory: '%kernel.project_dir%/public/uploads/images'
+    brevo_api_key: '%env(BREVO_API_KEY)%'
+
 services:
     _defaults:
         autowire: true

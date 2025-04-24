@@ -17,6 +17,10 @@
             <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
             <!-- Bootstrap -->
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <!-- Navbar -->
+            <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+            <!-- Slider -->
+            <link rel="stylesheet" href="{{ asset('css/slider.css') }}">
             <!-- Magnific Popup -->
             <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
             <!-- Owl Carousel -->
@@ -24,52 +28,174 @@
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
             <!-- Theme style -->
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <!-- Font Awesome -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
             <!-- Custom styles -->
             <style>
+                /* Reset */
+                * {
+                    box-sizing: border-box;
+                }
+
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-size: 100%;
+                    font-family: Arial, Helvetica, sans-serif;
+                }
+
+                /* Panels */
+                .splitview {
+                    position: relative;
+                    width: 100%;
+                    min-height: 45vw;
+                    overflow: hidden;
+                }
+
+                .panel {
+                    position: absolute;
+                    width: 100vw;
+                    min-height: 45vw;
+                    overflow: hidden;
+                }
+
+                .panel .content {
+                    position: absolute;
+                    width: 100vw;
+                    min-height: 45vw;
+                    color: #FFF;
+                }
+
+                .panel .description {
+                    width: 25%;
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    text-align: center;
+                }
+
+                .panel img {
+                    box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.15);
+                    width: 35%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+
+                .bottom {
+                    background-color: #934D1A;
+                    z-index: 1;
+                }
+
+                .bottom .description {
+                    right: 5%;
+                }
+
+                .top {
+                    background-color: #CAB69A;
+                    z-index: 2;
+                    width: 50vw;
+                }
+
+                .top .description {
+                    left: 5%;
+                }
+
+                /* Handle */
+                .handle {
+                    height: 100%;
+                    position: absolute;
+                    display: block;
+                    background-color: #AF9D81;
+                    width: 5px;
+                    top: 0;
+                    left: 50%;
+                    z-index: 3;
+                }
+
+                /* Skewed */
+                .skewed .handle {
+                    top: 50%;
+                    transform: rotate(30deg) translateY(-50%);
+                    height: 200%;
+                    -webkit-transform-origin: top;
+                    -moz-transform-origin: top;
+                    transform-origin: top;
+                }
+
+                .skewed .top {
+                    transform: skew(-30deg);
+                    margin-left: -1000px;
+                    width: calc(50vw + 1000px);
+                }
+
+                .skewed .top .content {
+                    transform: skew(30deg);
+                    margin-left: 1000px;
+                }
+
                 /* Navigation fixe */
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    padding-top: 70px; /* Ajusté pour une navbar plus compacte */
+                }
+
                 .fh5co-nav {
                     position: fixed;
                     top: 0;
                     width: 100%;
                     z-index: 1000;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    background: rgba(255, 255, 255, 0.9);
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
                 }
+
                 .fh5co-nav .container {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
                     padding: 10px 15px;
+                    max-width: 1200px;
+                    margin: 0 auto;
                 }
+
                 .fh5co-logo a {
                     font-family: 'Work Sans', sans-serif;
                     font-weight: 700;
                     font-size: 24px;
-                    color: #333;
+                    color: #934D1A;
                     text-decoration: none;
                 }
+
                 .user-circle {
                     display: inline-block;
-                    width: 32px;
-                    height: 32px;
-                    line-height: 32px;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
                     text-align: center;
                     border-radius: 50%;
                     background-color: #f0f0f0;
                     color: #333;
-                    font-size: 16px;
+                    font-size: 20px;
                     vertical-align: middle;
                     margin-right: 8px;
                 }
+
                 .user-circle img {
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
                     border-radius: 50%;
                 }
+
                 .fh5co-nav .menu-1 {
                     display: block;
                 }
+
                 .fh5co-nav .menu-1 ul {
                     display: flex;
                     align-items: center;
@@ -78,9 +204,12 @@
                     padding: 0;
                     list-style: none;
                 }
+
                 .fh5co-nav .menu-1 ul li {
                     margin: 0 15px;
+                    position: relative;
                 }
+
                 .fh5co-nav .menu-1 ul li a {
                     font-family: 'Work Sans', sans-serif;
                     font-size: 16px;
@@ -89,17 +218,20 @@
                     text-decoration: none;
                     transition: color 0.3s ease;
                 }
+
                 .fh5co-nav .menu-1 ul li a:hover {
-                    color: #007bff;
+                    color: #934D1A;
                 }
-                /* Correction de la couleur du lien actif */
+
                 .fh5co-nav .menu-1 ul li.active a {
-                    color: #007bff !important;
+                    color: #934D1A !important;
                     font-weight: 600;
                 }
+
                 .fh5co-nav .menu-1 ul li.has-dropdown {
                     position: relative;
                 }
+
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
                     display: none;
                     position: absolute;
@@ -110,13 +242,17 @@
                     list-style: none;
                     padding: 10px 0;
                     min-width: 150px;
+                    z-index: 1001;
                 }
+
                 .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block;
+                    display: block !important;
                 }
+
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
                     margin: 0;
                 }
+
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
                     padding: 10px 20px;
                     display: block;
@@ -124,16 +260,19 @@
                     text-transform: none;
                     color: #333;
                 }
+
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
                     color: #007bff;
                 }
-                /* Menu hamburger pour mobile */
+
                 .menu-toggle {
                     display: none;
                     font-size: 24px;
                     cursor: pointer;
                     color: #333;
+                    padding: 10px;
                 }
+
                 /* Style des boutons */
                 .btn-default {
                     font-family: 'Work Sans', sans-serif;
@@ -144,32 +283,257 @@
                     border-radius: 5px;
                     transition: all 0.3s ease;
                 }
+
                 .btn-default:hover {
                     background-color: #007bff;
                     color: #fff;
                     transform: scale(1.05);
                 }
+
                 /* Ajustement du header pour la navigation fixe */
                 #fh5co-header {
                     margin-top: 60px;
                 }
+
                 /* Typographie cohérente */
                 h1, h2, h3, h4, h5, h6 {
                     font-family: 'Work Sans', sans-serif;
                 }
+
                 .fh5co-heading h2 {
                     font-weight: 600;
                     color: #333;
                 }
+
                 .fh5co-heading span {
                     font-family: 'Sacramento', cursive;
                     color: #007bff;
                 }
-                /* Responsivité */
+
+                /* Gallery styles */
+                #fh5co-gallery-list {
+                    list-style: none;
+                    padding: 0;
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
+                .one-third {
+                    width: 33.33%;
+                    padding: 15px;
+                    box-sizing: border-box;
+                    position: relative;
+                    perspective: 1000px;
+                }
+
+                .card {
+                    position: relative;
+                    width: 100%;
+                    height: 300px;
+                    transform-style: preserve-3d;
+                    transition: transform 0.6s;
+                }
+
+                .card .front,
+                .card .back {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    backface-visibility: hidden;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+
+                .card .front {
+                    background-size: cover;
+                    background-position: center;
+                    color: white;
+                    text-align: center;
+                }
+
+                .card .back {
+                    background-color: #fff;
+                    color: #333;
+                    transform: rotateY(180deg);
+                    padding: 20px;
+                    text-align: center;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                }
+
+                .card .back h3 {
+                    margin: 0 0 10px;
+                    font-size: 1.5em;
+                }
+
+                .card .back p {
+                    margin: 0 0 15px;
+                    font-size: 1em;
+                }
+
+                .card .back a {
+                    color: #007bff;
+                    text-decoration: none;
+                    font-weight: bold;
+                }
+
+                .card .back a:hover {
+                    text-decoration: underline;
+                }
+
+                .one-third:hover .card {
+                    transform: rotateY(180deg);
+                }
+
+                /* Form styles */
+                .event-wrap {
+                    background: rgba(0, 123, 255, 0.2);
+                    padding: 40px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                    max-width: 700px;
+                    margin: 0 auto;
+                }
+
+                .event-wrap h3 {
+                    color: #fff;
+                    margin-bottom: 30px;
+                    font-size: 24px;
+                    text-transform: uppercase;
+                }
+
+                .event-wrap .form-group {
+                    margin-bottom: 20px;
+                }
+
+                .event-wrap .form-group label {
+                    color: #fff;
+                    font-weight: 500;
+                    margin-bottom: 5px;
+                    display: block;
+                }
+
+                .event-wrap .form-control {
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: #fff;
+                    border-radius: 5px;
+                    padding: 10px;
+                }
+
+                .event-wrap .form-control::placeholder {
+                    color: rgba(255, 255, 255, 0.7);
+                }
+
+                .event-wrap .form-control:focus {
+                    border-color: #007bff;
+                    box-shadow: none;
+                }
+
+                .event-wrap .form-control select {
+                    color: #fff;
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
+                .event-wrap .form-control select option {
+                    color: #333;
+                    background: #fff;
+                }
+
+                .event-wrap .btn {
+                    margin-top: 10px;
+                    padding: 10px;
+                    border-radius: 5px;
+                    font-size: 16px;
+                }
+
+                .event-wrap .btn-primary {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                }
+
+                .event-wrap .btn-secondary {
+                    background-color: #6c757d;
+                    border-color: #6c757d;
+                }
+
+                #fh5co-footer {
+                    background: rgba(255, 255, 255, 0.9);
+                    padding: 20px 0;
+                }
+
+                #fh5co-event {
+                    margin-top: 60px;
+                    flex: 1 0 auto;
+                    padding-top: 50px;
+                }
+
+                .fh5co-heading {
+                    margin-bottom: 40px;
+                }
+
+                .fh5co-heading span {
+                    color: #fff;
+                    font-size: 18px;
+                    display: block;
+                    margin-bottom: 10px;
+                }
+
+                .fh5co-heading h2 {
+                    color: #fff;
+                    font-size: 36px;
+                    margin: 0;
+                }
+
+                .form-error {
+                    color: #ff4d4d;
+                    font-size: 0.9em;
+                    margin-bottom: 5px;
+                    display: block;
+                }
+
+                /* Ajustement pour la section couple */
+                #fh5co-couple {
+                    min-height: 300px;
+                    padding: 50px 0;
+                    width: 100%;
+                    overflow: visible;
+                }
+
+                #fh5co-couple .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+
+                #fh5co-couple .fh5co-heading {
+                    padding: 20px;
+                }
+
+                #fh5co-couple .fh5co-heading h2,
+                #fh5co-couple .fh5co-heading h3,
+                #fh5co-couple .fh5co-heading p {
+                    margin: 10px 0;
+                    color: #333;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                /* Responsive adjustments */
+                @media (max-width: 900px) {
+                    body {
+                        font-size: 75%;
+                    }
+                }
+
                 @media (max-width: 768px) {
                     .menu-toggle {
                         display: block;
                     }
+
                     .fh5co-nav .menu-1 ul {
                         display: none;
                         flex-direction: column;
@@ -181,28 +545,73 @@
                         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                         padding: 20px 0;
                     }
+
                     .fh5co-nav .menu-1 ul.active {
                         display: flex;
                     }
+
                     .fh5co-nav .menu-1 ul li {
                         margin: 10px 0;
                         text-align: center;
                     }
+
                     .user-circle {
                         margin-right: 0;
                         margin-bottom: 5px;
                     }
+
                     .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
                         position: static;
                         display: none;
                         box-shadow: none;
                         background-color: #f8f9fa;
                     }
+
                     .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none;
+                        display: none !important;
                     }
+
                     .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block;
+                        display: block !important;
+                    }
+
+                    .event-wrap {
+                        max-width: 90%;
+                        padding: 20px;
+                    }
+
+                    .fh5co-heading h2 {
+                        font-size: 28px;
+                    }
+
+                    #fh5co-event {
+                        padding-top: 30px;
+                    }
+
+                    .one-third {
+                        width: 50%;
+                    }
+
+                    #fh5co-couple {
+                        padding: 30px 0;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .one-third {
+                        width: 100%;
+                    }
+
+                    #fh5co-couple .fh5co-heading h2 {
+                        font-size: 24px;
+                    }
+
+                    #fh5co-couple .fh5co-heading h3 {
+                        font-size: 20px;
+                    }
+
+                    #fh5co-couple .fh5co-heading p {
+                        font-size: 14px;
                     }
                 }
             </style>
@@ -231,31 +640,31 @@
                         <div class="menu-1">
                             <ul>
                                 <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                                 <li class="has-dropdown">
+                                <li class="has-dropdown">
                                     <a href="#">Réservation</a>
                                     <ul class="dropdown">
-                                            <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                            <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
                                     </ul>
                                 </li>
-                                  <li class="has-dropdown">
-                                        <a href="{{ path('user_packs') }}">Packs</a>
-                                    </li>
+                                <li class="has-dropdown">
+                                    <a href="{{ path('user_packs') }}">Packs</a>
+                                </li>
                                 <li class="has-dropdown">
                                     <a href="#">Services</a>
                                     <ul class="dropdown">
                                         <li><a href="{{ path('user_services') }}">Service</a></li>
-                                         <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                                        <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                                 <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="#">Talk with Evi</a></li>
+                                <li><a href="">Talk with Evi</a></li>
                                 <li class="has-dropdown">
                                     <a href="#">
                                         <span class="user-circle">
                                             {% if app.user and app.user.image %}
-                                                <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
                                             {% else %}
                                                 <i class="icon-user"></i>
                                             {% endif %}
@@ -282,20 +691,27 @@
                     </div>
                 </nav>
 
-                <header id="fh5co-header" class="fh5co-cover" role="banner" style="background-image:url({{ asset('images/event.jpg') }});" data-stellar-background-ratio="0.5">
-                    <div class="overlay"></div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-8 col-md-offset-2 text-center">
-                                <div class="display-t">
-                                    <div class="display-tc animate-box" data-animate-effect="fadeIn">
-                                        <h1>Wait For Our Event</h1>
-                                        <div class="simply-countdown simply-countdown-one"></div>
-                                        <p><a href="#" class="btn btn-default btn-sm">Save the date</a></p>
-                                    </div>
+                <header id="fh5co-header" class="fh5co-cover" role="banner">
+                    <div class="splitview skewed">
+                        <div class="panel bottom">
+                            <div class="content">
+                                <div class="description">
+                                    <h1>The original image.</h1>
+                                    <p>This is how the image looks like before applying a duotone effect.</p>
                                 </div>
+                                <img src="https://i.pinimg.com/736x/e2/1d/24/e21d24e61e8554d6af3c1aa37508bc89.jpg" alt="Original">
                             </div>
                         </div>
+                        <div class="panel top">
+                            <div class="content">
+                                <div class="description">
+                                    <h1>The duotone image.</h1>
+                                    <p>This is how the image looks like after applying a duotone effect.</p>
+                                </div>
+                                <img src="https://i.pinimg.com/736x/33/fb/3a/33fb3a348a77bfb030926ed612495cb8.jpg" alt="Duotone">
+                            </div>
+                        </div>
+                        <div class="handle"></div>
                     </div>
                 </header>
 
@@ -304,81 +720,144 @@
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
                                 <h2>Hello!</h2>
-                                <h3>November 28th, 2016 New York, USA</h3>
-                                <p>We invited you to celebrate our wedding</p>
-                            </div>
-                        </div>
-                        <div class="couple-wrap animate-box">
-                            <div class="couple-half">
-                                <div class="groom">
-                                    <img src="images/groom.jpg" alt="groom" class="img-responsive">
-                                </div>
-                                <div class="desc-groom">
-                                    <h3>Joefrey Mahusay</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove</p>
-                                </div>
-                            </div>
-                            <p class="heart text-center"><i class="icon-heart2"></i></p>
-                            <div class="couple-half">
-                                <div class="bride">
-                                    <img src="images/bride.jpg" alt="groom" class="img-responsive">
-                                </div>
-                                <div class="desc-bride">
-                                    <h3>Sheila Mahusay</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove</p>
-                                </div>
+                                <h3>Welcome to Eventora</h3>
+                                <p>We invited you to enjoying your experience with us</p>
+                                <p>Our website give u the opportunity to organize your events</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="fh5co-event" class="fh5co-bg" style="background-image:url(images/img_bg_3.jpg);">
-                    <div class="overlay"></div>
+                <div id="fh5co-gallery" class="fh5co-section-gray">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                                <span>Our Special Events</span>
-                                <h2>Wedding Events</h2>
+                                <span>Our Memories</span>
+                                <h2>Wedding Gallery</h2>
+                                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="display-t">
-                                <div class="display-tc">
-                                    <div class="col-md-10 col-md-offset-1">
-                                        <div class="col-md-6 col-sm-6 text-center">
-                                            <div class="event-wrap animate-box">
-                                                <h3>Main Ceremony</h3>
-                                                <div class="event-col">
-                                                    <i class="icon-clock"></i>
-                                                    <span>4:00 PM</span>
-                                                    <span>6:00 PM</span>
+                        <div class="row row-bottom-padded-md">
+                            <div class="col-md-12">
+                                <ul id="fh5co-gallery-list">
+                                    <li class="one-third animate-box" data-animate-effect="fadeIn">
+                                        <div class="card">
+                                            <div class="front" style="background-image: url(https://i.pinimg.com/736x/08/3a/1a/083a1a80b97e1dbec8c16de5ae9d135c.jpg);">
+                                                <div class="case-studies-summary">
+                                                    <h2>Weddings</h2>
                                                 </div>
-                                                <div class="event-col">
-                                                    <i class="icon-calendar"></i>
-                                                    <span>Monday 28</span>
-                                                    <span>November, 2016</span>
-                                                </div>
-                                                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
+                                            </div>
+                                            <div class="back">
+                                                <h3>Weddings</h3>
+                                                <p>Planifiez un mariage inoubliable avec notre équipe d'experts, des décorations somptueuses aux moments magiques.</p>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 col-sm-6 text-center">
-                                            <div class="event-wrap animate-box">
-                                                <h3>Wedding Party</h3>
-                                                <div class="event-col">
-                                                    <i class="icon-clock"></i>
-                                                    <span>7:00 PM</span>
-                                                    <span>12:00 AM</span>
+                                    </li>
+                                    <li class="one-third animate-box" data-animate-effect="fadeIn">
+                                        <div class="card">
+                                            <div class="front" style="background-image: url(https://i.pinimg.com/736x/72/68/f4/7268f44ff8069168eb78f200ac377af6.jpg);">
+                                                <div class="case-studies-summary">
+                                                    <h2>Cerimonie</h2>
                                                 </div>
-                                                <div class="event-col">
-                                                    <i class="icon-calendar"></i>
-                                                    <span>Monday 28</span>
-                                                    <span>November, 2016</span>
-                                                </div>
-                                                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
+                                            </div>
+                                            <div class="back">
+                                                <h3>Cerimonie</h3>
+                                                <p>Organisez des cérémonies élégantes avec une touche de sophistication et une planification sans faille.</p>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    </li>
+                                    <li class="one-third animate-box" data-animate-effect="fadeIn">
+                                        <div class="card">
+                                            <div class="front" style="background-image: url(https://i.pinimg.com/474x/dc/90/d1/dc90d1bbba6f6b83508ba127284f5ab9.jpg);">
+                                                <div class="case-studies-summary">
+                                                    <h2>Private Party</h2>
+                                                </div>
+                                            </div>
+                                            <div class="back">
+                                                <h3>Private Party</h3>
+                                                <p>Des soirées privées sur mesure pour des moments uniques avec vos proches.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="one-third animate-box" data-animate-effect="fadeIn">
+                                        <div class="card">
+                                            <div class="front" style="background-image: url(https://i.pinimg.com/474x/4d/d4/05/4dd405bbd61b5c9e4825d5afed6c9c80.jpg);">
+                                                <div class="case-studies-summary">
+                                                    <h2>Dj Party</h2>
+                                                </div>
+                                            </div>
+                                            <div class="back">
+                                                <h3>Dj Party</h3>
+                                                <p>Vibrez au rythme de nos DJ sets pour une soirée dansante mémorable.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="one-third animate-box" data-animate-effect="fadeIn">
+                                        <div class="card">
+                                            <div class="front" style="background-image: url(https://i.pinimg.com/474x/28/95/25/28952567535f6a56ff82380494a247b9.jpg);">
+                                                <div class="case-studies-summary">
+                                                    <h2>Birthday</h2>
+                                                </div>
+                                            </div>
+                                            <div class="back">
+                                                <h3>Birthday</h3>
+                                                <p>Célébrez vos anniversaires avec des décorations festives et des animations personnalisées.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="one-third animate-box" data-animate-effect="fadeIn">
+                                        <div class="card">
+                                            <div class="front" style="background-image: url(https://i.pinimg.com/474x/b2/75/33/b27533b4177c41545dfb178aa16f2ff7.jpg);">
+                                                <div class="case-studies-summary">
+                                                    <h2>Conférences</h2>
+                                                </div>
+                                            </div>
+                                            <div class="back">
+                                                <h3>Conférences</h3>
+                                                <p>Organisez des conférences professionnelles avec un équipement de pointe et une logistique impeccable.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="one-third animate-box" data-animate-effect="fadeIn">
+                                        <div class="card">
+                                            <div class="front" style="background-image: url(https://i.pinimg.com/474x/95/0a/3c/950a3cef0eef96b1aa32326fd28bd256.jpg);">
+                                                <div class="case-studies-summary">
+                                                    <h2>Festivals</h2>
+                                                </div>
+                                            </div>
+                                            <div class="back">
+                                                <h3>Festivals</h3>
+                                                <p>Créez des festivals vibrants avec des performances live et une ambiance électrisante.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="one-third animate-box" data-animate-effect="fadeIn">
+                                        <div class="card">
+                                            <div class="front" style="background-image: url(https://i.pinimg.com/474x/65/7b/ed/657bedc9da7f0701856e2c13327a58b8.jpg);">
+                                                <div class="case-studies-summary">
+                                                    <h2>Baby Showers</h2>
+                                                </div>
+                                            </div>
+                                            <div class="back">
+                                                <h3>Baby Showers</h3>
+                                                <p>Célébrez l'arrivée d'un bébé avec des décorations adorables et des activités ludiques.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="one-third animate-box" data-animate-effect="fadeIn">
+                                        <div class="card">
+                                            <div class="front" style="background-image: url(https://i.pinimg.com/736x/2d/eb/cb/2debcb0485f7bd49cfbd5bfb306c52bb.jpg);">
+                                                <div class="case-studies-summary">
+                                                    <h2>Séminaires</h2>
+                                                </div>
+                                            </div>
+                                            <div class="back">
+                                                <h3>Séminaires</h3>
+                                                <p>Des séminaires bien organisés pour des sessions éducatives et inspirantes.</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -447,99 +926,50 @@
                     </div>
                 </div>
 
-                <div id="fh5co-gallery" class="fh5co-section-gray">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                                <span>Our Memories</span>
-                                <h2>Wedding Gallery</h2>
-                                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                            </div>
-                        </div>
-                        <div class="row row-bottom-padded-md">
-                            <div class="col-md-12">
-                                <ul id="fh5co-gallery-list">
-                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(images/gallery-1.jpg); "> 
-                                        <a href="images/gallery-1.jpg">
-                                            <div class="case-studies-summary">
-                                                <span>14 Photos</span>
-                                                <h2>Two Glas of Juice</h2>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(images/gallery-2.jpg); ">
-                                        <a href="#" class="color-2">
-                                            <div class="case-studies-summary">
-                                                <span>30 Photos</span>
-                                                <h2>Timer starts now!</h2>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(images/gallery-3.jpg); ">
-                                        <a href="#" class="color-3">
-                                            <div class="case-studies-summary">
-                                                <span>90 Photos</span>
-                                                <h2>Beautiful sunset</h2>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(images/gallery-4.jpg); ">
-                                        <a href="#" class="color-4">
-                                            <div class="case-studies-summary">
-                                                <span>12 Photos</span>
-                                                <h2>Company's Conference Room</h2>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(images/gallery-5.jpg); ">
-                                        <a href="#" class="color-3">
-                                            <div class="case-studies-summary">
-                                                <span>50 Photos</span>
-                                                <h2>Useful baskets</h2>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(images/gallery-6.jpg); ">
-                                        <a href="#" class="color-4">
-                                            <div class="case-studies-summary">
-                                                <span>45 Photos</span>
-                                                <h2>Skater man in the road</h2>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(images/gallery-7.jpg); ">
-                                        <a href="#" class="color-4">
-                                            <div class="case-studies-summary">
-                                                <span>35 Photos</span>
-                                                <h2>Two Glas of Juice</h2>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(images/gallery-8.jpg); "> 
-                                        <a href="#" class="color-5">
-                                            <div class="case-studies-summary">
-                                                <span>90 Photos</span>
-                                                <h2>Timer starts now!</h2>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="one-third animate-box" data-animate-effect="fadeIn" style="background-image: url(images/gallery-9.jpg); ">
-                                        <a href="#" class="color-6">
-                                            <div class="case-studies-summary">
-                                                <span>56 Photos</span>
-                                                <h2>Beautiful sunset</h2>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>        
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="fh5co-counter" class="fh5co-bg fh5co-counter" style="background-image:url(images/img_bg_5.jpg);">
                     <div class="overlay"></div>
                     <div class="container">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+                                <span>Best Wishes</span>
+                                <h2>Friends Wishes</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 animate-box">
+                                <div class="wrap-testimony">
+                                    <div class="owl-carousel-fullwidth">
+                                        <div class="item">
+                                            <div class="testimony-slide active text-center">
+                                                
+                                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
+                                                <blockquote>
+                                                    <p>"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics"</p>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="testimony-slide active text-center">
+                                               
+                                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
+                                                <blockquote>
+                                                    <p>"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, at the coast of the Semantics, a large language ocean."</p>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="testimony-slide active text-center">
+                                                
+                                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
+                                                <blockquote>
+                                                    <p>"Far far away, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean."</p>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="display-t">
                                 <div class="display-tc">
@@ -577,60 +1007,6 @@
                                             </span>
                                             <span class="counter js-counter" data-from="0" data-to="2345" data-speed="5000" data-refresh-interval="50">1</span>
                                             <span class="counter-label">Hours Spent</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="fh5co-testimonial">
-                    <div class="container">
-                        <div class="row">
-                            <div class="row animate-box">
-                                <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-                                    <span>Best Wishes</span>
-                                    <h2>Friends Wishes</h2>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 animate-box">
-                                    <div class="wrap-testimony">
-                                        <div class="owl-carousel-fullwidth">
-                                            <div class="item">
-                                                <div class="testimony-slide active text-center">
-                                                    <figure>
-                                                        <img src="images/couple-1.jpg" alt="user">
-                                                    </figure>
-                                                    <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
-                                                    <blockquote>
-                                                        <p>"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics"</p>
-                                                    </blockquote>
-                                                </div>
-                                            </div>
-                                            <div class="item">
-                                                <div class="testimony-slide active text-center">
-                                                    <figure>
-                                                        <img src="images/couple-2.jpg" alt="user">
-                                                    </figure>
-                                                    <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
-                                                    <blockquote>
-                                                        <p>"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, at the coast of the Semantics, a large language ocean."</p>
-                                                    </blockquote>
-                                                </div>
-                                            </div>
-                                            <div class="item">
-                                                <div class="testimony-slide active text-center">
-                                                    <figure>
-                                                        <img src="images/couple-3.jpg" alt="user">
-                                                    </figure>
-                                                    <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
-                                                    <blockquote>
-                                                        <p>"Far far away, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean."</p>
-                                                    </blockquote>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -687,46 +1063,13 @@
                     </div>
                 </div>
 
-                <div id="fh5co-started" class="fh5co-bg" style="background-image:url(images/img_bg_4.jpg);">
-                    <div class="overlay"></div>
-                    <div class="container">
-                        <div class="row animate-box">
-                            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-                                <h2>Are You Attending?</h2>
-                                <p>Please Fill-up the form to notify you that you're attending. Thanks.</p>
-                            </div>
-                        </div>
-                        <div class="row animate-box">
-                            <div class="col-md-10 col-md-offset-1">
-                                <form class="form-inline">
-                                    <div class="col-md-4 col-sm-4">
-                                        <div class="form-group">
-                                            <label for="name" class="sr-only">Name</label>
-                                            <input type="name" class="form-control" id="name" placeholder="Name">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4">
-                                        <div class="form-group">
-                                            <label for="email" class="sr-only">Email</label>
-                                            <input type="email" class="form-control" id="email" placeholder="Email">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4">
-                                        <button type="submit" class="btn btn-default btn-block">I am Attending</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <footer id="fh5co-footer" role="contentinfo">
                     <div class="container">
                         <div class="row copyright">
                             <div class="col-md-12 text-center">
                                 <p>
                                     <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                                    <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                                    <small class="block" target="_blank">Designed by Nadhem Hmida</small>
                                 </p>
                             </div>
                         </div>
@@ -769,6 +1112,31 @@
                                 e.preventDefault();
                                 $(this).parent().toggleClass('active');
                             }
+                        });
+
+                        // Gestion du slider
+                        document.addEventListener('DOMContentLoaded', function() {
+                            var parent = document.querySelector('.splitview'),
+                                topPanel = parent.querySelector('.top'),
+                                handle = parent.querySelector('.handle'),
+                                skewHack = 0,
+                                delta = 0;
+
+                            // If the parent has .skewed class, set the skewHack var.
+                            if (parent.className.indexOf('skewed') != -1) {
+                                skewHack = 1000;
+                            }
+
+                            parent.addEventListener('mousemove', function(event) {
+                                // Get the delta between the mouse position and center point.
+                                delta = (event.clientX - window.innerWidth / 2) * 0.5;
+
+                                // Move the handle.
+                                handle.style.left = event.clientX + delta + 'px';
+
+                                // Adjust the top panel width.
+                                topPanel.style.width = event.clientX + skewHack + delta + 'px';
+                            });
                         });
                     });
                 </script>
