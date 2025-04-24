@@ -7,6 +7,7 @@ use App\Entity\Reclamation;
 use App\Form\RegistrationFormType;
 use App\Form\LoginFormType;
 use App\Repository\ReclamationRepository;
+use App\Repository\FeedbackRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,10 +119,11 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
-    public function index(ReclamationRepository $reclamationRepository): Response
+    public function index(ReclamationRepository $reclamationRepository, FeedbackRepository $feedbackRepository): Response
     {
         try {
             $this->logger->info('Début de la méthode index pour admin_dashboard');
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
             // Étape 1 : Récupérer le total des réclamations
             $totalReclamations = 0;
@@ -184,17 +186,111 @@ class SecurityController extends AbstractController
                 $this->logger->error('Erreur lors de la récupération des réclamations par statut: ' . $e->getMessage());
             }
 
-            // Rendre le template avec les données, même si certaines requêtes ont échoué
+            // Étape 5 : Récupérer les données des feedbacks
+            // Score de Satisfaction Moyen
+            $avgVote = 0;
+            try {
+                $avgVote = $feedbackRepository->createQueryBuilder('f')
+                    ->select('AVG(f.Vote) as avgVote')
+                    ->getQuery()
+                    ->getSingleScalarResult() ?? 0;
+                $this->logger->info('Score de satisfaction moyen: ' . $avgVote);
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors du calcul du score de satisfaction moyen: ' . $e->getMessage());
+            }
+
+            // Tendance (simplifiée, à affiner selon votre logique)
+            $avgVoteTrend = 0; // À implémenter pour comparer avec une période précédente
+
+            // Taux de Recommandation Net (NPS)
+            $npsScore = 0;
+            try {
+                $recommendOui = $feedbackRepository->count(['Recommend' => 'Oui']);
+                $recommendNon = $feedbackRepository->count(['Recommend' => 'Non']);
+                $totalFeedbacks = $feedbackRepository->count([]);
+                $npsScore = $totalFeedbacks > 0 ? (($recommendOui - $recommendNon) / $totalFeedbacks) * 100 : 0;
+                $this->logger->info('NPS Score: ' . $npsScore);
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors du calcul du NPS: ' . $e->getMessage());
+            }
+
+            // Taux de Feedbacks avec Image
+            $imageFeedbackRate = 0;
+            try {
+                $feedbacksWithImage = $feedbackRepository->createQueryBuilder('f')
+                    ->select('COUNT(f.ID)')
+                    ->where('f.Souvenirs IS NOT NULL')
+                    ->getQuery()
+                    ->getSingleScalarResult();
+                $imageFeedbackRate = $totalFeedbacks > 0 ? ($feedbacksWithImage / $totalFeedbacks) * 100 : 0;
+                $this->logger->info('Taux de feedbacks avec image: ' . $imageFeedbackRate);
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors du calcul du taux de feedbacks avec image: ' . $e->getMessage());
+            }
+
+            // Feedbacks par Tranche de Note
+            $feedbacksByVote = [];
+            try {
+                $feedbacksByVote = $feedbackRepository->createQueryBuilder('f')
+                    ->select('f.Vote as vote, COUNT(f.ID) as count')
+                    ->groupBy('f.Vote')
+                    ->orderBy('f.Vote', 'ASC')
+                    ->getQuery()
+                    ->getResult();
+                $this->logger->info('Feedbacks par tranche de note: ' . json_encode($feedbacksByVote));
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors de la récupération des feedbacks par note: ' . $e->getMessage());
+            }
+
+            // Score de Satisfaction par Mois
+            $satisfactionByMonth = [];
+            try {
+                $satisfactionByMonth = $feedbackRepository->createQueryBuilder('f')
+                    ->select("DATE_FORMAT(f.date, '%Y-%m') as month, AVG(f.Vote) as avgVote")
+                    ->groupBy('month')
+                    ->orderBy('month', 'ASC')
+                    ->setMaxResults(12)
+                    ->getQuery()
+                    ->getResult();
+                $this->logger->info('Satisfaction par mois: ' . json_encode($satisfactionByMonth));
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors de la récupération de la satisfaction par mois: ' . $e->getMessage());
+            }
+
+            // Engagement des Utilisateurs
+            $userEngagement = [];
+            try {
+                $userEngagement = $feedbackRepository->createQueryBuilder('f')
+                    ->select('m.email, COUNT(f.ID) as feedbackCount, AVG(f.Vote) as avgVote')
+                    ->leftJoin('f.membre', 'm')
+                    ->groupBy('m.id')
+                    ->orderBy('feedbackCount', 'DESC')
+                    ->setMaxResults(50)
+                    ->getQuery()
+                    ->getResult();
+                $this->logger->info('Engagement des utilisateurs: ' . json_encode($userEngagement));
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors de la récupération de l\'engagement des utilisateurs: ' . $e->getMessage());
+            }
+
+            // Rendre le template avec les données
             return $this->render('admin/dashboard.html.twig', [
                 'total_reclamations' => $totalReclamations,
                 'pourcentage_traitees' => $pourcentageTraitees,
                 'pourcentage_non_traitees' => $pourcentageNonTraitees,
                 'reclamations_par_type' => $reclamationsParTypeFormatted,
                 'reclamations_par_statut' => $reclamationsParStatut,
+                'avg_vote' => $avgVote,
+                'avg_vote_trend' => $avgVoteTrend,
+                'nps_score' => $npsScore,
+                'image_feedback_rate' => $imageFeedbackRate,
+                'feedbacks_by_vote' => $feedbacksByVote,
+                'satisfaction_by_month' => $satisfactionByMonth,
+                'user_engagement' => $userEngagement,
             ]);
         } catch (\Exception $e) {
-            $this->logger->error('Erreur globale dans admin_dashboard: ' . $e->getMessage());
-            throw $this->createNotFoundException('Une erreur est survenue lors du chargement du tableau de bord.');
+            $this->logger->error('Erreur globale dans admin_dashboard: ' . $e->getMessage() . ' - Trace: ' . $e->getTraceAsString());
+            throw new \Exception('Erreur détaillée : ' . $e->getMessage());
         }
     }
 }

@@ -3,6 +3,12 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
+    <!-- Vidéo en arrière-plan de la page entière -->
+    <video autoplay loop muted playsinline class="background-video">
+        <source src="{{ asset('images/video2.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
     <div class="flash-messages">
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">
@@ -42,9 +48,29 @@
     </div>
 
     <style>
+        /* Fond blanc pour le body comme secours */
+        body {
+            background-color: #fff; /* Fond blanc si la vidéo ne se charge pas */
+            margin: 0; /* Supprime les marges par défaut */
+            padding: 0;
+            height: 100vh; /* S’assure que le body prend toute la hauteur */
+            overflow-x: hidden; /* Empêche le défilement horizontal */
+        }
+        /* Style pour la vidéo en arrière-plan */
+        .background-video {
+            position: fixed; /* Position fixe pour couvrir toute la page */
+            top: 0;
+            left: 0;
+            width: 100%; /* Couvre toute la largeur */
+            height: 100%; /* Couvre toute la hauteur */
+            object-fit: cover; /* S’assure que la vidéo remplit l’espace sans déformation */
+            z-index: -1; /* Place la vidéo derrière tous les autres éléments */
+        }
         .flash-messages {
             margin: 20px auto;
             max-width: 600px;
+            position: relative; /* S’assure que les messages sont au-dessus de la vidéo */
+            z-index: 1; /* Place les messages au-dessus de la vidéo */
         }
         .alert {
             padding: 15px;
@@ -62,6 +88,65 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        .container {
+            width: 800px; /* Largeur fixe pour le conteneur */
+            margin: 0 auto; /* Centre le conteneur */
+            padding: 30px; /* Ajoute du padding pour plus d’espace */
+            background-color: rgba(255, 255, 255, 0.9); /* Fond blanc semi-transparent pour la lisibilité */
+            border-radius: 10px; /* Coins arrondis pour un meilleur contraste */
+            position: relative; /* S’assure que le conteneur est au-dessus de la vidéo */
+            z-index: 1; /* Place le conteneur au-dessus de la vidéo */
+            margin-top: 40px; /* Espace au-dessus pour ne pas coller au bord */
+        }
+        .form-columns {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-column {
+            width: 48%; /* Deux colonnes presque égales */
+        }
+        .password-container {
+            margin-top: 20px;
+        }
+        .btn-generate-password {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: #ff4b5c; /* Même couleur que les autres boutons */
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-generate-password:hover {
+            background-color: #e04352; /* Couleur plus foncée au survol */
+        }
+        button[type="submit"] {
+            display: block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ff4b5c;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button[type="submit"]:hover {
+            background-color: #e04352;
+        }
+        a[href="{{ path('app_auth') }}"] {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #ff4b5c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a[href="{{ path('app_auth') }}"]:hover {
+            color: #e04352;
+        }
     </style>
 {% endblock %}
 
@@ -69,7 +154,7 @@
     <script>
         document.getElementById('generate-password').addEventListener('click', function() {
             const passwordField = document.querySelector('input[name="membre[motDePasse]"]');
-            const generatedPassword = Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 10);
+            const generatedPassword = Math.random().toString(36).slicef(2, 10) + Math.random().toString(36).slice(2, 10);
             passwordField.value = generatedPassword;
         });
     </script>

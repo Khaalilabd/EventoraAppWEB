@@ -21,7 +21,7 @@ class Typepack
 
     #[ORM\Column(type: 'string', nullable: false)]
     #[Assert\NotBlank(message: 'Le type ne peut pas être vide.')]
-    private string $type = '';
+    private string $type;
 
     #[ORM\OneToMany(targetEntity: Pack::class, mappedBy: 'typepack')]
     private Collection $packs;
@@ -29,7 +29,7 @@ class Typepack
     public function __construct()
     {
         $this->packs = new ArrayCollection();
-        $this->type = '';
+        $this->type = ''; // Initialize to empty string to avoid null
     }
 
     public function getId(): ?int

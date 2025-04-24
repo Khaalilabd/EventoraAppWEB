@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html class="no-js" lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Historique - Eventora</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
+
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a1c2e 0%, #1e3a5f 100%);
+            font-family: 'Work Sans', sans-serif;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .fh5co-nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .fh5co-nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+        }
+        .fh5co-logo a {
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            color: #333;
+            text-decoration: none;
+        }
+        .user-circle {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            color: #333;
+            font-size: 16px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        .user-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .fh5co-nav .menu-1 {
+            display: block;
+        }
+        .fh5co-nav .menu-1 ul {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .fh5co-nav .menu-1 ul li {
+            margin: 0 15px;
+            position: relative;
+        }
+        .fh5co-nav .menu-1 ul li a {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 16px;
+            color: #333;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .fh5co-nav .menu-1 ul li a:hover {
+            color: #007bff;
+        }
+        .fh5co-nav .menu-1 ul li.active a {
+            color: #007bff !important;
+            font-weight: 600;
+        }
+        .fh5co-nav .menu-1 ul li.has-dropdown {
+            position: relative;
+        }
+        .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            list-style: none;
+            padding: 10px 0;
+            min-width: 150px;
+            z-index: 1001;
+        }
+        .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+            display: block !important;
+        }
+        .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+            margin: 0;
+        }
+        .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+            padding: 10px 20px;
+            display: block;
+            font-size: 14px;
+            text-transform: none;
+            color: #333;
+        }
+        .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+            color: #007bff;
+        }
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            padding: 10px;
+        }
+        .content-section {
+            padding: 100px 0 50px;
+            flex: 1 0 auto;
+        }
+        .content-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            color: #1e3a5f;
+        }
+        .content-card h2 {
+            font-size: 28px;
+            color: #1e3a5f;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .content-card .subtitle {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .nav-tabs {
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .nav-tabs li {
+            margin: 0 10px;
+        }
+        .nav-tabs li a {
+            color: #1e3a5f;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .nav-tabs li.active a {
+            color: #26a69a;
+            border-bottom: 3px solid #26a69a;
+            font-weight: 600;
+        }
+        .nav-tabs li a:hover {
+            color: #26a69a;
+            border-bottom: 3px solid #26a69a;
+        }
+        .table {
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .table th {
+            background: #1e3a5f;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 14px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .table td {
+            padding: 14px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background: #f8f9fa;
+        }
+        .table tbody tr:hover {
+            background: #e6ecef;
+            transition: background 0.3s ease;
+        }
+        .label {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+        .label-success {
+            background: #28a745;
+            color: #ffffff;
+        }
+        .label-warning {
+            background: #ffb300;
+            color: #333;
+        }
+        .label-danger {
+            background: #dc3545;
+            color: #ffffff;
+        }
+        .stars {
+            color: #ffb300;
+            font-size: 14px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .btn-primary {
+            background: #26a69a;
+            border: none;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background: #00897b;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+            color: #ffffff;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        .reclamation-details, .feedback-details {
+            font-size: 15px;
+        }
+        .reclamation-details p, .feedback-details p {
+            margin: 12px 0;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #26a69a;
+        }
+        .reclamation-details strong, .feedback-details strong {
+            color: #1e3a5f;
+            margin-right: 8px;
+            font-weight: 600;
+        }
+        .feedback-details img {
+            max-width: 300px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: block;
+        }
+        .pagination {
+            justify-content: center;
+            margin-top: 25px;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+        .pagination li a {
+            color: #1e3a5f;
+            border: 1px solid #e0e0e0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        .pagination li.active a {
+            background: #26a69a;
+            color: #ffffff;
+            border-color: #26a69a;
+        }
+        .pagination li a:hover {
+            background: #26a69a;
+            color: #ffffff;
+            border-color: #26a69a;
+        }
+        .pagination li.disabled a {
+            color: #ccc;
+            cursor: not-allowed;
+            border-color: #e0e0e0;
+            background: #f8f9fa;
+        }
+        #fh5co-footer {
+            background: #1e3a5f;
+            padding: 20px 0;
+            color: #e0e0e0;
+            text-align: center;
+        }
+        #fh5co-footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+        #fh5co-footer a {
+            color: #26a69a;
+            text-decoration: none;
+        }
+        #fh5co-footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            .fh5co-nav .menu-1 ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background-color: #fff;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                padding: 20px 0;
+            }
+            .fh5co-nav .menu-1 ul.active {
+                display: flex;
+            }
+            .fh5co-nav .menu-1 ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            .user-circle {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                position: static;
+                display: none;
+                box-shadow: none;
+                background-color: #f8f9fa;
+            }
+            .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                display: none !important;
+            }
+            .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                display: block !important;
+            }
+            .content-card {
+                padding: 20px;
+                max-width: 95%;
+            }
+            .content-card h2 {
+                font-size: 24px;
+            }
+            .table {
+                font-size: 13px;
+            }
+            .table th, .table td {
+                padding: 10px;
+                font-size: 13px;
+            }
+            .table td:nth-child(3) {
+                max-width: 120px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .nav-tabs li a {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+            .reclamation-details p, .feedback-details p {
+                font-size: 14px;
+                padding: 10px;
+            }
+            .feedback-details img {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="page">
+        <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
+                <div class="menu-toggle">☰</div>
+                <div class="menu-1">
+                    <ul>
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Réservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Personnalisée</a></li>
+                                <li><a href="{{ path('admin_reservations_user_pack_new') }}">Packs</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('user_packs') }}">Packs</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="#">Talk with Evi</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li class="active"><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <section class="content-section">
+            <div class="container">
+                <div class="content-card animate-box">
+                    <h2>Votre Historique</h2>
+                    <div class="subtitle">Consultez vos réclamations et feedbacks</div>
+
+                    <!-- Onglets pour les sections -->
+                    <ul class="nav nav-tabs">
+                        <li class="{{ section == 'reclamations' ? 'active' : '' }}"><a href="{{ path('app_user_history') }}">Réclamations</a></li>
+                        <li class="{{ section == 'feedbacks' ? 'active' : '' }}"><a href="{{ path('app_user_history_feedbacks') }}">Feedbacks</a></li>
+                    </ul>
+
+                    {% if section == 'reclamations' %}
+                        {% if selected_reclamation %}
+                            <!-- Détails de la réclamation -->
+                            <div class="reclamation-details">
+                                <h3>Détails de la Réclamation #{{ selected_reclamation.id }}</h3>
+                                <p><strong>Titre :</strong> {{ selected_reclamation.titre }}</p>
+                                <p><strong>Type :</strong> {{ selected_reclamation.Type }}</p>
+                                <p><strong>Description :</strong> {{ selected_reclamation.description }}</p>
+                                <p><strong>Statut :</strong>
+                                    <span class="label {{ selected_reclamation.statut == 'Resolue' ? 'label-success' : (selected_reclamation.statut == 'Rejetée' ? 'label-danger' : 'label-warning') }}">
+                                        {{ selected_reclamation.statut }}
+                                    </span>
+                                </p>
+                                <p><strong>Date :</strong> {{ selected_reclamation.date|date('d/m/Y H:i') }}</p>
+                                <div class="text-center">
+                                    <a href="{{ path('app_user_history') }}" class="btn btn-secondary">Retour à l'historique</a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <!-- Liste des réclamations -->
+                            {% if reclamations|length == 0 %}
+                                <p class="text-center">Aucune réclamation trouvée.</p>
+                                <div class="text-center">
+                                    <a href="{{ path('app_reclamation_new') }}" class="btn btn-primary">Soumettre une réclamation</a>
+                                </div>
+                            {% else %}
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Titre</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                                <th>Statut</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for reclamation in reclamations %}
+                                                <tr class="animate-box" data-animate-effect="fadeIn">
+                                                    <td>{{ reclamation.date|date('d/m/Y H:i') }}</td>
+                                                    <td>{{ reclamation.titre }}</td>
+                                                    <td>{{ reclamation.Type }}</td>
+                                                    <td title="{{ reclamation.description }}">{{ reclamation.description|u.truncate(60, '...') }}</td>
+                                                    <td>
+                                                        <span class="label {{ reclamation.statut == 'Resolue' ? 'label-success' : (reclamation.statut == 'Rejetée' ? 'label-danger' : 'label-warning') }}">
+                                                            {{ reclamation.statut }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ path('app_reclamation_show', {'id': reclamation.id}) }}" class="btn btn-primary btn-sm">Voir</a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Pagination -->
+                                <div class="text-center">
+                                    {{ knp_pagination_render(reclamations) }}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% elseif section == 'feedbacks' %}
+                        {% if selected_feedback %}
+                            <!-- Détails du feedback -->
+                            <div class="feedback-details">
+                                <h3>Détails du Feedback #{{ selected_feedback.ID }}</h3>
+                                <p><strong>Note :</strong> <span class="stars">
+                                    {% for i in 1..selected_feedback.Vote %}
+                                        ★
+                                    {% endfor %}
+                                    {% for i in 1..(5 - selected_feedback.Vote) %}
+                                        ☆
+                                    {% endfor %}
+                                </span></p>
+                                <p><strong>Description :</strong> {{ selected_feedback.Description }}</p>
+                                <p><strong>Recommandation :</strong>
+                                    <span class="label {{ selected_feedback.Recommend == 'Oui' ? 'label-success' : 'label-danger' }}">
+                                        {{ selected_feedback.Recommend }}
+                                    </span>
+                                </p>
+                                <p><strong>Date :</strong> {{ selected_feedback.date|date('d/m/Y H:i') }}</p>
+                                {% if selected_feedback.Souvenirs %}
+                                    <p><strong>Souvenir :</strong><br>
+                                        <img src="{{ path('app_feedback_image', {'id': selected_feedback.ID}) }}" alt="Souvenir">
+                                    </p>
+                                {% endif %}
+                                <div class="text-center">
+                                    <a href="{{ path('app_user_history_feedbacks') }}" class="btn btn-secondary">Retour à l'historique</a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <!-- Liste des feedbacks -->
+                            {% if feedbacks|length == 0 %}
+                                <p class="text-center">Aucun feedback trouvé.</p>
+                                <div class="text-center">
+                                    <a href="{{ path('app_feedback_new') }}" class="btn btn-primary">Soumettre un feedback</a>
+                                </div>
+                            {% else %}
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Note</th>
+                                                <th>Description</th>
+                                                <th>Recommandation</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for feedback in feedbacks %}
+                                                <tr class="animate-box" data-animate-effect="fadeIn">
+                                                    <td>{{ feedback.date|date('d/m/Y H:i') }}</td>
+                                                    <td><span class="stars">
+                                                        {% for i in 1..feedback.Vote %}
+                                                            ★
+                                                        {% endfor %}
+                                                        {% for i in 1..(5 - feedback.Vote) %}
+                                                            ☆
+                                                        {% endfor %}
+                                                    </span></td>
+                                                    <td title="{{ feedback.Description }}">{{ feedback.Description|u.truncate(60, '...') }}</td>
+                                                    <td>
+                                                        <span class="label {{ feedback.Recommend == 'Oui' ? 'label-success' : 'label-danger' }}">
+                                                            {{ feedback.Recommend }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ path('app_feedback_show', {'id': feedback.ID}) }}" class="btn btn-primary btn-sm">Voir</a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Pagination -->
+                                <div class="text-center">
+                                    {{ knp_pagination_render(feedbacks) }}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <footer id="fh5co-footer" role="contentinfo">
+            <div class="container">
+                <div class="row copyright">
+                    <div class="col-md-12 text-center">
+                        <p>
+                            <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                            <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        if (typeof jQuery === 'undefined') {
+            console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
+        } else {
+            console.log("jQuery est chargé avec succès");
+            jQuery(document).ready(function($) {
+                $('.menu-toggle').click(function() {
+                    console.log("Clic sur menu-toggle détecté");
+                    $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                });
+
+                $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                    if ($(window).width() <= 768) {
+                        console.log("Clic sur dropdown détecté");
+                        e.preventDefault();
+                        $(this).parent().toggleClass('active');
+                    }
+                });
+
+                $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
+                    function() {
+                        console.log("Survol détecté sur un élément has-dropdown");
+                        $(this).find('.dropdown').css({
+                            'display': 'block',
+                            'position': 'absolute',
+                            'top': '100%',
+                            'right': '0',
+                            'visibility': 'visible',
+                            'opacity': '1',
+                            'z-index': '1001'
+                        });
+                    },
+                    function() {
+                        console.log("Fin du survol");
+                        $(this).find('.dropdown').css({
+                            'display': 'none',
+                            'visibility': 'hidden',
+                            'opacity': '0'
+                        });
+                    }
+                );
+            });
+        }
+    </script>
+</body>
+</html>

@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\PackRepository;
+use App\Entity\Typepack;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PackRepository::class)]
@@ -16,23 +16,23 @@ class Pack
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, name: 'nomPack')]
+    #[ORM\Column(type: 'string', nullable: false, name: 'nomPack')]
     #[Assert\NotBlank(message: 'Le nom du pack ne peut pas être vide.')]
     private ?string $nomPack = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false)]
     #[Assert\NotBlank(message: 'La description ne peut pas être vide.')]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
+    #[ORM\Column(type: 'decimal', nullable: false)]
     #[Assert\NotBlank(message: 'Le prix ne peut pas être vide.')]
     #[Assert\GreaterThanOrEqual(0, message: 'Le prix doit être supérieur ou égal à 0.')]
     private ?float $prix = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, name: 'location')]
+    #[ORM\Column(type: 'string', nullable: false)]
     #[Assert\NotBlank(message: 'Le lieu ne peut pas être vide.')]
     #[Assert\Choice(
         choices: ['HOTEL', 'MAISON_D_HOTE', 'ESPACE_VERT', 'SALLE_DE_FETE', 'AUTRE'],
@@ -40,32 +40,30 @@ class Pack
     )]
     private ?string $location = null;
 
-    // On remplace la relation ManyToOne par une simple colonne de type chaîne
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, name: 'type')]
+    #[ORM\Column(type: 'string', nullable: false, name: 'type')]
     #[Assert\NotBlank(message: 'Le type ne peut pas être vide.')]
     private ?string $type = null;
 
-    #[ORM\Column(type: Types::INTEGER, nullable: false, name: 'nbrGuests')]
+    #[ORM\Column(type: 'integer', nullable: false, name: 'nbrGuests')]
     #[Assert\NotBlank(message: 'Le nombre d\'invités ne peut pas être vide.')]
     #[Assert\GreaterThanOrEqual(1, message: 'Le nombre d\'invités doit être au moins 1.')]
     private ?int $nbrGuests = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, name: 'image_path')]
+    #[ORM\Column(type: 'string', nullable: false, name: 'image_path')]
     private ?string $imagePath = null;
 
     #[ORM\OneToMany(targetEntity: Reservationpack::class, mappedBy: 'pack')]
     private Collection $reservationpacks;
 
-    private array $services = [];
-
-    // Propriété non persistante pour stocker le Typepack chargé manuellement
     private ?Typepack $typepack = null;
+
+    private array $services = [];
 
     public function __construct()
     {
         $this->reservationpacks = new ArrayCollection();
         $this->services = [];
-        $this->imagePath = '/Uploads/images/default.jpg';
+        $this->imagePath = '/uploads/images/default.jpg';
     }
 
     public function getId(): ?int
@@ -123,30 +121,14 @@ class Pack
         return $this;
     }
 
-    // Méthode pour accéder à la colonne type (chaîne)
     public function getType(): ?string
     {
         return $this->type;
     }
 
-    // Méthode pour définir la colonne type (chaîne)
     public function setType(string $type): self
     {
         $this->type = $type;
-        return $this;
-    }
-
-    public function getTypepack(): ?Typepack
-    {
-        return $this->typepack;
-    }
-
-    public function setTypepack(?Typepack $typepack): self
-    {
-        $this->typepack = $typepack;
-        if ($typepack !== null) {
-            $this->type = $typepack->getType();
-        }
         return $this;
     }
 
@@ -168,7 +150,7 @@ class Pack
 
     public function setImagePath(?string $imagePath): self
     {
-        $this->imagePath = $imagePath ?? '/Uploads/images/default.jpg';
+        $this->imagePath = $imagePath ?? '/uploads/images/default.jpg';
         return $this;
     }
 
@@ -198,6 +180,20 @@ class Pack
             if ($reservationpack->getPack() === $this) {
                 $reservationpack->setPack(null);
             }
+        }
+        return $this;
+    }
+
+    public function getTypepack(): ?Typepack
+    {
+        return $this->typepack;
+    }
+
+    public function setTypepack(?Typepack $typepack): self
+    {
+        $this->typepack = $typepack;
+        if ($typepack !== null) {
+            $this->type = $typepack->getType();
         }
         return $this;
     }

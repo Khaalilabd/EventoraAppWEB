@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin Dashboard - Réclamations{% endblock %}
+{% block title %}Admin Dashboard - Réclamations & Feedbacks{% endblock %}
 
 {% block stylesheets %}
     <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800" rel="stylesheet" />
@@ -206,7 +206,7 @@
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
             min-height: 350px;
-            transition: opacity 0.6s ease, transform 0.4s ease;
+            transition: opacity 0.6supa ease, transform 0.4s ease;
             opacity: 0;
         }
         .chart-card.animate {
@@ -283,6 +283,81 @@
         .navbar-main .nav-link:hover {
             color: #ff6200;
         }
+
+        /* Styles spécifiques pour les graphiques de feedbacks */
+        .bubble-chart {
+            min-height: 400px;
+        }
+
+        /* Styles pour les sections réductibles */
+        .collapsible-section {
+            margin-bottom: 40px;
+        }
+
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 15px 25px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .collapsible-header:hover {
+            background-color: #f8f9fa;
+        }
+
+        .collapsible-header h4 {
+            margin: 0;
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 1.5em;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .collapsible-content {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .collapsible-content.active {
+            padding: 25px;
+            max-height: 2000px; /* Ajustez selon le contenu */
+        }
+
+        .toggle-icon {
+            font-size: 1.2em;
+            color: #ff6200;
+        }
+
+        .toggle-icon.collapsed i::before {
+            content: "\f077"; /* Chevron-up */
+        }
+
+        /* Bouton Tout réduire / Tout afficher */
+        .toggle-all {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #ff6200;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-all:hover {
+            background-color: #e55a00;
+        }
     </style>
 {% endblock %}
 
@@ -290,7 +365,7 @@
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
         <div class="sidenav-header">
             <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
-                <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+                <img src="{{ asset('assets/img/eventora.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
                 <span class="ms-2 font-weight-bold text-dark">Eventora Dashboard</span>
             </a>
         </div>
@@ -303,6 +378,14 @@
                             <i class="fas fa-tachometer-alt text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Dashboard</span>
+                    </a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
+                        <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-tachometer-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Home</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -496,102 +579,258 @@
             </nav>
 
             <div class="container-fluid py-4">
+                <!-- Bouton Tout réduire / Tout afficher -->
+                <button class="toggle-all" onclick="toggleAllSections()">Tout réduire</button>
+
                 <!-- Section Réclamations -->
-                <div class="module-section">
-                    <h4 class="mb-4">Réclamations</h4>
-                    <!-- KPI Réclamations -->
-                    <div class="row mb-5">
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
-                            <div class="card kpi-card">
-                                <div class="card-body p-3 position-relative">
-                                    <div class="row align-items-center">
-                                        <div class="col-8 text-start">
-                                            <div class="icon icon-shape shadow text-center border-radius-2xl">
-                                                <i class="fas fa-exclamation-circle text-white text-lg opacity-10"></i>
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h4>Réclamations</h4>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="collapsible-content module-section">
+                        <!-- KPI Réclamations -->
+                        <div class="row mb-5">
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card kpi-card">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="row align-items-center">
+                                            <div class="col-8 text-start">
+                                                <div class="icon icon-shape shadow text-center border-radius-2xl">
+                                                    <i class="fas fa-exclamation-circle text-white text-lg opacity-10"></i>
+                                                </div>
+                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ total_reclamations }}</h5>
+                                                <span class="text-sm">Total Réclamations</span>
                                             </div>
-                                            <h5 class="font-weight-bolder mb-0 mt-3">{{ total_reclamations }}</h5>
-                                            <span class="text-sm">Total Réclamations</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card kpi-card">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="row align-items-center">
+                                            <div class="col-8 text-start">
+                                                <div class="icon icon-shape shadow text-center border-radius-2xl">
+                                                    <i class="fas fa-check-circle text-white text-lg opacity-10"></i>
+                                                </div>
+                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ pourcentage_traitees|round(2) }}%</h5>
+                                                <span class="text-sm">Réclamations Traitées</span>
+                                            </div>
+                                            <div class="col-4 text-end">
+                                                <p class="trend positive mb-0">+5%</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card kpi-card">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="row align-items-center">
+                                            <div class="col-8 text-start">
+                                                <div class="icon icon-shape shadow text-center border-radius-2xl">
+                                                    <i class="fas fa-hourglass-half text-white text-lg opacity-10"></i>
+                                                </div>
+                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ pourcentage_non_traitees|round(2) }}%</h5>
+                                                <span class="text-sm">Réclamations Non Traitées</span>
+                                            </div>
+                                            <div class="col-4 text-end">
+                                                <p class="trend negative mb-0">-2%</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
-                            <div class="card kpi-card">
-                                <div class="card-body p-3 position-relative">
-                                    <div class="row align-items-center">
-                                        <div class="col-8 text-start">
-                                            <div class="icon icon-shape shadow text-center border-radius-2xl">
-                                                <i class="fas fa-check-circle text-white text-lg opacity-10"></i>
-                                            </div>
-                                            <h5 class="font-weight-bolder mb-0 mt-3">{{ pourcentage_traitees|round(2) }}%</h5>
-                                            <span class="text-sm">Réclamations Traitées</span>
-                                        </div>
-                                        <div class="col-4 text-end">
-                                            <p class="trend positive mb-0">+5%</p>
+                        <!-- Graphiques Réclamations -->
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 mb-4">
+                                <div class="card chart-card">
+                                    <div class="card-header">
+                                        <h6>Réclamations Traitées vs Non Traitées</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="reclamations-treated-vs-untreated-chart"></canvas>
+                                        <div id="no-treated-data-message" class="text-center text-muted mt-3" style="display: none;">
+                                            Aucune donnée disponible pour les réclamations traitées/non traitées.
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
-                            <div class="card kpi-card">
-                                <div class="card-body p-3 position-relative">
-                                    <div class="row align-items-center">
-                                        <div class="col-8 text-start">
-                                            <div class="icon icon-shape shadow text-center border-radius-2xl">
-                                                <i class="fas fa-hourglass-half text-white text-lg opacity-10"></i>
-                                            </div>
-                                            <h5 class="font-weight-bolder mb-0 mt-3">{{ pourcentage_non_traitees|round(2) }}%</h5>
-                                            <span class="text-sm">Réclamations Non Traitées</span>
+                            <div class="col-lg-4 col-md-12 mb-4">
+                                <div class="card chart-card">
+                                    <div class="card-header">
+                                        <h6>Réclamations par Type</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="reclamations-by-type-chart"></canvas>
+                                        <div id="no-type-data-message" class="text-center text-muted mt-3" style="display: none;">
+                                            Aucune donnée disponible pour les réclamations par type.
                                         </div>
-                                        <div class="col-4 text-end">
-                                            <p class="trend negative mb-0">-2%</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-12 mb-4">
+                                <div class="card chart-card">
+                                    <div class="card-header">
+                                        <h6>Réclamations par Statut</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="reclamations-status-distribution-chart"></canvas>
+                                        <div id="no-status-data-message" class="text-center text-muted mt-3" style="display: none;">
+                                            Aucune donnée disponible pour les réclamations par statut.
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Graphiques Réclamations -->
-                    <div class="row">
-                        <div class="col-lg-4 col-md-12 mb-4">
-                            <div class="card chart-card">
-                                <div class="card-header">
-                                    <h6>Réclamations Traitées vs Non Traitées</h6>
+                </div>
+
+                <!-- Section Feedbacks -->
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h4>Feedbacks</h4>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="collapsible-content module-section">
+                        <!-- KPI Feedbacks -->
+                        <div class="row mb-5">
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card kpi-card">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="row align-items-center">
+                                            <div class="col-8 text-start">
+                                                <div class="icon icon-shape shadow text-center border-radius-2xl">
+                                                    <i class="fas fa-star text-white text-lg opacity-10"></i>
+                                                </div>
+                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ avg_vote|round(2) }}</h5>
+                                                <span class="text-sm">Score de Satisfaction Moyen</span>
+                                            </div>
+                                            <div class="col-4 text-end">
+                                                <p class="trend {{ avg_vote_trend > 0 ? 'positive' : 'negative' }} mb-0">{{ avg_vote_trend|round(2) }}%</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <canvas id="reclamations-treated-vs-untreated-chart"></canvas>
-                                    <div id="no-treated-data-message" class="text-center text-muted mt-3" style="display: none;">
-                                        Aucune donnée disponible pour les réclamations traitées/non traitées.
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card kpi-card">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="row align-items-center">
+                                            <div class="col-8 text-start">
+                                                <div class="icon icon-shape shadow text-center border-radius-2xl">
+                                                    <i class="fas fa-thumbs-up text-white text-lg opacity-10"></i>
+                                                </div>
+                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ nps_score|round(2) }}</h5>
+                                                <span class="text-sm">Taux de Recommandation Net</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card kpi-card">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="row align-items-center">
+                                            <div class="col-8 text-start">
+                                                <div class="icon icon-shape shadow text-center border-radius-2xl">
+                                                    <i class="fas fa-image text-white text-lg opacity-10"></i>
+                                                </div>
+                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ image_feedback_rate|round(2) }}%</h5>
+                                                <span class="text-sm">Feedbacks avec Image</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-12 mb-4">
-                            <div class="card chart-card">
-                                <div class="card-header">
-                                    <h6>Réclamations par Type</h6>
+                        <!-- Graphiques Feedbacks -->
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 mb-4">
+                                <div class="card chart-card">
+                                    <div class="card-header">
+                                        <h6>Feedbacks par Tranche de Note</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="feedbacks-by-vote-chart"></canvas>
+                                        <div id="no-vote-data-message" class="text-center text-muted mt-3" style="display: none;">
+                                            Aucune donnée disponible pour les feedbacks par note.
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <canvas id="reclamations-by-type-chart"></canvas>
-                                    <div id="no-type-data-message" class="text-center text-muted mt-3" style="display: none;">
-                                        Aucune donnée disponible pour les réclamations par type.
+                            </div>
+                            <div class="col-lg-4 col-md-12 mb-4">
+                                <div class="card chart-card">
+                                    <div class="card-header">
+                                        <h6>Score de Satisfaction par Mois</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="satisfaction-over-time-chart"></canvas>
+                                        <div id="no-satisfaction-data-message" class="text-center text-muted mt-3" style="display: none;">
+                                            Aucune donnée disponible pour la satisfaction.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-12 mb-4">
+                                <div class="card chart-card bubble-chart">
+                                    <div class="card-header">
+                                        <h6>Engagement des Utilisateurs</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="user-engagement-chart"></canvas>
+                                        <div id="no-engagement-data-message" class="text-center text-muted mt-3" style="display: none;">
+                                            Aucune donnée disponible pour l'engagement.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-12 mb-4">
-                            <div class="card chart-card">
-                                <div class="card-header">
-                                    <h6>Réclamations par Statut</h6>
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="reclamations-status-distribution-chart"></canvas>
-                                    <div id="no-status-data-message" class="text-center text-muted mt-3" style="display: none;">
-                                        Aucune donnée disponible pour les réclamations par statut.
-                                    </div>
-                                </div>
+                    </div>
+                </div>
+
+                <!-- Exemple de section pour Réservations (à remplir avec vos données) -->
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h4>Réservations</h4>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="collapsible-content module-section">
+                        <div class="row">
+                            <div class="col-12">
+                                <p>À venir...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exemple de section pour Utilisateurs (à remplir avec vos données) -->
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h4>Utilisateurs</h4>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="collapsible-content module-section">
+                        <div class="row">
+                            <div class="col-12">
+                                <p>À venir...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exemple de section pour Services (à remplir avec vos données) -->
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection(this)">
+                        <h4>Services</h4>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="collapsible-content module-section">
+                        <div class="row">
+                            <div class="col-12">
+                                <p>À venir...</p>
                             </div>
                         </div>
                     </div>
@@ -652,24 +891,28 @@
         kpiCards.forEach(card => observer.observe(card));
         chartCards.forEach(card => observer.observe(card));
 
-        // Données dynamiques passées depuis le contrôleur
+        // Données dynamiques passées depuis le contrôleur (Réclamations)
         const pourcentageTraitees = {{ pourcentage_traitees|default(0)|json_encode|raw }};
         const pourcentageNonTraitees = {{ pourcentage_non_traitees|default(0)|json_encode|raw }};
         const reclamationsParType = {{ reclamations_par_type|default([])|json_encode|raw }};
         const reclamationsParStatut = {{ reclamations_par_statut|default([])|json_encode|raw }};
+
+        // Données dynamiques passées depuis le contrôleur (Feedbacks)
+        const feedbacksByVote = {{ feedbacks_by_vote|default([])|json_encode|raw }};
+        const satisfactionByMonth = {{ satisfaction_by_month|default([])|json_encode|raw }};
+        const userEngagement = {{ user_engagement|default([])|json_encode|raw }};
 
         // Logs pour débogage
         console.log('pourcentageTraitees:', pourcentageTraitees);
         console.log('pourcentageNonTraitees:', pourcentageNonTraitees);
         console.log('reclamationsParType:', reclamationsParType);
         console.log('reclamationsParStatut:', reclamationsParStatut);
-
-        // Graphiques Chart.js
-        const ctx1 = document.getElementById('reclamations-treated-vs-untreated-chart').getContext('2d');
-        const ctx2 = document.getElementById('reclamations-by-type-chart').getContext('2d');
-        const ctx3 = document.getElementById('reclamations-status-distribution-chart').getContext('2d');
+        console.log('feedbacksByVote:', feedbacksByVote);
+        console.log('satisfactionByMonth:', satisfactionByMonth);
+        console.log('userEngagement:', userEngagement);
 
         // Graphique 1 : Réclamations Traitées vs Non Traitées (Pie Chart)
+        const ctx1 = document.getElementById('reclamations-treated-vs-untreated-chart').getContext('2d');
         const hasTreatedData = pourcentageTraitees !== 0 || pourcentageNonTraitees !== 0;
         if (!hasTreatedData) {
             document.getElementById('no-treated-data-message').style.display = 'block';
@@ -722,6 +965,7 @@
         const typeData = reclamationsParType.map(item => item.count);
         const hasTypeData = typeData.some(count => count > 0);
 
+        const ctx2 = document.getElementById('reclamations-by-type-chart').getContext('2d');
         if (!hasTypeData) {
             document.getElementById('no-type-data-message').style.display = 'block';
             ctx2.canvas.style.display = 'none';
@@ -791,6 +1035,7 @@
         const statusData = reclamationsParStatut.map(item => item.count);
         const hasStatusData = statusData.some(count => count > 0);
 
+        const ctx3 = document.getElementById('reclamations-status-distribution-chart').getContext('2d');
         if (!hasStatusData) {
             document.getElementById('no-status-data-message').style.display = 'block';
             ctx3.canvas.style.display = 'none';
@@ -836,5 +1081,186 @@
                 }
             });
         }
+
+        // Graphique 4 : Feedbacks par Tranche de Note (Bar Chart)
+        const voteLabels = feedbacksByVote.map(item => item.vote);
+        const voteData = feedbacksByVote.map(item => item.count);
+        const hasVoteData = voteData.some(count => count > 0);
+
+        const ctx4 = document.getElementById('feedbacks-by-vote-chart').getContext('2d');
+        if (!hasVoteData) {
+            document.getElementById('no-vote-data-message').style.display = 'block';
+            ctx4.canvas.style.display = 'none';
+        } else {
+            new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: voteLabels,
+                    datasets: [{
+                        label: 'Nombre de Feedbacks',
+                        data: voteData,
+                        backgroundColor: ['#ff6200', '#ff8c00', '#ffb74d', '#ffcc80', '#ffe0b2'],
+                        borderColor: ['#ff6200', '#ff8c00', '#ffb74d', '#ffcc80', '#ffe0b2'],
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#2d3748', font: { family: 'Inter', size: 12 } } },
+                        y: { beginAtZero: true, grid: { color: '#edf2f7' }, ticks: { color: '#2d3748', font: { family: 'Inter', size: 12 }, stepSize: 1 } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { backgroundColor: '#2d3748', titleFont: { size: 14, family: 'Inter' }, bodyFont: { size: 12, family: 'Inter' } }
+                    },
+                    animation: { duration: 1200, easing: 'easeOutQuart' }
+                }
+            });
+        }
+
+        // Graphique 5 : Score de Satisfaction par Mois (Line Chart)
+        const monthLabels = satisfactionByMonth.map(item => item.month);
+        const monthData = satisfactionByMonth.map(item => item.avgVote);
+        const hasSatisfactionData = monthData.some(avg => avg > 0);
+
+        const ctx5 = document.getElementById('satisfaction-over-time-chart').getContext('2d');
+        if (!hasSatisfactionData) {
+            document.getElementById('no-satisfaction-data-message').style.display = 'block';
+            ctx5.canvas.style.display = 'none';
+        } else {
+            new Chart(ctx5, {
+                type: 'line',
+                data: {
+                    labels: monthLabels,
+                    datasets: [{
+                        label: 'Score Moyen',
+                        data: monthData,
+                        borderColor: '#ff6200',
+                        backgroundColor: 'rgba(255, 98, 0, 0.2)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#ff6200'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#2d3748', font: { family: 'Inter', size: 12 } } },
+                        y: { beginAtZero: true, max: 5, grid: { color: '#edf2f7' }, ticks: { color: '#2d3748', font: { family: 'Inter', size: 12 } } }
+                    },
+                    plugins: {
+                        legend: { display: true, position: 'top' },
+                        tooltip: { backgroundColor: '#2d3748', titleFont: { size: 14, family: 'Inter' }, bodyFont: { size: 12, family: 'Inter' } }
+                    },
+                    animation: { duration: 1200, easing: 'easeOutQuart' }
+                }
+            });
+        }
+
+        // Graphique 6 : Engagement des Utilisateurs (Bubble Chart)
+        const hasEngagementData = userEngagement.length > 0;
+
+        const ctx6 = document.getElementById('user-engagement-chart').getContext('2d');
+        if (!hasEngagementData) {
+            document.getElementById('no-engagement-data-message').style.display = 'block';
+            ctx6.canvas.style.display = 'none';
+        } else {
+            new Chart(ctx6, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: 'Feedbacks par Utilisateur',
+                        data: userEngagement.map(item => ({
+                            x: item.avgVote,
+                            y: item.feedbackCount,
+                            r: Math.min(item.feedbackCount * 5, 50)
+                        })),
+                        backgroundColor: 'rgba(255, 98, 0, 0.5)',
+                        borderColor: '#ff6200'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Note Moyenne', color: '#2d3748', font: { family: 'Inter', size: 12 } },
+                            grid: { color: '#edf2f7' },
+                            ticks: { color: '#2d3748', font: { family: 'Inter', size: 12 } }
+                        },
+                        y: {
+                            title: { display: true, text: 'Nombre de Feedbacks', color: '#2d3748', font: { family: 'Inter', size: 12 } },
+                            grid: { color: '#edf2f7' },
+                            ticks: { color: '#2d3748', font: { family: 'Inter', size: 12 }, stepSize: 1 }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: true, position: 'top' },
+                        tooltip: {
+                            backgroundColor: '#2d3748',
+                            titleFont: { size: 14, family: 'Inter' },
+                            bodyFont: { size: 12, family: 'Inter' },
+                            callbacks: {
+                                label: function(context) {
+                                    return `Utilisateur: ${context.raw.email}, Note Moyenne: ${context.raw.x}, Feedbacks: ${context.raw.y}`;
+                                }
+                            }
+                        }
+                    },
+                    animation: { duration: 1200, easing: 'easeOutQuart' }
+                }
+            });
+        }
+
+        // Fonction pour basculer une section individuelle
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+
+            content.classList.toggle('active');
+            icon.classList.toggle('collapsed');
+
+            updateToggleAllButton();
+        }
+
+        // Fonction pour basculer toutes les sections
+        function toggleAllSections() {
+            const sections = document.querySelectorAll('.collapsible-content');
+            const allCollapsed = Array.from(sections).every(section => !section.classList.contains('active'));
+
+            sections.forEach(section => {
+                if (allCollapsed) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            const icons = document.querySelectorAll('.toggle-icon');
+            icons.forEach(icon => {
+                if (allCollapsed) {
+                    icon.classList.add('collapsed');
+                } else {
+                    icon.classList.remove('collapsed');
+                }
+            });
+
+            updateToggleAllButton();
+        }
+
+        // Fonction pour mettre à jour le texte du bouton "Tout réduire / Tout afficher"
+        function updateToggleAllButton() {
+            const toggleAllButton = document.querySelector('.toggle-all');
+            const sections = document.querySelectorAll('.collapsible-content');
+            const allCollapsed = Array.from(sections).every(section => !section.classList.contains('active'));
+
+            toggleAllButton.textContent = allCollapsed ? 'Tout afficher' : 'Tout réduire';
+        }
+
+        // Initialisation : mettre à jour le bouton au chargement
+        document.addEventListener('DOMContentLoaded', updateToggleAllButton);
     </script>
 {% endblock %}
