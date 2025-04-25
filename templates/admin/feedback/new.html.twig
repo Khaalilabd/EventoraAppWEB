@@ -21,24 +21,14 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
             <style>
                 body {
-                    background-image: url({{ asset('images/img_bg_3.jpg') }});
+                    background: linear-gradient(135deg, #F5F5DC 0%, #8B4513 100%); /* Beige to brown gradient */
                     background-size: cover;
-                    background-position: center;
                     background-attachment: fixed;
                     min-height: 100vh;
                     margin: 0;
                     padding: 0;
                     position: relative;
-                }
-                body::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.4);
-                    z-index: -1;
+                    font-family: 'Work Sans', sans-serif;
                 }
                 #page {
                     min-height: 100vh;
@@ -164,70 +154,123 @@
                     padding: 10px;
                 }
                 .event-wrap {
-                    background: rgba(0, 123, 255, 0.2);
-                    padding: 40px;
-                    border-radius: 10px;
-                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-                    max-width: 700px;
+                    background: rgba(255, 255, 255, 0.95);
+                    padding: 30px;
+                    border-radius: 20px;
+                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+                    max-width: 550px;
                     margin: 0 auto;
+                    border: 1px solid #D2B48C; /* Light beige border */
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }
+                .event-wrap:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
                 }
                 .event-wrap h3 {
-                    color: #fff;
-                    margin-bottom: 30px;
-                    font-size: 24px;
-                    text-transform: uppercase;
+                    color: #8B4513; /* Brown */
+                    margin-bottom: 25px;
+                    font-size: 26px;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    position: relative;
+                    animation: slideIn 0.5s ease-out;
+                }
+                .event-wrap h3::after {
+                    content: '✨';
+                    font-size: 20px;
+                    color: #DAA520; /* Golden accent */
+                }
+                @keyframes slideIn {
+                    from {
+                        opacity: 0;
+                        transform: translateX(-20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
                 }
                 .event-wrap .form-group {
-                    margin-bottom: 20px;
+                    margin-bottom: 25px;
+                    position: relative;
                 }
                 .event-wrap .form-group label {
-                    color: #fff;
-                    font-weight: 500;
-                    margin-bottom: 5px;
+                    color: #5C4033; /* Darker brown for labels */
+                    font-weight: 400;
+                    margin-bottom: 8px;
                     display: block;
+                    font-size: 14px;
+                    transition: color 0.3s ease;
+                }
+                .event-wrap .form-group label:hover {
+                    color: #8B4513; /* Brown on hover */
                 }
                 .event-wrap .form-control {
-                    background: rgba(255, 255, 255, 0.1);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    color: #fff;
-                    border-radius: 5px;
-                    padding: 10px;
+                    background: #FAF0E6; /* Very light beige */
+                    border: none;
+                    border-bottom: 2px solid #D2B48C; /* Light beige */
+                    color: #5C4033; /* Darker brown text */
+                    border-radius: 0;
+                    padding: 12px 5px;
+                    font-size: 14px;
+                    transition: border-bottom 0.3s ease;
                 }
                 .event-wrap .form-control::placeholder {
-                    color: rgba(255, 255, 255, 0.7);
+                    color: #A0522D; /* Medium brown placeholder */
                 }
                 .event-wrap .form-control:focus {
-                    border-color: #007bff;
+                    border-bottom: 2px solid #8B4513; /* Brown on focus */
                     box-shadow: none;
+                    outline: none;
                 }
                 .event-wrap .form-control.is-invalid {
-                    border-color: #ff4d4d;
+                    border-bottom: 2px solid #ff4d4d;
                 }
                 .event-wrap .form-control select {
-                    color: #fff;
-                    background: rgba(255, 255, 255, 0.1);
+                    color: #5C4033;
+                    background: #FAF0E6;
                 }
                 .event-wrap .form-control select option {
-                    color: #333;
-                    background: #fff;
+                    color: #5C4033;
+                    background: #FAF0E6;
                 }
                 .event-wrap .btn {
-                    margin-top: 10px;
-                    padding: 10px;
-                    border-radius: 5px;
+                    margin-top: 15px;
+                    padding: 12px;
+                    border-radius: 50px;
                     font-size: 16px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
                 }
                 .event-wrap .btn-primary {
-                    background-color: #007bff;
-                    border-color: #007bff;
+                    background: linear-gradient(90deg, #D2B48C, #8B4513); /* Beige to brown gradient */
+                    border: none;
+                    width: 100%;
+                    color: #fff;
+                }
+                .event-wrap .btn-primary:hover {
+                    background: linear-gradient(90deg, #C19A6B, #5C4033); /* Slightly darker gradient */
+                    transform: scale(1.05);
                 }
                 .event-wrap .btn-secondary {
-                    background-color: #6c757d;
-                    border-color: #6c757d;
+                    background: #EDE4D3; /* Light beige */
+                    border: none;
+                    width: 100%;
+                    color: #5C4033; /* Darker brown text */
+                }
+                .event-wrap .btn-secondary:hover {
+                    background: #D2B48C; /* Medium beige */
+                    transform: scale(1.05);
                 }
                 #fh5co-footer {
                     background: rgba(255, 255, 255, 0.9);
                     padding: 20px 0;
+                    margin-top: auto;
                 }
                 #fh5co-event {
                     margin-top: 60px;
@@ -249,17 +292,24 @@
                     margin: 0;
                 }
                 .event-wrap .form-check-label {
-                    color: #fff;
+                    color: #5C4033;
                     margin-left: 10px;
+                    font-size: 14px;
+                    transition: color 0.3s ease;
+                }
+                .event-wrap .form-check-label:hover {
+                    color: #8B4513;
                 }
                 .event-wrap .form-check-input {
-                    transform: scale(1.5);
+                    transform: scale(1.3);
+                    accent-color: #8B4513; /* Brown checkbox */
                 }
                 .star-rating-container {
                     display: flex;
                     justify-content: center;
-                    font-size: 30px;
+                    font-size: 28px;
                     gap: 10px;
+                    padding: 10px 0;
                 }
                 .star-rating-container select {
                     display: none;
@@ -269,17 +319,31 @@
                 }
                 .star-rating-container .star {
                     cursor: pointer;
-                    color: #ddd !important;
-                    transition: color 0.2s ease;
+                    color: #A0522D !important; /* Medium brown for unselected stars */
+                    transition: transform 0.3s ease, color 0.3s ease;
+                }
+                .star-rating-container .star:hover {
+                    transform: scale(1.2);
                 }
                 .star-rating-container .star.filled {
-                    color: #ffd700 !important;
+                    color: #DAA520 !important; /* Golden for filled stars */
+                    animation: starGlow 0.5s ease;
+                }
+                @keyframes starGlow {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.3); }
+                    100% { transform: scale(1); }
                 }
                 .text-danger {
-                    font-size: 14px;
+                    font-size: 12px;
                     margin-top: 5px;
                     color: #ff4d4d;
                     display: block;
+                    animation: fadeIn 0.3s ease;
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
                 }
                 @media (max-width: 768px) {
                     .menu-toggle {
@@ -409,7 +473,7 @@
                                 <div class="col-md-10 col-md-offset-1">
                                     <div class="col-md-8 col-md-offset-2 text-center">
                                         <div class="event-wrap animate-box">
-                                            <h3>Remplissez le Formulaire</h3>
+                                            <h3>We Value Your Feedback!</h3>
                                             {% for message in app.flashes('success') %}
                                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                                     {{ message }}
@@ -429,7 +493,7 @@
                                             {{ form_start(form, {'attr': {'class': 'form', 'id': 'feedback-form'}}) }}
                                                 <div class="form-group">
                                                     <div class="text-danger">{{ form_errors(form.Vote) }}</div>
-                                                    {{ form_label(form.Vote, 'Note (1 à 5 étoiles)') }}
+                                                    {{ form_label(form.Vote, 'Rate your experience') }}
                                                     <div class="star-rating-container">
                                                         {{ form_widget(form.Vote, {'attr': {'class': 'form-control star-rating', 'name': 'feedback[Vote]'}}) }}
                                                         <div class="stars">
@@ -443,22 +507,22 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="text-danger">{{ form_errors(form.Description) }}</div>
-                                                    {{ form_label(form.Description, 'Votre expérience') }}
-                                                    {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Décrivez votre expérience en détail...', 'name': 'feedback[Description]'}}) }}
+                                                    {{ form_label(form.Description, 'Your experience') }}
+                                                    {{ form_widget(form.Description, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Tell us about your experience...', 'name': 'feedback[Description]'}}) }}
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="text-danger">{{ form_errors(form.souvenirsFile) }}</div>
-                                                    {{ form_label(form.souvenirsFile, 'Uploader une image (optionnel)') }}
+                                                    {{ form_label(form.souvenirsFile, 'Upload an image (optional)') }}
                                                     {{ form_widget(form.souvenirsFile, {'attr': {'class': 'form-control', 'name': 'feedback[souvenirsFile]'}}) }}
                                                 </div>
                                                 <div class="form-group form-check">
                                                     <div class="text-danger">{{ form_errors(form.Recommend) }}</div>
                                                     {{ form_widget(form.Recommend, {'attr': {'class': 'form-check-input', 'name': 'feedback[Recommend]'}}) }}
-                                                    {{ form_label(form.Recommend, 'Recommanderiez-vous notre service ?', {'label_attr': {'class': 'form-check-label'}}) }}
+                                                    {{ form_label(form.Recommend, 'Would you recommend our service?', {'label_attr': {'class': 'form-check-label'}}) }}
                                                 </div>
                                                 <div class="form-group">
-                                                    <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
-                                                    <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
+                                                    <button type="submit" class="btn btn-primary btn-block">Submit Feedback</button>
+                                                    <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Back</a>
                                                 </div>
                                             {{ form_end(form) }}
                                         </div>
@@ -476,7 +540,6 @@
                         <div class="col-md-12 text-center">
                             <p>
                                 <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                                <small class="block">Designed by Nadhem Hmida</small>
                             </p>
                         </div>
                     </div>
@@ -493,13 +556,11 @@
                 } else {
                     console.log("jQuery est chargé avec succès");
                     jQuery(document).ready(function($) {
-                        // Menu hamburger
                         $('.menu-toggle').click(function() {
                             console.log("Clic sur menu-toggle détecté");
                             $('.fh5co-nav .menu-1 ul').toggleClass('active');
                         });
 
-                        // Dropdowns sur mobile
                         $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
                             if ($(window).width() <= 768) {
                                 console.log("Clic sur dropdown détecté");
@@ -508,7 +569,6 @@
                             }
                         });
 
-                        // Dropdowns sur desktop avec survol
                         $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
                             function() {
                                 console.log("Survol détecté sur un élément has-dropdown");
@@ -532,7 +592,6 @@
                             }
                         );
 
-                        // Gestion des étoiles
                         const select = $('.star-rating');
                         const stars = $('.star');
                         let selectedValue = parseInt(select.val()) || 0;
@@ -570,7 +629,6 @@
                             updateStars(selectedValue);
                         }
 
-                        // Soumission AJAX
                         $('#feedback-form').on('submit', function(event) {
                             event.preventDefault();
                             const form = this;

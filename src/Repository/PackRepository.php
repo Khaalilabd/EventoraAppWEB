@@ -132,4 +132,47 @@ class PackRepository extends ServiceEntityRepository
 
         return $packs;
     }
+    
+    /**
+     * Find all packs with pagination, populating typepack and services
+     *
+     * @param int $page
+     * @param int $limit
+     * @return Pack[]
+     */
+    public function findAllPaginated(int $page, int $limit): array
+    {
+        // Récupérer les packs avec pagination
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->orderBy('p.id', 'DESC')
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
+
+        $packs = $queryBuilder->getQuery()->getResult();
+
+        // Remplir typepack et services
+        $entityManager = $this->getEntityManager();
+        $typepackRepository = $entityManager->getRepository(Typepack::class);
+        $packServiceRepository = $entityManager->getRepository(PackService::class);
+        $gServiceRepository = $entityManager->getRepository(GService::class);
+
+        foreach ($packs as $pack) {
+            // Populate typepack
+            $typepack = $typepackRepository->findOneBy(['type' => $pack->getType()]);
+            $pack->setTypepack($typepack);
+
+            // Fetch associated services
+            $packServices = $packServiceRepository->findBy(['pack_id' => $pack->getId()]);
+            $services = [];
+            foreach ($packServices as $packService) {
+                $service = $gServiceRepository->findOneBy(['titre' => $packService->getServiceTitre()]);
+                if ($service) {
+                    $services[] = $service;
+                }
+            }
+            $pack->setServices($services);
+        }
+
+        return $packs;
+    }
 }

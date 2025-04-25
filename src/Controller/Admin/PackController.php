@@ -27,17 +27,29 @@ final class PackController extends AbstractController
     }
 
     #[Route('/', name: 'admin_packs', methods: ['GET'])]
-    public function index(PackRepository $packRepository): Response
+    public function index(Request $request, PackRepository $packRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $packs = $packRepository->findAll();
+
+        // Récupérer le paramètre de pagination depuis la requête
+        $page = $request->query->getInt('page', 1); // Page actuelle (par défaut : 1)
+        $limit = 3; // Nombre de packs par page
+
+        // Récupérer les packs avec typepack et services via la méthode paginée
+        $packs = $packRepository->findAllPaginated($page, $limit);
+
+        // Calculer le nombre total de packs pour la pagination
+        $totalPacks = $packRepository->count([]);
+        $totalPages = ceil($totalPacks / $limit);
 
         return $this->render('admin/Pack/index.html.twig', [
             'packs' => $packs,
+            'current_page' => $page,
+            'total_pages' => $totalPages,
         ]);
     }
 
-   #[Route('/new', name: 'admin_packs_create', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'admin_packs_create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager, PackRepository $packRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -66,7 +78,7 @@ final class PackController extends AbstractController
             $imageFile = $form->get('image_path')->getData();
             if ($imageFile) {
                 $newFilename = $this->uploadImage($imageFile);
-                $pack->setImagePath('/uploads/images/' . $newFilename);
+                $pack->setImagePath('/Uploads/images/' . $newFilename);
             }
 
             // Persist the pack
@@ -91,7 +103,6 @@ final class PackController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
 
     #[Route('/{id}/edit', name: 'admin_packs_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Pack $pack, EntityManagerInterface $entityManager, PackRepository $packRepository): Response
@@ -133,7 +144,7 @@ final class PackController extends AbstractController
             $imageFile = $form->get('image_path')->getData();
             if ($imageFile) {
                 $newFilename = $this->uploadImage($imageFile);
-                $pack->setImagePath('/uploads/images/' . $newFilename);
+                $pack->setImagePath('/Uploads/images/' . $newFilename);
             }
 
             // Update pack

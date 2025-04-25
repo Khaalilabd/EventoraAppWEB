@@ -113,6 +113,7 @@
                     font-family: 'Cormorant Garamond', serif;
                     font-weight: 700; /* Bolder label */
                     color: #fff;
+
                     font-size: 3.5rem; /* Increased size (was 3rem) */
                     margin: 0 0 1rem 0;
                     text-align: center; /* Center for better presentation */
@@ -129,6 +130,7 @@
 
                 h1 + p {
                     font-family: 'Work Sans', sans-serif; /* More readable font */
+
                     font-size: 1.2rem; /* Increased size (was 1rem) */
                     color: #fff;
                     text-transform: uppercase;
@@ -147,6 +149,7 @@
 
                 .pack-details p {
                     font-family: 'Roboto', sans-serif; /* Clear, modern font */
+
                     font-size: 1.1rem;
                     margin: 0.5rem 0;
                     color: #555;
@@ -210,6 +213,7 @@
 
                 .pack-card {
                     background: #fff;
+
                     border-radius: 10px;
                     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                     overflow: hidden;
@@ -282,6 +286,7 @@
                     }
 
                     h1 {
+
                         font-size: 2.8rem; /* Adjusted for smaller screens (was 2.2rem) */
                     }
 
@@ -318,11 +323,13 @@
                     }
 
                     h1 {
+
                         font-size: 2.2rem; /* Adjusted for smaller screens (was 1.8rem) */
                         text-align: center;
                     }
 
                     h1 + p {
+
                         font-size: 0.9rem; /* Adjusted for smaller screens (was 0.8rem) */
                         text-align: center;
                     }
@@ -332,6 +339,7 @@
                     }
 
                     .pack-details p {
+
                         font-size: 0.9rem;
                     }
 
@@ -386,6 +394,7 @@
                                 <li class="has-dropdown">
                                     <a href="#">Reclamation</a>
                                     <ul class="dropdown">
+
                                          <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                                 <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
                                     </ul>
@@ -393,13 +402,15 @@
                                <li class="has-dropdown">
                                     <a href="#">Réservation</a>
                                     <ul class="dropdown">
-                                    <li ><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li ><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
-                                </ul>
+                                            <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Reservation personnalisée</a></li>
+                                            <li><a href="{{ path('admin_reservations_user_pack_new') }}">Reservation Pack</a></li>
+>>>>>>> Eventora
+                                    </ul>
                                 </li>
                                 <li class="has-dropdown active">
                                     <a href="{{ path('user_packs') }}">Packs</a>
                                 </li>
+
                                 
                                 <li><a href="#">Talk with Evi</a></li>
                                  <li class="has-dropdown">
@@ -430,6 +441,7 @@
                                 </li>                                
                             </ul>
                             
+>>>>>>> Eventora
                         </div>
                     </div>
                 </div>
@@ -452,7 +464,8 @@
                                             <div class="swiper-image-inner">
                                                 <div class="pack-details">
                                                     <p><strong>Description:</strong> {{ pack.description }}</p>
-                                                    <p><strong>Prix:</strong> {{ pack.prix }} €</p>
+                                                    <p><strong>Prix:</strong> {{ pack.prix }} dt</p>
+
                                                     <p><strong>Lieu:</strong> {{ pack.location }}</p>
                                                     <p><strong>Invités:</strong> {{ pack.nbrGuests }}</p>
                                                 </div>
