@@ -51,6 +51,13 @@ class Reservationpersonnalise
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $date = null;
 
+    #[ORM\Column(type: 'string', length: 50, options: ['default' => 'En attente'])]
+    #[Assert\Choice(
+        choices: ['En attente', 'Validé', 'Refusé'],
+        message: "Le statut doit être 'En attente', 'Validé' ou 'Refusé'."
+    )]
+    private ?string $status = 'En attente';
+
     #[ORM\ManyToMany(targetEntity: GService::class, inversedBy: 'reservations')]
     #[ORM\JoinTable(name: 'reservation_personalise_service')]
     #[ORM\JoinColumn(name: 'reservation_id', referencedColumnName: 'IDReservationPersonalise')]
@@ -152,6 +159,22 @@ class Reservationpersonnalise
     {
         $this->date = $date;
         return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getIdMembre(): ?int
+    {
+        return $this->membre ? $this->membre->getId() : null;
     }
 
     /**

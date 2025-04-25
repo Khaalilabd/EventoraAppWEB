@@ -19,6 +19,7 @@
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
             <style>
                 body {
                     background-image: url({{ asset('images/img_bg_3.jpg') }});
@@ -198,24 +199,6 @@
                     margin-top: 5px;
                     color: #ff4d4d;
                 }
-                .event-wrap .form-check-label {
-                    color: #fff;
-                    margin-left: 10px;
-                }
-                .event-wrap .form-check-input {
-                    transform: scale(1.5);
-                }
-                .event-wrap .radio-container {
-                    max-height: 200px;
-                    overflow-y: auto;
-                    padding: 10px;
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    border-radius: 5px;
-                    background: rgba(255, 255, 255, 0.05);
-                }
-                .event-wrap .radio-container .form-check {
-                    margin-bottom: 10px;
-                }
                 .event-wrap .btn {
                     margin-top: 10px;
                     padding: 10px;
@@ -252,6 +235,45 @@
                     color: #fff;
                     font-size: 36px;
                     margin: 0;
+                }
+                /* Select2 Custom Styles */
+                .select2-container--default .select2-selection--single {
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 5px;
+                    height: 40px;
+                    color: #fff;
+                }
+                .select2-container--default .select2-selection--single .select2-selection__rendered {
+                    color: #fff;
+                    line-height: 40px;
+                    padding-left: 10px;
+                }
+                .select2-container--default .select2-selection--single .select2-selection__arrow {
+                    height: 40px;
+                    right: 10px;
+                }
+                .select2-container--default .select2-selection--single .select2-selection__placeholder {
+                    color: rgba(255, 255, 255, 0.7);
+                }
+                .select2-container--default .select2-selection--single:focus {
+                    border-color: #007bff;
+                }
+                .select2-container--default .select2-selection--single.is-invalid {
+                    border-color: #dc3545;
+                }
+                .select2-dropdown {
+                    background: rgba(255, 255, 255, 0.9);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: #333;
+                }
+                .select2-results__option {
+                    padding: 10px;
+                    color: #333;
+                }
+                .select2-results__option--highlighted {
+                    background: #007bff !important;
+                    color: #fff !important;
                 }
                 @media (max-width: 768px) {
                     .menu-toggle {
@@ -308,66 +330,62 @@
     <body>
         <div id="page">
             <nav class="fh5co-nav" role="navigation">
-                    <div class="container">
-                        <div class="fh5co-logo">
-                            <a href="{{ path('app_home') }}">Eventora</a>
-                        </div>
-                        <div class="menu-toggle">
-                            <i class="icon-menu"></i>
-                        </div>
-                        <div class="menu-1">
-                            <ul>
-                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                                 <li class="has-dropdown">
-                                    <a href="#">Réservation</a>
-                                    <ul class="dropdown">
-                                            <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Reservation personnalisée</a></li>
-                                            <li><a href="{{ path('admin_reservations_user_pack_new') }}">Reservation Pack</a></li>
-                                    </ul>
-                                </li>
-                                  <li class="has-dropdown">
-                                        <a href="{{ path('user_packs') }}">Packs</a>
-                                    </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#">Service</a></li>
-                                        <li><a href="#">Partenaire</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="#">Talk with Evi</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                    <ul class="dropdown">
-                                        {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_home') }}">Historique</a></li>
-                                            {% if is_granted('ROLE_ADMIN') %}
-                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                            {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                        {% else %}
-                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
                     </div>
-                </nav>
+                    <div class="menu-toggle">☰</div>
+                    <div class="menu-1">
+                        <ul>
+                            <li><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Service</a></li>
+                                    <li><a href="#">Partenaire</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dropdown active">
+                                <a href="#">Reservations</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservations personnalisées</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation packs</a></li>
+                                    <li class="active"><a href="{{ path('user_reservations') }}">Historique</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Reclamation</a></li>
+                            <li><a href="#">Feedback</a></li>
+                            <li><a href="#">Talk with Evi</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        {% else %}
+                                            <i class="icon-user"></i>
+                                        {% endif %}
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
+                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
 
             <div id="fh5co-event">
                 <div class="container">
@@ -394,22 +412,22 @@
 
                                                 <div class="form-group">
                                                     {{ form_label(form.nom, 'Nom') }}
-                                                    {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255'}}) }}
                                                     <div class="text-danger">{{ form_errors(form.nom) }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.prenom, 'Prénom') }}
-                                                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255'}}) }}
                                                     <div class="text-danger">{{ form_errors(form.prenom) }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.email, 'Email') }}
-                                                    {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email'}}) }}
+                                                    {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email', 'maxlength': '255'}}) }}
                                                     <div class="text-danger">{{ form_errors(form.email) }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.numtel, 'Numéro de téléphone') }}
-                                                    {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'pattern': '[0-9]{8}'}}) }}
+                                                    {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '20', 'pattern': '\\+?[1-9]\\d{1,14}'}}) }}
                                                     <div class="text-danger">{{ form_errors(form.numtel) }}</div>
                                                 </div>
                                                 <div class="form-group">
@@ -424,9 +442,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.pack, 'Sélectionnez un Pack') }}
-                                                    <div class="radio-container">
-                                                        {{ form_widget(form.pack) }}
-                                                    </div>
+                                                    {{ form_widget(form.pack, {'attr': {'class': 'form-control select2', 'required': 'required'}}) }}
                                                     <div class="text-danger">{{ form_errors(form.pack) }}</div>
                                                 </div>
                                                 <div class="form-group">
@@ -442,20 +458,50 @@
                     </div>
                 </div>
             </div>
-
-            
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
             if (typeof jQuery === 'undefined') {
                 console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
             } else {
                 console.log("jQuery est chargé avec succès");
                 jQuery(document).ready(function($) {
+                    // Initialize Select2 for pack field
+                    const $packSelect = $('#{{ form.pack.vars.id }}');
+                    $packSelect.select2({
+                        ajax: {
+                            url: '{{ path('user_pack_search') }}',
+                            dataType: 'json',
+                            delay: 250,
+                            data: function(params) {
+                                return { q: params.term || '' };
+                            },
+                            processResults: function(data) {
+                                return { results: data.results };
+                            },
+                            cache: true
+                        },
+                        minimumInputLength: 0, // Allow dropdown to open without typing
+                        placeholder: 'Rechercher ou sélectionner un pack...',
+                        allowClear: true,
+                        templateResult: function(data) { return data.text; },
+                        templateSelection: function(data) { return data.text || data.id; }
+                    });
+
+                    // Open dropdown on click
+                    $packSelect.on('select2:open', function() {
+                        if (!$(this).data('select2').dropdown.$search.val()) {
+                            // Trigger AJAX search with empty query to load initial options
+                            $(this).data('select2').trigger('query', { term: '' });
+                        }
+                    });
+
                     // Menu hamburger
                     $('.menu-toggle').click(function() {
                         console.log("Clic sur menu-toggle détecté");
@@ -500,7 +546,7 @@
                         dateFormat: "Y-m-d",
                         minDate: "today",
                         locale: "fr",
-                        allowInput: true, // Allow manual input
+                        allowInput: true,
                         onChange: function(selectedDates, dateStr, instance) {
                             const input = instance.element;
                             if (selectedDates.length === 0) {
@@ -528,28 +574,103 @@
                         }
                     });
 
-                    // Validation côté client avant soumission du formulaire
+                    // Gestion de la soumission du formulaire via AJAX
                     $('#pack-reservation-form').on('submit', function(e) {
+                        e.preventDefault();
+
                         let isValid = true;
+
+                        // Validation du champ nom
+                        const nomInput = $('#{{ form.nom.vars.id }}');
+                        const nomValue = nomInput.val().trim();
+                        if (!nomValue) {
+                            nomInput.addClass('is-invalid');
+                            nomInput.next('.text-danger').text('Le nom est requis.');
+                            isValid = false;
+                        } else if (nomValue.length > 255) {
+                            nomInput.addClass('is-invalid');
+                            nomInput.next('.text-danger').text('Le nom ne peut pas dépasser 255 caractères.');
+                            isValid = false;
+                        } else {
+                            nomInput.removeClass('is-invalid');
+                            nomInput.next('.text-danger').text('');
+                        }
+
+                        // Validation du champ prénom
+                        const prenomInput = $('#{{ form.prenom.vars.id }}');
+                        const prenomValue = prenomInput.val().trim();
+                        if (!prenomValue) {
+                            prenomInput.addClass('is-invalid');
+                            prenomInput.next('.text-danger').text('Le prénom est requis.');
+                            isValid = false;
+                        } else if (prenomValue.length > 255) {
+                            prenomInput.addClass('is-invalid');
+                            prenomInput.next('.text-danger').text('Le prénom ne peut pas dépasser 255 caractères.');
+                            isValid = false;
+                        } else {
+                            prenomInput.removeClass('is-invalid');
+                            prenomInput.next('.text-danger').text('');
+                        }
+
+                        // Validation du champ email
+                        const emailInput = $('#{{ form.email.vars.id }}');
+                        const emailValue = emailInput.val().trim();
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailValue) {
+                            emailInput.addClass('is-invalid');
+                            emailInput.next('.text-danger').text('L\'email est requis.');
+                            isValid = false;
+                        } else if (!emailRegex.test(emailValue)) {
+                            emailInput.addClass('is-invalid');
+                            emailInput.next('.text-danger').text('L\'email n\'est pas valide.');
+                            isValid = false;
+                        } else if (emailValue.length > 255) {
+                            emailInput.addClass('is-invalid');
+                            emailInput.next('.text-danger').text('L\'email ne peut pas dépasser 255 caractères.');
+                            isValid = false;
+                        } else {
+                            emailInput.removeClass('is-invalid');
+                            emailInput.next('.text-danger').text('');
+                        }
+
+                        // Validation du champ numéro de téléphone
+                        const numtelInput = $('#{{ form.numtel.vars.id }}');
+                        const numtelValue = numtelInput.val().trim();
+                        const numtelRegex = /^\+?[1-9]\d{1,14}$/;
+                        if (!numtelValue) {
+                            numtelInput.addClass('is-invalid');
+                            numtelInput.next('.text-danger').text('Le numéro de téléphone est requis.');
+                            isValid = false;
+                        } else if (!numtelRegex.test(numtelValue)) {
+                            numtelInput.addClass('is-invalid');
+                            numtelInput.next('.text-danger').text('Le numéro de téléphone n\'est pas valide (ex: +1234567890).');
+                            isValid = false;
+                        } else if (numtelValue.length > 20) {
+                            numtelInput.addClass('is-invalid');
+                            numtelInput.next('.text-danger').text('Le numéro de téléphone ne peut pas dépasser 20 caractères.');
+                            isValid = false;
+                        } else {
+                            numtelInput.removeClass('is-invalid');
+                            numtelInput.next('.text-danger').text('');
+                        }
+
+                        // Validation du champ date
                         const dateInput = $('#{{ form.date.vars.id }}');
                         const dateValue = dateInput.val();
-
                         if (!dateValue) {
                             dateInput.addClass('is-invalid');
                             dateInput.next('.text-danger').text('La date est requise.');
                             isValid = false;
                         } else {
-                            // Vérifier le format de la date (YYYY-MM-DD)
                             const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
                             if (!dateRegex.test(dateValue)) {
                                 dateInput.addClass('is-invalid');
                                 dateInput.next('.text-danger').text('La date doit être au format YYYY-MM-DD (ex. 2025-04-11).');
                                 isValid = false;
                             } else {
-                                // Vérifier si la date est aujourd'hui ou dans le futur
                                 const selectedDate = new Date(dateValue);
                                 const today = new Date();
-                                today.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour comparer uniquement la date
+                                today.setHours(0, 0, 0, 0);
                                 if (selectedDate < today) {
                                     dateInput.addClass('is-invalid');
                                     dateInput.next('.text-danger').text('La date doit être aujourd\'hui ou dans le futur.');
@@ -561,34 +682,77 @@
                             }
                         }
 
-                        // Vérifier si un pack est sélectionné
-                        const packChecked = $('input[name="{{ form.pack.vars.full_name }}"]:checked').length;
-                        const packContainer = $('#{{ form.pack.vars.id }}').closest('.form-group');
-                        if (packChecked === 0) {
-                            packContainer.find('.text-danger').text('Veuillez sélectionner un pack.');
+                        // Validation du champ pack
+                        const packInput = $('#{{ form.pack.vars.id }}');
+                        const packValue = packInput.val();
+                        if (!packValue) {
+                            packInput.addClass('is-invalid');
+                            packInput.next('.text-danger').text('Vous devez sélectionner un pack.');
                             isValid = false;
                         } else {
-                            packContainer.find('.text-danger').text('');
+                            packInput.removeClass('is-invalid');
+                            packInput.next('.text-danger').text('');
                         }
 
-                        if (!isValid) {
-                            e.preventDefault(); // Empêche la soumission du formulaire si la validation échoue
+                        if (isValid) {
+                            $.ajax({
+                                url: '{{ path('user_reservation_pack_new') }}',
+                                method: 'POST',
+                                data: $(this).serialize(),
+                                dataType: 'json',
+                                success: function(response) {
+                                    if (response.success) {
+                                        Swal.fire({
+                                            title: 'Succès !',
+                                            text: response.message,
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = '{{ path('app_home', {'_fragment': 'fh5co-started'}) }}';
+                                            }
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Erreur',
+                                            text: response.message || 'Une erreur s\'est produite lors de la création de la réservation.',
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                        if (response.errors) {
+                                            $.each(response.errors, function(field, errors) {
+                                                const $field = $('#{{ form.vars.id }}_' + field);
+                                                $field.addClass('is-invalid');
+                                                $field.next('.text-danger').text(errors.join(', '));
+                                            });
+                                        }
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    Swal.fire({
+                                        title: 'Erreur',
+                                        text: 'Une erreur s\'est produite. Veuillez réessayer.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            });
                         }
                     });
                 });
             }
         </script>
         <footer id="fh5co-footer" role="contentinfo">
-                <div class="container">
-                    <div class="row copyright">
-                        <div class="col-md-12 text-center">
-                            <p>
-                                <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                                <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
-                            </p>
-                        </div>
+            <div class="container">
+                <div class="row copyright">
+                    <div class="col-md-12 text-center">
+                        <p>
+                            <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                            <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                        </p>
                     </div>
                 </div>
-            </footer>
+            </div>
+        </footer>
     </body>
 </html>

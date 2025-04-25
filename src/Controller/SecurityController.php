@@ -8,6 +8,8 @@ use App\Form\RegistrationFormType;
 use App\Form\LoginFormType;
 use App\Repository\ReclamationRepository;
 use App\Repository\FeedbackRepository;
+use App\Repository\ReservationpackRepository;
+use App\Repository\ReservationpersonnaliseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -119,161 +121,143 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
-    public function index(ReclamationRepository $reclamationRepository, FeedbackRepository $feedbackRepository): Response
-    {
+    public function index(
+        ReclamationRepository $reclamationRepository,
+        FeedbackRepository $feedbackRepository,
+        ReservationpackRepository $reservationpackRepository,
+        ReservationpersonnaliseRepository $reservationpersonnaliseRepository
+    ): Response {
         try {
             $this->logger->info('Début de la méthode index pour admin_dashboard');
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-            // Étape 1 : Récupérer le total des réclamations
-            $totalReclamations = 0;
-            try {
-                $totalReclamations = $reclamationRepository->count([]);
-                $this->logger->info('Total réclamations: ' . $totalReclamations);
-            } catch (\Exception $e) {
-                $this->logger->error('Erreur lors du comptage des réclamations: ' . $e->getMessage());
-            }
+            // Réclamations
+            $totalReclamations = $reclamationRepository->count([]);
+            $reclamationsTraitees = $reclamationRepository->count(['statut' => Reclamation::STATUT_RESOLU]);
+            $pourcentageTraitees = $totalReclamations > 0 ? ($reclamationsTraitees / $totalReclamations) * 100 : 0;
+            $pourcentageNonTraitees = 100 - $pourcentageTraitees;
 
-            // Étape 2 : Récupérer les réclamations traitées
-            $reclamationsTraitees = 0;
-            $pourcentageTraitees = 0;
-            $pourcentageNonTraitees = 0;
-            try {
-                $reclamationsTraitees = $reclamationRepository->count(['statut' => Reclamation::STATUT_RESOLU]);
-                $pourcentageTraitees = $totalReclamations > 0 ? ($reclamationsTraitees / $totalReclamations) * 100 : 0;
-                $pourcentageNonTraitees = 100 - $pourcentageTraitees;
-                $this->logger->info('Réclamations traitées: ' . $reclamationsTraitees);
-                $this->logger->info('Pourcentage traité: ' . $pourcentageTraitees);
-                $this->logger->info('Pourcentage non traité: ' . $pourcentageNonTraitees);
-            } catch (\Exception $e) {
-                $this->logger->error('Erreur lors du calcul des réclamations traitées: ' . $e->getMessage());
-            }
+            $reclamationsParType = $reclamationRepository->createQueryBuilder('r')
+                ->select('r.Type as type, COUNT(r.id) as count')
+                ->groupBy('r.Type')
+                ->getQuery()
+                ->getResult();
+            $allTypes = Reclamation::TYPES;
+            $reclamationsParTypeFormatted = array_map(function ($type) use ($reclamationsParType) {
+                $found = array_filter($reclamationsParType, fn($item) => $item['type'] === $type);
+                return [
+                    'type' => $type,
+                    'count' => !empty($found) ? reset($found)['count'] : 0
+                ];
+            }, $allTypes);
 
-            // Étape 3 : Récupérer les réclamations par type
-            $reclamationsParTypeFormatted = [];
-            try {
-                $reclamationsParType = $reclamationRepository->createQueryBuilder('r')
-                    ->select('r.Type as type, COUNT(r.id) as count')
-                    ->groupBy('r.Type')
-                    ->getQuery()
-                    ->getResult();
-                $this->logger->info('Réclamations par type (brut): ' . json_encode($reclamationsParType));
+            $reclamationsParStatut = $reclamationRepository->createQueryBuilder('r')
+                ->select('r.statut, COUNT(r.id) as count')
+                ->groupBy('r.statut')
+                ->getQuery()
+                ->getResult();
 
-                // S'assurer que tous les types sont inclus
-                $allTypes = Reclamation::TYPES;
-                $reclamationsParTypeFormatted = array_map(function ($type) use ($reclamationsParType) {
-                    $found = array_filter($reclamationsParType, fn($item) => $item['type'] === $type);
-                    return [
-                        'type' => $type,
-                        'count' => !empty($found) ? reset($found)['count'] : 0
-                    ];
-                }, $allTypes);
-                $this->logger->info('Réclamations par type (formaté): ' . json_encode($reclamationsParTypeFormatted));
-            } catch (\Exception $e) {
-                $this->logger->error('Erreur lors de la récupération des réclamations par type: ' . $e->getMessage());
-            }
+            // Feedbacks
+            $avgVote = $feedbackRepository->createQueryBuilder('f')
+                ->select('AVG(f.Vote) as avgVote')
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0;
+            $avgVoteTrend = 0;
 
-            // Étape 4 : Récupérer les réclamations par statut
-            $reclamationsParStatut = [];
-            try {
-                $reclamationsParStatut = $reclamationRepository->createQueryBuilder('r')
-                    ->select('r.statut, COUNT(r.id) as count')
-                    ->groupBy('r.statut')
-                    ->getQuery()
-                    ->getResult();
-                $this->logger->info('Réclamations par statut: ' . json_encode($reclamationsParStatut));
-            } catch (\Exception $e) {
-                $this->logger->error('Erreur lors de la récupération des réclamations par statut: ' . $e->getMessage());
-            }
+            $recommendOui = $feedbackRepository->count(['Recommend' => 'Oui']);
+            $recommendNon = $feedbackRepository->count(['Recommend' => 'Non']);
+            $totalFeedbacks = $feedbackRepository->count([]);
+            $npsScore = $totalFeedbacks > 0 ? (($recommendOui - $recommendNon) / $totalFeedbacks) * 100 : 0;
 
-            // Étape 5 : Récupérer les données des feedbacks
-            // Score de Satisfaction Moyen
-            $avgVote = 0;
+            $feedbacksWithImage = $feedbackRepository->createQueryBuilder('f')
+                ->select('COUNT(f.ID)')
+                ->where('f.Souvenirs IS NOT NULL')
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0;
+
+            $imageFeedbackRate = $totalFeedbacks > 0 ? ($feedbacksWithImage / $totalFeedbacks) * 100 : 0;
+
+            $feedbacksByVote = $feedbackRepository->createQueryBuilder('f')
+                ->select('f.Vote as vote, COUNT(f.ID) as count')
+                ->groupBy('f.Vote')
+                ->orderBy('f.Vote', 'ASC')
+                ->getQuery()
+                ->getResult();
+
+            $userEngagement = $feedbackRepository->createQueryBuilder('f')
+                ->select('m.email, COUNT(f.ID) as feedbackCount, AVG(f.Vote) as avgVote')
+                ->leftJoin('f.membre', 'm')
+                ->groupBy('m.id')
+                ->orderBy('feedbackCount', 'DESC')
+                ->setMaxResults(50)
+                ->getQuery()
+                ->getResult();
+
+            // Réservations
+            $totalPackReservations = $reservationpackRepository->count([]);
+            $totalPersonaliseReservations = $reservationpersonnaliseRepository->count([]);
+            $totalReservations = $totalPackReservations + $totalPersonaliseReservations;
+
+            $refusedPackReservations = $reservationpackRepository->count(['status' => 'Refusé']);
+            $refusedPersonaliseReservations = $reservationpersonnaliseRepository->count(['status' => 'Refusé']);
+            $totalRefusedReservations = $refusedPackReservations + $refusedPersonaliseReservations;
+            $refusalRate = $totalReservations > 0 ? ($totalRefusedReservations / $totalReservations) * 100 : 0;
+
+            // Valeur moyenne des réservations
+            $avgPackValue = $reservationpackRepository->createQueryBuilder('rp')
+                ->select('AVG(p.prix) as avgValue')
+                ->leftJoin('rp.pack', 'p')
+                ->where('rp.status = :status')
+                ->setParameter('status', 'Validé')
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0;
+
+            $avgPersonaliseValue = 0;
             try {
-                $avgVote = $feedbackRepository->createQueryBuilder('f')
-                    ->select('AVG(f.Vote) as avgVote')
+                $avgPersonaliseValue = $reservationpersonnaliseRepository->createQueryBuilder('rp')
+                    ->select('AVG(s.prix) as avgValue')
+                    ->leftJoin('rp.services', 's')
+                    ->where('rp.status = :status')
+                    ->setParameter('status', 'Validé')
                     ->getQuery()
                     ->getSingleScalarResult() ?? 0;
-                $this->logger->info('Score de satisfaction moyen: ' . $avgVote);
-            } catch (\Exception $e) {
-                $this->logger->error('Erreur lors du calcul du score de satisfaction moyen: ' . $e->getMessage());
+            } catch (\Doctrine\ORM\NoResultException $e) {
+                $this->logger->warning('No valid personalised reservations found for avgPersonaliseValue: ' . $e->getMessage());
+                $avgPersonaliseValue = 0;
             }
 
-            // Tendance (simplifiée, à affiner selon votre logique)
-            $avgVoteTrend = 0; // À implémenter pour comparer avec une période précédente
+            $avgReservationValue = ($avgPackValue + $avgPersonaliseValue) / 2;
 
-            // Taux de Recommandation Net (NPS)
-            $npsScore = 0;
-            try {
-                $recommendOui = $feedbackRepository->count(['Recommend' => 'Oui']);
-                $recommendNon = $feedbackRepository->count(['Recommend' => 'Non']);
-                $totalFeedbacks = $feedbackRepository->count([]);
-                $npsScore = $totalFeedbacks > 0 ? (($recommendOui - $recommendNon) / $totalFeedbacks) * 100 : 0;
-                $this->logger->info('NPS Score: ' . $npsScore);
-            } catch (\Exception $e) {
-                $this->logger->error('Erreur lors du calcul du NPS: ' . $e->getMessage());
+            // Réservations par type
+            $reservationsByType = [
+                ['type' => 'Pack', 'count' => $totalPackReservations],
+                ['type' => 'Personnalise', 'count' => $totalPersonaliseReservations]
+            ];
+
+            // Réservations par statut
+            $packReservationsByStatus = $reservationpackRepository->createQueryBuilder('rp')
+                ->select('rp.status as status, COUNT(rp.IDReservationPack) as count')
+                ->groupBy('rp.status')
+                ->getQuery()
+                ->getResult();
+
+            $personaliseReservationsByStatus = $reservationpersonnaliseRepository->createQueryBuilder('rp')
+                ->select('rp.status as status, COUNT(rp.IDReservationPersonalise) as count')
+                ->groupBy('rp.status')
+                ->getQuery()
+                ->getResult();
+
+            // Fusionner les statuts
+            $reservationsByStatus = [];
+            $statuses = ['En attente', 'Validé', 'Refusé'];
+            foreach ($statuses as $status) {
+                $packCount = array_filter($packReservationsByStatus, fn($item) => $item['status'] === $status);
+                $personaliseCount = array_filter($personaliseReservationsByStatus, fn($item) => $item['status'] === $status);
+                $totalCount = (!empty($packCount) ? reset($packCount)['count'] : 0) + (!empty($personaliseCount) ? reset($personaliseCount)['count'] : 0);
+                $reservationsByStatus[] = ['status' => $status, 'count' => $totalCount];
             }
 
-            // Taux de Feedbacks avec Image
-            $imageFeedbackRate = 0;
-            try {
-                $feedbacksWithImage = $feedbackRepository->createQueryBuilder('f')
-                    ->select('COUNT(f.ID)')
-                    ->where('f.Souvenirs IS NOT NULL')
-                    ->getQuery()
-                    ->getSingleScalarResult();
-                $imageFeedbackRate = $totalFeedbacks > 0 ? ($feedbacksWithImage / $totalFeedbacks) * 100 : 0;
-                $this->logger->info('Taux de feedbacks avec image: ' . $imageFeedbackRate);
-            } catch (\Exception $e) {
-                $this->logger->error('Erreur lors du calcul du taux de feedbacks avec image: ' . $e->getMessage());
-            }
-
-            // Feedbacks par Tranche de Note
-            $feedbacksByVote = [];
-            try {
-                $feedbacksByVote = $feedbackRepository->createQueryBuilder('f')
-                    ->select('f.Vote as vote, COUNT(f.ID) as count')
-                    ->groupBy('f.Vote')
-                    ->orderBy('f.Vote', 'ASC')
-                    ->getQuery()
-                    ->getResult();
-                $this->logger->info('Feedbacks par tranche de note: ' . json_encode($feedbacksByVote));
-            } catch (\Exception $e) {
-                $this->logger->error('Erreur lors de la récupération des feedbacks par note: ' . $e->getMessage());
-            }
-
-            // Score de Satisfaction par Mois
-            $satisfactionByMonth = [];
-            try {
-                $satisfactionByMonth = $feedbackRepository->createQueryBuilder('f')
-                    ->select("DATE_FORMAT(f.date, '%Y-%m') as month, AVG(f.Vote) as avgVote")
-                    ->groupBy('month')
-                    ->orderBy('month', 'ASC')
-                    ->setMaxResults(12)
-                    ->getQuery()
-                    ->getResult();
-                $this->logger->info('Satisfaction par mois: ' . json_encode($satisfactionByMonth));
-            } catch (\Exception $e) {
-                $this->logger->error('Erreur lors de la récupération de la satisfaction par mois: ' . $e->getMessage());
-            }
-
-            // Engagement des Utilisateurs
-            $userEngagement = [];
-            try {
-                $userEngagement = $feedbackRepository->createQueryBuilder('f')
-                    ->select('m.email, COUNT(f.ID) as feedbackCount, AVG(f.Vote) as avgVote')
-                    ->leftJoin('f.membre', 'm')
-                    ->groupBy('m.id')
-                    ->orderBy('feedbackCount', 'DESC')
-                    ->setMaxResults(50)
-                    ->getQuery()
-                    ->getResult();
-                $this->logger->info('Engagement des utilisateurs: ' . json_encode($userEngagement));
-            } catch (\Exception $e) {
-                $this->logger->error('Erreur lors de la récupération de l\'engagement des utilisateurs: ' . $e->getMessage());
-            }
-
-            // Rendre le template avec les données
+            // Rendu du template
             return $this->render('admin/dashboard.html.twig', [
                 'total_reclamations' => $totalReclamations,
                 'pourcentage_traitees' => $pourcentageTraitees,
@@ -285,11 +269,15 @@ class SecurityController extends AbstractController
                 'nps_score' => $npsScore,
                 'image_feedback_rate' => $imageFeedbackRate,
                 'feedbacks_by_vote' => $feedbacksByVote,
-                'satisfaction_by_month' => $satisfactionByMonth,
                 'user_engagement' => $userEngagement,
+                'total_reservations' => $totalReservations,
+                'refusal_rate' => $refusalRate,
+                'avg_reservation_value' => $avgReservationValue,
+                'reservations_by_type' => $reservationsByType,
+                'reservations_by_status' => $reservationsByStatus,
             ]);
         } catch (\Exception $e) {
-            $this->logger->error('Erreur globale dans admin_dashboard: ' . $e->getMessage() . ' - Trace: ' . $e->getTraceAsString());
+            $this->logger->error('Erreur globale dans admin_dashboard: ' . $e->getMessage());
             throw new \Exception('Erreur détaillée : ' . $e->getMessage());
         }
     }

@@ -42,9 +42,21 @@ class Reservationpack
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $date = null;
 
+    #[ORM\Column(type: 'string', length: 50, options: ['default' => 'En attente'])]
+    #[Assert\Choice(
+        choices: ['En attente', 'Validé', 'Refusé'],
+        message: "Le statut doit être 'En attente', 'Validé' ou 'Refusé'."
+    )]
+    private ?string $status = 'En attente';
+
     public function getIDReservationPack(): ?int
     {
         return $this->IDReservationPack;
+    }
+
+    public function getIdMembre(): ?int
+    {
+        return $this->membre ? $this->membre->getId() : null;
     }
 
     public function getNom(): ?string
@@ -138,5 +150,16 @@ class Reservationpack
     public function getIDPack(): ?int
     {
         return $this->pack ? $this->pack->getId() : null;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+        return $this;
     }
 }

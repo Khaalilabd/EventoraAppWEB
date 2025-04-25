@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Form;
 
 use App\Entity\Reservationpersonnalise;
@@ -10,14 +11,13 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class ReservationPersonnaliseType extends AbstractType
 {
@@ -60,13 +60,16 @@ class ReservationPersonnaliseType extends AbstractType
                         'maxMessage' => 'Le numéro de téléphone ne peut pas dépasser {{ limit }} caractères.',
                     ]),
                     new Regex([
-                        'pattern' => '/^[0-9\s\-\+\(\)]+$/',
-                        'message' => 'Le numéro de téléphone doit contenir uniquement des chiffres, espaces, tirets, plus ou parenthèses.',
+                        'pattern' => '/^\+?[1-9]\d{1,14}$/',
+                        'message' => 'Le numéro de téléphone n\'est pas valide (ex: +1234567890).',
                     ]),
                 ],
             ])
             ->add('description', TextareaType::class, [
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'La description est requise.']),
+                ],
             ])
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
@@ -82,12 +85,27 @@ class ReservationPersonnaliseType extends AbstractType
                     new NotBlank(['message' => 'Vous devez sélectionner au moins un service.']),
                 ],
             ]);
+
+        // Ajouter le champ status uniquement pour les admins
+        if ($options['is_admin']) {
+            $builder->add('status', ChoiceType::class, [
+                'choices' => [
+                    'En attente' => 'En attente',
+                    'Validé' => 'Validé',
+                    'Refusé' => 'Refusé',
+                ],
+                'constraints' => [
+                    new NotBlank(['message' => 'Le statut est requis.']),
+                ],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Reservationpersonnalise::class,
+            'is_admin' => false,
         ]);
     }
 }

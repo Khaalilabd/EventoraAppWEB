@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% block title %}Historique des Réservations - Eventora{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
+
+        {% block stylesheets %}
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <style>
+                body {
+                    background-image: url({{ asset('images/img_bg_3.jpg') }});
+                    background-size: cover;
+                    background-position: center;
+                    background-attachment: fixed;
+                    min-height: 100vh;
+                    margin: 0;
+                    padding: 0;
+                    position: relative;
+                    font-family: 'Work Sans', sans-serif;
+                }
+                body::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: -1;
+                }
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background-color: #fff;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 20px;
+                }
+                .fh5co-logo a {
+                    font-weight: 700;
+                    font-size: 28px;
+                    color: #2c3e50;
+                    text-decoration: none;
+                }
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+                .fh5co-nav .menu-1 ul li a {
+                    font-size: 15px;
+                    color: #2c3e50;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    padding: 10px 15px;
+                    transition: all 0.3s ease;
+                }
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #007bff;
+                    background: #f8f9fa;
+                    border-radius: 5px;
+                }
+                .event-wrap {
+                    background: #ffffff;
+                    padding: 40px;
+                    border-radius: 15px;
+                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+                    max-width: 1100px;
+                    margin: 0 auto;
+                    transition: transform 0.3s ease;
+                    width: 100%;
+                }
+                .event-wrap:hover {
+                    transform: translateY(-5px);
+                }
+                .event-wrap h3 {
+                    color: #2c3e50;
+                    margin-bottom: 30px;
+                    font-size: 30px;
+                    font-weight: 600;
+                    text-align: center;
+                    letter-spacing: 1px;
+                }
+                .event-wrap table {
+                    width: 100%;
+                    background: #fff;
+                    border-collapse: separate;
+                    border-spacing: 0 10px;
+                    color: #1a1a1a;
+                    border-radius: 10px;
+                    overflow: hidden;
+                }
+                .event-wrap table th {
+                    background: #007bff;
+                    color: white;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    padding: 15px 20px;
+                    font-size: 15px;
+                    letter-spacing: 0.5px;
+                }
+                .event-wrap table td {
+                    padding: 15px 20px;
+                    background: #ffffff;
+                    font-size: 15px;
+                    font-weight: 500;
+                    border-bottom: 1px solid #e9ecef;
+                    transition: background 0.2s ease;
+                }
+                .event-wrap table tr {
+                    transition: transform 0.2s ease;
+                }
+                .event-wrap table tr:hover {
+                    transform: translateX(5px);
+                    background: #f1f3f5;
+                }
+                .reservation-type {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 8px 15px;
+                    border-radius: 20px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                    color: #000000;
+                }
+                .type-pack {
+                    background: #7da6f7;
+                    box-shadow: 0 2px 5px rgba(26, 115, 232, 0.3);
+                }
+                .type-personalise {
+                    background: #fb923c;
+                    box-shadow: 0 2px 5px rgba(249, 115, 22, 0.3);
+                }
+                .status-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 10px 18px;
+                    border-radius: 25px;
+                    font-size: 15px;
+                    font-weight: 700;
+                    position: relative;
+                    transition: all 0.3s ease;
+                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+                    color: #000000;
+                }
+                .status-badge::before {
+                    content: '';
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                }
+                .status-pending {
+                    background: #fde68a;
+                }
+                .status-pending::before {
+                    background: #d97706;
+                }
+                .status-approved {
+                    background: #6ee7b7;
+                }
+                .status-approved::before {
+                    background: #059669;
+                }
+                .status-rejected {
+                    background: #f87171;
+                }
+                .status-rejected::before {
+                    background: #dc2626;
+                }
+                .action-link {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 8px 15px;
+                    background: #e3f2fd;
+                    color: #007bff;
+                    border-radius: 20px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    font-size: 14px;
+                    transition: all 0.3s ease;
+                }
+                .action-link:hover {
+                    background: #bbdefb;
+                    color: #0056b3;
+                    transform: translateY(-2px);
+                }
+                .event-wrap .pagination {
+                    margin-top: 30px;
+                    display: flex;
+                    justify-content: center;
+                    gap: 10px;
+                }
+                .event-wrap .pagination li a, .event-wrap .pagination span a {
+                    color: #2c3e50;
+                    background: #f0f0f0;
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                }
+                .event-wrap .pagination .current {
+                    background: #007bff;
+                    color: white;
+                    padding: 10px 15px;
+                    border-radius: 8px;
+                }
+                .event-wrap .pagination li a:hover, .event-wrap .pagination span a:hover {
+                    background: #007bff;
+                    color: white;
+                    transform: translateY(-2px);
+                }
+                .event-wrap .btn {
+                    margin-top: 30px;
+                    padding: 12px 30px;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                }
+                .event-wrap .btn:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                }
+                .btn-secondary {
+                    background-color: #6c757d;
+                    border-color: #6c757d;
+                    color: white;
+                }
+                #fh5co-footer {
+                    background: rgba(255, 255, 255, 0.9);
+                    padding: 20px 0;
+                    margin-top: auto;
+                }
+                #fh5co-event {
+                    margin-top: 80px;
+                    flex: 1 0 auto;
+                    padding-top: 60px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                .fh5co-heading {
+                    margin-bottom: 50px;
+                }
+                .fh5co-heading span {
+                    color: #fff;
+                    font-size: 20px;
+                    display: block;
+                    margin-bottom: 10px;
+                    opacity: 0.9;
+                }
+                .fh5co-heading h2 {
+                    color: #fff;
+                    font-size: 40px;
+                    margin: 0;
+                    font-weight: 600;
+                }
+                .container-centered {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                }
+                @media (max-width: 768px) {
+                    .menu-toggle {
+                        display: block;
+                        font-size: 24px;
+                        cursor: pointer;
+                        color: #333;
+                        padding: 10px;
+                    }
+                    .event-wrap {
+                        max-width: 95%;
+                        padding: 20px;
+                    }
+                    .event-wrap table {
+                        font-size: 13px;
+                    }
+                    .event-wrap table th,
+                    .event-wrap table td {
+                        padding: 10px 15px;
+                    }
+                    .fh5co-heading h2 {
+                        font-size: 32px;
+                    }
+                    .reservation-type,
+                    .status-badge,
+                    .action-link {
+                        padding: 6px 10px;
+                        font-size: 12px;
+                    }
+                }
+            </style>
+        {% endblock %}
+    </head>
+    <body>
+        <div id="page">
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
+                    </div>
+                    <div class="menu-toggle">☰</div>
+                    <div class="menu-1">
+                        <ul>
+                            <li><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">Service</a></li>
+                                    <li><a href="#">Partenaire</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dropdown active">
+                                <a href="#">Reservations</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservations personnalisées</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation packs</a></li>
+                                    <li class="active"><a href="{{ path('user_reservations') }}">Historique</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Reclamation</a></li>
+                            <li><a href="#">Feedback</a></li>
+                            <li><a href="#">Talk with Evi</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        {% else %}
+                                            <i class="icon-user"></i>
+                                        {% endif %}
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_home') }}">Paramètres</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
+                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="fh5co-event">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center fh5co-heading animate-box">
+                            <span>Vos Événements</span>
+                            <h2>Historique des Réservations</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container-centered">
+                            <div class="event-wrap animate-box">
+                                <h3>Vos Réservations</h3>
+                                {% if reservations|length > 0 %}
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Nom</th>
+                                                <th>Prénom</th>
+                                                <th>Date</th>
+                                                <th>Statut</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for reservation in reservations %}
+                                                <tr>
+                                                    <td>
+                                                        <span class="reservation-type {% if reservation.type == 'Pack' %}type-pack{% else %}type-personalise{% endif %}">
+                                                            {{ reservation.type }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ reservation.nom }}</td>
+                                                    <td>{{ reservation.prenom }}</td>
+                                                    <td>{{ reservation.date ? reservation.date|date('Y-m-d') : 'N/A' }}</td>
+                                                    <td>
+                                                        <span class="status-badge 
+                                                            {% if reservation.status == 'En attente' %}status-pending{% endif %}
+                                                            {% if reservation.status == 'Validé' %}status-approved{% endif %}
+                                                            {% if reservation.status == 'Refusé' %}status-rejected{% endif %}">
+                                                            {{ reservation.status }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        {% if reservation.IDReservationPack %}
+                                                            <a href="{{ path('user_reservation_pack_show', {'id': reservation.IDReservationPack}) }}" class="action-link">Voir</a>
+                                                        {% elseif reservation.IDReservationPersonalise %}
+                                                            <a href="{{ path('user_reservation_personnalise_show', {'id': reservation.IDReservationPersonalise}) }}" class="action-link">Voir</a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <div class="pagination">
+                                        {{ knp_pagination_render(reservations) }}
+                                    </div>
+                                {% else %}
+                                    <p style="color: #2c3e50; text-align: center; font-size: 16px; font-weight: 500;">Aucune réservation trouvée.</p>
+                                {% endif %}
+                                <div class="form-group">
+                                    <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            if (typeof jQuery === 'undefined') {
+                console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
+            } else {
+                jQuery(document).ready(function($) {
+                    $('.menu-toggle').click(function() {
+                        $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                    });
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                        if ($(window).width() <= 768) {
+                            e.preventDefault();
+                            $(this).parent().toggleClass('active');
+                        }
+                    });
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
+                        function() {
+                            $(this).find('.dropdown').css({
+                                'display': 'block',
+                                'position': 'absolute',
+                                'top': '100%',
+                                'right': '0',
+                                'visibility': 'visible',
+                                'opacity': '1',
+                                'z-index': '1001'
+                            });
+                        },
+                        function() {
+                            $(this).find('.dropdown').css({
+                                'display': 'none',
+                                'visibility': 'hidden',
+                                'opacity': '0'
+                            });
+                        }
+                    );
+                });
+            }
+        </script>
+        <footer id="fh5co-footer" role="contentinfo">
+            <div class="container">
+                <div class="row copyright">
+                    <div class="col-md-12 text-center">
+                        <p>
+                            <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                            <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

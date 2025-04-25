@@ -3,60 +3,42 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
 use App\Repository\ReservationPersonaliseServiceRepository;
 
 #[ORM\Entity(repositoryClass: ReservationPersonaliseServiceRepository::class)]
 #[ORM\Table(name: 'reservation_personalise_service')]
+#[ORM\UniqueConstraint(columns: ['reservation_id', 'service_id'])]
 class ReservationPersonaliseService
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $reservation_id = null;
+    #[ORM\ManyToOne(targetEntity: Reservationpersonnalise::class, inversedBy: 'reservationServices')]
+    #[ORM\JoinColumn(name: 'reservation_id', referencedColumnName: 'IDReservationPersonalise')]
+    private ?Reservationpersonnalise $reservation = null;
 
-    public function getReservation_id(): ?int
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: GService::class)]
+    #[ORM\JoinColumn(name: 'service_id', referencedColumnName: 'id')]
+    private ?GService $service = null;
+
+    public function getReservation(): ?Reservationpersonnalise
     {
-        return $this->reservation_id;
+        return $this->reservation;
     }
 
-    public function setReservation_id(int $reservation_id): self
+    public function setReservation(?Reservationpersonnalise $reservation): self
     {
-        $this->reservation_id = $reservation_id;
+        $this->reservation = $reservation;
         return $this;
     }
 
-    #[ORM\Column(type: 'integer', nullable: false)]
-    private ?int $service_id = null;
-
-    public function getService_id(): ?int
+    public function getService(): ?GService
     {
-        return $this->service_id;
+        return $this->service;
     }
 
-    public function setService_id(int $service_id): self
+    public function setService(?GService $service): self
     {
-        $this->service_id = $service_id;
+        $this->service = $service;
         return $this;
     }
-
-    public function getReservationId(): ?int
-    {
-        return $this->reservation_id;
-    }
-
-    public function getServiceId(): ?int
-    {
-        return $this->service_id;
-    }
-
-    public function setServiceId(int $service_id): static
-    {
-        $this->service_id = $service_id;
-
-        return $this;
-    }
-
 }

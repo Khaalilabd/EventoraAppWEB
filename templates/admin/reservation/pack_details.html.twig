@@ -127,12 +127,15 @@
                 <div class="col-12">
                     <div class="card mb-4 shadow-sm border-radius-xl">
                         <div class="card-header p-3">
-                            <h6 class="font-weight-bolder mb-0">Détails de la Réservation Pack</h6>
+                            <h6 class="font-weight-bolder mb-0">Détails de la Réservation #{{ reservation.IDReservationPack }}</h6>
                         </div>
                         <div class="card-body p-3">
                             <dl class="row">
                                 <dt class="col-sm-3">ID</dt>
                                 <dd class="col-sm-9">{{ reservation.IDReservationPack }}</dd>
+
+                                <dt class="col-sm-3">ID Membre</dt>
+                                <dd class="col-sm-9">{{ reservation.idMembre }}</dd>
 
                                 <dt class="col-sm-3">Nom</dt>
                                 <dd class="col-sm-9">{{ reservation.nom }}</dd>
@@ -150,13 +153,24 @@
                                 <dd class="col-sm-9">{{ reservation.description ?: 'Aucune description' }}</dd>
 
                                 <dt class="col-sm-3">Date</dt>
-                                <dd class="col-sm-9">{{ reservation.date|date('d/m/Y') }}</dd>
+                                <dd class="col-sm-9">{{ reservation.date ? reservation.date|date('d/m/Y H:i') : 'Non définie' }}</dd>
+
+                                <dt class="col-sm-3">Statut</dt>
+                                <dd class="col-sm-9">
+                                    <span class="badge 
+                                        {{ reservation.status == 'Validé' ? 'bg-success' : 
+                                           reservation.status == 'Refusé' ? 'bg-danger' : 
+                                           'bg-warning' }}">
+                                        {{ reservation.status }}
+                                    </span>
+                                </dd>
 
                                 <dt class="col-sm-3">Pack</dt>
-                                <dd class="col-sm-9">{{ reservation.pack.nomPack }}</dd>
+                                <dd class="col-sm-9">{{ reservation.pack.nomPack ?? 'Non défini' }}</dd>
                             </dl>
 
                             <a href="{{ path('admin_reservations_pack_edit', {'id': reservation.IDReservationPack}) }}" class="btn btn-warning mt-3">Modifier</a>
+                            <a href="{{ path('admin_reservations_pack_pdf', {'id': reservation.IDReservationPack}) }}" class="btn btn-primary mt-3">Exporter en PDF</a>
                             <a href="{{ path('admin_reservations_pack') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
                         </div>
                     </div>

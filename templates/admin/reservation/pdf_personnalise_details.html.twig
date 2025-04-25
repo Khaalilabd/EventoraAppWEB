@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Réservation Personnalisée #{{ reservation.IDReservationPersonalise }}</title>
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Work Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #ffffff;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #dee2e6;
+            background: #fff;
+        }
+        .header img {
+            max-width: 150px;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #007bff;
+            margin: 10px 0 5px;
+            font-weight: 600;
+        }
+        .header span {
+            font-family: 'Sacramento', cursive;
+            font-size: 20px;
+            color: #007bff;
+            display: block;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content h2 {
+            font-size: 24px;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        dl {
+            margin: 0;
+            color: #2c3e50;
+        }
+        dt {
+            font-weight: 700;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        dd {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #000;
+        }
+        .status-badge::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .status-pending {
+            background: #fde68a;
+        }
+        .status-pending::before {
+            background: #d97706;
+        }
+        .status-approved {
+            background: #6ee7b7;
+        }
+        .status-approved::before {
+            background: #059669;
+        }
+        .status-rejected {
+            background: #f87171;
+        }
+        .status-rejected::before {
+            background: #dc2626;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            text-align: left;
+        }
+        th {
+            background: #f0f0f0;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid #dee2e6;
+            font-size: 12px;
+            color: #6c757d;
+            background: #fff;
+        }
+        @media print {
+            body {
+                background: #fff;
+            }
+            .container {
+                box-shadow: none;
+                border: 1px solid #dee2e6;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ absolute_url(asset('assets/img/logo-ct-dark.png')) }}" alt="Eventora Logo">
+            <span>Votre Événement</span>
+            <h1>Réservation Personnalisée #{{ reservation.IDReservationPersonalise }}</h1>
+        </div>
+        <div class="content">
+            <h2>Détails de la Réservation</h2>
+            <dl>
+                <dt>Nom</dt>
+                <dd>{{ reservation.nom|default('N/A') }}</dd>
+                <dt>Prénom</dt>
+                <dd>{{ reservation.prenom|default('N/A') }}</dd>
+                <dt>Email</dt>
+                <dd>{{ reservation.email|default('N/A') }}</dd>
+                <dt>Numéro de téléphone</dt>
+                <dd>{{ reservation.numtel|default('N/A') }}</dd>
+                <dt>Description</dt>
+                <dd>{{ reservation.description|default('N/A') }}</dd>
+                <dt>Date</dt>
+                <dd>{{ reservation.date ? reservation.date|date('Y-m-d') : 'N/A' }}</dd>
+            </dl>
+            <h2>Services Sélectionnés</h2>
+            <table>
+                <tr>
+                    <th>Titre</th>
+                    <th>Prix</th>
+                    <th>Location</th>
+                </tr>
+                {% for service in reservation.services %}
+                    <tr>
+                        <td>{{ service.titre|default('N/A') }}</td>
+                        <td>{{ service.prix|default('N/A') }}</td>
+                        <td>{{ service.location|default('N/A') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" style="text-align: center;">Aucun service sélectionné</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="footer">
+            <p>© 2025 Eventora. Tous droits réservés. | Généré le {{ 'now'|date('Y-m-d H:i:s') }}</p>
+        </div>
+    </div>
+</body>
+</html>

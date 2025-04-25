@@ -1,7 +1,8 @@
+# config/packages/doctrine.yaml
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
-        server_version: '10.4.32-MariaDB' # Votre version MariaDB
+        server_version: '10.4.32-MariaDB'
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
         mapping_types:
@@ -22,7 +23,12 @@ doctrine:
                 alias: App
         dql:
             datetime_functions:
-                DATE: DoctrineExtensions\Query\Mysql\Date # Majuscule pour correspondre à l'usage dans DQL
+                DATE: DoctrineExtensions\Query\Mysql\Date
+            string_functions:
+                YEAR: DoctrineExtensions\Query\Mysql\Year
+                MONTH: DoctrineExtensions\Query\Mysql\Month
+                LPAD: DoctrineExtensions\Query\Mysql\Lpad
+                # Removed CONCAT as it may not be available
 
 when@test:
     doctrine:
@@ -41,10 +47,10 @@ when@prod:
                 type: pool
                 pool: doctrine.result_cache_pool
 
-    framework:
-        cache:
-            pools:
-                doctrine.result_cache_pool:
-                    adapter: cache.app
-                doctrine.system_cache_pool:
-                    adapter: cache.system
+framework:
+    cache:
+        pools:
+            doctrine.result_cache_pool:
+                adapter: cache.app
+            doctrine.system_cache_pool:
+                adapter: cache.system
