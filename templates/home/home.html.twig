@@ -659,9 +659,9 @@
                                 </li>
                                 <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                                 <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="">Talk with Evi</a></li>
+                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
                                 <li class="has-dropdown">
-                                    <a href="#">
+                                      <a href="#">
                                         <span class="user-circle">
                                             {% if app.user and app.user.image %}
                                                 <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">

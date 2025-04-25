@@ -25,11 +25,602 @@
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
             <!-- Navbar -->
             <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+            
             <!-- chat_ai -->
             <link rel="stylesheet" href="{{ asset('css/chat_ai.css') }}">
             <!-- Fonts for card hover effect -->
             <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700|Playfair+Display:700" rel="stylesheet">
+
+             <!-- Font Awesome -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+            <!-- Custom styles -->
+            <style>
+                /* Reset */
+                * {
+                    box-sizing: border-box;
+                }
+
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-size: 100%;
+                    font-family: Arial, Helvetica, sans-serif;
+                }
+
+                /* Panels */
+                .splitview {
+                    position: relative;
+                    width: 100%;
+                    min-height: 45vw;
+                    overflow: hidden;
+                }
+
+                .panel {
+                    position: absolute;
+                    width: 100vw;
+                    min-height: 45vw;
+                    overflow: hidden;
+                }
+
+                .panel .content {
+                    position: absolute;
+                    width: 100vw;
+                    min-height: 45vw;
+                    color: #FFF;
+                }
+
+                .panel .description {
+                    width: 25%;
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    text-align: center;
+                }
+
+                .panel img {
+                    box-shadow: 0 0 20px 20px rgba(0, 0, 0, 0.15);
+                    width: 35%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+
+                .bottom {
+                    background-color: #934D1A;
+                    z-index: 1;
+                }
+
+                .bottom .description {
+                    right: 5%;
+                }
+
+                .top {
+                    background-color: #CAB69A;
+                    z-index: 2;
+                    width: 50vw;
+                }
+
+                .top .description {
+                    left: 5%;
+                }
+
+                /* Handle */
+                .handle {
+                    height: 100%;
+                    position: absolute;
+                    display: block;
+                    background-color: #AF9D81;
+                    width: 5px;
+                    top: 0;
+                    left: 50%;
+                    z-index: 3;
+                }
+
+                /* Skewed */
+                .skewed .handle {
+                    top: 50%;
+                    transform: rotate(30deg) translateY(-50%);
+                    height: 200%;
+                    -webkit-transform-origin: top;
+                    -moz-transform-origin: top;
+                    transform-origin: top;
+                }
+
+                .skewed .top {
+                    transform: skew(-30deg);
+                    margin-left: -1000px;
+                    width: calc(50vw + 1000px);
+                }
+
+                .skewed .top .content {
+                    transform: skew(30deg);
+                    margin-left: 1000px;
+                }
+
+                /* Navigation fixe */
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    padding-top: 70px; /* Ajusté pour une navbar plus compacte */
+                }
+
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background: rgba(255, 255, 255, 0.9);
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
+
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+
+                .fh5co-logo a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 24px;
+                    color: #934D1A;
+                    text-decoration: none;
+                }
+
+                .user-circle {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 20px;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                }
+
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
+
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 15px;
+                    position: relative;
+                }
+
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #934D1A;
+                }
+
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #934D1A !important;
+                    font-weight: 600;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 150px;
+                    z-index: 1001;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block !important;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #007bff;
+                }
+
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                    padding: 10px;
+                }
+
+                /* Style des boutons */
+                .btn-default {
+                    font-family: 'Work Sans', sans-serif;
+                    background-color: #fff;
+                    border: 1px solid #007bff;
+                    color: #007bff;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    transition: all 0.3s ease;
+                }
+
+                .btn-default:hover {
+                    background-color: #007bff;
+                    color: #fff;
+                    transform: scale(1.05);
+                }
+
+                /* Ajustement du header pour la navigation fixe */
+                #fh5co-header {
+                    margin-top: 60px;
+                }
+
+                /* Typographie cohérente */
+                h1, h2, h3, h4, h5, h6 {
+                    font-family: 'Work Sans', sans-serif;
+                }
+
+                .fh5co-heading h2 {
+                    font-weight: 600;
+                    color: #333;
+                }
+
+                .fh5co-heading span {
+                    font-family: 'Sacramento', cursive;
+                    color: #007bff;
+                }
+
+                /* Gallery styles */
+                #fh5co-gallery-list {
+                    list-style: none;
+                    padding: 0;
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
+                .one-third {
+                    width: 33.33%;
+                    padding: 15px;
+                    box-sizing: border-box;
+                    position: relative;
+                    perspective: 1000px;
+                }
+
+                .card {
+                    position: relative;
+                    width: 100%;
+                    height: 300px;
+                    transform-style: preserve-3d;
+                    transition: transform 0.6s;
+                }
+
+                .card .front,
+                .card .back {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    backface-visibility: hidden;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+
+                .card .front {
+                    background-size: cover;
+                    background-position: center;
+                    color: white;
+                    text-align: center;
+                }
+
+                .card .back {
+                    background-color: #fff;
+                    color: #333;
+                    transform: rotateY(180deg);
+                    padding: 20px;
+                    text-align: center;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                }
+
+                .card .back h3 {
+                    margin: 0 0 10px;
+                    font-size: 1.5em;
+                }
+
+                .card .back p {
+                    margin: 0 0 15px;
+                    font-size: 1em;
+                }
+
+                .card .back a {
+                    color: #007bff;
+                    text-decoration: none;
+                    font-weight: bold;
+                }
+
+                .card .back a:hover {
+                    text-decoration: underline;
+                }
+
+                .one-third:hover .card {
+                    transform: rotateY(180deg);
+                }
+
+                /* Form styles */
+                .event-wrap {
+                    background: rgba(0, 123, 255, 0.2);
+                    padding: 40px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                    max-width: 700px;
+                    margin: 0 auto;
+                }
+
+                .event-wrap h3 {
+                    color: #fff;
+                    margin-bottom: 30px;
+                    font-size: 24px;
+                    text-transform: uppercase;
+                }
+
+                .event-wrap .form-group {
+                    margin-bottom: 20px;
+                }
+
+                .event-wrap .form-group label {
+                    color: #fff;
+                    font-weight: 500;
+                    margin-bottom: 5px;
+                    display: block;
+                }
+
+                .event-wrap .form-control {
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: #fff;
+                    border-radius: 5px;
+                    padding: 10px;
+                }
+
+                .event-wrap .form-control::placeholder {
+                    color: rgba(255, 255, 255, 0.7);
+                }
+
+                .event-wrap .form-control:focus {
+                    border-color: #007bff;
+                    box-shadow: none;
+                }
+
+                .event-wrap .form-control select {
+                    color: #fff;
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
+                .event-wrap .form-control select option {
+                    color: #333;
+                    background: #fff;
+                }
+
+                .event-wrap .btn {
+                    margin-top: 10px;
+                    padding: 10px;
+                    border-radius: 5px;
+                    font-size: 16px;
+                }
+
+                .event-wrap .btn-primary {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                }
+
+                .event-wrap .btn-secondary {
+                    background-color: #6c757d;
+                    border-color: #6c757d;
+                }
+
+                #fh5co-footer {
+                    background: rgba(255, 255, 255, 0.9);
+                    padding: 20px 0;
+                }
+
+                #fh5co-event {
+                    margin-top: 60px;
+                    flex: 1 0 auto;
+                    padding-top: 50px;
+                }
+
+                .fh5co-heading {
+                    margin-bottom: 40px;
+                }
+
+                .fh5co-heading span {
+                    color: #fff;
+                    font-size: 18px;
+                    display: block;
+                    margin-bottom: 10px;
+                }
+
+                .fh5co-heading h2 {
+                    color: #fff;
+                    font-size: 36px;
+                    margin: 0;
+                }
+
+                .form-error {
+                    color: #ff4d4d;
+                    font-size: 0.9em;
+                    margin-bottom: 5px;
+                    display: block;
+                }
+
+                /* Ajustement pour la section couple */
+                #fh5co-couple {
+                    min-height: 300px;
+                    padding: 50px 0;
+                    width: 100%;
+                    overflow: visible;
+                }
+
+                #fh5co-couple .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+
+                #fh5co-couple .fh5co-heading {
+                    padding: 20px;
+                }
+
+                #fh5co-couple .fh5co-heading h2,
+                #fh5co-couple .fh5co-heading h3,
+                #fh5co-couple .fh5co-heading p {
+                    margin: 10px 0;
+                    color: #333;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                /* Responsive adjustments */
+                @media (max-width: 900px) {
+                    body {
+                        font-size: 75%;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .menu-toggle {
+                        display: block;
+                    }
+
+                    .fh5co-nav .menu-1 ul {
+                        display: none;
+                        flex-direction: column;
+                        position: absolute;
+                        top: 60px;
+                        left: 0;
+                        width: 100%;
+                        background-color: #fff;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        padding: 20px 0;
+                    }
+
+                    .fh5co-nav .menu-1 ul.active {
+                        display: flex;
+                    }
+
+                    .fh5co-nav .menu-1 ul li {
+                        margin: 10px 0;
+                        text-align: center;
+                    }
+
+                    .user-circle {
+                        margin-right: 0;
+                        margin-bottom: 5px;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                        position: static;
+                        display: none;
+                        box-shadow: none;
+                        background-color: #f8f9fa;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                        display: none !important;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                        display: block !important;
+                    }
+
+                    .event-wrap {
+                        max-width: 90%;
+                        padding: 20px;
+                    }
+
+                    .fh5co-heading h2 {
+                        font-size: 28px;
+                    }
+
+                    #fh5co-event {
+                        padding-top: 30px;
+                    }
+
+                    .one-third {
+                        width: 50%;
+                    }
+
+                    #fh5co-couple {
+                        padding: 30px 0;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .one-third {
+                        width: 100%;
+                    }
+
+                    #fh5co-couple .fh5co-heading h2 {
+                        font-size: 24px;
+                    }
+
+                    #fh5co-couple .fh5co-heading h3 {
+                        font-size: 20px;
+                    }
+
+                    #fh5co-couple .fh5co-heading p {
+                        font-size: 14px;
+                    }
+                }
+            </style>
         {% endblock %}
+
+    
 
         <!-- Modernizr JS -->
         <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
@@ -39,65 +630,68 @@
     <body>
         <div class="fh5co-loader"></div>
         {% block body %}
-        <nav class="fh5co-nav" role="navigation">
-            <div class="container">
-                 <div class="menu-toggle">
-                    <i class="icon-menu"></i>
-                </div>
-                <div class="menu-1">
-                    <ul>
-                        <li class=""><a href="{{ path('app_home') }}">Home</a></li>
-                        <li class="has-dropdown">
-                            <a href="#">Réservation</a>
-                            <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
-                                </ul>
-                        </li>
-                        <li class="has-dropdown">
-                            <a href="{{ path('user_packs') }}">Packs</a>
-                        </li>
-                        <li class="has-dropdown">
-                            <a href="#">Services</a>
-                            <ul class="dropdown">
-                                <li><a href="{{ path('user_services') }}">Service</a></li>
-                                <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+          <nav class="fh5co-nav" role="navigation">
+                    <div class="container">
+                        <div class="fh5co-logo">
+                            <a href="{{ path('app_home') }}">Eventora</a>
+                        </div>
+                        <div class="menu-toggle">
+                            <i class="icon-menu"></i>
+                        </div>
+                        <div class="menu-1">
+                            <ul>
+                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">Réservation</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                    </ul>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="{{ path('user_packs') }}">Packs</a>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="#">Services</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_services') }}">Service</a></li>
+                                        <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">
+                                        <span class="user-circle">
+                                            {% if app.user and app.user.image %}
+                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <i class="icon-user"></i>
+                                            {% endif %}
+                                        </span>
+                                        Contact
+                                    </a>
+                                    <ul class="dropdown">
+                                        {% if app.user %}
+                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                            <li><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                        {% else %}
+                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
                             </ul>
-                        </li>
-                        <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                        <li class="active"><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                        <li class="has-dropdown">
-                            <a href="#">
-                                <span class="user-circle">
-                                    {% if app.user and app.user.image %}
-                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                    {% else %}
-                                        <i class="icon-user"></i>
-                                    {% endif %}
-                                </span>
-                                Contact
-                            </a>
-                            <ul class="dropdown">
-                                {% if app.user %}
-                                    <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                    <li><a href="{{ path('app_home') }}">Historique</a></li>
-                                    {% if is_granted('ROLE_ADMIN') %}
-                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                    {% endif %}
-                                    <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                {% else %}
-                                    <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                    <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        
+                        </div>
+                    </div>
+                </nav>
+
         
        
         <div id="page">

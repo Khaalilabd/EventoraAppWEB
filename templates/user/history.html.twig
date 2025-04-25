@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Historique - Eventora</title>
+    <title>{% block title %}Historique - Eventora{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
@@ -19,25 +19,17 @@
         <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
         <style>
+            /* Général */
             body {
-                background-image: url({{ asset('images/img_bg_3.jpg') }});
+                background: linear-gradient(135deg, #F5F5DC 0%, #8B4513 100%); /* Beige to brown gradient */
                 background-size: cover;
-                background-position: center;
                 background-attachment: fixed;
                 min-height: 100vh;
                 margin: 0;
                 padding: 0;
                 position: relative;
-            }
-            body::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.4);
-                z-index: -1;
+                font-family: 'Work Sans', sans-serif;
+                color: #5C4033; /* Darker brown */
             }
             #page {
                 min-height: 100vh;
@@ -45,6 +37,8 @@
                 flex-direction: column;
                 padding-top: 70px;
             }
+
+            /* Navigation */
             .fh5co-nav {
                 position: fixed;
                 top: 0;
@@ -53,7 +47,6 @@
                 background: rgba(255, 255, 255, 0.9);
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
                 backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
             }
             .fh5co-nav .container {
                 display: flex;
@@ -64,7 +57,6 @@
                 margin: 0 auto;
             }
             .fh5co-logo a {
-                font-family: 'Work Sans', sans-serif;
                 font-weight: 700;
                 font-size: 24px;
                 color: #934D1A;
@@ -89,9 +81,6 @@
                 object-fit: cover;
                 border-radius: 50%;
             }
-            .fh5co-nav .menu-1 {
-                display: block;
-            }
             .fh5co-nav .menu-1 ul {
                 display: flex;
                 align-items: center;
@@ -105,7 +94,6 @@
                 position: relative;
             }
             .fh5co-nav .menu-1 ul li a {
-                font-family: 'Work Sans', sans-serif;
                 font-size: 16px;
                 color: #333;
                 text-transform: uppercase;
@@ -116,11 +104,8 @@
                 color: #934D1A;
             }
             .fh5co-nav .menu-1 ul li.active a {
-                color: #934D1A !important;
+                color: #934D1A;
                 font-weight: 600;
-            }
-            .fh5co-nav .menu-1 ul li.has-dropdown {
-                position: relative;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
                 display: none;
@@ -133,22 +118,23 @@
                 padding: 10px 0;
                 min-width: 150px;
                 z-index: 1001;
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity 0.2s ease, visibility 0.2s ease;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                display: block !important;
-            }
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                margin: 0;
+                display: block;
+                visibility: visible;
+                opacity: 1;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
                 padding: 10px 20px;
-                display: block;
                 font-size: 14px;
                 text-transform: none;
                 color: #333;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                color: #007bff;
+                color: #8B4513;
             }
             .menu-toggle {
                 display: none;
@@ -157,151 +143,62 @@
                 color: #333;
                 padding: 10px;
             }
-            .event-wrap {
-                background: rgba(0, 123, 255, 0.2);
-                padding: 40px;
-                border-radius: 10px;
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-                max-width: 700px;
-                margin: 0 auto;
-            }
-            .event-wrap h3 {
-                color: #fff;
-                margin-bottom: 30px;
-                font-size: 24px;
-                text-transform: uppercase;
-            }
-            .event-wrap .form-group {
-                margin-bottom: 20px;
-            }
-            .event-wrap .form-group label {
-                color: #fff;
-                font-weight: 500;
-                margin-bottom: 5px;
-                display: block;
-            }
-            .event-wrap .form-control {
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                color: #fff;
-                border-radius: 5px;
-                padding: 10px;
-            }
-            .event-wrap .form-control::placeholder {
-                color: rgba(255, 255, 255, 0.7);
-            }
-            .event-wrap .form-control:focus {
-                border-color: #007bff;
-                box-shadow: none;
-            }
-            .event-wrap .form-control.is-invalid {
-                border-color: #ff4d4d;
-            }
-            .event-wrap .form-control select {
-                color: #fff;
-                background: rgba(255, 255, 255, 0.1);
-            }
-            .event-wrap .form-control select option {
-                color: #333;
-                background: #fff;
-            }
-            .event-wrap .btn {
-                margin-top: 10px;
-                padding: 10px;
-                border-radius: 5px;
-                font-size: 16px;
-            }
-            .event-wrap .btn-primary {
-                background-color: #007bff;
-                border-color: #007bff;
-            }
-            .event-wrap .btn-secondary {
-                background-color: #6c757d;
-                border-color: #6c757d;
-            }
-            #fh5co-footer {
-                background: rgba(255, 255, 255, 0.9);
-                padding: 20px 0;
-            }
-            #fh5co-event {
-                margin-top: 60px;
-                flex: 1 0 auto;
-                padding-top: 50px;
-            }
-            .fh5co-heading {
-                margin-bottom: 40px;
-            }
-            .fh5co-heading span {
-                color: #fff;
-                font-size: 18px;
-                display: block;
-                margin-bottom: 10px;
-            }
-            .fh5co-heading h2 {
-                color: #fff;
-                font-size: 36px;
-                margin: 0;
-            }
-            .event-wrap .form-check-label {
-                color: #fff;
-                margin-left: 10px;
-            }
-            .event-wrap .form-check-input {
-                transform: scale(1.5);
-            }
-            .star-rating-container {
-                display: flex;
-                justify-content: center;
-                font-size: 30px;
-                gap: 10px;
-            }
-            .star-rating-container select {
-                display: none;
-            }
-            .star-rating-container .stars {
-                display: flex;
-            }
-            .star-rating-container .star {
-                cursor: pointer;
-                color: #ddd !important;
-                transition: color 0.2s ease;
-            }
-            .star-rating-container .star.filled {
-                color: #ffd700 !important;
-            }
-            .text-danger {
-                font-size: 14px;
-                margin-top: 5px;
-                color: #ff4d4d;
-                display: block;
-            }
+
+            /* Section contenu */
             .content-section {
                 padding: 100px 0 50px;
                 flex: 1 0 auto;
             }
             .content-card {
                 background: rgba(255, 255, 255, 0.95);
-                border-radius: 12px;
+                border-radius: 20px;
                 padding: 30px;
                 max-width: 1000px;
                 margin: 0 auto;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-                color: #1e3a5f;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+                border: 1px solid #D2B48C; /* Light beige border */
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .content-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
             }
             .content-card h2 {
-                font-size: 28px;
-                color: #1e3a5f;
+                font-size: 26px;
+                color: #8B4513; /* Brown */
                 margin-bottom: 15px;
                 text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                animation: slideIn 0.5s ease-out;
+            }
+            .content-card h2::after {
+                content: '📜';
+                font-size: 20px;
+                color: #DAA520; /* Golden accent */
             }
             .content-card .subtitle {
                 font-size: 16px;
-                color: #666;
+                color: #5C4033; /* Darker brown */
                 text-align: center;
                 margin-bottom: 25px;
             }
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            /* Onglets */
             .nav-tabs {
-                border-bottom: 2px solid #e0e0e0;
+                border-bottom: 2px solid #D2B48C; /* Light beige */
                 margin-bottom: 30px;
                 display: flex;
                 justify-content: center;
@@ -310,7 +207,7 @@
                 margin: 0 10px;
             }
             .nav-tabs li a {
-                color: #1e3a5f;
+                color: #5C4033; /* Darker brown */
                 font-size: 16px;
                 padding: 10px 20px;
                 border: none;
@@ -319,146 +216,31 @@
                 text-decoration: none;
             }
             .nav-tabs li.active a {
-                color: #007bff;
-                border-bottom: 3px solid #007bff;
+                color: #8B4513; /* Brown */
+                border-bottom: 3px solid #8B4513;
                 font-weight: 600;
             }
             .nav-tabs li a:hover {
-                color: #007bff;
-                border-bottom: 3px solid #007bff;
+                color: #8B4513;
+                border-bottom: 3px solid #8B4513;
             }
-            .label {
-                padding: 6px 12px;
-                border-radius: 12px;
-                font-size: 13px;
-                display: inline-block;
-                min-width: 80px;
-                text-align: center;
-            }
-            .label-success {
-                background: #28a745;
-                color: #ffffff;
-            }
-            .label-warning {
-                background: #ffb300;
-                color: #333;
-            }
-            .label-danger {
-                background: #dc3545;
-                color: #ffffff;
-            }
-            .stars {
-                color: #ffb300;
-                font-size: 14px;
-            }
-            .btn {
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 14px;
-                transition: background 0.3s ease, transform 0.2s ease;
-            }
-            .btn-primary {
-                background: #007bff;
-                border: none;
-                color: #ffffff;
-            }
-            .btn-primary:hover {
-                background: #0056b3;
-                transform: translateY(-2px);
-            }
-            .btn-secondary {
-                background: #6c757d;
-                border: none;
-                color: #ffffff;
-            }
-            .btn-secondary:hover {
-                background: #5a6268;
-                transform: translateY(-2px);
-            }
-            .reclamation-details, .feedback-details, .reservation-details {
-                font-size: 15px;
-            }
-            .reclamation-details p, .feedback-details p, .reservation-details p {
-                margin: 12px 0;
-                padding: 12px;
-                background: #f8f9fa;
-                border-radius: 6px;
-                border-left: 4px solid #007bff;
-            }
-            .reclamation-details strong, .feedback-details strong, .reservation-details strong {
-                color: #1e3a5f;
-                margin-right: 8px;
-                font-weight: 600;
-            }
-            .feedback-details img {
-                max-width: 300px;
-                border-radius: 8px;
-                margin-top: 10px;
-                display: block;
-            }
-            .pagination {
-                justify-content: center;
-                margin-top: 25px;
-            }
-            .pagination li {
-                margin: 0 5px;
-            }
-            .pagination li a {
-                color: #1e3a5f;
-                border: 1px solid #e0e0e0;
-                padding: 8px 12px;
-                border-radius: 6px;
-                text-decoration: none;
-                transition: all 0.3s ease;
-                font-size: 14px;
-            }
-            .pagination li.active a {
-                background: #007bff;
-                color: #ffffff;
-                border-color: #007bff;
-            }
-            .pagination li a:hover {
-                background: #007bff;
-                color: #ffffff;
-                border-color: #007bff;
-            }
-            .pagination li.disabled a {
-                color: #ccc;
-                cursor: not-allowed;
-                border-color: #e0e0e0;
-                background: #f8f9fa;
-            }
-            .filter-form {
-                margin-bottom: 20px;
-                text-align: center;
-            }
-            .filter-form select {
-                padding: 8px;
-                border-radius: 6px;
-                border: 1px solid #e0e0e0;
-                font-size: 14px;
-                color: #1e3a5f;
-            }
-            .filter-form select:focus {
-                outline: none;
-                border-color: #007bff;
-            }
-            /* Nouveau style pour le tableau */
+
+            /* Tableau */
             .history-table {
                 width: 100%;
                 border-collapse: separate;
                 border-spacing: 0;
-                background: #ffffff;
+                background: #FAF0E6; /* Very light beige */
                 border-radius: 10px;
                 overflow: hidden;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
                 margin-bottom: 20px;
             }
             .history-table thead {
-                background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+                background: linear-gradient(135deg, #D2B48C 0%, #8B4513 100%); /* Beige to brown gradient */
             }
             .history-table th {
-                color: #ffffff;
+                color: #fff;
                 font-weight: 600;
                 padding: 15px;
                 text-align: left;
@@ -470,15 +252,15 @@
                 transition: background 0.3s ease;
             }
             .history-table tbody tr:nth-child(even) {
-                background: #f8f9fa;
+                background: #F5F5DC; /* Light beige */
             }
             .history-table tbody tr:hover {
-                background: #e3f2fd;
+                background: #EDE4D3; /* Slightly darker beige */
             }
             .history-table td {
                 padding: 15px;
-                border-bottom: 1px solid #e0e0e0;
-                color: #333;
+                border-bottom: 1px solid #D2B48C; /* Light beige */
+                color: #5C4033; /* Darker brown */
                 font-size: 14px;
                 vertical-align: middle;
             }
@@ -492,7 +274,200 @@
             .history-table td .stars {
                 white-space: nowrap;
             }
-            /* Responsive adjustments */
+
+            /* Étiquettes */
+            .label {
+                padding: 6px 12px;
+                border-radius: 12px;
+                font-size: 13px;
+                display: inline-block;
+                min-width: 80px;
+                text-align: center;
+            }
+            .label-success {
+                background: #28a745; /* Vert pour Résolue, Validé, Oui */
+                color: #ffffff;
+            }
+            .label-warning {
+                background: #ffb300; /* Jaune pour En attente */
+                color: #333;
+            }
+            .label-danger {
+                background: #dc3545; /* Rouge pour Rejetée, Refusé, Non */
+                color: #ffffff;
+            }
+
+            /* Étoiles */
+            .stars {
+                color: #A0522D; /* Medium brown */
+                font-size: 14px;
+            }
+            .stars .filled {
+                color: #DAA520; /* Golden */
+                animation: starGlow 0.5s ease;
+            }
+            @keyframes starGlow {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.3); }
+                100% { transform: scale(1); }
+            }
+
+            /* Boutons */
+            .btn {
+                padding: 12px;
+                border-radius: 50px;
+                font-size: 16px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                border: none;
+            }
+            .btn-primary {
+                background: linear-gradient(90deg, #D2B48C, #8B4513); /* Beige to brown gradient */
+                color: #fff;
+            }
+            .btn-primary:hover {
+                background: linear-gradient(90deg, #C19A6B, #5C4033); /* Slightly darker gradient */
+                transform: scale(1.05);
+            }
+            .btn-secondary {
+                background: #EDE4D3; /* Light beige */
+                color: #5C4033; /* Darker brown text */
+            }
+            .btn-secondary:hover {
+                background: #D2B48C; /* Medium beige */
+                transform: scale(1.05);
+            }
+            .btn:focus {
+                outline: 2px solid #8B4513;
+                outline-offset: 2px;
+            }
+
+            /* Détails */
+            .reclamation-details, .feedback-details, .reservation-details {
+                font-size: 15px;
+                background: #FAF0E6; /* Very light beige */
+                padding: 20px;
+                border-radius: 10px;
+                border: 1px solid #D2B48C;
+                margin=C2=A0margin-bottom: 20px;
+            }
+            .reclamation-details h3, .feedback-details h3, .reservation-details h3 {
+                color: #8B4513; /* Brown */
+                font-size: 22px;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: slideIn 0.5s ease-out;
+            }
+            .reclamation-details h3::after, .feedback-details h3::after, .reservation-details h3::after {
+                content: '✨';
+                font-size: 18px;
+                color: #DAA520; /* Golden accent */
+            }
+            .reclamation-details p, .feedback-details p, .reservation-details p {
+                margin: 12px 0;
+                padding: 12px;
+                background: #F5F5DC; /* Light beige */
+                border-radius: 6px;
+                border-left: 4px solid #8B4513; /* Brown */
+            }
+            .reclamation-details strong, .feedback-details strong, .reservation-details strong {
+                color: #5C4033; /* Darker brown */
+                margin-right: 8px;
+                font-weight: 600;
+            }
+            .feedback-details img {
+                max-width: 300px;
+                border-radius: 8px;
+                margin-top: 10px;
+                display: block;
+                border: 1px solid #D2B48C;
+            }
+
+            /* Pagination */
+            .pagination {
+                justify-content: center;
+                margin-top: 25px;
+            }
+            .pagination li {
+                margin: 0 5px;
+            }
+            .pagination li a {
+                color: #5C4033; /* Darker brown */
+                border: 1px solid #D2B48C; /* Light beige */
+                padding: 8px 12px;
+                border-radius: 6px;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                font-size: 14px;
+            }
+            .pagination li.active a {
+                background: #8B4513; /* Brown */
+                color: #ffffff;
+                border-color: #8B4513;
+            }
+            .pagination li a:hover {
+                background: #8B4513;
+                color: #ffffff;
+                border-color: #8B4513;
+            }
+            .pagination li.disabled a {
+                color: #A0522D; /* Medium brown */
+                cursor: not-allowed;
+                border-color: #D2B48C;
+                background: #F5F5DC; /* Light beige */
+            }
+
+            /* Filtre */
+            .filter-form {
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .filter-form select {
+                padding: 12px;
+                border: none;
+                border-bottom: 2px solid #D2B48C; /* Light beige */
+                background: #FAF0E6; /* Very light beige */
+                border-radius: 0;
+                font-size: 14px;
+                color: #5C4033; /* Darker brown */
+                transition: border-bottom 0.3s ease;
+            }
+            .filter-form select:focus {
+                border-bottom: 2px solid #8B4513; /* Brown */
+                outline: none;
+            }
+
+            /* Message vide */
+            .text-center p {
+                color: #5C4033;
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+
+            /* Pied de page */
+            #fh5co-footer {
+                background: rgba(255, 255, 255, 0.9);
+                padding: 20px 0;
+                margin-top: auto;
+            }
+            #fh5co-footer p {
+                color: #5C4033;
+                font-size: 14px;
+                text-align: center;
+            }
+            #fh5co-footer a {
+                color: #8B4513;
+                text-decoration: none;
+            }
+            #fh5co-footer a:hover {
+                text-decoration: underline;
+            }
+
+            /* Responsive */
             @media (max-width: 768px) {
                 .menu-toggle {
                     display: block;
@@ -515,15 +490,11 @@
                     margin: 10px 0;
                     text-align: center;
                 }
-                .user-circle {
-                    margin-right: 0;
-                    margin-bottom: 5px;
-                }
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
                     position: static;
                     display: none;
                     box-shadow: none;
-                    background-color: #f8f9fa;
+                    background-color: #F5F5DC; /* Light beige */
                 }
                 .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
                     display: none !important;
@@ -531,22 +502,12 @@
                 .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
                     display: block !important;
                 }
-                .event-wrap {
-                    max-width: 90%;
-                    padding: 20px;
-                }
-                .fh5co-heading h2 {
-                    font-size: 28px;
-                }
-                #fh5co-event {
-                    padding-top: 30px;
-                }
                 .content-card {
                     padding: 20px;
                     max-width: 95%;
                 }
                 .content-card h2 {
-                    font-size: 24px;
+                    font-size: 22px;
                 }
                 .history-table {
                     font-size: 13px;
@@ -588,45 +549,45 @@
                     <a href="{{ path('app_home') }}">Eventora</a>
                 </div>
                 <div class="menu-toggle">
-                    <i class="icon-menu"></i>
+                    <i class="fas fa-bars"></i>
                 </div>
                 <div class="menu-1">
                     <ul>
-                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}"><a href="{{ path('app_home') }}">Home</a></li>
                         <li class="has-dropdown">
                             <a href="#">Réservation</a>
                             <ul class="dropdown">
-                                <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                <li class="{{ app.request.attributes.get('_route') == 'user_reservation_personnalise_new' ? 'active' : '' }}"><a href="{{ path('user_reservation_personnalise_new') }}">Réservation personnalisée</a></li>
+                                <li class="{{ app.request.attributes.get('_route') == 'user_reservation_pack_new' ? 'active' : '' }}"><a href="{{ path('user_reservation_pack_new') }}">Réservation Pack</a></li>
                             </ul>
                         </li>
-                        <li><a href="{{ path('user_packs') }}">Packs</a></li>
+                        <li class="{{ app.request.attributes.get('_route') == 'user_packs' ? 'active' : '' }}"><a href="{{ path('user_packs') }}">Packs</a></li>
                         <li class="has-dropdown">
                             <a href="#">Services</a>
                             <ul class="dropdown">
-                                <li><a href="{{ path('user_services') }}">Service</a></li>
-                                <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                                <li class="{{ app.request.attributes.get('_route') == 'user_services' ? 'active' : '' }}"><a href="{{ path('user_services') }}">Service</a></li>
+                                <li class="{{ app.request.attributes.get('_route') == 'user_sponsor' ? 'active' : '' }}"><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
                             </ul>
                         </li>
-                        <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                        <li><a href="">Talk with Evi</a></li>
+                        <li class="{{ app.request.attributes.get('_route') == 'app_reclamation_new' ? 'active' : '' }}"><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
+                        <li class="{{ app.request.attributes.get('_route') == 'app_feedback_new' ? 'active' : '' }}"><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li class="{{ app.request.attributes.get('_route') == 'user_chat_ai' ? 'active' : '' }}"><a href="{{ path('user_chat_ai') }}">Parler avec Evi</a></li>
                         <li class="has-dropdown">
                             <a href="#">
                                 <span class="user-circle">
                                     {% if app.user and app.user.image %}
-                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profil" aria-hidden="true">
                                     {% else %}
                                         <i class="icon-user"></i>
                                     {% endif %}
                                 </span>
-                                Contact
+                                {{ app.user ? app.user.prenom|default('Compte') : 'Compte' }}
                             </a>
                             <ul class="dropdown">
                                 {% if app.user %}
                                     <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
                                     <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                    <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                    <li class="{{ app.request.attributes.get('_route') starts with 'app_user_history' ? 'active' : '' }}"><a href="{{ path('app_user_history') }}">Historique</a></li>
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                                     {% endif %}
@@ -642,24 +603,24 @@
             </div>
         </nav>
 
-        <section class="content-section">
+        <section class="content-section" role="main">
             <div class="container">
                 <div class="content-card animate-box">
                     <h2>Votre Historique</h2>
                     <div class="subtitle">Consultez vos réclamations, feedbacks et réservations</div>
 
                     <!-- Onglets pour les sections -->
-                    <ul class="nav nav-tabs">
-                        <li class="{{ section == 'reclamations' ? 'active' : '' }}"><a href="{{ path('app_user_history') }}">Réclamations</a></li>
-                        <li class="{{ section == 'feedbacks' ? 'active' : '' }}"><a href="{{ path('app_user_history_feedbacks') }}">Feedbacks</a></li>
-                        <li class="{{ section == 'reservations' ? 'active' : '' }}"><a href="{{ path('app_user_history_reservations') }}">Réservations</a></li>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="{{ section == 'reclamations' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history') }}" role="tab" aria-selected="{{ section == 'reclamations' ? 'true' : 'false' }}">Réclamations</a></li>
+                        <li class="{{ section == 'feedbacks' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history_feedbacks') }}" role="tab" aria-selected="{{ section == 'feedbacks' ? 'true' : 'false' }}">Feedbacks</a></li>
+                        <li class="{{ section == 'reservations' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history_reservations') }}" role="tab" aria-selected="{{ section == 'reservations' ? 'true' : 'false' }}">Réservations</a></li>
                     </ul>
 
                     {% if section == 'reclamations' %}
                         {% if selected_reclamation %}
                             <!-- Détails de la réclamation -->
-                            <div class="reclamation-details">
-                                <h3>Détails de la Réclamation #{{ selected_reclamation.id }}</h3>
+                            <div class="reclamation-details" role="region" aria-labelledby="reclamation-title">
+                                <h3 id="reclamation-title">Détails de la Réclamation #{{ selected_reclamation.id }}</h3>
                                 <p><strong>Titre :</strong> {{ selected_reclamation.titre }}</p>
                                 <p><strong>Type :</strong> {{ selected_reclamation.Type }}</p>
                                 <p><strong>Description :</strong> {{ selected_reclamation.description }}</p>
@@ -682,15 +643,15 @@
                                 </div>
                             {% else %}
                                 <div class="table-responsive">
-                                    <table class="history-table">
+                                    <table class="history-table" role="grid">
                                         <thead>
                                             <tr>
-                                                <th>Date</th>
-                                                <th>Titre</th>
-                                                <th>Type</th>
-                                                <th>Description</th>
-                                                <th>Statut</th>
-                                                <th>Actions</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Titre</th>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Description</th>
+                                                <th scope="col">Statut</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -706,7 +667,7 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ path('app_reclamation_show', {'id': reclamation.id}) }}" class="btn btn-primary btn-sm">Voir</a>
+                                                        <a href="{{ path('app_reclamation_show', {'id': reclamation.id}) }}" class="btn btn-primary btn-sm" aria-label="Voir la réclamation {{ reclamation.titre }}">Voir</a>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -722,14 +683,14 @@
                     {% elseif section == 'feedbacks' %}
                         {% if selected_feedback %}
                             <!-- Détails du feedback -->
-                            <div class="feedback-details">
-                                <h3>Détails du Feedback #{{ selected_feedback.ID }}</h3>
+                            <div class="feedback-details" role="region" aria-labelledby="feedback-title">
+                                <h3 id="feedback-title">Détails du Feedback #{{ selected_feedback.ID }}</h3>
                                 <p><strong>Note :</strong> <span class="stars">
                                     {% for i in 1..selected_feedback.Vote %}
-                                        ★
+                                        <span class="filled">★</span>
                                     {% endfor %}
                                     {% for i in 1..(5 - selected_feedback.Vote) %}
-                                        ☆
+                                        <span>☆</span>
                                     {% endfor %}
                                 </span></p>
                                 <p><strong>Description :</strong> {{ selected_feedback.Description }}</p>
@@ -741,7 +702,7 @@
                                 <p><strong>Date :</strong> {{ selected_feedback.date|date('d/m/Y H:i') }}</p>
                                 {% if selected_feedback.Souvenirs %}
                                     <p><strong>Souvenir :</strong><br>
-                                        <img src="{{ path('app_feedback_image', {'id': selected_feedback.ID}) }}" alt="Souvenir">
+                                        <img src="{{ path('app_feedback_image', {'id': selected_feedback.ID}) }}" alt="Souvenir du feedback">
                                     </p>
                                 {% endif %}
                                 <div class="text-center">
@@ -757,14 +718,14 @@
                                 </div>
                             {% else %}
                                 <div class="table-responsive">
-                                    <table class="history-table">
+                                    <table class="history-table" role="grid">
                                         <thead>
                                             <tr>
-                                                <th>Date</th>
-                                                <th>Note</th>
-                                                <th>Description</th>
-                                                <th>Recommandation</th>
-                                                <th>Actions</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Note</th>
+                                                <th scope="col">Description</th>
+                                                <th scope="col">Recommandation</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -773,10 +734,10 @@
                                                     <td>{{ feedback.date|date('d/m/Y H:i') }}</td>
                                                     <td><span class="stars">
                                                         {% for i in 1..feedback.Vote %}
-                                                            ★
+                                                            <span class="filled">★</span>
                                                         {% endfor %}
                                                         {% for i in 1..(5 - feedback.Vote) %}
-                                                            ☆
+                                                            <span>☆</span>
                                                         {% endfor %}
                                                     </span></td>
                                                     <td title="{{ feedback.Description }}">{{ feedback.Description|u.truncate(60, '...') }}</td>
@@ -786,7 +747,7 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ path('app_feedback_show', {'id': feedback.ID}) }}" class="btn btn-primary btn-sm">Voir</a>
+                                                        <a href="{{ path('app_feedback_show', {'id': feedback.ID}) }}" class="btn btn-primary btn-sm" aria-label="Voir le feedback #{{ feedback.ID }}">Voir</a>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -802,8 +763,8 @@
                     {% elseif section == 'reservations' %}
                         {% if selected_reservation %}
                             <!-- Détails de la réservation -->
-                            <div class="reservation-details">
-                                <h3>Détails de la Réservation {{ reservation_type == 'pack' ? 'Pack' : 'Personnalisée' }} #{{ selected_reservation.IDReservationPack ?: selected_reservation.IDReservationPersonalise }}</h3>
+                            <div class="reservation-details" role="region" aria-labelledby="reservation-title">
+                                <h3 id="reservation-title">Détails de la Réservation {{ reservation_type == 'pack' ? 'Pack' : 'Personnalisée' }} #{{ selected_reservation.IDReservationPack ?: selected_reservation.IDReservationPersonalise }}</h3>
                                 <p><strong>Nom :</strong> {{ selected_reservation.nom }}</p>
                                 <p><strong>Prénom :</strong> {{ selected_reservation.prenom }}</p>
                                 <p><strong>Date :</strong> {{ selected_reservation.date|date('d/m/Y H:i') }}</p>
@@ -832,8 +793,8 @@
                         {% else %}
                             <!-- Filtre pour les réservations -->
                             <div class="filter-form">
-                                <form action="{{ path('app_user_history_reservations') }}" method="get">
-                                    <select name="type" onchange="this.form.submit()">
+                                <form action="{{ path('app_user_history_reservations') }}" method="get" role="form">
+                                    <select name="type" onchange="this.form.submit()" aria-label="Filtrer les réservations par type">
                                         <option value="" {% if reservation_type is null %}selected{% endif %}>Tous</option>
                                         <option value="pack" {% if reservation_type == 'pack' %}selected{% endif %}>Pack</option>
                                         <option value="personnalise" {% if reservation_type == 'personnalise' %}selected{% endif %}>Personnalisée</option>
@@ -849,16 +810,16 @@
                                 </div>
                             {% else %}
                                 <div class="table-responsive">
-                                    <table class="history-table">
+                                    <table class="history-table" role="grid">
                                         <thead>
                                             <tr>
-                                                <th>Type</th>
-                                                <th>Date</th>
-                                                <th>Nom</th>
-                                                <th>Prénom</th>
-                                                <th>Description</th>
-                                                <th>Statut</th>
-                                                <th>Actions</th>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Nom</th>
+                                                <th scope="col">Prénom</th>
+                                                <th scope="col">Description</th>
+                                                <th scope="col">Statut</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -875,7 +836,7 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ path('app_reservation_show', {'id': reservation.IDReservationPack ?: reservation.IDReservationPersonalise, 'type': reservation.type == 'Pack' ? 'pack' : 'personnalise'}) }}" class="btn btn-primary btn-sm">Voir</a>
+                                                        <a href="{{ path('app_reservation_show', {'id': reservation.IDReservationPack ?: reservation.IDReservationPersonalise, 'type': reservation.type == 'Pack' ? 'pack' : 'personnalise'}) }}" class="btn btn-primary btn-sm" aria-label="Voir la réservation {{ reservation.type }} de {{ reservation.nom }}">Voir</a>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -898,8 +859,8 @@
                 <div class="row copyright">
                     <div class="col-md-12 text-center">
                         <p>
-                            <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                            <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                            <small class="block">© {{ 'now'|date('Y') }} Eventora. Tous droits réservés.</small>
+                            <small class="block">Conçu par <a href="http://freehtml5.co/" target="_blank" rel="nofollow">FREEHTML5.co</a></small>
                         </p>
                     </div>
                 </div>
@@ -907,50 +868,49 @@
         </footer>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script>
-        if (typeof jQuery === 'undefined') {
-            console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
-        } else {
-            console.log("jQuery est chargé avec succès");
-            jQuery(document).ready(function($) {
-                $('.menu-toggle').click(function() {
-                    console.log("Clic sur menu-toggle détecté");
-                    $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                });
+    {% block javascripts %}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script>
+            if (typeof jQuery === 'undefined') {
+                console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
+            } else {
+                console.log("jQuery est chargé avec succès");
+                jQuery(document).ready(function($) {
+                    $('.menu-toggle').click(function() {
+                        console.log("Clic sur menu-toggle détecté");
+                        $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                    });
 
-                $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                    if ($(window).width() <= 768) {
-                        console.log("Clic sur dropdown détecté");
-                        e.preventDefault();
-                        $(this).parent().toggleClass('active');
-                    }
-                });
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                        if ($(window).width() <= 768) {
+                            console.log("Clic sur dropdown détecté");
+                            e.preventDefault();
+                            $(this).parent().toggleClass('active');
+                        }
+                    });
 
-                $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
-                    function() {
-                        console.log("Survol détecté sur un élément has-dropdown");
-                        $(this).find('.dropdown').css({
-                            'display': 'block',
-                            'position': 'absolute',
-                            'top': '100%',
-                            'right': '0',
-                            'visibility': 'visible',
-                            'opacity': '1',
-                            'z-index': '1001'
-                        });
-                    },
-                    function() {
-                        console.log("Fin du survol");
-                        $(this).find('.dropdown').css({
-                            'display': 'none',
-                            'visibility': 'hidden',
-                            'opacity': '0'
-                        });
-                    }
-                );
-            });
-        }
-    </script>
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
+                        function() {
+                            console.log("Survol détecté sur un élément has-dropdown");
+                            $(this).find('.dropdown').css({
+                                'display': 'block',
+                                'visibility': 'visible',
+                                'opacity': '1'
+                            });
+                        },
+                        function() {
+                            console.log("Fin du survol");
+                            $(this).find('.dropdown').css({
+                                'display': 'none',
+                                'visibility': 'hidden',
+                                'opacity': '0'
+                            });
+                        }
+                    );
+                });
+            }
+        </script>
+    {% endblock %}
 </body>
 </html>

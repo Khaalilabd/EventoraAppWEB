@@ -30,7 +30,7 @@ class ReclamationsController extends AbstractController
     public function index(Request $request, ReclamationRepository $reclamationRepository): Response
     {
         $page = $request->query->getInt('page', 1);
-        $limit = 6  ;
+        $limit = 6;
         $searchTerm = $request->query->get('search', '');
         $statusFilter = $request->query->get('status_filter', '');
         $sortBy = $request->query->get('sort_by', 'date');
@@ -40,12 +40,16 @@ class ReclamationsController extends AbstractController
             ->leftJoin('r.membre', 'm')
             ->orderBy("r.$sortBy", $sortOrder);
 
+        // Gestion des filtres par statut
         if ($statusFilter === 'non_traitees') {
             $queryBuilder->andWhere('r.statut IN (:statuses)')
                 ->setParameter('statuses', ['En_Attente', 'En_Cours']);
         } elseif ($statusFilter === 'traitees') {
             $queryBuilder->andWhere('r.statut IN (:statuses)')
                 ->setParameter('statuses', ['Resolue', 'Rejetée']);
+        } elseif (in_array($statusFilter, ['en_attente', 'en_cours', 'resolue', 'rejetée'])) {
+            $queryBuilder->andWhere('r.statut = :status')
+                ->setParameter('status', str_replace('_', ' ', ucwords($statusFilter, '_')));
         }
 
         if ($searchTerm) {
@@ -66,6 +70,10 @@ class ReclamationsController extends AbstractController
             '' => 'Toutes',
             'non_traitees' => 'Non Traitées',
             'traitees' => 'Traitées',
+            'en_attente' => 'En Attente',
+            'en_cours' => 'En Cours',
+            'resolue' => 'Résolue',
+            'rejetée' => 'Rejetée',
         ];
 
         return $this->render('admin/reclamations/index.html.twig', [

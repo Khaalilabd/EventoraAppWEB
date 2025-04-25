@@ -203,13 +203,13 @@
             .reclamation-card { min-height: 250px; }
             .card-body { padding: 15px; font-size: 0.9rem; }
             .card-header { font-size: 1rem; }
-            .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
+            .btn-sm { padding: 6pxpx 10px; font-size: 0.8rem; }
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
         <div class="sidenav-header">
             <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
                 <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
@@ -224,6 +224,14 @@
                             <i class="fas fa-tachometer-alt text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
+                        <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-tachometer-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Home</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -385,7 +393,6 @@
             </ul>
         </div>
     </aside>
-
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg reclamation-container">
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
             <div class="container-fluid py-1 px-3">

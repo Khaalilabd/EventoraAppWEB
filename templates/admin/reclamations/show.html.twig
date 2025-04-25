@@ -127,6 +127,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
+                        <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-tachometer-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reservationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'true' : 'false' }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-calendar-check text-dark"></i>

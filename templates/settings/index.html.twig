@@ -3,515 +3,360 @@
 {% block title %}{{ 'settings'|trans }} - Eventora{% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
     <style>
-        /* Palette de couleurs (inchangée) */
         :root {
-            --primary-color: #D66F6F; /* Deep Pink pour les accents et boutons */
-            --secondary-color: #FFF7F7; /* Very Light Pink pour le fond principal */
-            --text-color: #333; /* Gris foncé pour le texte principal (lisibilité) */
-            --text-muted: #666; /* Texte secondaire (légèrement plus clair) */
-            --shadow: 0 2px 4px rgba(139, 46, 46, 0.1); /* Ombre avec Dark Reddish Tone */
-            --hover-shadow: 0 4px 12px rgba(139, 46, 46, 0.2);
-            --accent-color: #F5BFBF; /* Medium Pink pour les survols */
-            --error-color: #8B2E2E; /* Dark Reddish Tone pour les erreurs */
-            --sidebar-color: #8B2E2E; /* Dark Reddish Tone pour la sidebar */
+            --primary-color: #934D1A;
+            --secondary-color: #BE6C2A;
+            --text-color: #1f2937;
+            --bg-color: #f9fafb;
+            --sidebar-bg: #ffffff;
+            --border-color: #e5e7eb;
+            --error-color: #dc2626;
+            --success-color: #16a34a;
         }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--secondary-color);
-            margin: 0;
-            padding: 0;
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Conteneur principal avec sidebar */
         .settings-wrapper {
             display: flex;
             min-height: 100vh;
-            width: 100%;
-            overflow: hidden; /* Empêche tout débordement indésirable */
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
         }
 
         /* Sidebar */
         .sidebar {
-            width: 250px;
-            background-color: var(--sidebar-color);
-            color: #fff;
-            padding: 30px 20px;
-            border-bottom-right-radius: 40px;
-            flex-shrink: 0;
-            overflow-y: auto; /* Permet le défilement si nécessaire */
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent-color) var(--sidebar-color);
-            animation: bounceInLeft 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            will-change: transform, opacity;
-            box-sizing: border-box;
-            min-height: 100vh; /* Hauteur minimale pour couvrir la fenêtre */
-            height: auto; /* S'adapte au contenu si plus grand */
-        }
-
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background-color: var(--accent-color);
-            border-radius: 3px;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background-color: #e0a0a0;
-        }
-
-        .sidebar::-webkit-scrollbar-track {
-            background-color: var(--sidebar-color);
-        }
-
-        @keyframes bounceInLeft {
-            0% { transform: translateX(-100%); opacity: 0; }
-            60% { transform: translateX(20px); opacity: 1; }
-            80% { transform: translateX(-10px); }
-            100% { transform: translateX(0); opacity: 1; }
+            width: 300px;
+            background-color: var(--sidebar-bg);
+            padding: 2.5rem 2rem;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            transition: width 0.3s ease;
         }
 
         .sidebar h2 {
-            font-size: 24px;
-            font-weight: 500;
-            margin-bottom: 30px;
-            letter-spacing: 0.5px;
-            transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
-        }
-
-        .sidebar h2:hover {
-            transform: scale(1.05);
-            color: var(--accent-color);
+            font-size: 1.75rem;
+            color: var(--text-color);
+            margin-bottom: 2.5rem;
+            font-weight: 600;
         }
 
         .sidebar ul {
             list-style: none;
             padding: 0;
-            margin: 0;
         }
 
-        .sidebar ul li {
-            margin-bottom: 20px;
+        .sidebar li {
+            margin-bottom: 1.25rem;
+            position: relative;
             opacity: 0;
-            animation: fadeInBounce 0.6s ease-in-out forwards;
-            animation-delay: calc(0.1s * var(--index));
-            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            will-change: transform, opacity;
+            transform: translateX(-20px);
+            animation: slideIn 0.5s ease forwards;
+            animation-delay: calc(var(--index) * 0.1s);
         }
 
-        @keyframes fadeInBounce {
-            0% { opacity: 0; transform: translateY(20px); }
-            60% { opacity: 1; transform: translateY(-5px); }
-            100% { opacity: 1; transform: translateY(0); }
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        .sidebar ul li a {
-            color: #fff;
+        .sidebar li a {
+            display: block;
+            padding: 1rem 1.25rem;
+            color: var(--text-color);
             text-decoration: none;
-            font-size: 16px;
-            font-weight: 400;
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-            position: relative;
-            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
         }
 
-        .sidebar ul li a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background-color: var(--accent-color);
-            bottom: 0;
-            left: 0;
-            transition: width 0.3s ease-in-out;
+        .sidebar li a:hover {
+            background-color: #BE6C2A;
+            color: #ffffff;
+            transform: translateX(5px);
         }
 
-        .sidebar ul li a:hover,
-        .sidebar ul li.active a {
-            color: var(--accent-color);
+        .sidebar li.active a {
+            background-color: #934D1A;
+            color: #ffffff;
             font-weight: 500;
-            transform: translateX(8px);
         }
 
-        .sidebar ul li a:hover::after {
-            width: 100%;
-        }
-
-        .sidebar ul li.active a {
-            border-left: 3px solid #fff;
-            padding-left: 10px;
-        }
-
-        /* Style pour le sous-menu des langues */
-        .sidebar ul li.language-menu {
-            position: relative;
-        }
-
-        .sidebar ul li.language-menu .language-toggle {
+        .language-menu .language-toggle {
             cursor: pointer;
         }
 
-        .sidebar ul li.language-menu .language-submenu {
+        .language-submenu {
             display: none;
-            padding-left: 20px;
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
-        .sidebar ul li.language-menu .language-submenu.active {
+        .language-submenu.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .sidebar ul li.language-menu .language-submenu a {
-            display: block;
-            padding: 8px 0;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 400;
-            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        .language-submenu a {
+            font-size: 1rem;
+            padding: 0.75rem 1.25rem;
         }
 
-        .sidebar ul li.language-menu .language-submenu a:hover {
-            color: var(--accent-color);
-            transform: translateX(8px);
-        }
-
-        /* Cacher l'élément "Help" quand le sous-menu est actif */
-        .sidebar ul li.help-item.hidden {
+        .help-item.hidden {
             display: none;
         }
 
-        /* Contenu principal */
+        /* Main Content */
         .main-content {
             flex: 1;
-            padding: 40px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--text-muted) var(--secondary-color);
-            animation: bounceInRight 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            min-height: 100vh;
-            background-color: var(--secondary-color);
-            transition: background-color 0.3s ease-in-out;
-            will-change: transform, opacity;
-        }
-
-        .main-content::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .main-content::-webkit-scrollbar-thumb {
-            background-color: var(--text-muted);
-            border-radius: 3px;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .main-content::-webkit-scrollbar-thumb:hover {
-            background-color: #999;
-        }
-
-        .main-content::-webkit-scrollbar-track {
-            background-color: var(--secondary-color);
-        }
-
-        @keyframes bounceInRight {
-            0% { transform: translateX(100%); opacity: 0; }
-            60% { transform: translateX(-20px); opacity: 1; }
-            80% { transform: translateX(10px); }
-            100% { transform: translateX(0); opacity: 1; }
+            padding: 2.5rem;
+            max-width: 900px;
+            margin-left: 340px;
+            margin-right: 2rem;
         }
 
         .main-content h1 {
-            font-size: 24px;
-            font-weight: 500;
+            font-size: 2.25rem;
             color: var(--text-color);
-            margin-bottom: 20px;
-            position: relative;
-            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+            margin-bottom: 2.5rem;
+            font-weight: 700;
         }
 
-        .main-content h1::after {
-            content: '';
-            position: absolute;
-            width: 50px;
-            height: 3px;
-            background-color: var(--primary-color);
-            bottom: -5px;
-            left: 0;
-            transition: width 0.4s ease-in-out, background-color 0.3s ease-in-out;
+        .alert-success,
+        .alert-error {
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            border-radius: 6px;
+            font-size: 1rem;
         }
 
-        .main-content h1:hover {
-            transform: translateX(5px);
+        .alert-success {
+            background-color: var(--success-color);
+            color: #ffffff;
         }
 
-        .main-content h1:hover::after {
-            width: 100px;
-            background-color: var(--accent-color);
+        .alert-error {
+            background-color: var(--error-color);
+            color: #ffffff;
         }
 
-        /* Sections */
+        /* Settings Sections */
         .settings-section {
-            background-color: #fff;
+            background-color: #ffffff;
+            padding: 2rem;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
+            margin-bottom: 2.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             opacity: 0;
-            transform: translateY(30px);
-            animation: popIn 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-            animation-delay: calc(0.2s * var(--index));
-            transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            will-change: transform, opacity;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-delay: calc(var(--index) * 0.2s);
         }
 
-        @keyframes popIn {
-            0% { opacity: 0; transform: translateY(30px) scale(0.95); }
-            70% { opacity: 1; transform: translateY(-5px) scale(1.02); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .settings-section:hover {
-            box-shadow: var(--hover-shadow);
-            transform: translateY(-5px) scale(1.01);
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .settings-section h3 {
-            font-size: 18px;
-            font-weight: 500;
+            font-size: 1.5rem;
             color: var(--text-color);
-            margin-bottom: 15px;
-            border-left: 4px solid var(--primary-color);
-            padding-left: 10px;
+            margin-bottom: 1.25rem;
+            font-weight: 600;
+        }
+
+        .settings-section:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-section.highlight {
+            animation: highlightSection 1s ease-out;
+        }
+
+        @keyframes highlightSection {
+            0% {
+                background-color: #934D1A;
+            }
+            100% {
+                background-color: #ffffff;
+            }
+        }
+
+        /* Profile Picture */
+        .profile-picture {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-picture img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1.25rem;
+            border: 3px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-picture img:hover {
+            transform: scale(1.1);
+        }
+
+        .file-upload-wrapper {
             position: relative;
-            overflow: hidden;
-            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+            display: inline-block;
         }
 
-        .settings-section h3::after {
-            content: '';
+        .custom-file-upload {
+            display: inline-block;
+            padding: 0.75rem 1.25rem;
+            background-color: #934D1A;
+            color: #ffffff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-align: center;
+            border: 1px solid #BE6C2A;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #BE6C2A;
+            border-color: #BE6C2A;
+            transform: translateY(-2px);
+        }
+
+        .file-upload-wrapper input[type="file"] {
             position: absolute;
-            width: 0;
-            height: 2px;
-            background-color: var(--accent-color);
-            bottom: 0;
+            top: 0;
             left: 0;
-            transition: width 0.4s ease-in-out;
-        }
-
-        .settings-section h3:hover {
-            transform: translateX(5px);
-        }
-
-        .settings-section h3:hover::after {
             width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
         }
 
-        /* Grille pour organiser les champs du formulaire */
+        /* Form Styling */
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
         }
 
-        /* Formulaires */
         .form-group {
-            margin-bottom: 20px;
-            position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
         .form-group label {
-            font-size: 14px;
+            font-size: 1rem;
+            color: var(--text-color);
+            margin-bottom: 0.75rem;
             font-weight: 500;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            display: block;
-            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .form-group label:hover {
-            color: var(--primary-color);
-            transform: translateX(3px);
         }
 
         .form-group input,
         .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--text-muted);
-            border-radius: 4px;
-            font-size: 14px;
-            color: var(--text-color);
-            background-color: #fff;
-            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-            will-change: border-color, box-shadow, transform;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 8px rgba(214, 111, 111, 0.3);
-            transform: scale(1.02);
+            border-color: #934D1A;
+            box-shadow: 0 0 0 3px #BE6C2A;
         }
 
-        /* Animation pour les champs remplis */
-        .form-group input:not(:placeholder-shown),
-        .form-group select:not(:placeholder-shown) {
-            border-color: var(--primary-color);
-            transform: scale(1.01);
-            transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        /* Bouton de soumission */
-        .form-group input[type="submit"] {
-            background-color: var(--primary-color);
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            position: relative;
-            overflow: hidden;
-            will-change: transform, box-shadow;
-        }
-
-        .form-group input[type="submit"]::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 100%;
-            background-color: rgba(255, 255, 253, 0.3);
-            top: 0;
-            left: -100%;
-            transition: width 0.4s ease-in-out, left 0.4s ease-in-out;
-        }
-
-        .form-group input[type="submit"]:hover {
-            background-color: #c55e5e;
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 4px 12px rgba(139, 46, 46, 0.3);
-        }
-
-        .form-group input[type="submit"]:hover::after {
-            width: 200%;
-            left: 100%;
-        }
-
-        /* Photo de profil */
-        .profile-picture {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .profile-picture:hover {
-            transform: scale(1.03);
-        }
-
-        .profile-picture img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
-            object-fit: cover;
-            border: 2px solid var(--primary-color);
-            transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out;
-            will-change: transform, border-color;
-        }
-
-        .profile-picture img:hover {
-            border-color: var(--accent-color);
-            transform: rotate(8deg) scale(1.1);
-        }
-
-        .profile-picture .custom-file-upload {
-            color: var(--primary-color);
-            font-size: 14px;
-            text-decoration: none;
-            position: relative;
-            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .profile-picture .custom-file-upload::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 1px;
-            background-color: var(--primary-color);
-            bottom: -2px;
-            left: 0;
-            transition: width 0.3s ease-in-out;
-        }
-
-        .profile-picture .custom-file-upload:hover {
-            color: var(--accent-color);
-            transform: translateX(3px);
-        }
-
-        .profile-picture .custom-file-upload:hover::after {
-            width: 100%;
-        }
-
-        .profile-picture input[type="file"] {
-            display: none;
-        }
-
-        /* Messages flash */
-        .alert-success {
-            background-color: var(--accent-color);
-            color: var(--text-color);
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            opacity: 0;
-            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .alert-error {
-            background-color: var(--error-color);
-            color: #fff;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            opacity: 0;
-            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        @keyframes popIn {
-            0% { opacity: 0; transform: translateY(10px) scale(0.95); }
-            70% { opacity: 1; transform: translateY(-3px) scale(1.02); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* Style pour les erreurs */
         .form-error {
             color: var(--error-color);
-            font-size: 12px;
-            margin-top: 5px;
-            opacity: 0;
-            animation: fadeIn 0.3s ease-in-out forwards;
-            transition: opacity 0.3s ease-in-out;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .form-group button[type="submit"] {
+            padding: 1rem 2rem;
+            background-color: #934D1A;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .form-group button[type="submit"]:hover {
+            background-color: #BE6C2A;
+            transform: translateY(-2px);
+        }
+
+        /* Password Toggle Icon */
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-container input {
+            width: 100%;
+            padding-right: 3rem; /* Space for the icon */
+        }
+
+        .password-toggle-icon {
+            position: absolute;
+            right: 1rem;
+            cursor: pointer;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle-icon:hover {
+            color: #934D1A;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .settings-wrapper {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+                box-shadow: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
+    <!-- Include Font Awesome for eye icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block body %}
@@ -521,14 +366,15 @@
             <h2>{{ 'settings'|trans }}</h2>
             <ul>
                 {% set menu_items = [
-                    'Home',
-                    'Privacy and Security',
+                    'Back To Home',
+                    'Account Information',
+                    'Change Password',
                     'Langages',
                     'Help'
                 ] %}
                 {% for item in menu_items %}
                     <li style="--index: {{ loop.index }}"
-                        {% if item == 'Privacy and Security' or item == 'Home' %}class="active"{% endif %}
+                        {% if item == 'Change Password' %}class="active"{% endif %}
                         {% if item == 'Langages' %}class="language-menu"{% endif %}
                         {% if item == 'Help' %}class="help-item"{% endif %}>
                         {% if item == 'Home' %}
@@ -539,6 +385,10 @@
                                 <a href="{{ path('app_change_language', {locale: 'fr'}) }}">{{ 'french'|trans }}</a>
                                 <a href="{{ path('app_change_language', {locale: 'en'}) }}">{{ 'english'|trans }}</a>
                             </div>
+                        {% elseif item == 'Change Password' %}
+                            <a href="#change-password" class="scroll-link">{{ item|trans }}</a>
+                        {% elseif item == 'Account Information' %}
+                            <a href="#account-information" class="scroll-link">{{ item|trans }}</a>
                         {% else %}
                             <a href="#">{{ item|trans }}</a>
                         {% endif %}
@@ -547,10 +397,10 @@
             </ul>
         </div>
 
-        <!-- Contenu principal -->
+        <!-- Main Content -->
         <div class="main-content">
-            {# Titre traduit #}
-            <h1>{{ 'privacy_and_security'|trans }}:</h1>
+            {# Translated Title #}
+            <h1>{{ 'Account Information'|trans }}:</h1>
 
             {% for flash_message in app.flashes('success') %}
                 <div class="alert-success">
@@ -563,20 +413,22 @@
                 </div>
             {% endfor %}
 
-            <!-- Section 1: Informations de base -->
-            <div class="settings-section" style="--index: 1">
+            <!-- Section 1: Basic Information -->
+            <div class="settings-section" id="account-information" style="--index: 1">
                 <h3>{{ 'your_account'|trans }}</h3>
                 <div class="profile-picture">
                     {% if app.user.image %}
-                        <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="{{ 'profile_picture'|trans }}">
+                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="{{ 'profile_picture'|trans }}">
                     {% else %}
-                        <img src="{{ asset('images/default-profile.png') }}" alt="{{ 'default_profile_picture'|trans }}">
+                        <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="{{ 'default_profile_picture'|trans }}">
                     {% endif %}
-                    {{ form_start(imageForm, {'attr': {'id': 'imageForm'}}) }}
-                    <label for="imageForm_image" class="custom-file-upload">
-                        {{ 'edit_profile_picture'|trans }}
-                    </label>
-                    {{ form_widget(imageForm.image, {'attr': {'id': 'imageForm_image'}}) }}
+                    {{ form_start(imageForm, {'attr': {'id': 'imageForm', 'enctype': 'multipart/form-data'}}) }}
+                    <div class="file-upload-wrapper">
+                        <label for="imageForm_image" class="custom-file-upload">
+                            {{ 'edit_profile_picture'|trans }}
+                        </label>
+                        {{ form_widget(imageForm.image, {'attr': {'id': 'imageForm_image', 'accept': 'image/*'}}) }}
+                    </div>
                     {{ form_widget(imageForm.submit, {'attr': {'style': 'display: none;'}}) }}
                     {{ form_end(imageForm) }}
                 </div>
@@ -639,16 +491,16 @@
                             <div class="form-error">{{ form.adresse.vars.errors[0].message|trans }}</div>
                         {% endif %}
                     </div>
-                  <div class="form-group">
+                    <div class="form-group">
                         <label>{{ 'account_confirmed'|trans }}</label>
                         <p>{{ app.user.isConfirmed ? 'Oui' : 'Non' }}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Section 2: Sécurité et accès -->
-            <div class="settings-section" style="--index: 2">
-                <h3>{{ 'security_and_account_access'|trans }}</h3>
+            <!-- Section 2: Security and Access -->
+            <div class="settings-section" id="change-password" style="--index: 2">
+                <h3>{{ 'Change password'|trans }}</h3>
                 <div class="form-grid">
                     <div class="form-group">
                         {{ form_label(form.username, null, {'label': 'username'|trans}) }}
@@ -659,7 +511,10 @@
                     </div>
                     <div class="form-group">
                         {{ form_label(form.motDePasse, null, {'label': 'password'|trans}) }}
-                        {{ form_widget(form.motDePasse) }}
+                        <div class="password-container">
+                            {{ form_widget(form.motDePasse, {'attr': {'class': 'password-input'}}) }}
+                            <i class="fas fa-eye password-toggle-icon" id="password-toggle"></i>
+                        </div>
                         {% if form.motDePasse.vars.errors|length > 0 %}
                             <div class="form-error">{{ form.motDePasse.vars.errors[0].message|trans }}</div>
                         {% endif %}
@@ -677,10 +532,9 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Ajuster dynamiquement la hauteur de la sidebar
+            // Adjust sidebar height dynamically (not needed with fixed position, but kept for consistency)
             const sidebar = document.querySelector('.sidebar');
             const mainContent = document.querySelector('.main-content');
             if (sidebar && mainContent) {
@@ -692,11 +546,11 @@
                 window.addEventListener('resize', adjustSidebarHeight);
             }
 
-            // Soumettre automatiquement le formulaire de photo après sélection
+            // Auto-submit profile picture form on file selection
             const imageInput = document.getElementById('imageForm_image');
             if (imageInput) {
                 imageInput.addEventListener('change', function() {
-                    if (this.files.length > 0) {
+                    if (this.files && this.files.length > 0) {
                         const imageForm = document.getElementById('imageForm');
                         if (imageForm) {
                             imageForm.submit();
@@ -705,7 +559,18 @@
                 });
             }
 
-            // Afficher/masquer le sous-menu des langues et gérer la visibilité de "Help"
+            // Ensure file input click is not prevented
+            const fileLabel = document.querySelector('.custom-file-upload');
+            if (fileLabel) {
+                fileLabel.addEventListener('click', function(e) {
+                    const fileInput = document.getElementById('imageForm_image');
+                    if (fileInput) {
+                        fileInput.click();
+                    }
+                });
+            }
+
+            // Toggle language submenu and manage "Help" visibility
             const languageToggle = document.querySelector('.language-toggle');
             const languageSubmenu = document.querySelector('.language-submenu');
             const helpItem = document.querySelector('.help-item');
@@ -719,20 +584,17 @@
                     } else {
                         helpItem.classList.remove('hidden');
                     }
-                    // Réajuster la hauteur après l'ouverture/fermeture du sous-menu
-                    adjustSidebarHeight();
                 });
 
                 document.addEventListener('click', function(e) {
                     if (!languageToggle.contains(e.target) && !languageSubmenu.contains(e.target)) {
                         languageSubmenu.classList.remove('active');
                         helpItem.classList.remove('hidden');
-                        adjustSidebarHeight();
                     }
                 });
             }
 
-            // Ajout d'un log pour vérifier que le clic sur "English" est bien détecté
+            // Log language link clicks
             const englishLink = document.querySelector('a[href*="/change-language/en"]');
             if (englishLink) {
                 englishLink.addEventListener('click', function(e) {
@@ -747,7 +609,7 @@
                 });
             }
 
-            // Animations au survol des sections
+            // Section hover animations
             const sections = document.querySelectorAll('.settings-section');
             sections.forEach(section => {
                 section.addEventListener('mouseenter', function() {
@@ -755,6 +617,54 @@
                 });
                 section.addEventListener('mouseleave', function() {
                     this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Password toggle functionality
+            const passwordInput = document.querySelector('.password-input');
+            const passwordToggle = document.querySelector('#password-toggle');
+            if (passwordInput && passwordToggle) {
+                passwordToggle.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            }
+
+            // Smooth scroll for section links and manage active state
+            const scrollLinks = document.querySelectorAll('.scroll-link');
+            scrollLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Remove active class from all sidebar items
+                    document.querySelectorAll('.sidebar li').forEach(item => {
+                        item.classList.remove('active');
+                    });
+
+                    // Add active class to the clicked item's parent li
+                    const parentLi = this.parentElement;
+                    if (parentLi) {
+                        parentLi.classList.add('active');
+                    }
+
+                    // Smooth scroll to the target section
+                    const targetId = this.getAttribute('href').substring(1); // Remove '#'
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        const offset = 100; // Adjust based on any fixed header height
+                        const sectionPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - offset;
+                        window.scrollTo({
+                            top: sectionPosition,
+                            behavior: 'smooth'
+                        });
+                        // Add highlight animation
+                        targetSection.classList.add('highlight');
+                        setTimeout(() => {
+                            targetSection.classList.remove('highlight');
+                        }, 1000);
+                    }
                 });
             });
         });

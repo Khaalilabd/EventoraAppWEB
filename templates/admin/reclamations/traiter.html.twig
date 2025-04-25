@@ -3,7 +3,7 @@
 {% block title %}Traiter la Réclamation #{{ reclamation.id }}{% endblock %}
 
 {% block body %}
-    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main">
+     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
         <div class="sidenav-header">
             <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
                 <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
@@ -21,12 +21,40 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
+                        <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-tachometer-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reservationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'true' : 'false' }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-calendar-check text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Réservations</span>
                     </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'show' : '' }}" id="reservationsMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_pack' ? 'active' : '' }}" href="{{ path('admin_reservations_pack') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-box text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Réservations Pack</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_personnalise' ? 'active' : '' }}" href="{{ path('admin_reservations_personnalise') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-calendar-alt text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Réservations Personnalisées</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reclamationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'true' : 'false' }}">
@@ -36,7 +64,7 @@
                         <span class="nav-link-text ms-1">Réclamations</span>
                     </a>
                     <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'show' : '' }}" id="reclamationsMenu">
-                        <ul class="navbar-nav">
+                        <ul class="navbar-nav ms-3">
                             <li class="nav-item">
                                 <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reclamations' ? 'active' : '' }}" href="{{ path('admin_reclamations') }}">
                                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -57,14 +85,14 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' ? 'true' : 'false' }}">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'true' : 'false' }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-users text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Utilisateurs</span>
                     </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' ? 'show' : '' }}" id="usersMenu">
-                        <ul class="navbar-nav">
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'show' : '' }}" id="usersMenu">
+                        <ul class="navbar-nav ms-3">
                             <li class="nav-item">
                                 <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
                                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -81,16 +109,44 @@
                                     <span class="nav-link-text ms-1">Modérateurs</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="{{ path('admin_admins') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-user-cog text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Admins</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'true' : 'false' }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-box text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Packs</span>
                     </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'show' : '' }}" id="packsMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-box-open text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Packs</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_typepacks' ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-tags text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Types de Packs</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">

@@ -430,15 +430,15 @@
                             <li><a href="#">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
-                                    <span class="user-circle">
-                                        {% if app.user and app.user.image %}
-                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                        {% else %}
-                                            <i class="fas fa-user"></i>
-                                        {% endif %}
-                                    </span>
-                                    Contact
-                                </a>
+                                        <span class="user-circle">
+                                            {% if app.user and app.user.image %}
+                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <i class="icon-user"></i>
+                                            {% endif %}
+                                        </span>
+                                        Contact
+                                    </a>
                                 <ul class="dropdown">
                                     {% if app.user %}
                                         <li><a href="{{ path('app_settings') }}">Paramètres</a></li>

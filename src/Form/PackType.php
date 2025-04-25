@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Pack;
 use App\Entity\GService;
 use App\Entity\Typepack;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,6 +20,13 @@ use Symfony\Component\Form\FormEvents;
 
 class PackType extends AbstractType
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -85,12 +93,12 @@ class PackType extends AbstractType
         });
 
         // Événement pour initialiser typepack à partir de type
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $pack = $event->getData();
             $form = $event->getForm();
 
             if ($pack && $pack->getType()) {
-                $typepack = $options['entity_manager']
+                $typepack = $this->entityManager
                     ->getRepository(Typepack::class)
                     ->findOneBy(['type' => $pack->getType()]);
                 if ($typepack) {
@@ -105,7 +113,6 @@ class PackType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Pack::class,
-            'entity_manager' => null,
             'service_choices' => [
                 'Photographe' => 'Photographe',
                 'DJ' => 'DJ',
@@ -114,7 +121,5 @@ class PackType extends AbstractType
                 'Animateur' => 'Animateur',
             ],
         ]);
-
-        $resolver->setRequired(['entity_manager']);
     }
 }

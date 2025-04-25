@@ -18,7 +18,7 @@ class FeedbackRecommendType extends AbstractType
                     'Oui' => 'oui',
                     'Non' => 'non',
                 ],
-                'label' => false, // Pas besoin de label ici, on l’ajoute manuellement dans le template
+                'label' => false, 
                 'expanded' => true,
                 'multiple' => false,
                 'required' => true,
