@@ -173,7 +173,7 @@
                             <p class="text-sm mb-2"><strong>Titre :</strong> {{ reclamation.titre }}</p>
                             <p class="text-sm mb-2"><strong>Description :</strong> {{ reclamation.description }}</p>
                             <p class="text-sm mb-2"><strong>Type :</strong> {{ reclamation.Type }}</p>
-                            <p class="text-sm mb-2"><strong>Statut :</strong> 
+                            <p class="text-sm mb-2"><strong>Statut :</strong>
                                 <span class="badge badge-{{ reclamation.statut|lower|replace({'en_attente': 'en_attente', 'en_cours': 'en_cours', 'resolue': 'resolue', 'rejetée': 'rejetée'}) }}">
                                     {{ reclamation.statut }}
                                 </span>
@@ -186,15 +186,19 @@
                             {{ form_start(form) }}
                                 <div class="mb-3">
                                     {{ form_label(form.reponse, 'Réponse', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.reponse, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_widget(form.reponse, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
                                     {{ form_errors(form.reponse) }}
+                                    <small class="form-text text-muted">Suggestion générée par IA. Vous pouvez la modifier avant de soumettre.</small>
                                 </div>
                                 <div class="mb-3">
                                     {{ form_label(form.statut, 'Nouveau Statut', {'label_attr': {'class': 'form-label'}}) }}
                                     {{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}
                                     {{ form_errors(form.statut) }}
                                 </div>
-                                <button type="submit" class="btn btn-orange">Traiter Réclamation</button>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-orange">Traiter Réclamation</button>
+                                    <button type="button" class="btn btn-secondary" id="regenerateResponse" data-reclamation-id="{{ reclamation.id }}">Régénérer la suggestion</button>
+                                </div>
                             {{ form_end(form) }}
                         </div>
                         <div class="card-footer p-3">
@@ -329,6 +333,16 @@
             background-color: #ff8c00;
         }
 
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
         .card-header.bg-gradient-dark {
             background: linear-gradient(90deg, #343a40, #495057);
         }
@@ -336,5 +350,68 @@
         .text-sm {
             font-size: 0.9rem;
         }
+
+        .form-text {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .d-flex.gap-2 {
+            display: flex;
+            gap: 10px;
+        }
     </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Fonction de débouncing pour limiter les clics rapides
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        document.getElementById('regenerateResponse').addEventListener('click', debounce(function() {
+            const reclamationId = this.getAttribute('data-reclamation-id');
+            const textarea = document.querySelector('textarea[name="reclamation_rep[reponse]"]');
+            const regenerateButton = this;
+
+            // Désactiver le bouton pendant la requête
+            regenerateButton.disabled = true;
+            regenerateButton.textContent = 'Génération en cours...';
+
+            fetch('{{ path('admin_reclamations_generate_response', {'id': reclamation.id}) }}', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.response) {
+                    textarea.value = data.response;
+                } else {
+                    alert('Erreur lors de la génération de la réponse : ' + (data.message || 'Veuillez réessayer.'));
+                }
+            })
+            .catch(error => {
+                console.error('Erreur AJAX:', error);
+                alert('Erreur lors de la communication avec le serveur.');
+            })
+            .finally(() => {
+                // Réactiver le bouton
+                regenerateButton.disabled = false;
+                regenerateButton.textContent = 'Régénérer la suggestion';
+            });
+        }, 5000)); // Délai de 5 secondes entre les clics
+    </script>
 {% endblock %}

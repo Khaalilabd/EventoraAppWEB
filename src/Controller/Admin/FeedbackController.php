@@ -25,7 +25,7 @@ class FeedbackController extends AbstractController
         $selectedUser = $request->query->get('user_filter', null);
         $selectedDate = $request->query->get('date_filter', null);
         $page = $request->query->getInt('page', 1); // Page actuelle (par défaut : 1)
-        $limit = 5; // Nombre de feedbacks par page
+        $limit = 6; // Nombre de feedbacks par page
 
         // Validation des paramètres de tri
         $validSortFields = ['membre.email', 'Vote', 'date', 'recommend'];

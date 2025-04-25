@@ -134,9 +134,14 @@
                     padding: 10px 0;
                     min-width: 150px;
                     z-index: 1001;
+                    visibility: hidden;
+                    opacity: 0;
+                    transition: opacity 0.2s ease, visibility 0.2s ease;
                 }
                 .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
                     display: block !important;
+                    visibility: visible;
+                    opacity: 1;
                 }
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
                     margin: 0;
@@ -336,7 +341,7 @@
                         <a href="{{ path('app_home') }}">Eventora</a>
                     </div>
                     <div class="menu-toggle">
-                        <i class="icon-menu"></i>
+                        <i class="fas fa-bars"></i>
                     </div>
                     <div class="menu-1">
                         <ul>
@@ -358,14 +363,14 @@
                             </li>
                             <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                             <li class="active"><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="">Talk with Evi</a></li>
+                            <li><a href="#">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
                                     <span class="user-circle">
                                         {% if app.user and app.user.image %}
                                             <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
                                         {% else %}
-                                            <i class="icon-user"></i>
+                                            <i class="fas fa-user"></i>
                                         {% endif %}
                                     </span>
                                     Contact
@@ -374,7 +379,7 @@
                                     {% if app.user %}
                                         <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
                                         <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                        <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                        <li><a href="{{ path('app_user_history') }}">Historique</a></li>
                                         {% if is_granted('ROLE_ADMIN') %}
                                             <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                                         {% endif %}
@@ -479,148 +484,171 @@
             </footer>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-        <script>
-            if (typeof jQuery === 'undefined') {
-                console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
-            } else {
-                console.log("jQuery est chargé avec succès");
-                jQuery(document).ready(function($) {
-                    // Menu hamburger
-                    $('.menu-toggle').click(function() {
-                        console.log("Clic sur menu-toggle détecté");
-                        $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                    });
+        {% block javascripts %}
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+            <script>
+                if (typeof jQuery === 'undefined') {
+                    console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
+                } else {
+                    console.log("jQuery est chargé avec succès");
+                    jQuery(document).ready(function($) {
+                        // Menu hamburger
+                        $('.menu-toggle').click(function() {
+                            console.log("Clic sur menu-toggle détecté");
+                            $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                        });
 
-                    // Gestion des sous-menus sur mobile
-                    $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                        if ($(window).width() <= 768) {
-                            console.log("Clic sur dropdown détecté");
-                            e.preventDefault();
-                            $(this).parent().toggleClass('active');
-                        }
-                    });
-
-                    // Gestion des étoiles
-                    const select = $('.star-rating');
-                    const stars = $('.star');
-                    let selectedValue = parseInt(select.val()) || 0;
-
-                    function updateStars(value) {
-                        stars.each(function() {
-                            const starValue = parseInt($(this).attr('data-value'));
-                            if (starValue <= value) {
-                                $(this).addClass('filled');
-                            } else {
-                                $(this).removeClass('filled');
+                        // Dropdowns sur mobile
+                        $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                            if ($(window).width() <= 768) {
+                                console.log("Clic sur dropdown détecté");
+                                e.preventDefault();
+                                $(this).parent().toggleClass('active');
                             }
                         });
-                    }
 
-                    stars.each(function() {
-                        $(this).on('click', function() {
-                            const value = parseInt($(this).attr('data-value'));
-                            selectedValue = value;
-                            select.val(value);
-                            updateStars(value);
-                            console.log('Étoile sélectionnée : ' + value);
-                        });
-                        $(this).on('mouseover', function() {
-                            const value = parseInt($(this).attr('data-value'));
-                            updateStars(value);
-                        });
-                        $(this).on('mouseout', function() {
-                            updateStars(selectedValue);
-                        });
-                    });
-
-                    if (select.val()) {
-                        selectedValue = parseInt(select.val());
-                        updateStars(selectedValue);
-                    }
-
-                    // Soumission AJAX
-                    $('#feedback-form').on('submit', function(event) {
-                        event.preventDefault();
-                        const form = this;
-                        const formData = new FormData(form);
-
-                        // Réinitialiser les erreurs et styles
-                        $('.form-control').removeClass('is-invalid');
-                        $('.text-danger').empty();
-
-                        // Journaliser les données envoyées
-                        for (var pair of formData.entries()) {
-                            console.log('Donnée envoyée : ' + pair[0] + ': ' + pair[1]);
-                        }
-
-                        console.log('Envoi de la requête AJAX', {
-                            url: form.action,
-                            method: form.method,
-                        });
-
-                        $.ajax({
-                            url: form.action,
-                            method: form.method,
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            dataType: 'json',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                            success: function(data) {
-                                console.log('Réponse AJAX reçue', data);
-                                if (data.success) {
-                                    alert('Feedback soumis avec succès !');
-                                    form.reset();
-                                    stars.removeClass('filled');
-                                    selectedValue = 0;
-                                } else {
-                                    // Afficher les erreurs sous les champs concernés
-                                    if (data.errors) {
-                                        for (const field in data.errors) {
-                                            const errorMessage = data.errors[field][0];
-                                            const $field = $(`[name="feedback[${field}]"]`);
-                                            if ($field.length) {
-                                                $field.addClass('is-invalid');
-                                                $field.closest('.form-group').find('.text-danger').text(errorMessage);
-                                            } else {
-                                                console.warn(`Champ ${field} non trouvé dans le formulaire.`);
-                                            }
-                                        }
-                                    }
-                                    alert(data.message || 'Veuillez corriger les erreurs dans le formulaire.');
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Erreur AJAX :', {
-                                    status: status,
-                                    error: error,
-                                    response: xhr.responseText,
+                        // Dropdowns sur desktop avec survol
+                        $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
+                            function() {
+                                console.log("Survol détecté sur un élément has-dropdown");
+                                $(this).find('.dropdown').css({
+                                    'display': 'block',
+                                    'position': 'absolute',
+                                    'top': '100%',
+                                    'right': '0',
+                                    'visibility': 'visible',
+                                    'opacity': '1',
+                                    'z-index': '1001'
                                 });
-                                try {
-                                    const data = JSON.parse(xhr.responseText);
-                                    if (data.errors) {
-                                        for (const field in data.errors) {
-                                            const errorMessage = data.errors[field][0];
-                                            const $field = $(`[name="feedback[${field}]"]`);
-                                            if ($field.length) {
-                                                $field.addClass('is-invalid');
-                                                $field.closest('.form-group').find('.text-danger').text(errorMessage);
-                                            } else {
-                                                console.warn(`Champ ${field} non trouvé dans le formulaire.`);
+                            },
+                            function() {
+                                console.log("Fin du survol");
+                                $(this).find('.dropdown').css({
+                                    'display': 'none',
+                                    'visibility': 'hidden',
+                                    'opacity': '0'
+                                });
+                            }
+                        );
+
+                        // Gestion des étoiles
+                        const select = $('.star-rating');
+                        const stars = $('.star');
+                        let selectedValue = parseInt(select.val()) || 0;
+
+                        function updateStars(value) {
+                            stars.each(function() {
+                                const starValue = parseInt($(this).attr('data-value'));
+                                if (starValue <= value) {
+                                    $(this).addClass('filled');
+                                } else {
+                                    $(this).removeClass('filled');
+                                }
+                            });
+                        }
+
+                        stars.each(function() {
+                            $(this).on('click', function() {
+                                const value = parseInt($(this).attr('data-value'));
+                                selectedValue = value;
+                                select.val(value);
+                                updateStars(value);
+                                console.log('Étoile sélectionnée : ' + value);
+                            });
+                            $(this).on('mouseover', function() {
+                                const value = parseInt($(this).attr('data-value'));
+                                updateStars(value);
+                            });
+                            $(this).on('mouseout', function() {
+                                updateStars(selectedValue);
+                            });
+                        });
+
+                        if (select.val()) {
+                            selectedValue = parseInt(select.val());
+                            updateStars(selectedValue);
+                        }
+
+                        // Soumission AJAX
+                        $('#feedback-form').on('submit', function(event) {
+                            event.preventDefault();
+                            const form = this;
+                            const formData = new FormData(form);
+
+                            $('.form-control').removeClass('is-invalid');
+                            $('.text-danger').empty();
+
+                            for (var pair of formData.entries()) {
+                                console.log('Donnée envoyée : ' + pair[0] + ': ' + pair[1]);
+                            }
+
+                            console.log('Envoi de la requête AJAX', {
+                                url: form.action,
+                                method: form.method,
+                            });
+
+                            $.ajax({
+                                url: form.action,
+                                method: form.method,
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                dataType: 'json',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                                success: function(data) {
+                                    console.log('Réponse AJAX reçue', data);
+                                    if (data.success) {
+                                        alert('Feedback soumis avec succès !');
+                                        form.reset();
+                                        stars.removeClass('filled');
+                                        selectedValue = 0;
+                                    } else {
+                                        if (data.errors) {
+                                            for (const field in data.errors) {
+                                                const errorMessage = data.errors[field][0];
+                                                const $field = $(`[name="feedback[${field}]"]`);
+                                                if ($field.length) {
+                                                    $field.addClass('is-invalid');
+                                                    $field.closest('.form-group').find('.text-danger').text(errorMessage);
+                                                } else {
+                                                    console.warn(`Champ ${field} non trouvé dans le formulaire.`);
+                                                }
                                             }
                                         }
+                                        alert(data.message || 'Veuillez corriger les erreurs dans le formulaire.');
                                     }
-                                    alert(data.message || 'Erreur de communication avec le serveur.');
-                                } catch (e) {
-                                    alert('Erreur de communication avec le serveur. Veuillez réessayer.');
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Erreur AJAX :', {
+                                        status: status,
+                                        error: error,
+                                        response: xhr.responseText,
+                                    });
+                                    try {
+                                        const data = JSON.parse(xhr.responseText);
+                                        if (data.errors) {
+                                            for (const field in data.errors) {
+                                                const errorMessage = data.errors[field][0];
+                                                const $field = $(`[name="feedback[${field}]"]`);
+                                                if ($field.length) {
+                                                    $field.addClass('is-invalid');
+                                                    $field.closest('.form-group').find('.text-danger').text(errorMessage);
+                                                } else {
+                                                    console.warn(`Champ ${field} non trouvé dans le formulaire.`);
+                                                }
+                                            }
+                                        }
+                                        alert(data.message || 'Erreur de communication avec le serveur.');
+                                    } catch (e) {
+                                        alert('Erreur de communication avec le serveur. Veuillez réessayer.');
+                                    }
                                 }
-                            }
+                            });
                         });
                     });
-                });
-            }
-        </script>
+                }
+            </script>
+        {% endblock %}
     </body>
 </html>

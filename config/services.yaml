@@ -18,3 +18,10 @@ services:
         arguments:
             $registry: '@doctrine'
             $entityClass: 'App\Entity\Typepack'
+
+    App\Service\AiResponseGenerator:
+        arguments:
+            $httpClient: '@Symfony\Contracts\HttpClient\HttpClientInterface'
+            $logger: '@monolog.logger'
+            $apiKey: '%env(GEMINI_API_KEY)%'
+            $apiEndpoint: '%env(GEMINI_API_ENDPOINT)%'

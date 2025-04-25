@@ -7,6 +7,7 @@ use App\Entity\ReclamationRep;
 use App\Form\ReclamationType;
 use App\Form\ReclamationRepType;
 use App\Repository\ReclamationRepository;
+use App\Service\AiResponseGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +30,7 @@ class ReclamationsController extends AbstractController
     public function index(Request $request, ReclamationRepository $reclamationRepository): Response
     {
         $page = $request->query->getInt('page', 1);
-        $limit = 4;
+        $limit = 6  ;
         $searchTerm = $request->query->get('search', '');
         $statusFilter = $request->query->get('status_filter', '');
         $sortBy = $request->query->get('sort_by', 'date');
@@ -109,10 +110,19 @@ class ReclamationsController extends AbstractController
     }
 
     #[Route('/{id}/traiter', name: 'admin_reclamations_traiter', methods: ['GET', 'POST'])]
-    public function traiter(Request $request, Reclamation $reclamation): Response
+    public function traiter(Request $request, Reclamation $reclamation, AiResponseGenerator $aiResponseGenerator): Response
     {
         $reclamationRep = new ReclamationRep();
         $reclamationRep->setReclamation($reclamation);
+
+        // Générer une suggestion de réponse initiale
+        $suggestedResponse = $aiResponseGenerator->generateResponse(
+            $reclamation->getTitre(),
+            $reclamation->getDescription(),
+            $reclamation->getType()
+        );
+        $reclamationRep->setReponse($suggestedResponse);
+
         $form = $this->createForm(ReclamationRepType::class, $reclamationRep, [
             'reclamation' => $reclamation,
         ]);
@@ -130,24 +140,38 @@ class ReclamationsController extends AbstractController
         return $this->render('admin/reclamations/traiter.html.twig', [
             'reclamation' => $reclamation,
             'form' => $form->createView(),
+            'suggested_response' => $suggestedResponse,
         ]);
+    }
+
+    #[Route('/{id}/generate-response', name: 'admin_reclamations_generate_response', methods: ['POST'])]
+    public function generateResponse(Reclamation $reclamation, AiResponseGenerator $aiResponseGenerator): JsonResponse
+    {
+        try {
+            $response = $aiResponseGenerator->generateResponse(
+                $reclamation->getTitre(),
+                $reclamation->getDescription(),
+                $reclamation->getType()
+            );
+            return new JsonResponse(['success' => true, 'response' => $response]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'message' => 'Erreur lors de la génération de la réponse : ' . $e->getMessage()], 500);
+        }
     }
 
     #[Route('/{id}/export-pdf', name: 'admin_reclamations_export_pdf', methods: ['GET'])]
     public function exportPdf(Reclamation $reclamation): Response
     {
         try {
-            dump($reclamation->getStatut());
-    
             $html = $this->renderView('admin/reclamations/pdf.html.twig', [
                 'reclamation' => $reclamation,
             ]);
-    
+
             $dompdf = new Dompdf();
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
-    
+
             return new Response(
                 $dompdf->output(),
                 200,

@@ -54,11 +54,11 @@ class FeedbackType extends AbstractType
                 'label' => 'Uploader une image (optionnel)',
                 'mapped' => false,
                 'required' => false,
-                'attr' => ['class' => 'form-control'], // Pas d'attribut accept
+                'attr' => ['class' => 'form-control'], // Pas d'attribut accept 
                 'constraints' => [
                     new File([
                         'maxSize' => '5M',
-                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/PNG'],
                         'mimeTypesMessage' => 'Veuillez uploader une image valide (JPEG ou PNG).',
                     ]),
                 ],

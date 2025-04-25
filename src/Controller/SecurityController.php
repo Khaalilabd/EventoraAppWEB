@@ -125,13 +125,51 @@ class SecurityController extends AbstractController
         ReclamationRepository $reclamationRepository,
         FeedbackRepository $feedbackRepository,
         ReservationpackRepository $reservationpackRepository,
-        ReservationpersonnaliseRepository $reservationpersonnaliseRepository
+        ReservationpersonnaliseRepository $reservationpersonnaliseRepository,
+        Request $request
     ): Response {
         try {
             $this->logger->info('Début de la méthode index pour admin_dashboard');
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-            // Réclamations
+            // Handle date range for reclamations
+            $startDate = $request->query->get('startDate');
+            $endDate = $request->query->get('endDate');
+
+            // Default to last 30 days if no dates provided
+            $endDateObj = $endDate ? new \DateTime($endDate) : new \DateTime();
+            $startDateObj = $startDate ? new \DateTime($startDate) : (clone $endDateObj)->modify('-30 days');
+
+            // Ensure startDate is before endDate
+            if ($startDateObj > $endDateObj) {
+                $temp = $startDateObj;
+                $startDateObj = $endDateObj;
+                $endDateObj = $temp;
+            }
+
+            // Réclamations for selected date range
+            $reclamationsByDateRaw = $reclamationRepository->createQueryBuilder('r')
+                ->select('r.date as date, COUNT(r.id) as count')
+                ->where('r.date BETWEEN :startDate AND :endDate')
+                ->setParameter('startDate', $startDateObj->format('Y-m-d'))
+                ->setParameter('endDate', $endDateObj->format('Y-m-d'))
+                ->groupBy('r.date')
+                ->orderBy('r.date', 'ASC')
+                ->getQuery()
+                ->getResult();
+
+            // Format dates in PHP
+            $reclamationsByDate = array_map(function ($item) {
+                $date = $item['date'] instanceof \DateTime ? $item['date'] : new \DateTime($item['date']);
+                return [
+                    'date' => $date->format('Y-m-d'),
+                    'count' => (int) $item['count']
+                ];
+            }, $reclamationsByDateRaw);
+
+            $totalReclamationsSelected = array_sum(array_column($reclamationsByDate, 'count'));
+
+            // Existing Réclamations logic
             $totalReclamations = $reclamationRepository->count([]);
             $reclamationsTraitees = $reclamationRepository->count(['statut' => Reclamation::STATUT_RESOLU]);
             $pourcentageTraitees = $totalReclamations > 0 ? ($reclamationsTraitees / $totalReclamations) * 100 : 0;
@@ -203,7 +241,6 @@ class SecurityController extends AbstractController
             $totalRefusedReservations = $refusedPackReservations + $refusedPersonaliseReservations;
             $refusalRate = $totalReservations > 0 ? ($totalRefusedReservations / $totalReservations) * 100 : 0;
 
-            // Valeur moyenne des réservations
             $avgPackValue = $reservationpackRepository->createQueryBuilder('rp')
                 ->select('AVG(p.prix) as avgValue')
                 ->leftJoin('rp.pack', 'p')
@@ -228,13 +265,11 @@ class SecurityController extends AbstractController
 
             $avgReservationValue = ($avgPackValue + $avgPersonaliseValue) / 2;
 
-            // Réservations par type
             $reservationsByType = [
                 ['type' => 'Pack', 'count' => $totalPackReservations],
                 ['type' => 'Personnalise', 'count' => $totalPersonaliseReservations]
             ];
 
-            // Réservations par statut
             $packReservationsByStatus = $reservationpackRepository->createQueryBuilder('rp')
                 ->select('rp.status as status, COUNT(rp.IDReservationPack) as count')
                 ->groupBy('rp.status')
@@ -247,7 +282,6 @@ class SecurityController extends AbstractController
                 ->getQuery()
                 ->getResult();
 
-            // Fusionner les statuts
             $reservationsByStatus = [];
             $statuses = ['En attente', 'Validé', 'Refusé'];
             foreach ($statuses as $status) {
@@ -257,13 +291,16 @@ class SecurityController extends AbstractController
                 $reservationsByStatus[] = ['status' => $status, 'count' => $totalCount];
             }
 
-            // Rendu du template
             return $this->render('admin/dashboard.html.twig', [
                 'total_reclamations' => $totalReclamations,
                 'pourcentage_traitees' => $pourcentageTraitees,
                 'pourcentage_non_traitees' => $pourcentageNonTraitees,
                 'reclamations_par_type' => $reclamationsParTypeFormatted,
                 'reclamations_par_statut' => $reclamationsParStatut,
+                'reclamations_by_date' => $reclamationsByDate,
+                'total_reclamations_selected' => $totalReclamationsSelected,
+                'start_date' => $startDateObj->format('Y-m-d'),
+                'end_date' => $endDateObj->format('Y-m-d'),
                 'avg_vote' => $avgVote,
                 'avg_vote_trend' => $avgVoteTrend,
                 'nps_score' => $npsScore,
