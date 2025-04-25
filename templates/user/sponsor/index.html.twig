@@ -20,218 +20,14 @@
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
             <link rel="stylesheet" href="{{ asset('css/sponsors_card.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/sponsor_header.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+
+
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
             <style>
-                /* Page Layout */
-                #page {
-                    min-height: 100vh;
-                    display: flex;
-                    flex-direction: column;
-                    overflow: visible;
-                }
-                /* Navigation fixe */
-                .fh5co-nav {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    z-index: 1000;
-                    background-color: rgba(255, 255, 255, 0.6);
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    backdrop-filter: blur(10px);
-                }
-                .fh5co-nav .container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px 15px;
-                }
-                .fh5co-logo a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-weight: 700;
-                    font-size: 24px;
-                    color: #333;
-                    text-decoration: none;
-                }
-                .user-circle {
-                    display: inline-block;
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
-                    text-align: center;
-                    border-radius: 50%;
-                    background-color: #f0f0f0;
-                    color: #333;
-                    font-size: 20px;
-                    vertical-align: middle;
-                    margin-right: 8px;
-                }
-                .user-circle img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 50%;
-                }
-                .fh5co-nav .menu-1 {
-                    display: block;
-                }
-                .fh5co-nav .menu-1 ul {
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    margin: 0;
-                    padding: 0;
-                    list-style: none;
-                }
-                .fh5co-nav .menu-1 ul li {
-                    margin: 0 15px;
-                    position: relative;
-                }
-                .fh5co-nav .menu-1 ul li a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-size: 16px;
-                    color: #333;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    transition: color 0.3s ease;
-                }
-                .fh5co-nav .menu-1 ul li a:hover {
-                    color: #007bff;
-                }
-                .fh5co-nav .menu-1 ul li.active a {
-                    color: #007bff;
-                    font-weight: 600;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown {
-                    position: relative;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    right: 0;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    list-style: none;
-                    padding: 10px 0;
-                    min-width: 150px;
-                    z-index: 1001;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                    margin: 0;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                    padding: 10px 20px;
-                    display: block;
-                    font-size: 14px;
-                    text-transform: none;
-                    color: #333;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                    color: #007bff;
-                }
-                .menu-toggle {
-                    display: none;
-                    font-size: 24px;
-                    cursor: pointer;
-                    color: #333;
-                    padding: 10px;
-                }
-                /* Header Styles */
-                #fh5co-header.fh5co-cover {
-                    position: relative;
-                    height: 600px;
-                    min-height: 600px;
-                    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-                    overflow: hidden;
-                    margin-top: 80px;
-                    z-index: 1;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    visibility: visible !important;
-                }
-                #stars, #stars2, #stars3 {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: transparent;
-                }
-                #stars {
-                    width: 1px;
-                    height: 1px;
-                    box-shadow:
-                        123px 456px #FFF, 789px 234px #FFF, 345px 678px #FFF, 901px 123px #FFF, 567px 890px #FFF,
-                        234px 567px #FFF, 678px 901px #FFF, 123px 345px #FFF, 890px 789px #FFF, 456px 234px #FFF;
-                    animation: animStar 50s linear infinite;
-                }
-                #stars:after {
-                    content: " ";
-                    position: absolute;
-                    top: 600px;
-                    width: 1px;
-                    height: 1px;
-                    box-shadow:
-                        123px 456px #FFF, 789px 234px #FFF, 345px 678px #FFF, 901px 123px #FFF, 567px 890px #FFF,
-                        234px 567px #FFF, 678px 901px #FFF, 123px 345px #FFF, 890px 789px #FFF, 456px 234px #FFF;
-                }
-                #stars2 {
-                    width: 2px;
-                    height: 2px;
-                    box-shadow:
-                        456px 789px #FFF, 123px 234px #FFF, 678px 345px #FFF, 901px 567px #FFF, 234px 890px #FFF,
-                        789px 123px #FFF, 345px 678px #FFF, 567px 901px #FFF, 890px 456px #FFF, 123px 789px #FFF;
-                    animation: animStar 100s linear infinite;
-                }
-                #stars2:after {
-                    content: " ";
-                    position: absolute;
-                    top: 600px;
-                    width: 2px;
-                    height: 2px;
-                    box-shadow:
-                        456px 789px #FFF, 123px 234px #FFF, 678px 345px #FFF, 901px 567px #FFF, 234px 890px #FFF,
-                        789px 123px #FFF, 345px 678px #FFF, 567px 901px #FFF, 890px 456px #FFF, 123px 789px #FFF;
-                }
-                #stars3 {
-                    width: 3px;
-                    height: 3px;
-                    box-shadow:
-                        789px 123px #FFF, 234px 456px #FFF, 567px 789px #FFF, 901px 234px #FFF, 345px 678px #FFF,
-                        123px 890px #FFF, 678px 345px #FFF, 456px 901px #FFF, 789px 567px #FFF, 234px 123px #FFF;
-                    animation: animStar 150s linear infinite;
-                }
-                #stars3:after {
-                    content: " ";
-                    position: absolute;
-                    top: 600px;
-                    width: 3px;
-                    height: 3px;
-                    box-shadow:
-                        789px 123px #FFF, 234px 456px #FFF, 567px 789px #FFF, 901px 234px #FFF, 345px 678px #FFF,
-                        123px 890px #FFF, 678px 345px #FFF, 456px 901px #FFF, 789px 567px #FFF, 234px 123px #FFF;
-                }
-                @keyframes animStar {
-                    from { transform: translateY(0px); }
-                    to { transform: translateY(-600px); }
-                }
-                #title {
-                    position: relative;
-                    z-index: 10;
-                    text-align: center;
-                    color: #ffffff;
-                    font-family: 'Ripe Mango', cursive;
-                    font-size: 72px;
-                    line-height: 1.2;
-                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-                }
-                #title span {
-                    display: block;
-                }
+              
+                
                 /* Sponsor Cards */
                 .sponsor-card-container {
                     display: grid;
@@ -474,9 +270,6 @@
         <div id="page">
             <nav class="fh5co-nav" role="navigation">
                 <div class="container">
-                    <div class="fh5co-logo">
-                        <a href="{{ path('app_home') }}">Eventora</a>
-                    </div>
                     <div class="menu-toggle">
                         <i class="icon-menu"></i>
                     </div>
@@ -502,7 +295,7 @@
                             </li>
                             <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                             <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="">Talk with Evi</a></li>
+                            <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
                                     <span class="user-circle">

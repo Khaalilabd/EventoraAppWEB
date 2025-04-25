@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,12 +19,11 @@ class GServiceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('Sponsor', EntityType::class, [
+            ->add('sponsor', EntityType::class, [
                 'label' => 'Partenaire (Sponsor)',
                 'class' => Sponsor::class,
                 'choice_label' => 'nom_partenaire',
                 'placeholder' => 'Sélectionner un sponsor',
-                'required' => true,
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'Veuillez sélectionner un partenaire.',
@@ -33,7 +33,6 @@ class GServiceType extends AbstractType
             ])
             ->add('titre', TextType::class, [
                 'label' => 'Titre du service',
-                'required' => true,
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'Le titre du service est requis.',
@@ -57,7 +56,6 @@ class GServiceType extends AbstractType
                     'Autre' => 'autre',
                 ],
                 'placeholder' => 'Choisissez un lieu',
-                'required' => true,
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'Veuillez sélectionner un lieu.',
@@ -76,7 +74,6 @@ class GServiceType extends AbstractType
                     'Autre' => 'autre',
                 ],
                 'placeholder' => 'Choisissez un type',
-                'required' => true,
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'Veuillez sélectionner un type de service.',
@@ -86,7 +83,6 @@ class GServiceType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
-                'required' => true,
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'La description est requise.',
@@ -102,21 +98,45 @@ class GServiceType extends AbstractType
             ])
             ->add('prix', TextType::class, [
                 'label' => 'Prix',
-                'required' => true,
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'Le prix est requis.',
                     ]),
                     new Assert\Regex([
                         'pattern' => '/^\d+(\.\d{1,2})?\s*(dt|Dt)$/',
-                        'message' => 'Le prix doit être un nombre positif suivi de "dt" ou "Dt" (ex. : 99.99 dt).',
+                        'message' => 'Le prix doit être au format "99.99 dt" ou "99.99 Dt".',
                     ]),
-                    new Assert\GreaterThanOrEqual([
-                        'value' => 0,
-                        'message' => 'Le prix ne peut pas être négatif.',
+                    new Assert\Callback([
+                        'callback' => function ($value, $context) {
+                            if (is_string($value)) {
+                                // Extraire la partie numérique
+                                $numericValue = (float) preg_replace('/\s*(dt|Dt)$/', '', $value);
+                                if ($numericValue < 0) {
+                                    $context->buildViolation('Le prix ne peut pas être négatif.')
+                                        ->addViolation();
+                                }
+                            }
+                        },
                     ]),
                 ],
                 'help' => 'Entrez le prix en dinars tunisiens (ex. : 99.99 dt).',
+                'attr' => [
+                    'pattern' => '\d+(\.\d{1,2})?\s*(dt|Dt)', // Validation côté client
+                    'title' => 'Entrez un prix au format 99.99 dt ou 99.99 Dt',
+                ],
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'Image',
+                'required' => false,
+                'mapped' => false, // Géré manuellement dans le contrôleur
+                'constraints' => [
+                    new Assert\File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'mimeTypesMessage' => 'Veuillez uploader une image valide (JPEG ou PNG).',
+                    ]),
+                ],
+                'help' => 'Uploadez une image pour le service (max 2 Mo, formats JPEG ou PNG).',
             ]);
     }
 
@@ -124,6 +144,7 @@ class GServiceType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => GService::class,
+            'attr' => ['novalidate' => 'novalidate'], // Désactive la validation HTML5
         ]);
     }
 }

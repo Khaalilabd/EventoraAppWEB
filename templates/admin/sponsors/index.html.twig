@@ -6,7 +6,8 @@
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
         <div class="sidenav-header">
             <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
-                <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+                <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+                <span class="ms-2 font-weight-bold text-dark">Eventora Dashboard</span>
             </a>
         </div>
         <hr class="horizontal dark mt-0">
@@ -302,6 +303,17 @@
             text-decoration: none;
             transition: all 0.3s ease;
         }
+        /* Bouton de détail */
+        .detail-btn {
+            background-color: transparent;
+            border: 1px solid #17a2b8;
+            color: #17a2b8;
+        }
+        .detail-btn:hover {
+            background-color: #17a2b8;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
 
         /* Bouton d'édition */
         .edit-btn {
@@ -515,6 +527,9 @@
                                                         </td>
                                                         <td data-label="type_partenaire">{{ Sponsor.type_partenaire }}</td>
                                                         <td class="action-cell">
+                                                            <a href="{{ path('admin_sponsors_show', {'id': Sponsor.id_partenaire}) }}" class="action-btn detail-btn">
+                                                                <i class="fas fa-eye"></i> Détail
+                                                            </a>
                                                             <a href="{{ path('admin_sponsors_edit', {'id_partenaire': Sponsor.id_partenaire}) }}" class="action-btn edit-btn">
                                                                 <i class="fas fa-edit"></i> Modifier
                                                             </a>

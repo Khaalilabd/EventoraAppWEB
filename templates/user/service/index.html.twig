@@ -25,340 +25,357 @@
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
             <!-- Navbar -->
             <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
-             <!-- header -->
-             <link rel="stylesheet" href="{{ asset('css/header_service.css') }}">
+            <!-- header -->
+            <link rel="stylesheet" href="{{ asset('css/header_service.css') }}">
             <!-- Fonts for card hover effect -->
             <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700|Playfair+Display:700" rel="stylesheet">
+            <!-- Font Awesome for icons -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
             <style>
-                
-                /* Styles for services section */
+                /* Existing styles */
                 .services-intro {
-    text-align: center;
-    padding: 40px 20px;
-    background: linear-gradient(180deg, #f8fafc, #ffffff);
-    border-radius: 16px;
-    margin: 0 auto 32px;
-    max-width: 1200px;
-}
+                    text-align: center;
+                    padding: 40px 20px;
+                    background: linear-gradient(180deg, #f8fafc, #ffffff);
+                    border-radius: 16px;
+                    margin: 0 auto 32px;
+                    max-width: 1200px;
+                }
 
-.intro-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1a202c;
-    margin-bottom: 16px;
-    animation: fadeIn 1s ease-in-out;
-}
+                .intro-title {
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    color: #1a202c;
+                    margin-bottom: 16px;
+                    animation: fadeIn 1s ease-in-out;
+                }
 
-.intro-text {
-    font-size: 1.2rem;
-    color: #4a5568;
-    max-width: 800px;
-    margin: 0 auto;
-    animation: fadeIn 1.5s ease-in-out;
-}
+                .intro-text {
+                    font-size: 1.2rem;
+                    color: #4a5568;
+                    max-width: 800px;
+                    margin: 0 auto;
+                    animation: fadeIn 1.5s ease-in-out;
+                }
 
-.card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 28px;
-    padding: 40px;
-    max-width: 1440px;
-    margin: 0 auto;
-}
+                .card-container {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                    gap: 28px;
+                    padding: 40px;
+                    max-width: 1440px;
+                    margin: 0 auto;
+                }
 
-.card {
-    width: 100%;
-    height: 450px;
-    perspective: 1400px;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-    
-}
+                .card {
+                    width: 100%;
+                    height: 450px;
+                    perspective: 1400px;
+                    border-radius: 20px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+                    transition: transform 0.4s ease, box-shadow 0.4s ease;
+                }
 
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-}
+                .card:hover {
+                    transform: translateY(-10px);
+                    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+                }
 
-.service-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-    transition: transform 0.5s ease;
-}
+                .service-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 12px;
+                    transition: transform 0.5s ease;
+                }
 
-.content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    transition: transform 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    border-radius: 20px;
-}
+                .content {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    transform-style: preserve-3d;
+                    transition: transform 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                    border-radius: 20px;
+                }
 
-.card:hover .content {
-    transform: rotateY(180deg);
-}
+                .front {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(145deg, #ffffff, #f7fafc);
+                    border-radius: 20px;
+                    padding: 28px;
+                    display: flex;
+                    flex-direction: column;
+                    backface-visibility: hidden;
+                    transform: rotateY(0deg);
+                }
 
-.front {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(145deg, #ffffff, #f7fafc);
-    border-radius: 20px;
-    padding: 28px;
-    display: flex;
-    flex-direction: column;
-    backface-visibility: hidden;
-    transform: rotateY(0deg);
-}
+                .front-content {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    height: 100%;
+                }
 
-.back {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(145deg, #f7fafc, #ffffff);
-    color: #1a202c;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    backface-visibility: hidden;
-    transform: rotateY(180deg);
-    padding: 28px;
-    box-sizing: border-box;
-}
+                .badges {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                }
 
-.back-details {
-    max-height: 200px;
-    overflow-y: auto;
-    text-align: left;
-    font-size: 1rem;
-    line-height: 1.7;
-    scrollbar-width: thin;
-    scrollbar-color: #4a90e2 #e2e8f0;
-    transition: max-height 0.6s ease;
-}
+                .badge {
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    color: #ffffff;
+                    padding: 8px 14px;
+                    border-radius: 24px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: transform 0.3s ease;
+                }
 
-.back-details.expanded {
-    max-height: 320px;
-}
+                .badge.location {
+                    background-color: #4a90e2;
+                }
 
-.back-details::-webkit-scrollbar {
-    width: 8px;
-}
+                .badge.type-service {
+                    background-color: #20c997;
+                }
 
-.back-details::-webkit-scrollbar-track {
-    background: #e2e8f0;
-}
+                .title {
+                    font-size: 1.6rem;
+                    font-weight: 700;
+                    color: #1a202c;
+                    margin: 14px 0;
+                }
 
-.back-details::-webkit-scrollbar-thumb {
-    background: #4a90e2;
-    border-radius: 4px;
-}
+                .card-footer {
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    color: #2d3748;
+                    margin-top: auto;
+                }
 
-.toggle-details {
-    background: none;
-    border: none;
-    color: #4a90e2;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin: 16px 0;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
+                .img {
+                    position: relative;
+                    overflow: hidden;
+                    border-radius: 12px;
+                    margin-bottom: 20px;
+                    height: 200px;
+                }
 
-.toggle-details:hover {
-    color: #2b6cb0;
-}
+                .card:hover .service-img {
+                    transform: scale(1.15);
+                }
 
-.front-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-}
+                .circle {
+                    position: absolute;
+                    background-color: #ff6b6b;
+                    border-radius: 50%;
+                    opacity: 0.35;
+                    transition: opacity 0.4s ease, transform 0.4s ease;
+                }
 
-.badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
+                .circle#right {
+                    right: 12%;
+                    top: 12%;
+                    width: 45px;
+                    height: 45px;
+                }
 
-.badge {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #ffffff;
-    padding: 8px 14px;
-    border-radius: 24px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: transform 0.3s ease;
-}
+                /* Styles for details container */
+                .details-container {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+                    visibility: hidden;
+                    opacity: 0;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                }
 
-.badge:hover {
-    transform: scale(1.05);
-}
+                .details-container.active {
+                    visibility: visible;
+                    opacity: 1;
+                }
 
-.badge.location {
-    background-color: #4a90e2;
-}
+                .details-content {
+                    background: #ffffff;
+                    border-radius: 16px;
+                    max-width: 800px; /* Increased width */
+                    width: 90%;
+                    padding: 32px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                    transform: scale(0.8);
+                    opacity: 0;
+                    transition: transform 0.4s ease, opacity 0.4s ease;
+                    position: relative;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                }
 
-.badge.type-service {
-    background-color: #20c997;
-}
+                .details-container.active .details-content {
+                    transform: scale(1);
+                    opacity: 1;
+                }
 
-.title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #1a202c;
-    margin: 14px 0;
-}
+                .details-content img {
+                    width: 100%;
+                    height: 200px;
+                    object-fit: cover;
+                    border-radius: 12px;
+                    margin-bottom: 20px;
+                }
 
-.card-footer {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-top: auto;
-}
+                .details-content h2 {
+                    font-size: 2.2rem; /* Increased font size */
+                    font-weight: 700;
+                    color: #1a202c;
+                    margin-bottom: 16px;
+                }
 
-.img {
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    height: 200px;
-}
+                .details-content p {
+                    font-size: 1.2rem; /* Increased font size */
+                    color: #4a5568;
+                    margin-bottom: 16px;
+                }
 
-.card:hover .service-img {
-    transform: scale(1.15);
-}
+                .details-content .badges {
+                    margin-bottom: 16px;
+                }
 
-.circle {
-    position: absolute;
-    background-color: #ff6b6b;
-    border-radius: 50%;
-    opacity: 0.35;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
+                .details-content .badge {
+                    font-size: 1.1rem; /* Increased font size */
+                    padding: 10px 16px; /* Slightly larger padding for readability */
+                }
 
-.circle#right {
-    right: 12%;
-    top: 12%;
-    width: 45px;
-    height: 45px;
-}
+                .details-content .close-btn {
+                    position: absolute;
+                    top: 16px;
+                    right: 16px;
+                    background: #ff6b6b;
+                    color: #fff;
+                    border: none;
+                    border-radius: 50%;
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: background 0.3s ease;
+                }
 
-.circle#bottom {
-    bottom: 12%;
-    left: 12%;
-    width: 55px;
-    height: 55px;
-}
+                .details-content .close-btn:hover {
+                    background: #e53e3e;
+                }
 
-.card:hover .circle {
-    opacity: 0.55;
-    transform: scale(1.2);
-}
+                /* Blur effect on main content */
+                #page.blur-active {
+                    filter: blur(5px);
+                }
 
-.reserve-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 24px;
-    background-color: #20c997;
-    color: #ffffff;
-    text-align: center;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 10px;
-    margin-top: 16px;
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-}
+                @media (max-width: 768px) {
+                    .card-container {
+                        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                        padding: 24px;
+                    }
 
-.reserve-btn:hover {
-    background-color: #18a77b;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+                    .card {
+                        height: 400px;
+                    }
 
-.reserve-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
+                    .title {
+                        font-size: 1.4rem;
+                    }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+                    .img {
+                        height: 180px;
+                    }
 
-@media (max-width: 768px) {
-    .card-container {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        padding: 24px;
-    }
+                    .services-intro {
+                        padding: 32px 16px;
+                    }
 
-    .card {
-        height: 400px;
-    }
+                    .intro-title {
+                        font-size: 2rem;
+                    }
 
-    .title {
-        font-size: 1.4rem;
-    }
+                    .intro-text {
+                        font-size: 1rem;
+                    }
 
-    .img {
-        height: 180px;
-    }
+                    .details-content {
+                        max-width: 700px; /* Slightly smaller increase for medium screens */
+                        width: 95%;
+                        padding: 24px;
+                    }
 
-    .services-intro {
-        padding: 32px 16px;
-    }
+                    .details-content img {
+                        height: 150px;
+                    }
 
-    .intro-title {
-        font-size: 2rem;
-    }
+                    .details-content h2 {
+                        font-size: 2rem; /* Adjusted for medium screens */
+                    }
 
-    .intro-text {
-        font-size: 1rem;
-    }
-}
+                    .details-content p {
+                        font-size: 1.1rem; /* Adjusted for medium screens */
+                    }
 
-@media (max-width: 480px) {
-    .card {
-        height: 360px;
-    }
+                    .details-content .badge {
+                        font-size: 1rem; /* Adjusted for medium screens */
+                        padding: 8px 14px;
+                    }
+                }
 
-    .badge {
-        font-size: 0.8rem;
-        padding: 6px 10px;
-    }
+                @media (max-width: 480px) {
+                    .card {
+                        height: 360px;
+                    }
 
-    .reserve-btn {
-        font-size: 0.9rem;
-        padding: 10px 18px;
-    }
+                    .badge {
+                        font-size: 0.8rem;
+                        padding: 6px 10px;
+                    }
 
-    .img {
-        height: 160px;
-    }
-}
+                    .img {
+                        height: 160px;
+                    }
+
+                    .details-content {
+                        max-width: 90%; /* Full width for small screens */
+                        padding: 16px;
+                    }
+
+                    .details-content img {
+                        height: 120px;
+                    }
+
+                    .details-content h2 {
+                        font-size: 1.8rem; /* Adjusted for small screens */
+                    }
+
+                    .details-content p {
+                        font-size: 1rem; /* Adjusted for small screens */
+                    }
+
+                    .details-content .badge {
+                        font-size: 0.9rem; /* Adjusted for small screens */
+                        padding: 6px 12px;
+                    }
+                }
             </style>
         {% endblock %}
 
@@ -373,9 +390,6 @@
         {% block body %}
         <nav class="fh5co-nav" role="navigation">
             <div class="container">
-                <div class="fh5co-logo">
-                    <a href="{{ path('app_home') }}">Eventora</a>
-                </div>
                 <div class="menu-toggle">
                     <i class="icon-menu"></i>
                 </div>
@@ -384,7 +398,7 @@
                         <li ><a href="{{ path('app_home') }}">Home</a></li>
                         <li class="has-dropdown">
                             <a href="#">Réservation</a>
-                            <ul class="dropdown">
+                             <ul class="dropdown">
                                     <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
                                     <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
                                 </ul>
@@ -401,7 +415,7 @@
                         </li>
                         <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                         <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                        <li><a href="">Talk with Evi</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
                         <li class="has-dropdown">
                             <a href="#">
                                 <span class="user-circle">
@@ -458,47 +472,53 @@
                 </div>
             </header>
             <section id="services-section">
-    <div class="services-intro" data-aos="fade-in">
-        <h2 class="intro-title">Nos Services d'Exception</h2>
-        <p class="intro-text">Découvrez nos prestations sur mesure pour sublimer vos espaces et événements avec élégance et créativité.</p>
-    </div>
-    <div class="card-container">
-        {% for service in GServices %}
-            <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" role="article" aria-labelledby="service-title-{{ service.id }}">
-                <div class="content">
-                    <div class="back">
-                        <div class="back-content">
-                            <div class="back-details" id="service-description-{{ service.id }}">
-                                <p><strong>Description:</strong> {{ service.description }}</p>
-                            </div>
-                            <button class="toggle-details" aria-controls="service-description-{{ service.id }}" aria-expanded="false">Voir plus</button>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="front">
-                        <div class="img">
-                            <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img" loading="lazy">
-                            <div class="circle" id="right"></div>
-                            <div class="circle" id="bottom"></div>
-                        </div>
-                        <div class="front-content">
-                            <div class="badges">
-                                <small class="badge location"><i class="fas fa-map-marker-alt"></i> {{ service.location }}</small>
-                                <small class="badge type-service"><i class="fas fa-concierge-bell"></i> {{ service.type_service }}</small>
-                            </div>
-                            <div class="description">
-                                <div class="title">
-                                    <p class="title" id="service-title-{{ service.id }}"><strong>{{ service.titre }}</strong></p>
-                                </div>
-                                <p class="card-footer">{{ service.prix }}</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="services-intro" data-aos="fade-in">
+                    <h2 class="intro-title">Nos Services d'Exception</h2>
+                    <p class="intro-text">Découvrez nos prestations sur mesure pour sublimer vos espaces et événements avec élégance et créativité.</p>
                 </div>
+                <div class="card-container">
+                    {% for service in GServices %}
+                        <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" role="article" aria-labelledby="service-title-{{ service.id }}" data-service-id="{{ service.id }}" data-service-title="{{ service.titre }}" data-service-description="{{ service.description }}" data-service-location="{{ service.location }}" data-service-type="{{ service.type_service }}" data-service-price="{{ service.prix }}" data-service-image="{{ asset(service.image) }}" data-service-partenaire="{{ service.sponsor.nom_partenaire }}">
+                            <div class="content">
+                                <div class="front">
+                                    <div class="img">
+                                        <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img" loading="lazy">
+                                        <div class="circle" id="right"></div>
+                                        <div class="circle" id="bottom"></div>
+                                    </div>
+                                    <div class="front-content">
+                                        <div class="badges">
+                                            <small class="badge location"><i class="fas fa-map-marker-alt"></i> {{ service.location }}</small>
+                                            <small class="badge type-service"><i class="fas fa-concierge-bell"></i> {{ service.type_service }}</small>
+                                        </div>
+                                        <div class="description">
+                                            <div class="title">
+                                                <p class="title" id="service-title-{{ service.id }}"><strong>{{ service.titre }}</strong></p>
+                                            </div>
+                                            <p class="card-footer">{{ service.prix }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+        <!-- Details Container -->
+        <div class="details-container" id="detailsContainer" role="dialog" aria-labelledby="details-title">
+            <div class="details-content">
+                <button class="close-btn" aria-label="Fermer les détails"><i class="fas fa-times"></i></button>
+                <img id="details-image" src="" alt="">
+                <h2 id="details-title"></h2>
+                <div class="badges">
+                    <small class="badge location" id="details-location"></small>
+                    <small class="badge type-service" id="details-type"></small>
+                </div>
+                <p><strong>Partenaire:</strong> <span id="details-partenaire"></span></p>
+                <p><strong>Description: </strong><span id="details-description"></span></p>
+                <p><strong>Prix:</strong> <span id="details-price"></span></p>
             </div>
-        {% endfor %}
-    </div>
-</section>
         </div>
         {% endblock %}
         {% block javascripts %}
@@ -516,6 +536,8 @@
             <script src="{{ asset('js/main.js') }}"></script>
             <!-- Vue.js for card hover effect -->
             <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+            <!-- AOS for animations -->
+            <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
             <script>
                 var eventDate = new Date('2025-12-31'); // Date mise à jour dynamiquement
                 simplyCountdown('.simply-countdown-one', {
@@ -566,6 +588,80 @@
                                 offset: 100
                             });
                         }
+
+                        // Details container logic
+                        const cards = document.querySelectorAll('.card');
+                        const detailsContainer = document.getElementById('detailsContainer');
+                        const detailsContent = detailsContainer.querySelector('.details-content');
+                        const closeBtn = detailsContainer.querySelector('.close-btn');
+                        const pageContent = document.getElementById('page');
+                        const detailsImage = document.getElementById('details-image');
+                        const detailsTitle = document.getElementById('details-title');
+                        const detailsLocation = document.getElementById('details-location');
+                        const detailsType = document.getElementById('details-type');
+                        const detailsDescription = document.getElementById('details-description');
+                        const detailsPrice = document.getElementById('details-price');
+                        const detailsPartenaire = document.getElementById('details-partenaire');
+
+                        cards.forEach(card => {
+                            card.addEventListener('click', () => {
+                                // Populate details
+                                detailsImage.src = card.dataset.serviceImage;
+                                detailsImage.alt = `Image de ${card.dataset.serviceTitle}`;
+                                detailsTitle.textContent = card.dataset.serviceTitle;
+                                detailsLocation.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${card.dataset.serviceLocation}`;
+                                detailsType.innerHTML = `<i class="fas fa-concierge-bell"></i> ${card.dataset.serviceType}`;
+                                detailsDescription.textContent = card.dataset.serviceDescription;
+                                detailsPrice.textContent = card.dataset.servicePrice;
+                                detailsPartenaire.textContent = card.dataset.servicePartenaire;
+
+                                // Show container and apply blur
+                                detailsContainer.classList.add('active');
+                                pageContent.classList.add('blur-active');
+
+                                // Focus on close button for accessibility
+                                closeBtn.focus();
+                            });
+                        });
+
+                        // Close container
+                        closeBtn.addEventListener('click', () => {
+                            detailsContainer.classList.remove('active');
+                            pageContent.classList.remove('blur-active');
+                        });
+
+                        // Close on outside click
+                        detailsContainer.addEventListener('click', (e) => {
+                            if (e.target === detailsContainer) {
+                                detailsContainer.classList.remove('active');
+                                pageContent.classList.remove('blur-active');
+                            }
+                        });
+
+                        // Close on Escape key
+                        document.addEventListener('keydown', (e) => {
+                            if (e.key === 'Escape' && detailsContainer.classList.contains('active')) {
+                                detailsContainer.classList.remove('active');
+                                pageContent.classList.remove('blur-active');
+                            }
+                        });
+
+                        // Accessibility: Trap focus within the details container
+                        const focusableElements = detailsContent.querySelectorAll('button, [tabindex]');
+                        const firstFocusable = focusableElements[0];
+                        const lastFocusable = focusableElements[focusableElements.length - 1];
+
+                        detailsContent.addEventListener('keydown', (e) => {
+                            if (e.key === 'Tab') {
+                                if (e.shiftKey && document.activeElement === firstFocusable) {
+                                    e.preventDefault();
+                                    lastFocusable.focus();
+                                } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+                                    e.preventDefault();
+                                    firstFocusable.focus();
+                                }
+                            }
+                        });
                     } catch (error) {
                         console.error('Error initializing service cards:', error);
                     }

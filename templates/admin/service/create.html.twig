@@ -1,9 +1,9 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Ajouter un service #{{ GService.id }}{% endblock %}
+{% block title %}Ajouter un service{% endblock %}
 
 {% block body %}
-   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
         <div class="sidenav-header">
             <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
                 <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
@@ -133,280 +133,26 @@
         </div>
     </aside>
 
-    <style>
-        /* Sidebar Styling */
-        .sidenav {
-            background-color: #f8f9fa;
-            width: 250px;
-            height: 100vh;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="formbold-main-wrapper">
+                        <div class="formbold-form-wrapper">
+                            {# Affichage des messages flash #}
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                            {% for message in app.flashes('error') %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
 
-        .sidenav-header {
-            padding: 15px;
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            color: #333;
-        }
-
-        .navbar-brand:hover {
-            color: #ff6200;
-        }
-
-        .navbar-nav .nav-link {
-            padding: 12px 15px;
-            color: #555;
-            transition: all 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover {
-            background-color: #ff6200;
-            color: #fff;
-        }
-
-        .navbar-nav .nav-link.active {
-            background-color: #ff6200;
-            color: #fff;
-        }
-
-        .navbar-nav .nav-link .icon {
-            width: 30px;
-            height: 30px;
-            background-color: #fff;
-            transition: background-color 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover .icon,
-        .navbar-nav .nav-link.active .icon {
-            background-color: #ff6200;
-        }
-
-        .navbar-nav .nav-link .icon i {
-            font-size: 16px;
-        }
-
-        .navbar-nav .dropdown-toggle::after {
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .navbar-nav .dropdown-toggle[aria-expanded="true"]::after {
-            transform: rotate(180deg);
-        }
-
-        .collapse {
-            transition: all 0.3s ease;
-        }
-
-        .navbar-nav .collapse .nav-link {
-            padding-left: 40px;
-            font-size: 0.9em;
-        }
-
-        .navbar-nav .collapse .nav-link:hover {
-            background-color: #ff8c00;
-        }
-
-        hr.horizontal {
-            border: 0;
-            height: 1px;
-            background-color: #ddd;
-        }
-
-        /* Conteneur global */
-        .table-container {
-            max-width: 100%;
-            overflow-x: auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Style général du tableau */
-        .modern-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        /* En-têtes */
-        .modern-table thead {
-            background-color: #4a90e2;
-            color: #fff;
-        }
-
-        .modern-table th {
-            padding: 15px;
-            text-align: center;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        /* Corps du tableau */
-        .modern-table tbody tr {
-            transition: background-color 0.3s ease;
-        }
-
-        .modern-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-
-        .modern-table tbody tr:hover {
-            background-color: #e9ecef;
-            transform: translateY(-2px);
-        }
-
-        /* Cellules */
-        .modern-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e9ecef;
-            color: #333;
-            font-size: 0.9rem;
-        }
-
-        /* Cellule des actions */
-        .action-cell {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Boutons d'action */
-        .action-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 12px;
-            font-size: 0.85rem;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        /* Bouton d'édition */
-        .edit-btn {
-            background-color: transparent;
-            border: 1px solid #4a90e2;
-            color: #4a90e2;
-        }
-
-        .edit-btn:hover {
-            background-color: #4a90e2;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Bouton de suppression */
-        .delete-btn {
-            background-color: transparent;
-            border: 1px solid #dc3545;
-            color: #dc3545;
-        }
-
-        .delete-btn:hover {
-            background-color: #dc3545;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Style des boutons de tri */
-        .sort-btn {
-            background: none;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 0;
-            color: inherit;
-            text-align: left;
-        }
-
-        .sort-btn:hover {
-            color: #d1e7ff;
-        }
-
-        .sort-icon {
-            margin-left: 5px;
-            font-size: 0.8em;
-        }
-
-        .sort-asc .sort-icon::after {
-            content: '↑';
-        }
-
-        .sort-desc .sort-icon::after {
-            content: '↓';
-        }
-
-        /* Style du champ de recherche */
-        .input-group {
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .input-group-text {
-            background-color: #f8f9fa;
-            border: none;
-            color: #4a90e2;
-        }
-
-        #searchInput {
-            border: none;
-            padding: 10px;
-            font-size: 0.9rem;
-        }
-
-        #searchInput:focus {
-            outline: none;
-            box-shadow: inset 0 0 5px rgba(74, 144, 226, 0.3);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .modern-table th,
-            .modern-table td {
-                padding: 10px;
-                font-size: 0.8rem;
-            }
-
-            .action-cell {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .action-btn {
-                width: 100%;
-                text-align: center;
-            }
-
-            .input-group {
-                max-width: 100%;
-                margin-bottom: 10px;
-            }
-        }
-    </style>
- <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    <div class="container-fluid py-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="formbold-main-wrapper">
-                    <div class="formbold-form-wrapper">
-                        <form method="post">
                             {{ form_start(form, {'attr': {'class': 'formbold-form'}}) }}
                             <div class="formbold-steps">
                                 <ul>
@@ -425,9 +171,9 @@
                                         {{ form_errors(form.titre) }}
                                     </div>
                                     <div>
-                                        {{ form_widget(form.Sponsor, {'attr': {'class': 'formbold-form-input'}}) }}
-                                        <label for="{{ form.Sponsor.vars.id }}" class="formbold-form-label">Partenaire</label>
-                                        {{ form_errors(form.Sponsor) }}
+                                        {{ form_widget(form.sponsor, {'attr': {'class': 'formbold-form-input'}}) }}
+                                        <label for="{{ form.sponsor.vars.id }}" class="formbold-form-label">Partenaire</label>
+                                        {{ form_errors(form.sponsor) }}
                                     </div>
                                 </div>
 
@@ -438,7 +184,7 @@
                                         {{ form_errors(form.typeService) }}
                                     </div>
                                     <div>
-                                        {{ form_widget(form.location, {'attr': {'class': 'formbold-form-input', 'placeholder': 'Emplacement'}}) }}
+                                        {{ form_widget(form.location, {'attr': {'class': 'formbold-form-input'}}) }}
                                         <label for="{{ form.location.vars.id }}" class="formbold-form-label">Emplacement</label>
                                         {{ form_errors(form.location) }}
                                     </div>
@@ -452,14 +198,13 @@
 
                                 <div class="formbold-input-flex">
                                     <div>
-                                        {{ form_widget(form.prix, {'attr': {'class': 'formbold-form-input', 'placeholder': 'Prix'}}) }}
+                                        {{ form_widget(form.prix, {'attr': {'class': 'formbold-form-input', 'placeholder': 'Prix (ex. : 99.99)'}}) }}
                                         <label for="{{ form.prix.vars.id }}" class="formbold-form-label">Prix</label>
                                         {{ form_errors(form.prix) }}
                                     </div>
                                     <div></div> <!-- Div vide pour maintenir la grille -->
                                 </div>
 
-                                <!-- Hidden fields and CSRF token -->
                                 {{ form_rest(form) }}
 
                                 <div class="formbold-form-btn-wrapper">
@@ -480,182 +225,175 @@
                                 </div>
                             </div>
                             {{ form_end(form) }}
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    .formbold-main-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 48px;
-    }
-
-    .formbold-form-wrapper {
-        margin: 0 auto;
-        max-width: 550px;
-        width: 100%;
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .formbold-steps {
-        padding-bottom: 18px;
-        margin-bottom: 35px;
-        border-bottom: 1px solid #DDE3EC;
-    }
-    .formbold-steps ul {
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        display: flex;
-        gap: 40px;
-    }
-    .formbold-steps li {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 24px;
-        color: #536387;
-    }
-    .formbold-steps li span {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #DDE3EC;
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 24px;
-        color: #536387;
-    }
-    .formbold-steps li.active {
-        color: #07074D;
-    }
-    .formbold-steps li.active span {
-        background: #6A64F1;
-        color: #FFFFFF;
-    }
-
-    .formbold-input-flex {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 22px;
-    }
-    .formbold-input-flex > div {
-        width: 50%;
-        display: flex;
-        flex-direction: column-reverse;
-    }
-    .formbold-textarea {
-        display: flex;
-        flex-direction: column-reverse;
-        margin-bottom: 22px;
-    }
-
-    .formbold-form-input {
-        width: 100%;
-        padding-bottom: 10px;
-        border: none;
-        border-bottom: 1px solid #DDE3EC;
-        background: #FFFFFF;
-        font-weight: 500;
-        font-size: 16px;
-        color: #07074D;
-        outline: none;
-        resize: none;
-    }
-    .formbold-form-input::placeholder {
-        color: #536387;
-    }
-    .formbold-form-input:focus {
-        border-color: #6A64F1;
-    }
-    .formbold-form-label {
-        color: #07074D;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 24px;
-        display: block;
-        margin-bottom: 18px;
-    }
-    .formbold-form-input:focus + .formbold-form-label {
-        color: #6A64F1;
-    }
-
-    .formbold-form-btn-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 25px;
-        margin-top: 25px;
-    }
-    .formbold-back-btn {
-        cursor: pointer;
-        background: #FFFFFF;
-        border: 1px solid #DDE3EC;
-        color: #07074D;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 24px;
-        padding: 10px 25px;
-        border-radius: 5px;
-        text-decoration: none;
-    }
-    .formbold-back-btn:hover {
-        background: #F8F9FA;
-        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
-    }
-    .formbold-btn {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 16px;
-        border-radius: 5px;
-        padding: 12px 25px;
-        border: none;
-        font-weight: 500;
-        background-color: #6A64F1;
-        color: white;
-        cursor: pointer;
-    }
-    .formbold-btn:hover {
-        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    /* Style pour le select */
-    select.formbold-form-input {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='5' viewBox='0 0 10 5'><path fill='%23536387' d='M0 0h10L5 5z'/></svg>") no-repeat right 15px center;
-        padding-right: 30px;
-        border-bottom: 1px solid #DDE3EC;
-    }
-
-    /* Gestion des erreurs Symfony */
-    .form-error {
-        color: #dc3545;
-        font-size: 12px;
-        margin-top: 5px;
-        display: block;
-    }
-</style>
-  {% endblock %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .formbold-main-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+        }
+        .formbold-form-wrapper {
+            margin: 0 auto;
+            max-width: 550px;
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .formbold-steps {
+            padding-bottom: 18px;
+            margin-bottom: 35px;
+            border-bottom: 1px solid #DDE3EC;
+        }
+        .formbold-steps ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            display: flex;
+            gap: 40px;
+        }
+        .formbold-steps li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            color: #536387;
+        }
+        .formbold-steps li span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #DDE3EC;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            color: #536387;
+        }
+        .formbold-steps li.active {
+            color: #07074D;
+        }
+        .formbold-steps li.active span {
+            background: #6A64F1;
+            color: #FFFFFF;
+        }
+        .formbold-input-flex {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+        .formbold-input-flex > div {
+            width: 50%;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .formbold-textarea {
+            display: flex;
+            flex-direction: column-reverse;
+            margin-bottom: 22px;
+        }
+        .formbold-form-input {
+            width: 100%;
+            padding-bottom: 10px;
+            border: none;
+            border-bottom: 1px solid #DDE3EC;
+            background: #FFFFFF;
+            font-weight: 500;
+            font-size: 16px;
+            color: #07074D;
+            outline: none;
+            resize: none;
+        }
+        .formbold-form-input::placeholder {
+            color: #536387;
+        }
+        .formbold-form-input:focus {
+            border-color: #6A64F1;
+        }
+        .formbold-form-label {
+            color: #07074D;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 24px;
+            display: block;
+            margin-bottom: 18px;
+        }
+        .formbold-form-input:focus + .formbold-form-label {
+            color: #6A64F1;
+        }
+        .formbold-form-btn-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 25px;
+            margin-top: 25px;
+        }
+        .formbold-back-btn {
+            cursor: pointer;
+            background: #FFFFFF;
+            border: 1px solid #DDE3EC;
+            color: #07074D;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            padding: 10px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .formbold-back-btn:hover {
+            background: #F8F9FA;
+            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        .formbold-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            padding: 12px 25px;
+            border: none;
+            font-weight: 500;
+            background-color: #6A64F1;
+            color: white;
+            cursor: pointer;
+        }
+        .formbold-btn:hover {
+            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        select.formbold-form-input {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='5' viewBox='0 0 10 5'><path fill='%23536387' d='M0 0h10L5 5z'/></svg>") no-repeat right 15px center;
+            padding-right: 30px;
+            border-bottom: 1px solid #DDE3EC;
+        }
+        .form-error {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+        .alert {
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}

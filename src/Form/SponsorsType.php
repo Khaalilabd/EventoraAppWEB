@@ -112,6 +112,7 @@ class SponsorsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sponsor::class,
+            'attr' => ['novalidate' => 'novalidate'], // Désactive la validation HTML5
         ]);
     }
 }

@@ -6,7 +6,8 @@
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
         <div class="sidenav-header">
             <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
-                <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+                <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+                <span class="ms-2 font-weight-bold text-dark">Eventora Dashboard</span>
             </a>
         </div>
         <hr class="horizontal dark mt-0">
@@ -111,7 +112,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('admin_sponsors') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md.ConcurrentModificationException bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                                         <i class="fas fa-handshake text-dark"></i>
                                     </div>
                                     <span class="nav-link-text ms-1">Partenaires</span>
@@ -141,81 +142,65 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
-
         .sidenav-header {
             padding: 15px;
         }
-
         .navbar-brand {
             display: flex;
             align-items: center;
             color: #333;
         }
-
         .navbar-brand:hover {
             color: #ff6200;
         }
-
         .navbar-nav .nav-link {
             padding: 12px 15px;
             color: #555;
             transition: all 0.3s ease;
         }
-
         .navbar-nav .nav-link:hover {
             background-color: #ff6200;
             color: #fff;
         }
-
         .navbar-nav .nav-link.active {
             background-color: #ff6200;
             color: #fff;
         }
-
         .navbar-nav .nav-link .icon {
             width: 30px;
             height: 30px;
             background-color: #fff;
             transition: background-color 0.3s ease;
         }
-
         .navbar-nav .nav-link:hover .icon,
         .navbar-nav .nav-link.active .icon {
             background-color: #ff6200;
         }
-
         .navbar-nav .nav-link .icon i {
             font-size: 16px;
         }
-
         .navbar-nav .dropdown-toggle::after {
             margin-left: 10px;
             transition: transform 0.3s ease;
         }
-
         .navbar-nav .dropdown-toggle[aria-expanded="true"]::after {
             transform: rotate(180deg);
         }
-
         .collapse {
             transition: all 0.3s ease;
         }
-
         .navbar-nav .collapse .nav-link {
             padding-left: 40px;
             font-size: 0.9em;
         }
-
         .navbar-nav .collapse .nav-link:hover {
             background-color: #ff8c00;
         }
-
         hr.horizontal {
             border: 0;
             height: 1px;
             background-color: #ddd;
         }
-
         /* Conteneur global */
         .table-container {
             max-width: 100%;
@@ -225,7 +210,6 @@
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
-
         /* Style général du tableau */
         .modern-table {
             width: 100%;
@@ -235,13 +219,11 @@
             border-radius: 10px;
             overflow: hidden;
         }
-
         /* En-têtes */
         .modern-table thead {
             background-color: #4a90e2;
             color: #fff;
         }
-
         .modern-table th {
             padding: 15px;
             text-align: center;
@@ -249,21 +231,17 @@
             font-weight: 600;
             text-transform: uppercase;
         }
-
         /* Corps du tableau */
         .modern-table tbody tr {
             transition: background-color 0.3s ease;
         }
-
         .modern-table tbody tr:nth-child(even) {
             background-color: #f8f9fa;
         }
-
         .modern-table tbody tr:hover {
             background-color: #e9ecef;
             transform: translateY(-2px);
         }
-
         /* Cellules */
         .modern-table td {
             padding: 12px 15px;
@@ -272,7 +250,6 @@
             color: #333;
             font-size: 0.9rem;
         }
-
         /* Cellule des actions */
         .action-cell {
             display: flex;
@@ -280,7 +257,6 @@
             justify-content: center;
             align-items: center;
         }
-
         /* Boutons d'action */
         .action-btn {
             display: inline-flex;
@@ -292,33 +268,39 @@
             text-decoration: none;
             transition: all 0.3s ease;
         }
-
+        /* Bouton de détail */
+        .detail-btn {
+            background-color: transparent;
+            border: 1px solid #17a2b8;
+            color: #17a2b8;
+        }
+        .detail-btn:hover {
+            background-color: #17a2b8;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
         /* Bouton d'édition */
         .edit-btn {
             background-color: transparent;
             border: 1px solid #4a90e2;
             color: #4a90e2;
         }
-
         .edit-btn:hover {
             background-color: #4a90e2;
             color: #fff;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
-
         /* Bouton de suppression */
         .delete-btn {
             background-color: transparent;
             border: 1px solid #dc3545;
             color: #dc3545;
         }
-
         .delete-btn:hover {
             background-color: #dc3545;
             color: #fff;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
-
         /* Style des boutons de tri */
         .sort-btn {
             background: none;
@@ -333,48 +315,39 @@
             color: inherit;
             text-align: left;
         }
-
         .sort-btn:hover {
             color: #d1e7ff;
         }
-
         .sort-icon {
             margin-left: 5px;
             font-size: 0.8em;
         }
-
         .sort-asc .sort-icon::after {
             content: '↑';
         }
-
         .sort-desc .sort-icon::after {
             content: '↓';
         }
-
         /* Style du champ de recherche */
         .input-group {
             border-radius: 6px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-
         .input-group-text {
             background-color: #f8f9fa;
             border: none;
             color: #4a90e2;
         }
-
         #searchInput {
             border: none;
             padding: 10px;
             font-size: 0.9rem;
         }
-
         #searchInput:focus {
             outline: none;
             box-shadow: inset 0 0 5px rgba(74, 144, 226, 0.3);
         }
-
         /* Nouveau style pour la pagination */
         .pagination {
             display: flex;
@@ -383,12 +356,10 @@
             gap: 8px;
             font-family: 'Arial', sans-serif;
         }
-
         .pagination .page-item {
             display: inline-flex;
             align-items: center;
         }
-
         .pagination .page-link {
             display: flex;
             align-items: center;
@@ -406,7 +377,6 @@
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
         .pagination .page-link:hover {
             background-color: #4a90e2;
             color: #ffffff;
@@ -414,14 +384,12 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-
         .pagination .page-item.active .page-link {
             background-color: #ff6200;
             border-color: #ff6200;
             color: #ffffff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-
         .pagination .page-item.disabled .page-link {
             background-color: #f8f9fa;
             border-color: #dee2e6;
@@ -429,14 +397,12 @@
             cursor: not-allowed;
             box-shadow: none;
         }
-
         .pagination .page-item.disabled .page-link:hover {
             background-color: #f8f9fa;
             color: #6c757d;
             transform: none;
             box-shadow: none;
         }
-
         /* Responsive */
         @media (max-width: 768px) {
             .modern-table th,
@@ -444,22 +410,18 @@
                 padding: 10px;
                 font-size: 0.8rem;
             }
-
             .action-cell {
                 flex-direction: column;
                 gap: 5px;
             }
-
             .action-btn {
                 width: 100%;
                 text-align: center;
             }
-
             .input-group {
                 max-width: 100%;
                 margin-bottom: 10px;
             }
-
             .pagination .page-link {
                 min-width: 35px;
                 height: 35px;
@@ -571,6 +533,9 @@
                                                         </td>
                                                         <td data-label="prix">{{ Gservice.prix }}</td>
                                                         <td class="action-cell">
+                                                            <a href="{{ path('admin_service_show', {'id': Gservice.id}) }}" class="action-btn detail-btn">
+                                                                <i class="fas fa-eye"></i> Détail
+                                                            </a>
                                                             <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="action-btn edit-btn">
                                                                 <i class="fas fa-edit"></i> Modifier
                                                             </a>
@@ -659,6 +624,7 @@
                     // Mettre à jour l'icône de tri
                     header.classList.add(isAsc ? 'sort-asc' : 'sort-desc');
                     header.classList.remove(isAsc ? 'sort-desc' : 'sort-asc');
+                    header.querySelector('.sort-icon').innerHTML = isAsc ? '↑' : '↓';
 
                     // Trier les lignes
                     sortTable(sortKey, isAsc);
@@ -667,13 +633,14 @@
 
             function sortTable(column, asc) {
                 const rowsArray = Array.from(rows);
+                const isNumeric = ['id', 'prix'].includes(column);
 
                 rowsArray.sort((a, b) => {
                     let aValue = column === 'description'
-                        ? a.querySelector(`td[data-label="${column}"]`).getAttribute('data-full-description') || a.querySelector(`td[data-label="${column}"]`).textContent.trim()
+                        ? (a.querySelector(`td[data-label="${column}"]`).getAttribute('data-full-description') || a.querySelector(`td[data-label="${column}"]`).textContent.trim())
                         : a.querySelector(`td[data-label="${column}"]`).textContent.trim();
                     let bValue = column === 'description'
-                        ? b.querySelector(`td[data-label="${column}"]`).getAttribute('data-full-description') || b.querySelector(`td[data-label="${column}"]`).textContent.trim()
+                        ? (b.querySelector(`td[data-label="${column}"]`).getAttribute('data-full-description') || b.querySelector(`td[data-label="${column}"]`).textContent.trim())
                         : b.querySelector(`td[data-label="${column}"]`).textContent.trim();
 
                     // Gestion des valeurs vides
@@ -681,17 +648,17 @@
                     if (!aValue) return asc ? 1 : -1;
                     if (!bValue) return asc ? -1 : 1;
 
-                    // Gestion des nombres pour ID et Prix
-                    if (column === 'id' || column === 'prix') {
+                    // Tri numérique pour id et prix
+                    if (isNumeric) {
                         aValue = parseFloat(aValue) || 0;
                         bValue = parseFloat(bValue) || 0;
                         return asc ? aValue - bValue : bValue - aValue;
                     }
 
-                    // Tri alphabétique pour les autres colonnes
+                    // Tri textuel pour les autres colonnes
                     return asc
-                        ? aValue.localeCompare(bValue)
-                        : bValue.localeCompare(aValue);
+                        ? aValue.localeCompare(bValue, undefined, { sensitivity: 'base' })
+                        : bValue.localeCompare(aValue, undefined, { sensitivity: 'base' });
                 });
 
                 // Réinsérer les lignes triées

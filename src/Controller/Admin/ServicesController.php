@@ -101,7 +101,13 @@ public function delete(Request $request, GService $gService, EntityManagerInterf
     }
 
 
-  
+    #[Route('/{id}', name: 'admin_service_show', methods: ['GET'])]
+    public function show(GService $GService): Response
+    {
+        return $this->render('admin/service/show.html.twig', [
+            'GService' => $GService,
+        ]);
+    } 
 
 
 }

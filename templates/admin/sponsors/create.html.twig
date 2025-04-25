@@ -400,64 +400,61 @@
             }
         }
     </style>
-  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-4 shadow-sm border-radius-xl">
-                        <div class="card-header p-3">
-                            <h6 class="font-weight-bolder mb-0">Ajouter un partenaire</h6>
-                        </div>
-                        <div class="card-body">
-                            <form method="post">
-                                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-                                <div class="mb-3">
-                                    {{ form_label(form.nomPartenaire, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.nomPartenaire, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom officiel du partenaire'}}) }}
-                                    {{ form_help(form.nomPartenaire, {'help_attr': {'class': 'form-text'}}) }}
-                                    {{ form_errors(form.nomPartenaire, {'error_attr': {'class': 'invalid-feedback'}}) }}
-                                </div>
-                                <div class="mb-3">
-                                    {{ form_label(form.emailPartenaire, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.emailPartenaire, {'attr': {'class': 'form-control', 'placeholder': 'Entrez l\'email du partenaire'}}) }}
-                                    {{ form_help(form.emailPartenaire, {'help_attr': {'class': 'form-text'}}) }}
-                                    {{ form_errors(form.emailPartenaire, {'error_attr': {'class': 'invalid-feedback'}}) }}
-                                </div>
-                                <div class="mb-3">
-                                    {{ form_label(form.telephonePartenaire, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.telephonePartenaire, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le numéro de téléphone'}}) }}
-                                    {{ form_help(form.telephonePartenaire, {'help_attr': {'class': 'form-text'}}) }}
-                                    {{ form_errors(form.telephonePartenaire, {'error_attr': {'class': 'invalid-feedback'}}) }}
-                                </div>
-                                <div class="mb-3">
-                                    {{ form_label(form.adressePartenaire, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.adressePartenaire, {'attr': {'class': 'form-control', 'placeholder': 'Entrez l\'adresse complète'}}) }}
-                                    {{ form_help(form.adressePartenaire, {'help_attr': {'class': 'form-text'}}) }}
-                                    {{ form_errors(form.adressePartenaire, {'error_attr': {'class': 'invalid-feedback'}}) }}
-                                </div>
-                                <div class="mb-3">
-                                    {{ form_label(form.siteWeb, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.siteWeb, {'attr': {'class': 'form-control', 'placeholder': 'Entrez l\'URL du site web'}}) }}
-                                    {{ form_help(form.siteWeb, {'help_attr': {'class': 'form-text'}}) }}
-                                    {{ form_errors(form.siteWeb, {'error_attr': {'class': 'invalid-feedback'}}) }}
-                                </div>
-                                <div class="mb-3">
-                                    {{ form_label(form.typePartenaire, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.typePartenaire, {'attr': {'class': 'form-select'}}) }}
-                                    {{ form_help(form.typePartenaire, {'help_attr': {'class': 'form-text'}}) }}
-                                    {{ form_errors(form.typePartenaire, {'error_attr': {'class': 'invalid-feedback'}}) }}
-                                </div>
-                                <button type="submit" class="btn btn-primary">Ajouter</button>
-                                {{ form_end(form) }}
-                            </form>
-                            <a href="{{ path('admin_sponsors') }}" class="btn btn-outline-secondary mt-2">Retour à la liste</a>
-                        </div>
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4 shadow-sm border-radius-xl">
+                    <div class="card-header p-3">
+                        <h6 class="font-weight-bolder mb-0">Ajouter un partenaire</h6>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                            <div class="mb-3">
+                                {{ form_label(form.nomPartenaire, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.nomPartenaire, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom officiel du partenaire'}}) }}
+                                {{ form_help(form.nomPartenaire, {'help_attr': {'class': 'form-text'}}) }}
+                                {{ form_errors(form.nomPartenaire, {'error_attr': {'class': 'invalid-feedback'}}) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.emailPartenaire, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.emailPartenaire, {'attr': {'class': 'form-control', 'placeholder': 'Entrez l\'email du partenaire'}}) }}
+                                {{ form_help(form.emailPartenaire, {'help_attr': {'class': 'form-text'}}) }}
+                                {{ form_errors(form.emailPartenaire, {'error_attr': {'class': 'invalid-feedback'}}) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.telephonePartenaire, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.telephonePartenaire, {'attr': {'class': 'form-control', 'placeholder': 'Ex. : +21612345678'}}) }}
+                                {{ form_help(form.telephonePartenaire, {'help_attr': {'class': 'form-text'}}) }}
+                                {{ form_errors(form.telephonePartenaire, {'error_attr': {'class': 'invalid-feedback'}}) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.adressePartenaire, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.adressePartenaire, {'attr': {'class': 'form-control', 'placeholder': 'Entrez l\'adresse complète'}}) }}
+                                {{ form_help(form.adressePartenaire, {'help_attr': {'class': 'form-text'}}) }}
+                                {{ form_errors(form.adressePartenaire, {'error_attr': {'class': 'invalid-feedback'}}) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.siteWeb, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.siteWeb, {'attr': {'class': 'form-control', 'placeholder': 'Ex. : https://www.exemple.com'}}) }}
+                                {{ form_help(form.siteWeb, {'help_attr': {'class': 'form-text'}}) }}
+                                {{ form_errors(form.siteWeb, {'error_attr': {'class': 'invalid-feedback'}}) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(form.typePartenaire, null, {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.typePartenaire, {'attr': {'class': 'form-select'}}) }}
+                                {{ form_help(form.typePartenaire, {'help_attr': {'class': 'form-text'}}) }}
+                                {{ form_errors(form.typePartenaire, {'error_attr': {'class': 'invalid-feedback'}}) }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        {{ form_end(form) }}
+                        <a href="{{ path('admin_sponsors') }}" class="btn btn-outline-secondary mt-2">Retour à la liste</a>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
-
+    </div>
+</main>
     <!-- Bootstrap JS (optional, for interactive components) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>>
 

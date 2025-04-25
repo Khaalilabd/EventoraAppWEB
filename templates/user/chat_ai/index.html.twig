@@ -41,10 +41,7 @@
         {% block body %}
         <nav class="fh5co-nav" role="navigation">
             <div class="container">
-                <div class="fh5co-logo">
-                    <a href="{{ path('app_home') }}">Eventora</a>
-                </div>
-                <div class="menu-toggle">
+                 <div class="menu-toggle">
                     <i class="icon-menu"></i>
                 </div>
                 <div class="menu-1">
@@ -53,9 +50,9 @@
                         <li class="has-dropdown">
                             <a href="#">Réservation</a>
                             <ul class="dropdown">
-                                <li><a href="{{ path('admin_reservations_user_personnalise_new') }}">Reservation personnalisée</a></li>
-                                <li><a href="{{ path('admin_reservations_user_pack_new') }}">Reservation Pack</a></li>
-                            </ul>
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                </ul>
                         </li>
                         <li class="has-dropdown">
                             <a href="{{ path('user_packs') }}">Packs</a>
@@ -111,7 +108,7 @@
                 <div class="circle"></div>
             </div>
             <div class="main-content">
-                <h1>Hi, {{ app.user.prenom ??}}<br>Can I help you with anything?</h1>
+                <h1>Hi, {{ app.user.prenom ??""}}<br>Can I help you with anything?</h1>
                 <p>Ready to assist you with anything you need, from answering<br>questions to providing recommendations. Let's get started!</p>
             </div>
         

@@ -25,3 +25,7 @@ services:
             $logger: '@monolog.logger'
             $apiKey: '%env(GEMINI_API_KEY)%'
             $apiEndpoint: '%env(GEMINI_API_ENDPOINT)%'
+
+    App\Controller\Users\ChatAiController:
+        arguments:
+            $geminiApiKey: '%env(GOOGLE_GEMINI_API_KEY)%'

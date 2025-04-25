@@ -86,4 +86,12 @@ public function delete(Request $request, Sponsor $Sponsor, EntityManagerInterfac
             'Sponsor' => $Sponsor,  // Assurez-vous que la variable GService est passée au template
         ]);
     }
+    #[Route('/{id}', name: 'admin_sponsors_show', methods: ['GET'])]
+    public function show(Sponsor $Sponsor): Response
+    {
+        return $this->render('admin/sponsors/show.html.twig', [
+            'Sponsor' => $Sponsor,
+        ]);
+    } 
+
 }
