@@ -101,7 +101,7 @@ class DiscordBotCommand extends Command
                     return;
                 }
 
-                if ($message->channel_id === $_ENV['DISCORD_CHANNEL_ID']) {
+                if ($message->channel_id === $_ENV['DISCORD_CHANNEL_IDs']) {
                     $io->info("Nouveau message détecté !");
                     $io->info("Auteur : {$message->author->username}");
                     $io->info("Canal ID : {$message->channel_id}");
