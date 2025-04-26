@@ -11,9 +11,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Knp\Snappy\Pdf;
 
 #[Route('/reclamation')]
 class UserReclamationController extends AbstractController
@@ -21,19 +24,22 @@ class UserReclamationController extends AbstractController
     private $logger;
     private $twig;
     private $emailSender;
+    private $pdf;
 
     public function __construct(
         LoggerInterface $logger,
         Environment $twig,
-        BrevoEmailSender $emailSender
+        BrevoEmailSender $emailSender,
+        Pdf $pdf
     ) {
         $this->logger = $logger;
         $this->twig = $twig;
         $this->emailSender = $emailSender;
+        $this->pdf = $pdf;
     }
 
     #[Route('/new', name: 'app_reclamation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator): Response
     {
         if (!$this->isGranted('ROLE_MEMBRE') && !$this->isGranted('ROLE_ADMIN')) {
             $this->logger->warning('Accès refusé : utilisateur non autorisé', [
@@ -90,8 +96,22 @@ class UserReclamationController extends AbstractController
                             $reclamation->setDate(new \DateTime());
                         }
 
+                        // Générer l'URL du QR code après avoir persisté la réclamation
                         $entityManager->persist($reclamation);
                         $entityManager->flush();
+
+                        // Générer l'URL pour télécharger le PDF avec ngrok (temporaire pour les tests locaux)
+                        $ngrokBaseUrl = 'https://abcd1234.ngrok.io'; // Remplace par ton URL ngrok réelle
+                        $reclamationUrl = $ngrokBaseUrl . $this->generateUrl('app_reclamation_pdf', ['id' => $reclamation->getId()]);
+                        $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($reclamationUrl);
+                        $this->logger->info('URL du QR code générée', [
+                            'reclamation_id' => $reclamation->getId(),
+                            'reclamation_url' => $reclamationUrl,
+                            'qr_code_url' => $qrCodeUrl,
+                        ]);
+                        $reclamation->setQrCodeUrl($qrCodeUrl);
+                        $entityManager->flush();
+
                         $membreHtml = $this->twig->render('admin/reclamations/email_rec_membre.html.twig', [
                             'reclamation' => $reclamation,
                             'membre' => $user,
@@ -108,7 +128,7 @@ class UserReclamationController extends AbstractController
                             'reclamation_id' => $reclamation->getId(),
                         ]);
 
-                        $admins = $entityManager->getRepository(Membre::class)->findByRole('ADMIN'); 
+                        $admins = $entityManager->getRepository(Membre::class)->findByRole('ADMIN');
                         $this->logger->info('Admins trouvés pour envoi email', [
                             'admin_emails' => array_map(fn($admin) => $admin->getEmail(), $admins),
                             'reclamation_id' => $reclamation->getId(),
@@ -200,8 +220,22 @@ class UserReclamationController extends AbstractController
                     $reclamation->setDate(new \DateTime());
                 }
 
+                // Générer l'URL du QR code après avoir persisté la réclamation
                 $entityManager->persist($reclamation);
                 $entityManager->flush();
+
+                // Générer l'URL pour télécharger le PDF avec ngrok (temporaire pour les tests locaux)
+                $ngrokBaseUrl = 'https://abcd1234.ngrok.io'; // Remplace par ton URL ngrok réelle
+                $reclamationUrl = $ngrokBaseUrl . $this->generateUrl('app_reclamation_pdf', ['id' => $reclamation->getId()]);
+                $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($reclamationUrl);
+                $this->logger->info('URL du QR code générée', [
+                    'reclamation_id' => $reclamation->getId(),
+                    'reclamation_url' => $reclamationUrl,
+                    'qr_code_url' => $qrCodeUrl,
+                ]);
+                $reclamation->setQrCodeUrl($qrCodeUrl);
+                $entityManager->flush();
+
                 $membreHtml = $this->twig->render('admin/reclamations/email_rec_membre.html.twig', [
                     'reclamation' => $reclamation,
                     'membre' => $user,
@@ -222,7 +256,7 @@ class UserReclamationController extends AbstractController
                     $this->addFlash('warning', 'Réclamation soumise, mais l\'email de confirmation n\'a pas pu être envoyé.');
                 }
 
-                $admins = $entityManager->getRepository(Membre::class)->findByRole('ADMIN'); 
+                $admins = $entityManager->getRepository(Membre::class)->findByRole('ADMIN');
                 $this->logger->info('Admins trouvés pour envoi email (non-AJAX)', [
                     'admin_emails' => array_map(fn($admin) => $admin->getEmail(), $admins),
                     'reclamation_id' => $reclamation->getId(),
@@ -282,5 +316,47 @@ class UserReclamationController extends AbstractController
         return $this->render('admin/reclamations/new.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/public/reclamation/{id}', name: 'app_reclamation_public', methods: ['GET'])]
+    public function showPublicReclamation(Reclamation $reclamation): Response
+    {
+        return $this->render('reclamation/public.html.twig', [
+            'reclamation' => $reclamation,
+        ]);
+    }
+
+    #[Route('/public/pdf/{id}', name: 'app_reclamation_pdf', methods: ['GET'])]
+    public function downloadPdf(Reclamation $reclamation): Response
+    {
+        try {
+            // Rendre le template HTML pour le PDF
+            $html = $this->twig->render('reclamation/pdf.html.twig', [
+                'reclamation' => $reclamation,
+            ]);
+
+            // Générer le PDF
+            $pdfContent = $this->pdf->getOutputFromHtml($html);
+
+            // Créer la réponse avec le PDF
+            $response = new Response($pdfContent);
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-Disposition', 'attachment; filename="reclamation_' . $reclamation->getId() . '.pdf"');
+            $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+
+            $this->logger->info('PDF généré pour la réclamation', [
+                'reclamation_id' => $reclamation->getId(),
+            ]);
+
+            return $response;
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la génération du PDF', [
+                'reclamation_id' => $reclamation->getId(),
+                'exception' => $e->getMessage(),
+            ]);
+            throw $this->createNotFoundException('Erreur lors de la génération du PDF : ' . $e->getMessage());
+        }
     }
 }

@@ -14,6 +14,11 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    Knp\Snappy\Pdf:
+        arguments:
+            $binary: '%kernel.project_dir%/bin/wkhtmltopdf' # Ajuste ce chemin selon l'emplacement de wkhtmltopdf
+            $options: []
+
     App\Repository\TypepackRepository:
         arguments:
             $registry: '@doctrine'
