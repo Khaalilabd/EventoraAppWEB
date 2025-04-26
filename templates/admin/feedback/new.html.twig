@@ -345,6 +345,60 @@
                     from { opacity: 0; }
                     to { opacity: 1; }
                 }
+
+                /* Pop-up de succès */
+                .success-popup {
+                    display: none;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #FAF0E6; /* Very light beige */
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    z-index: 10000;
+                    text-align: center;
+                    max-width: 350px;
+                    width: 90%;
+                    border: 1px solid #D2B48C; /* Light beige border */
+                }
+                .success-popup h5 {
+                    font-size: 20px;
+                    color: #8B4513; /* Brown */
+                    margin-bottom: 15px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                }
+                .success-popup h5::before {
+                    content: '✔';
+                    font-size: 24px;
+                    color: #28a745; /* Green checkmark */
+                }
+                .success-popup p {
+                    color: #5C4033; /* Darker brown */
+                    font-size: 14px;
+                    margin: 15px 0;
+                }
+                .success-popup .btn-primary {
+                    padding: 8px 16px;
+                    font-size: 14px;
+                }
+
+                /* Overlay pour la pop-up */
+                .popup-overlay {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 9999;
+                }
+
                 @media (max-width: 768px) {
                     .menu-toggle {
                         display: block;
@@ -392,6 +446,9 @@
                     }
                     #fh5co-event {
                         padding-top: 30px;
+                    }
+                    .success-popup {
+                        max-width: 90%;
                     }
                 }
             </style>
@@ -534,6 +591,14 @@
                 </div>
             </div>
 
+            <!-- Pop-up de succès -->
+            <div id="successPopup" class="success-popup">
+                <h5>Feedback Soumis !</h5>
+                <p>Votre feedback a été soumis avec succès. Merci de partager votre expérience !</p>
+                <button type="button" class="btn btn-primary" id="closeSuccessPopup">Voir l'historique</button>
+            </div>
+            <div id="popupOverlay" class="popup-overlay"></div>
+
             <footer id="fh5co-footer" role="contentinfo">
                 <div class="container">
                     <div class="row copyright">
@@ -656,7 +721,15 @@
                                 success: function(data) {
                                     console.log('Réponse AJAX reçue', data);
                                     if (data.success) {
-                                        alert('Feedback soumis avec succès !');
+                                        // Afficher la pop-up de succès
+                                        $('#successPopup p').text(data.message);
+                                        $('#successPopup').fadeIn();
+                                        $('#popupOverlay').fadeIn();
+
+                                        // Stocker l'URL de redirection
+                                        $('#closeSuccessPopup').data('redirect-url', data.redirectUrl);
+
+                                        // Réinitialiser le formulaire
                                         form.reset();
                                         stars.removeClass('filled');
                                         selectedValue = 0;
@@ -702,6 +775,30 @@
                                     }
                                 }
                             });
+                        });
+
+                        // Fermer la pop-up et rediriger
+                        $('#closeSuccessPopup').on('click', function() {
+                            $('#successPopup').fadeOut();
+                            $('#popupOverlay').fadeOut();
+
+                            // Rediriger vers l'historique des feedbacks
+                            var redirectUrl = $(this).data('redirect-url');
+                            if (redirectUrl) {
+                                window.location.href = redirectUrl;
+                            }
+                        });
+
+                        // Fermer la pop-up en cliquant sur l'overlay
+                        $('#popupOverlay').on('click', function() {
+                            $('#successPopup').fadeOut();
+                            $('#popupOverlay').fadeOut();
+
+                            // Rediriger vers l'historique des feedbacks
+                            var redirectUrl = $('#closeSuccessPopup').data('redirect-url');
+                            if (redirectUrl) {
+                                window.location.href = redirectUrl;
+                            }
                         });
                     });
                 }

@@ -109,7 +109,14 @@ class UserFeedbackController extends AbstractController
                         'feedback_id' => $feedback->getID(),
                     ]);
 
-                    return new JsonResponse(['success' => true, 'message' => 'Feedback soumis avec succès !']);
+                    // Retourner l'URL de redirection vers la page des feedbacks
+                    $redirectUrl = $this->generateUrl('app_user_history_feedbacks');
+
+                    return new JsonResponse([
+                        'success' => true,
+                        'message' => 'Feedback soumis avec succès !',
+                        'redirectUrl' => $redirectUrl
+                    ]);
                 } catch (\Exception $e) {
                     $this->logger->error('Erreur lors de la soumission du feedback', [
                         'exception' => $e->getMessage(),
@@ -155,7 +162,7 @@ class UserFeedbackController extends AbstractController
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Votre feedback a été soumis avec succès !');
-                return $this->redirectToRoute('app_home');
+                return $this->redirectToRoute('app_user_history_feedbacks');
             } catch (\Exception $e) {
                 $this->logger->error('Erreur lors de la soumission du feedback (non-AJAX)', [
                     'exception' => $e->getMessage(),
