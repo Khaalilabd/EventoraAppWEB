@@ -8,7 +8,7 @@
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
-         {% block stylesheets %}
+        {% block stylesheets %}
             <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
             <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
@@ -18,7 +18,8 @@
             <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
             <style>
                 body {
                     background-image: url({{ asset('images/img_bg_3.jpg') }});
@@ -250,31 +251,51 @@
                 .event-wrap .form-check-input {
                     transform: scale(1.5);
                 }
-                .star-rating-container {
-                    display: flex;
-                    justify-content: center;
-                    font-size: 30px;
-                    gap: 10px;
-                }
-                .star-rating-container select {
-                    display: none;
-                }
-                .star-rating-container .stars {
-                    display: flex;
-                }
-                .star-rating-container .star {
-                    cursor: pointer;
-                    color: #ddd !important;
-                    transition: color 0.2s ease;
-                }
-                .star-rating-container .star.filled {
-                    color: #ffd700 !important;
-                }
                 .text-danger {
                     font-size: 14px;
                     margin-top: 5px;
                     color: #ff4d4d;
                     display: block;
+                }
+                .checkbox-container {
+                    max-height: 200px;
+                    overflow-y: auto;
+                    padding: 10px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 5px;
+                }
+                .checkbox-container .form-check {
+                    margin-bottom: 10px;
+                }
+                /* Flatpickr custom styles */
+                .flatpickr-calendar {
+                    background: rgba(255, 255, 255, 0.95);
+                    border-radius: 5px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                    font-family: 'Work Sans', sans-serif;
+                }
+                .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+                    background: #007bff;
+                    border-color: #007bff;
+                    color: #fff;
+                }
+                .flatpickr-day.today {
+                    border-color: #007bff;
+                }
+                .flatpickr-day:hover {
+                    background: rgba(0, 123, 255, 0.1);
+                }
+                .flatpickr-monthDropdown-months, .flatpickr-year {
+                    color: #333;
+                }
+                .flatpickr-prev-month, .flatpickr-next-month {
+                    color: #007bff;
+                }
+                .flatpickr-prev-month:hover, .flatpickr-next-month:hover {
+                    color: #0056b3;
+                }
+                .flatpickr-disabled {
+                    color: #ccc;
                 }
                 @media (max-width: 768px) {
                     .menu-toggle {
@@ -321,7 +342,7 @@
                     .fh5co-heading h2 {
                         font-size: 28px;
                     }
-                    #fh5co-event {
+                    .fh5co-event {
                         padding-top: 30px;
                     }
                 }
@@ -336,7 +357,7 @@
                         <a href="{{ path('app_home') }}">Eventora</a>
                     </div>
                     <div class="menu-toggle">
-                        <i class="icon-menu"></i>
+                        <i class="fas fa-bars"></i>
                     </div>
                     <div class="menu-1">
                         <ul>
@@ -344,8 +365,8 @@
                             <li class="has-dropdown">
                                 <a href="#">Réservation</a>
                                 <ul class="dropdown">
-                                    <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                    <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Réservation personnalisée</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Réservation Pack</a></li>
                                 </ul>
                             </li>
                             <li><a href="{{ path('user_packs') }}">Packs</a></li>
@@ -356,16 +377,16 @@
                                     <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
                                 </ul>
                             </li>
-                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                            <li ><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="">Talk with Evi</a></li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
+                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="#">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
                                     <span class="user-circle">
                                         {% if app.user and app.user.image %}
                                             <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
                                         {% else %}
-                                            <i class="icon-user"></i>
+                                            <i class="fas fa-user"></i>
                                         {% endif %}
                                     </span>
                                     Contact
@@ -406,7 +427,6 @@
                                         <div class="event-wrap animate-box">
                                             <h3>Remplissez le Formulaire</h3>
                                             {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'personnalise-reservation-form'}}) }}
-                                                <!-- Display global form errors (if any) -->
                                                 {% if form_errors(form) %}
                                                     <div class="alert alert-danger">
                                                         {{ form_errors(form) }}
@@ -430,7 +450,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.numtel, 'Numéro de téléphone') }}
-                                                    {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '20', 'pattern': '\\+?[1-9]\\d{1,14}'}}) }}
+                                                    {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '8', 'pattern': '[0-9]{8}', 'placeholder': '12345678'}}) }}
                                                     <div class="text-danger">{{ form_errors(form.numtel) }}</div>
                                                 </div>
                                                 <div class="form-group">
@@ -440,7 +460,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form_label(form.date, 'Date de l\'événement') }}
-                                                    {{ form_widget(form.date, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                                    {{ form_widget(form.date, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'text', 'placeholder': 'YYYY-MM-DD'}}) }}
                                                     <div class="text-danger">{{ form_errors(form.date) }}</div>
                                                 </div>
                                                 <div class="form-group">
@@ -463,8 +483,6 @@
                     </div>
                 </div>
             </div>
-
-           
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -475,19 +493,22 @@
         <script>
             if (typeof jQuery === 'undefined') {
                 console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
+                Swal.fire({
+                    title: 'Erreur',
+                    text: 'Impossible de charger jQuery. Vérifiez votre connexion.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             } else {
-                console.log("jQuery est chargé avec succès");
                 jQuery(document).ready(function($) {
                     // Menu hamburger
                     $('.menu-toggle').click(function() {
-                        console.log("Clic sur menu-toggle détecté");
                         $('.fh5co-nav .menu-1 ul').toggleClass('active');
                     });
 
                     // Dropdowns sur mobile
                     $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
                         if ($(window).width() <= 768) {
-                            console.log("Clic sur dropdown détecté");
                             e.preventDefault();
                             $(this).parent().toggleClass('active');
                         }
@@ -496,19 +517,13 @@
                     // Dropdowns sur desktop avec survol
                     $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
                         function() {
-                            console.log("Survol détecté sur un élément has-dropdown");
                             $(this).find('.dropdown').css({
                                 'display': 'block',
-                                'position': 'absolute',
-                                'top': '100%',
-                                'right': '0',
                                 'visibility': 'visible',
-                                'opacity': '1',
-                                'z-index': '1001'
+                                'opacity': '1'
                             });
                         },
                         function() {
-                            console.log("Fin du survol");
                             $(this).find('.dropdown').css({
                                 'display': 'none',
                                 'visibility': 'hidden',
@@ -518,162 +533,128 @@
                     );
 
                     // Flatpickr pour le champ date
-                    const datePicker = flatpickr("#{{ form.date.vars.id }}", {
+                    flatpickr("#{{ form.date.vars.id }}", {
                         dateFormat: "Y-m-d",
                         minDate: "today",
                         locale: "fr",
                         allowInput: true,
+                        altInput: true,
+                        altFormat: "d/m/Y",
                         onChange: function(selectedDates, dateStr, instance) {
-                            const input = instance.element;
+                            const $input = $(instance.element);
                             if (selectedDates.length === 0) {
-                                input.classList.add('is-invalid');
-                                $(input).next('.text-danger').text('La date est requise.');
+                                $input.addClass('is-invalid').next('.text-danger').text('La date est requise.');
                             } else {
-                                input.classList.remove('is-invalid');
-                                $(input).next('.text-danger').text('');
+                                $input.removeClass('is-invalid').next('.text-danger').text('');
                             }
                         },
                         onClose: function(selectedDates, dateStr, instance) {
-                            const input = instance.element;
+                            const $input = $(instance.element);
                             if (selectedDates.length === 0) {
-                                input.classList.add('is-invalid');
-                                $(input).next('.text-danger').text('La date est requise.');
+                                $input.addClass('is-invalid').next('.text-danger').text('La date est requise.');
                             }
                         }
                     });
 
-                    // Ajouter la classe is-invalid si des erreurs existent lors du chargement de la page
-                    $('.form-control').each(function() {
-                        const errorDiv = $(this).next('.text-danger');
-                        if (errorDiv.length > 0 && errorDiv.text().trim() !== '') {
-                            $(this).addClass('is-invalid');
-                        }
+                    // Validation du champ numéro de téléphone
+                    $('#{{ form.numtel.vars.id }}').on('input', function() {
+                        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
                     });
 
                     // Gestion de la soumission du formulaire via AJAX
                     $('#personnalise-reservation-form').on('submit', function(e) {
-                        e.preventDefault(); // Empêche la soumission classique du formulaire
-
+                        e.preventDefault();
                         let isValid = true;
 
+                        // Clear existing errors
+                        $('.form-control').removeClass('is-invalid');
+                        $('.text-danger').text('');
+
                         // Validation du champ nom
-                        const nomInput = $('#{{ form.nom.vars.id }}');
-                        const nomValue = nomInput.val().trim();
+                        const $nomInput = $('#{{ form.nom.vars.id }}');
+                        const nomValue = $nomInput.val().trim();
                         if (!nomValue) {
-                            nomInput.addClass('is-invalid');
-                            nomInput.next('.text-danger').text('Le nom est requis.');
+                            $nomInput.addClass('is-invalid').next('.text-danger').text('Le nom est requis.');
                             isValid = false;
                         } else if (nomValue.length > 255) {
-                            nomInput.addClass('is-invalid');
-                            nomInput.next('.text-danger').text('Le nom ne peut pas dépasser 255 caractères.');
+                            $nomInput.addClass('is-invalid').next('.text-danger').text('Le nom ne peut pas dépasser 255 caractères.');
                             isValid = false;
-                        } else {
-                            nomInput.removeClass('is-invalid');
-                            nomInput.next('.text-danger').text('');
                         }
 
                         // Validation du champ prénom
-                        const prenomInput = $('#{{ form.prenom.vars.id }}');
-                        const prenomValue = prenomInput.val().trim();
+                        const $prenomInput = $('#{{ form.prenom.vars.id }}');
+                        const prenomValue = $prenomInput.val().trim();
                         if (!prenomValue) {
-                            prenomInput.addClass('is-invalid');
-                            prenomInput.next('.text-danger').text('Le prénom est requis.');
+                            $prenomInput.addClass('is-invalid').next('.text-danger').text('Le prénom est requis.');
                             isValid = false;
                         } else if (prenomValue.length > 255) {
-                            prenomInput.addClass('is-invalid');
-                            prenomInput.next('.text-danger').text('Le prénom ne peut pas dépasser 255 caractères.');
+                            $prenomInput.addClass('is-invalid').next('.text-danger').text('Le prénom ne peut pas dépasser 255 caractères.');
                             isValid = false;
-                        } else {
-                            prenomInput.removeClass('is-invalid');
-                            prenomInput.next('.text-danger').text('');
                         }
 
                         // Validation du champ email
-                        const emailInput = $('#{{ form.email.vars.id }}');
-                        const emailValue = emailInput.val().trim();
+                        const $emailInput = $('#{{ form.email.vars.id }}');
+                        const emailValue = $emailInput.val().trim();
                         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         if (!emailValue) {
-                            emailInput.addClass('is-invalid');
-                            emailInput.next('.text-danger').text('L\'email est requis.');
+                            $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email est requis.');
                             isValid = false;
                         } else if (!emailRegex.test(emailValue)) {
-                            emailInput.addClass('is-invalid');
-                            emailInput.next('.text-danger').text('L\'email n\'est pas valide.');
+                            $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email n\'est pas valide.');
                             isValid = false;
                         } else if (emailValue.length > 255) {
-                            emailInput.addClass('is-invalid');
-                            emailInput.next('.text-danger').text('L\'email ne peut pas dépasser 255 caractères.');
+                            $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email ne peut pas dépasser 255 caractères.');
                             isValid = false;
-                        } else {
-                            emailInput.removeClass('is-invalid');
-                            emailInput.next('.text-danger').text('');
                         }
 
                         // Validation du champ numéro de téléphone
-                        const numtelInput = $('#{{ form.numtel.vars.id }}');
-                        const numtelValue = numtelInput.val().trim();
-                        const numtelRegex = /^\+?[1-9]\d{1,14}$/;
+                        const $numtelInput = $('#{{ form.numtel.vars.id }}');
+                        const numtelValue = $numtelInput.val().trim();
                         if (!numtelValue) {
-                            numtelInput.addClass('is-invalid');
-                            numtelInput.next('.text-danger').text('Le numéro de téléphone est requis.');
+                            $numtelInput.addClass('is-invalid').next('.text-danger').text('Le numéro de téléphone est requis.');
                             isValid = false;
-                        } else if (!numtelRegex.test(numtelValue)) {
-                            numtelInput.addClass('is-invalid');
-                            numtelInput.next('.text-danger').text('Le numéro de téléphone n\'est pas valide (ex: +1234567890).');
+                        } else if (!/^[0-9]{8}$/.test(numtelValue)) {
+                            $numtelInput.addClass('is-invalid').next('.text-danger').text('Le numéro doit contenir exactement 8 chiffres (ex. 12345678).');
                             isValid = false;
-                        } else if (numtelValue.length > 20) {
-                            numtelInput.addClass('is-invalid');
-                            numtelInput.next('.text-danger').text('Le numéro de téléphone ne peut pas dépasser 20 caractères.');
-                            isValid = false;
-                        } else {
-                            numtelInput.removeClass('is-invalid');
-                            numtelInput.next('.text-danger').text('');
                         }
 
                         // Validation du champ date
-                        const dateInput = $('#{{ form.date.vars.id }}');
-                        const dateValue = dateInput.val();
+                        const $dateInput = $('#{{ form.date.vars.id }}');
+                        const dateValue = $dateInput.val();
                         if (!dateValue) {
-                            dateInput.addClass('is-invalid');
-                            dateInput.next('.text-danger').text('La date est requise.');
+                            $dateInput.addClass('is-invalid').next('.text-danger').text('La date est requise.');
+                            isValid = false;
+                        } else if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+                            $dateInput.addClass('is-invalid').next('.text-danger').text('La date doit être au format YYYY-MM-DD.');
                             isValid = false;
                         } else {
-                            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-                            if (!dateRegex.test(dateValue)) {
-                                dateInput.addClass('is-invalid');
-                                dateInput.next('.text-danger').text('La date doit être au format YYYY-MM-DD (ex. 2025-04-11).');
+                            const selectedDate = new Date(dateValue);
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            if (selectedDate < today) {
+                                $dateInput.addClass('is-invalid').next('.text-danger').text('La date doit être aujourd\'hui ou dans le futur.');
                                 isValid = false;
-                            } else {
-                                const selectedDate = new Date(dateValue);
-                                const today = new Date();
-                                today.setHours(0, 0, 0, 0);
-                                if (selectedDate < today) {
-                                    dateInput.addClass('is-invalid');
-                                    dateInput.next('.text-danger').text('La date doit être aujourd\'hui ou dans le futur.');
-                                    isValid = false;
-                                } else {
-                                    dateInput.removeClass('is-invalid');
-                                    dateInput.next('.text-danger').text('');
-                                }
                             }
                         }
 
                         // Validation des services
                         const servicesChecked = $('input[name="{{ form.services.vars.full_name }}[]"]:checked').length;
-                        const servicesContainer = $('#{{ form.services.vars.id }}').closest('.form-group');
+                        const $servicesContainer = $('#{{ form.services.vars.id }}').closest('.form-group');
                         if (servicesChecked === 0) {
-                            servicesContainer.find('.text-danger').text('Veuillez sélectionner au moins un service.');
+                            $servicesContainer.find('.text-danger').text('Veuillez sélectionner au moins un service.');
                             isValid = false;
-                        } else {
-                            servicesContainer.find('.text-danger').text('');
                         }
 
                         if (isValid) {
+                            const $form = $(this);
                             $.ajax({
                                 url: '{{ path('user_reservation_personnalise_new') }}',
                                 method: 'POST',
-                                data: $(this).serialize(),
+                                data: $form.serialize(),
                                 dataType: 'json',
+                                beforeSend: function() {
+                                    $form.find('button[type="submit"]').prop('disabled', true);
+                                },
                                 success: function(response) {
                                     if (response.success) {
                                         Swal.fire({
@@ -689,15 +670,14 @@
                                     } else {
                                         Swal.fire({
                                             title: 'Erreur',
-                                            text: response.message || 'Une erreur s\'est produite lors de la création de la réservation.',
+                                            text: response.message || 'Une erreur s\'est produite.',
                                             icon: 'error',
                                             confirmButtonText: 'OK'
                                         });
                                         if (response.errors) {
                                             $.each(response.errors, function(field, errors) {
                                                 const $field = $('#{{ form.vars.id }}_' + field);
-                                                $field.addClass('is-invalid');
-                                                $field.next('.text-danger').text(errors.join(', '));
+                                                $field.addClass('is-invalid').next('.text-danger').text(errors.join(', '));
                                             });
                                         }
                                     }
@@ -709,24 +689,35 @@
                                         icon: 'error',
                                         confirmButtonText: 'OK'
                                     });
+                                },
+                                complete: function() {
+                                    $form.find('button[type="submit"]').prop('disabled', false);
                                 }
                             });
+                        }
+                    });
+
+                    // Apply is-invalid on page load
+                    $('.form-control').each(function() {
+                        const $errorDiv = $(this).next('.text-danger');
+                        if ($errorDiv.length && $errorDiv.text().trim()) {
+                            $(this).addClass('is-invalid');
                         }
                     });
                 });
             }
         </script>
-         <footer id="fh5co-footer" role="contentinfo">
-                <div class="container">
-                    <div class="row copyright">
-                        <div class="col-md-12 text-center">
-                            <p>
-                                <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                                <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
-                            </p>
-                        </div>
+        <footer id="fh5co-footer" role="contentinfo">
+            <div class="container">
+                <div class="row copyright">
+                    <div class="col-md-12 text-center">
+                        <p>
+                            <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                            <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                        </p>
                     </div>
                 </div>
-            </footer>
+            </div>
+        </footer>
     </body>
 </html>

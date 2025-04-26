@@ -1,460 +1,463 @@
 <!DOCTYPE html>
 <html class="no-js">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title %}Créer une Réservation Pack - Eventora{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}Créer une Réservation Pack - Eventora{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        {% block stylesheets %}
-            <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
-            <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
-            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
-            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
-            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
-            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
-            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-            <style>
-                body {
-                    background-image: url({{ asset('images/img_bg_3.jpg') }});
-                    background-size: cover;
-                    background-position: center;
-                    background-attachment: fixed;
-                    min-height: 100vh;
-                    margin: 0;
-                    padding: 0;
-                    position: relative;
-                }
-                body::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.4);
-                    z-index: -1;
-                }
-                #page {
-                    min-height: 100vh;
-                    display: flex;
-                    flex-direction: column;
-                    padding-top: 70px;
-                }
-                .fh5co-nav {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    z-index: 1000;
-                    background: rgba(255, 255, 255, 0.9);
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
-                }
-                .fh5co-nav .container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px 15px;
-                    max-width: 1200px;
-                    margin: 0 auto;
-                }
-                .fh5co-logo a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-weight: 700;
-                    font-size: 24px;
-                    color: #934D1A;
-                    text-decoration: none;
-                }
-                .user-circle {
-                    display: inline-block;
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
-                    text-align: center;
-                    border-radius: 50%;
-                    background-color: #f0f0f0;
-                    color: #333;
-                    font-size: 20px;
-                    vertical-align: middle;
-                    margin-right: 8px;
-                }
-                .user-circle img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 50%;
-                }
-                .fh5co-nav .menu-1 {
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
+
+    {% block stylesheets %}
+        <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+        <style>
+            body {
+                background-image: url({{ asset('images/img_bg_3.jpg') }});
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+                min-height: 100vh;
+                margin: 0;
+                padding: 0;
+                position: relative;
+            }
+            body::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: -1;
+            }
+            #page {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                padding-top: 80px;
+            }
+            .fh5co-nav {
+                position: fixed;
+                top: 0;
+                width: 100%;
+                z-index: 1000;
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+            }
+            .fh5co-nav .container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 15px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            .fh5co-logo a {
+                font-family: 'Work Sans', sans-serif;
+                font-weight: 700;
+                font-size: 24px;
+                color: #934D1A;
+                text-decoration: none;
+            }
+            .user-circle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #f0f0f0;
+                color: #333;
+                font-size: 20px;
+                margin-right: 8px;
+            }
+            .user-circle img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+            .fh5co-nav .menu-1 ul {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            .fh5co-nav .menu-1 ul li {
+                margin: 0 15px;
+            }
+            .fh5co-nav .menu-1 ul li a {
+                font-family: 'Work Sans', sans-serif;
+                font-size: 16px;
+                color: #333;
+                text-transform: uppercase;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+            .fh5co-nav .menu-1 ul li a:hover {
+                color: #934D1A;
+            }
+            .fh5co-nav .menu-1 ul li.active a {
+                color: #934D1A;
+                font-weight: 600;
+            }
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background-color: #fff;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                list-style: none;
+                padding: 10px 0;
+                min-width: 180px;
+                z-index: 1001;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+            .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                display: block;
+                opacity: 1;
+                visibility: visible;
+            }
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                padding: 10px 20px;
+                font-size: 14px;
+                text-transform: none;
+                color: #333;
+            }
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                color: #007bff;
+                background-color: #f8f9fa;
+            }
+            .menu-toggle {
+                display: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: #333;
+                padding: 10px;
+            }
+            .event-wrap {
+                background: rgba(255, 255, 255, 0.9);
+                padding: 40px;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                max-width: 700px;
+                margin: 0 auto;
+            }
+            .event-wrap h3 {
+                color: #333;
+                margin-bottom: 30px;
+                font-size: 24px;
+                text-transform: uppercase;
+                text-align: center;
+            }
+            .event-wrap .form-group {
+                margin-bottom: 20px;
+            }
+            .event-wrap .form-group label {
+                color: #333;
+                font-weight: 500;
+                margin-bottom: 8px;
+                display: block;
+            }
+            .event-wrap .form-control {
+                background: #fff;
+                border: 1px solid #ced4da;
+                color: #333;
+                border-radius: 6px;
+                padding: 12px;
+                font-size: 16px;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            }
+            .event-wrap .form-control::placeholder {
+                color: #6c757d;
+            }
+            .event-wrap .form-control:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+                outline: none;
+            }
+            .event-wrap .form-control.is-invalid {
+                border-color: #dc3545;
+            }
+            .event-wrap .btn {
+                margin-top: 10px;
+                padding: 12px;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: 500;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+            .event-wrap .btn-primary {
+                background-color: #007bff;
+                border-color: #007bff;
+            }
+            .event-wrap .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+                transform: translateY(-2px);
+            }
+            .event-wrap .btn-secondary {
+                background-color: #6c757d;
+                border-color: #6c757d;
+            }
+            .event-wrap .btn-secondary:hover {
+                background-color: #545b62;
+                border-color: #545b62;
+                transform: translateY(-2px);
+            }
+            .event-wrap .btn:disabled {
+                cursor: not-allowed;
+                opacity: 0.65;
+            }
+            #fh5co-footer {
+                background: rgba(255, 255, 255, 0.95);
+                padding: 20px 0;
+                margin-top: auto;
+            }
+            #fh5co-event {
+                margin-top: 60px;
+                flex: 1 0 auto;
+                padding-top: 50px;
+            }
+            .fh5co-heading {
+                margin-bottom: 40px;
+            }
+            .fh5co-heading span {
+                color: #fff;
+                font-size: 18px;
+                display: block;
+                margin-bottom: 10px;
+            }
+            .fh5co-heading h2 {
+                color: #fff;
+                font-size: 36px;
+                margin: 0;
+            }
+            .text-danger {
+                font-size: 14px;
+                margin-top: 5px;
+                color: #dc3545;
+                display: block;
+            }
+            .loading-spinner {
+                display: none;
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #007bff;
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                animation: spin 1s linear infinite;
+                margin: 10px auto;
+            }
+            .selected-pack {
+                margin-top: 10px;
+                padding: 10px;
+                background-color: #e9f7ff;
+                border-radius: 6px;
+                color: #333;
+                font-size: 14px;
+                display: none;
+            }
+            .selected-pack.visible {
+                display: block;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            @media (max-width: 768px) {
+                .menu-toggle {
                     display: block;
                 }
                 .fh5co-nav .menu-1 ul {
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    margin: 0;
-                    padding: 0;
-                    list-style: none;
-                }
-                .fh5co-nav .menu-1 ul li {
-                    margin: 0 15px;
-                    position: relative;
-                }
-                .fh5co-nav .menu-1 ul li a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-size: 16px;
-                    color: #333;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    transition: color 0.3s ease;
-                }
-                .fh5co-nav .menu-1 ul li a:hover {
-                    color: #934D1A;
-                }
-                .fh5co-nav .menu-1 ul li.active a {
-                    color: #934D1A !important;
-                    font-weight: 600;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown {
-                    position: relative;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
                     display: none;
+                    flex-direction: column;
                     position: absolute;
-                    top: 100%;
-                    right: 0;
+                    top: 60px;
+                    left: 0;
+                    width: 100%;
                     background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    list-style: none;
-                    padding: 10px 0;
-                    min-width: 150px;
-                    z-index: 1001;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block !important;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                    margin: 0;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                    padding: 10px 20px;
-                    display: block;
-                    font-size: 14px;
-                    text-transform: none;
-                    color: #333;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                    color: #007bff;
-                }
-                .menu-toggle {
-                    display: none;
-                    font-size: 24px;
-                    cursor: pointer;
-                    color: #333;
-                    padding: 10px;
-                }
-                .event-wrap {
-                    background: rgba(0, 123, 255, 0.2);
-                    padding: 40px;
-                    border-radius: 10px;
-                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-                    max-width: 700px;
-                    margin: 0 auto;
-                }
-                .event-wrap h3 {
-                    color: #fff;
-                    margin-bottom: 30px;
-                    font-size: 24px;
-                    text-transform: uppercase;
-                }
-                .event-wrap .form-group {
-                    margin-bottom: 20px;
-                }
-                .event-wrap .form-group label {
-                    color: #fff;
-                    font-weight: 500;
-                    margin-bottom: 5px;
-                    display: block;
-                }
-                .event-wrap .form-control {
-                    background: rgba(255, 255, 255, 0.1);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    color: #fff;
-                    border-radius: 5px;
-                    padding: 10px;
-                }
-                .event-wrap .form-control::placeholder {
-                    color: rgba(255, 255, 255, 0.7);
-                }
-                .event-wrap .form-control:focus {
-                    border-color: #007bff;
-                    box-shadow: none;
-                }
-                .event-wrap .form-control.is-invalid {
-                    border-color: #ff4d4d;
-                }
-                .event-wrap .form-control select {
-                    color: #fff;
-                    background: rgba(255, 255, 255, 0.1);
-                }
-                .event-wrap .form-control select option {
-                    color: #333;
-                    background: #fff;
-                }
-                .event-wrap .btn {
-                    margin-top: 10px;
-                    padding: 10px;
-                    border-radius: 5px;
-                    font-size: 16px;
-                }
-                .event-wrap .btn-primary {
-                    background-color: #007bff;
-                    border-color: #007bff;
-                }
-                .event-wrap .btn-secondary {
-                    background-color: #6c757d;
-                    border-color: #6c757d;
-                }
-                #fh5co-footer {
-                    background: rgba(255, 255, 255, 0.9);
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
                     padding: 20px 0;
                 }
-                #fh5co-event {
-                    margin-top: 60px;
-                    flex: 1 0 auto;
-                    padding-top: 50px;
+                .fh5co-nav .menu-1 ul.active {
+                    display: flex;
                 }
-                .fh5co-heading {
-                    margin-bottom: 40px;
+                .fh5co-nav .menu-1 ul li {
+                    margin: 10px 0;
+                    text-align: center;
                 }
-                .fh5co-heading span {
-                    color: #fff;
-                    font-size: 18px;
+                .user-circle {
+                    margin: 0 auto 5px;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    position: static;
+                    display: none;
+                    box-shadow: none;
+                    background-color: #f8f9fa;
+                }
+                .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
                     display: block;
-                    margin-bottom: 10px;
+                }
+                .event-wrap {
+                    max-width: 90%;
+                    padding: 25px;
                 }
                 .fh5co-heading h2 {
-                    color: #fff;
-                    font-size: 36px;
-                    margin: 0;
+                    font-size: 28px;
                 }
-                .event-wrap .form-check-label {
-                    color: #fff;
-                    margin-left: 10px;
+                #fh5co-event {
+                    padding-top: 30px;
                 }
-                .event-wrap .form-check-input {
-                    transform: scale(1.5);
-                }
-                .star-rating-container {
-                    display: flex;
-                    justify-content: center;
-                    font-size: 30px;
-                    gap: 10px;
-                }
-                .star-rating-container select {
-                    display: none;
-                }
-                .star-rating-container .stars {
-                    display: flex;
-                }
-                .star-rating-container .star {
-                    cursor: pointer;
-                    color: #ddd !important;
-                    transition: color 0.2s ease;
-                }
-                .star-rating-container .star.filled {
-                    color: #ffd700 !important;
-                }
-                .text-danger {
-                    font-size: 14px;
-                    margin-top: 5px;
-                    color: #ff4d4d;
-                    display: block;
-                }
-                @media (max-width: 768px) {
-                    .menu-toggle {
-                        display: block;
-                    }
-                    .fh5co-nav .menu-1 ul {
-                        display: none;
-                        flex-direction: column;
-                        position: absolute;
-                        top: 60px;
-                        left: 0;
-                        width: 100%;
-                        background-color: #fff;
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                        padding: 20px 0;
-                    }
-                    .fh5co-nav .menu-1 ul.active {
-                        display: flex;
-                    }
-                    .fh5co-nav .menu-1 ul li {
-                        margin: 10px 0;
-                        text-align: center;
-                    }
-                    .user-circle {
-                        margin-right: 0;
-                        margin-bottom: 5px;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                        position: static;
-                        display: none;
-                        box-shadow: none;
-                        background-color: #f8f9fa;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none !important;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block !important;
-                    }
-                    .event-wrap {
-                        max-width: 90%;
-                        padding: 20px;
-                    }
-                    .fh5co-heading h2 {
-                        font-size: 28px;
-                    }
-                    #fh5co-event {
-                        padding-top: 30px;
-                    }
-                }
-            </style>
-        {% endblock %}
-    </head>
-    <body>
-        <div id="page">
-            <nav class="fh5co-nav" role="navigation">
-                <div class="container">
-                    <div class="fh5co-logo">
-                        <a href="{{ path('app_home') }}">Eventora</a>
-                    </div>
-                    <div class="menu-toggle">
-                        <i class="icon-menu"></i>
-                    </div>
-                    <div class="menu-1">
-                        <ul>
-                            <li><a href="{{ path('app_home') }}">Home</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">Réservation</a>
-                                <ul class="dropdown">
-                                    <li ><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li class="active"><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="{{ path('user_packs') }}">Packs</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">Services</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_services') }}">Service</a></li>
-                                    <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                            <li ><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="">Talk with Evi</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">
-                                    <span class="user-circle">
-                                        {% if app.user and app.user.image %}
-                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                        {% else %}
-                                            <i class="icon-user"></i>
-                                        {% endif %}
-                                    </span>
-                                    Contact
-                                </a>
-                                <ul class="dropdown">
-                                    {% if app.user %}
-                                        <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                        <li><a href="{{ path('app_user_history') }}">Historique</a></li>
-                                        {% if is_granted('ROLE_ADMIN') %}
-                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                        {% endif %}
-                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                    {% else %}
-                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
+            }
+        </style>
+    {% endblock %}
+</head>
+<body>
+<div id="page">
+    <nav class="fh5co-nav" role="navigation">
+        <div class="container">
+            <div class="fh5co-logo">
+                <a href="{{ path('app_home') }}">Eventora</a>
+            </div>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="menu-1">
+                <ul>
+                    <li><a href="{{ path('app_home') }}">Home</a></li>
+                    <li class="has-dropdown">
+                        <a href="#">Réservation</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ path('user_reservation_personnalise_new') }}">Réservation personnalisée</a></li>
+                            <li class="active"><a href="{{ path('user_reservation_pack_new') }}">Réservation Pack</a></li>
                         </ul>
-                    </div>
+                    </li>
+                    <li><a href="{{ path('user_packs') }}">Packs</a></li>
+                    <li class="has-dropdown">
+                        <a href="#">Services</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ path('user_services') }}">Service</a></li>
+                            <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
+                    <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                    <li><a href="#">Talk with Evi</a></li>
+                    <li class="has-dropdown">
+                        <a href="#">
+                            <span class="user-circle">
+                                {% if app.user and app.user.image %}
+                                    <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                {% else %}
+                                    <i class="fas fa-user"></i>
+                                {% endif %}
+                            </span>
+                            Contact
+                        </a>
+                        <ul class="dropdown">
+                            {% if app.user %}
+                                <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                <li><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                {% endif %}
+                                <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                            {% else %}
+                                <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="fh5co-event">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
+                    <span>Votre Événement Parfait</span>
+                    <h2>Créer une Réservation Pack</h2>
                 </div>
-            </nav>
+            </div>
+            <div class="row">
+                <div class="display-t">
+                    <div class="display-tc">
+                        <div class="col-md-10 col-md-offset-1">
+                            <div class="col-md-8 col-md-offset-2 text-center">
+                                <div class="event-wrap animate-box">
+                                    <h3>Remplissez le Formulaire</h3>
+                                    {{ form_start(form, {'attr': {'class': 'form', 'id': 'pack-reservation-form'}}) }}
+                                        {% if form_errors(form) %}
+                                            <div class="alert alert-danger">
+                                                {{ form_errors(form) }}
+                                            </div>
+                                        {% endif %}
 
-            <div id="fh5co-event">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                            <span>Votre Événement Parfait</span>
-                            <h2>Créer une Réservation Pack</h2>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="display-t">
-                            <div class="display-tc">
-                                <div class="col-md-10 col-md-offset-1">
-                                    <div class="col-md-8 col-md-offset-2 text-center">
-                                        <div class="event-wrap animate-box">
-                                            <h3>Remplissez le Formulaire</h3>
-                                            {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'pack-reservation-form'}}) }}
-                                                <!-- Display global form errors (if any) -->
-                                                {% if form_errors(form) %}
-                                                    <div class="alert alert-danger">
-                                                        {{ form_errors(form) }}
-                                                    </div>
-                                                {% endif %}
-
-                                                <div class="form-group">
-                                                    {{ form_label(form.nom, 'Nom') }}
-                                                    {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255'}}) }}
-                                                    <div class="text-danger">{{ form_errors(form.nom) }}</div>
-                                                </div>
-                                                <div class="form-group">
-                                                    {{ form_label(form.prenom, 'Prénom') }}
-                                                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255'}}) }}
-                                                    <div class="text-danger">{{ form_errors(form.prenom) }}</div>
-                                                </div>
-                                                <div class="form-group">
-                                                    {{ form_label(form.email, 'Email') }}
-                                                    {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email', 'maxlength': '255'}}) }}
-                                                    <div class="text-danger">{{ form_errors(form.email) }}</div>
-                                                </div>
-                                                <div class="form-group">
-                                                    {{ form_label(form.numtel, 'Numéro de téléphone') }}
-                                                    {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '20', 'pattern': '\\+?[1-9]\\d{1,14}'}}) }}
-                                                    <div class="text-danger">{{ form_errors(form.numtel) }}</div>
-                                                </div>
-                                                <div class="form-group">
-                                                    {{ form_label(form.description, 'Description de l\'événement') }}
-                                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
-                                                    <div class="text-danger">{{ form_errors(form.description) }}</div>
-                                                </div>
-                                                <div class="form-group">
-                                                    {{ form_label(form.date, 'Date de l\'événement') }}
-                                                    {{ form_widget(form.date, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
-                                                    <div class="text-danger">{{ form_errors(form.date) }}</div>
-                                                </div>
-                                                <div class="form-group">
-                                                    {{ form_label(form.pack, 'Sélectionnez un Pack') }}
-                                                    {{ form_widget(form.pack, {'attr': {'class': 'form-control select2', 'required': 'required'}}) }}
-                                                    <div class="text-danger">{{ form_errors(form.pack) }}</div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <button type="submit" class="btn btn-primary btn-block">Créer la Réservation</button>
-                                                    <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
-                                                </div>
-                                            {{ form_end(form) }}
+                                        <div class="form-group">
+                                            {{ form_label(form.nom, 'Nom', {'label_attr': {'for': form.nom.vars.id}}) }}
+                                            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'id': form.nom.vars.id}}) }}
+                                            <div class="text-danger">{{ form_errors(form.nom) }}</div>
                                         </div>
-                                    </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.prenom, 'Prénom', {'label_attr': {'for': form.prenom.vars.id}}) }}
+                                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'id': form.prenom.vars.id}}) }}
+                                            <div class="text-danger">{{ form_errors(form.prenom) }}</div>
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.email, 'Email', {'label_attr': {'for': form.email.vars.id}}) }}
+                                            {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email', 'maxlength': '255', 'id': form.email.vars.id}}) }}
+                                            <div class="text-danger">{{ form_errors(form.email) }}</div>
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.numtel, 'Numéro de téléphone', {'label_attr': {'for': form.numtel.vars.id}}) }}
+                                            {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '8', 'pattern': '[0-9]{8}', 'placeholder': '12345678', 'id': form.numtel.vars.id}}) }}
+                                            {{ form_help(form.numtel) }}
+                                            <div class="text-danger">{{ form_errors(form.numtel) }}</div>
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.description, 'Description de l\'événement', {'label_attr': {'for': form.description.vars.id}}) }}
+                                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5', 'id': form.description.vars.id}}) }}
+                                            <div class="text-danger">{{ form_errors(form.description) }}</div>
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.date, 'Date de l\'événement', {'label_attr': {'for': form.date.vars.id}}) }}
+                                            {{ form_widget(form.date, {'attr': {'class': 'form-control', 'required': 'required', 'id': form.date.vars.id}}) }}
+                                            <div class="text-danger">{{ form_errors(form.date) }}</div>
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.pack, 'Sélectionnez un Pack', {'label_attr': {'for': form.pack.vars.id}}) }}
+                                            {{ form_widget(form.pack, {'attr': {'class': 'form-control select2', 'required': 'required', 'id': form.pack.vars.id}}) }}
+                                            <div class="text-danger">{{ form_errors(form.pack) }}</div>
+                                            <div class="selected-pack" id="selected-pack"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary btn-block">Créer la Réservation</button>
+                                            <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
+                                            <div class="loading-spinner"></div>
+                                        </div>
+                                    {{ form_end(form) }}
                                 </div>
                             </div>
                         </div>
@@ -462,300 +465,268 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <script>
-            if (typeof jQuery === 'undefined') {
-                console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
-            } else {
-                console.log("jQuery est chargé avec succès");
-                jQuery(document).ready(function($) {
-                    // Initialize Select2 for pack field
-                    const $packSelect = $('#{{ form.pack.vars.id }}');
-                    $packSelect.select2({
-                        ajax: {
-                            url: '{{ path('user_pack_search') }}',
-                            dataType: 'json',
-                            delay: 250,
-                            data: function(params) {
-                                return { q: params.term || '' };
-                            },
-                            processResults: function(data) {
-                                return { results: data.results };
-                            },
-                            cache: true
-                        },
-                        minimumInputLength: 0, // Allow dropdown to open without typing
-                        placeholder: 'Rechercher ou sélectionner un pack...',
-                        allowClear: true,
-                        templateResult: function(data) { return data.text; },
-                        templateSelection: function(data) { return data.text || data.id; }
-                    });
-
-                    // Open dropdown on click
-                    $packSelect.on('select2:open', function() {
-                        if (!$(this).data('select2').dropdown.$search.val()) {
-                            // Trigger AJAX search with empty query to load initial options
-                            $(this).data('select2').trigger('query', { term: '' });
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    if (typeof jQuery === 'undefined') {
+        console.error("jQuery n'est pas chargé.");
+        Swal.fire({
+            title: 'Erreur',
+            text: 'Impossible de charger jQuery. Vérifiez votre connexion.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    } else {
+        jQuery(document).ready(function($) {
+            // Initialize Select2
+            const $packSelect = $('#{{ form.pack.vars.id }}');
+            $packSelect.select2({
+                ajax: {
+                    url: '{{ path('user_pack_search') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return { q: params.term || '' };
+                    },
+                    processResults: function(data) {
+                        if (!data.results || data.results.length === 0) {
+                            return { results: [{ id: '', text: 'Aucun pack trouvé', disabled: true }] };
                         }
-                    });
+                        return { results: data.results };
+                    },
+                    error: function() {
+                        Swal.fire({
+                            title: 'Erreur',
+                            text: 'Impossible de charger les packs.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return { results: [] };
+                    }
+                },
+                minimumInputLength: 0,
+                placeholder: 'Rechercher ou sélectionner un pack...',
+                allowClear: true
+            });
 
-                    // Menu hamburger
-                    $('.menu-toggle').click(function() {
-                        console.log("Clic sur menu-toggle détecté");
-                        $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                    });
+            // Display selected pack
+            $packSelect.on('select2:select', function(e) {
+                const selectedText = e.params.data.text;
+                const $selectedPackDiv = $('#selected-pack');
+                $selectedPackDiv.text(`Pack sélectionné : ${selectedText}`).addClass('visible');
+            });
 
-                    // Dropdowns sur mobile
-                    $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                        if ($(window).width() <= 768) {
-                            console.log("Clic sur dropdown détecté");
-                            e.preventDefault();
-                            $(this).parent().toggleClass('active');
-                        }
-                    });
+            $packSelect.on('select2:unselect', function() {
+                const $selectedPackDiv = $('#selected-pack');
+                $selectedPackDiv.text('').removeClass('visible');
+            });
 
-                    // Dropdowns sur desktop avec survol
-                    $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
-                        function() {
-                            console.log("Survol détecté sur un élément has-dropdown");
-                            $(this).find('.dropdown').css({
-                                'display': 'block',
-                                'position': 'absolute',
-                                'top': '100%',
-                                'right': '0',
-                                'visibility': 'visible',
-                                'opacity': '1',
-                                'z-index': '1001'
-                            });
-                        },
-                        function() {
-                            console.log("Fin du survol");
-                            $(this).find('.dropdown').css({
-                                'display': 'none',
-                                'visibility': 'hidden',
-                                'opacity': '0'
-                            });
-                        }
-                    );
+            $packSelect.on('select2:open', function() {
+                if (!$(this).data('select2').dropdown.$search.val()) {
+                    $(this).data('select2').trigger('query', { term: '' });
+                }
+            });
 
-                    // Flatpickr pour le champ date
-                    const datePicker = flatpickr("#{{ form.date.vars.id }}", {
-                        dateFormat: "Y-m-d",
-                        minDate: "today",
-                        locale: "fr",
-                        allowInput: true,
-                        onChange: function(selectedDates, dateStr, instance) {
-                            const input = instance.element;
-                            if (selectedDates.length === 0) {
-                                input.classList.add('is-invalid');
-                                $(input).next('.text-danger').text('La date est requise.');
-                            } else {
-                                input.classList.remove('is-invalid');
-                                $(input).next('.text-danger').text('');
-                            }
-                        },
-                        onClose: function(selectedDates, dateStr, instance) {
-                            const input = instance.element;
-                            if (selectedDates.length === 0) {
-                                input.classList.add('is-invalid');
-                                $(input).next('.text-danger').text('La date est requise.');
-                            }
-                        }
-                    });
+            // Menu toggle
+            $('.menu-toggle').click(function() {
+                $('.fh5co-nav .menu-1 ul').toggleClass('active');
+            });
 
-                    // Ajouter la classe is-invalid si des erreurs existent lors du chargement de la page
-                    $('.form-control').each(function() {
-                        const errorDiv = $(this).next('.text-danger');
-                        if (errorDiv.length > 0 && errorDiv.text().trim() !== '') {
-                            $(this).addClass('is-invalid');
-                        }
-                    });
+            // Mobile dropdowns
+            $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                if ($(window).width() <= 768) {
+                    e.preventDefault();
+                    $(this).parent().toggleClass('active').siblings().removeClass('active');
+                }
+            });
 
-                    // Gestion de la soumission du formulaire via AJAX
-                    $('#pack-reservation-form').on('submit', function(e) {
-                        e.preventDefault();
+            // Flatpickr
+            flatpickr("#{{ form.date.vars.id }}", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                locale: "fr",
+                allowInput: true,
+                onChange: function(selectedDates, dateStr, instance) {
+                    const $input = $(instance.element);
+                    if (selectedDates.length === 0) {
+                        $input.addClass('is-invalid').next('.text-danger').text('La date est requise.');
+                    } else {
+                        $input.removeClass('is-invalid').next('.text-danger').text('');
+                    }
+                }
+            });
 
-                        let isValid = true;
+            // Numtel input validation
+            $('#{{ form.numtel.vars.id }}').on('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
+            });
 
-                        // Validation du champ nom
-                        const nomInput = $('#{{ form.nom.vars.id }}');
-                        const nomValue = nomInput.val().trim();
-                        if (!nomValue) {
-                            nomInput.addClass('is-invalid');
-                            nomInput.next('.text-danger').text('Le nom est requis.');
-                            isValid = false;
-                        } else if (nomValue.length > 255) {
-                            nomInput.addClass('is-invalid');
-                            nomInput.next('.text-danger').text('Le nom ne peut pas dépasser 255 caractères.');
-                            isValid = false;
-                        } else {
-                            nomInput.removeClass('is-invalid');
-                            nomInput.next('.text-danger').text('');
-                        }
+            // Form validation and submission
+            $('#pack-reservation-form').on('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
 
-                        // Validation du champ prénom
-                        const prenomInput = $('#{{ form.prenom.vars.id }}');
-                        const prenomValue = prenomInput.val().trim();
-                        if (!prenomValue) {
-                            prenomInput.addClass('is-invalid');
-                            prenomInput.next('.text-danger').text('Le prénom est requis.');
-                            isValid = false;
-                        } else if (prenomValue.length > 255) {
-                            prenomInput.addClass('is-invalid');
-                            prenomInput.next('.text-danger').text('Le prénom ne peut pas dépasser 255 caractères.');
-                            isValid = false;
-                        } else {
-                            prenomInput.removeClass('is-invalid');
-                            prenomInput.next('.text-danger').text('');
-                        }
+                // Clear existing errors
+                $('.form-control').removeClass('is-invalid');
+                $('.text-danger').text('');
 
-                        // Validation du champ email
-                        const emailInput = $('#{{ form.email.vars.id }}');
-                        const emailValue = emailInput.val().trim();
-                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                        if (!emailValue) {
-                            emailInput.addClass('is-invalid');
-                            emailInput.next('.text-danger').text('L\'email est requis.');
-                            isValid = false;
-                        } else if (!emailRegex.test(emailValue)) {
-                            emailInput.addClass('is-invalid');
-                            emailInput.next('.text-danger').text('L\'email n\'est pas valide.');
-                            isValid = false;
-                        } else if (emailValue.length > 255) {
-                            emailInput.addClass('is-invalid');
-                            emailInput.next('.text-danger').text('L\'email ne peut pas dépasser 255 caractères.');
-                            isValid = false;
-                        } else {
-                            emailInput.removeClass('is-invalid');
-                            emailInput.next('.text-danger').text('');
-                        }
+                // Nom
+                const $nomInput = $('#{{ form.nom.vars.id }}');
+                const nomValue = $nomInput.val().trim();
+                if (!nomValue) {
+                    $nomInput.addClass('is-invalid').next('.text-danger').text('Le nom est requis.');
+                    isValid = false;
+                } else if (nomValue.length > 255) {
+                    $nomInput.addClass('is-invalid').next('.text-danger').text('Le nom ne peut pas dépasser 255 caractères.');
+                    isValid = false;
+                }
 
-                        // Validation du champ numéro de téléphone
-                        const numtelInput = $('#{{ form.numtel.vars.id }}');
-                        const numtelValue = numtelInput.val().trim();
-                        const numtelRegex = /^\+?[1-9]\d{1,14}$/;
-                        if (!numtelValue) {
-                            numtelInput.addClass('is-invalid');
-                            numtelInput.next('.text-danger').text('Le numéro de téléphone est requis.');
-                            isValid = false;
-                        } else if (!numtelRegex.test(numtelValue)) {
-                            numtelInput.addClass('is-invalid');
-                            numtelInput.next('.text-danger').text('Le numéro de téléphone n\'est pas valide (ex: +1234567890).');
-                            isValid = false;
-                        } else if (numtelValue.length > 20) {
-                            numtelInput.addClass('is-invalid');
-                            numtelInput.next('.text-danger').text('Le numéro de téléphone ne peut pas dépasser 20 caractères.');
-                            isValid = false;
-                        } else {
-                            numtelInput.removeClass('is-invalid');
-                            numtelInput.next('.text-danger').text('');
-                        }
+                // Prénom
+                const $prenomInput = $('#{{ form.prenom.vars.id }}');
+                const prenomValue = $prenomInput.val().trim();
+                if (!prenomValue) {
+                    $prenomInput.addClass('is-invalid').next('.text-danger').text('Le prénom est requis.');
+                    isValid = false;
+                } else if (prenomValue.length > 255) {
+                    $prenomInput.addClass('is-invalid').next('.text-danger').text('Le prénom ne peut pas dépasser 255 caractères.');
+                    isValid = false;
+                }
 
-                        // Validation du champ date
-                        const dateInput = $('#{{ form.date.vars.id }}');
-                        const dateValue = dateInput.val();
-                        if (!dateValue) {
-                            dateInput.addClass('is-invalid');
-                            dateInput.next('.text-danger').text('La date est requise.');
-                            isValid = false;
-                        } else {
-                            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-                            if (!dateRegex.test(dateValue)) {
-                                dateInput.addClass('is-invalid');
-                                dateInput.next('.text-danger').text('La date doit être au format YYYY-MM-DD (ex. 2025-04-11).');
-                                isValid = false;
-                            } else {
-                                const selectedDate = new Date(dateValue);
-                                const today = new Date();
-                                today.setHours(0, 0, 0, 0);
-                                if (selectedDate < today) {
-                                    dateInput.addClass('is-invalid');
-                                    dateInput.next('.text-danger').text('La date doit être aujourd\'hui ou dans le futur.');
-                                    isValid = false;
-                                } else {
-                                    dateInput.removeClass('is-invalid');
-                                    dateInput.next('.text-danger').text('');
-                                }
-                            }
-                        }
+                // Email
+                const $emailInput = $('#{{ form.email.vars.id }}');
+                const emailValue = $emailInput.val().trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailValue) {
+                    $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email est requis.');
+                    isValid = false;
+                } else if (!emailRegex.test(emailValue)) {
+                    $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email n\'est pas valide.');
+                    isValid = false;
+                } else if (emailValue.length > 255) {
+                    $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email ne peut pas dépasser 255 caractères.');
+                    isValid = false;
+                }
 
-                        // Validation du champ pack
-                        const packInput = $('#{{ form.pack.vars.id }}');
-                        const packValue = packInput.val();
-                        if (!packValue) {
-                            packInput.addClass('is-invalid');
-                            packInput.next('.text-danger').text('Vous devez sélectionner un pack.');
-                            isValid = false;
-                        } else {
-                            packInput.removeClass('is-invalid');
-                            packInput.next('.text-danger').text('');
-                        }
+                // Numtel
+                const $numtelInput = $('#{{ form.numtel.vars.id }}');
+                const numtelValue = $numtelInput.val().trim();
+                if (!numtelValue) {
+                    $numtelInput.addClass('is-invalid').next('.text-danger').text('Le numéro de téléphone est requis.');
+                    isValid = false;
+                } else if (!/^[0-9]{8}$/.test(numtelValue)) {
+                    $numtelInput.addClass('is-invalid').next('.text-danger').text('Le numéro doit contenir exactement 8 chiffres (ex. 12345678).');
+                    isValid = false;
+                }
 
-                        if (isValid) {
-                            $.ajax({
-                                url: '{{ path('user_reservation_pack_new') }}',
-                                method: 'POST',
-                                data: $(this).serialize(),
-                                dataType: 'json',
-                                success: function(response) {
-                                    if (response.success) {
-                                        Swal.fire({
-                                            title: 'Succès !',
-                                            text: response.message,
-                                            icon: 'success',
-                                            confirmButtonText: 'OK'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                window.location.href = '{{ path('app_home', {'_fragment': 'fh5co-started'}) }}';
-                                            }
-                                        });
-                                    } else {
-                                        Swal.fire({
-                                            title: 'Erreur',
-                                            text: response.message || 'Une erreur s\'est produite lors de la création de la réservation.',
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        });
-                                        if (response.errors) {
-                                            $.each(response.errors, function(field, errors) {
-                                                const $field = $('#{{ form.vars.id }}_' + field);
-                                                $field.addClass('is-invalid');
-                                                $field.next('.text-danger').text(errors.join(', '));
-                                            });
-                                        }
+                // Date
+                const $dateInput = $('#{{ form.date.vars.id }}');
+                const dateValue = $dateInput.val();
+                if (!dateValue) {
+                    $dateInput.addClass('is-invalid').next('.text-danger').text('La date est requise.');
+                    isValid = false;
+                } else if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+                    $dateInput.addClass('is-invalid').next('.text-danger').text('La date doit être au format YYYY-MM-DD.');
+                    isValid = false;
+                } else {
+                    const selectedDate = new Date(dateValue);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    if (selectedDate < today) {
+                        $dateInput.addClass('is-invalid').next('.text-danger').text('La date doit être aujourd\'hui ou dans le futur.');
+                        isValid = false;
+                    }
+                }
+
+                // Pack
+                const $packInput = $('#{{ form.pack.vars.id }}');
+                if (!$packInput.val()) {
+                    $packInput.addClass('is-invalid').next('.text-danger').text('Vous devez sélectionner un pack.');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    const $form = $(this);
+                    const $submitButton = $form.find('button[type="submit"]');
+                    const $spinner = $form.find('.loading-spinner');
+                    $submitButton.prop('disabled', true);
+                    $spinner.show();
+
+                    $.ajax({
+                        url: '{{ path('user_reservation_pack_new') }}',
+                        method: 'POST',
+                        data: $form.serialize(),
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Succès !',
+                                    text: response.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '{{ path('app_home', {'_fragment': 'fh5co-started'}) }}';
                                     }
-                                },
-                                error: function(xhr, status, error) {
-                                    Swal.fire({
-                                        title: 'Erreur',
-                                        text: 'Une erreur s\'est produite. Veuillez réessayer.',
-                                        icon: 'error',
-                                        confirmButtonText: 'OK'
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Erreur',
+                                    text: response.message || 'Une erreur s\'est produite.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                                if (response.errors) {
+                                    $.each(response.errors, function(field, errors) {
+                                        const $field = $('#{{ form.vars.id }}_' + field);
+                                        $field.addClass('is-invalid').next('.text-danger').text(errors.join(', '));
                                     });
                                 }
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Erreur',
+                                text: 'Une erreur s\'est produite. Veuillez réessayer.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
                             });
+                        },
+                        complete: function() {
+                            $submitButton.prop('disabled', false);
+                            $spinner.hide();
                         }
                     });
-                });
-            }
-        </script>
-        <footer id="fh5co-footer" role="contentinfo">
-            <div class="container">
-                <div class="row copyright">
-                    <div class="col-md-12 text-center">
-                        <p>
-                            <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                            <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
-                        </p>
-                    </div>
-                </div>
+                }
+            });
+
+            // Apply is-invalid on page load
+            $('.form-control').each(function() {
+                const $errorDiv = $(this).next('.text-danger');
+                if ($errorDiv.length && $errorDiv.text().trim()) {
+                    $(this).addClass('is-invalid');
+                }
+            });
+        });
+    }
+</script>
+<footer id="fh5co-footer" role="contentinfo">
+    <div class="container">
+        <div class="row copyright">
+            <div class="col-md-12 text-center">
+                <p>
+                    <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                    <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                </p>
             </div>
-        </footer>
-    </body>
+        </div>
+    </div>
+</footer>
+</body>
 </html>

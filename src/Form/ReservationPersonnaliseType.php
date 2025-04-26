@@ -56,14 +56,21 @@ class ReservationPersonnaliseType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'Le numéro de téléphone est requis.']),
                     new Length([
-                        'max' => 20,
-                        'maxMessage' => 'Le numéro de téléphone ne peut pas dépasser {{ limit }} caractères.',
+                        'min' => 8,
+                        'max' => 8,
+                        'minMessage' => 'Le numéro de téléphone doit contenir exactement 8 chiffres.',
+                        'maxMessage' => 'Le numéro de téléphone doit contenir exactement 8 chiffres.',
                     ]),
                     new Regex([
-                        'pattern' => '/^\+?[1-9]\d{1,14}$/',
-                        'message' => 'Le numéro de téléphone n\'est pas valide (ex: +1234567890).',
+                        'pattern' => '/^[0-9]{8}$/',
+                        'message' => 'Le numéro de téléphone doit contenir exactement 8 chiffres (ex. 12345678).',
                     ]),
                 ],
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => '12345678',
+                ],
+                'help' => 'Entrez un numéro tunisien de 8 chiffres (ex. 12345678).',
             ])
             ->add('description', TextareaType::class, [
                 'required' => true,

@@ -1,9 +1,9 @@
 knp_snappy:
     pdf:
-        enabled:    true
-        binary:     '%env(WKHTMLTOPDF_PATH)%'
-        options:    []
+        enabled: true
+        binary: '"C:\wkhtmltopdf\bin\wkhtmltopdf"'
+        options:
+            lowquality: true
+            load-error-handling: ignore
     image:
-        enabled:    true
-        binary:     '%env(WKHTMLTOIMAGE_PATH)%'
-        options:    []
+        enabled: false

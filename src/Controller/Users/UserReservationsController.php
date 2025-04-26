@@ -23,10 +23,21 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Psr\Log\LoggerInterface;
+use Twilio\Rest\Client;
 
 #[Route('/user/reservations')]
 class UserReservationsController extends AbstractController
 {
+    private $twilioClient;
+    private $twilioFromNumber;
+    private $logger;
+
+    public function __construct(string $twilioAccountSid, string $twilioAuthToken, string $twilioPhoneNumber, LoggerInterface $logger)
+    {
+        $this->twilioClient = new Client($twilioAccountSid, $twilioAuthToken);
+        $this->twilioFromNumber = $twilioPhoneNumber;
+        $this->logger = $logger;
+    }
     #[Route('/pack/new', name: 'user_reservation_pack_new', methods: ['GET', 'POST'])]
     public function newPack(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -61,12 +72,45 @@ class UserReservationsController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
-                    $entityManager->persist($reservation);
-                    $entityManager->flush();
-                    return new JsonResponse([
-                        'success' => true,
-                        'message' => 'Votre réservation pack a été créée avec succès !'
-                    ]);
+                    try {
+                        // Prepend +216 to numtel
+                        $numtel = $form->get('numtel')->getData();
+                        $reservation->setNumtel('+216' . $numtel);
+
+                        $entityManager->persist($reservation);
+                        $entityManager->flush();
+
+                        // Generate personalized message
+                        $packName = $reservation->getPack() ? $reservation->getPack()->getNomPack() : 'Non spécifié';
+                        $eventDate = $reservation->getDate()->format('d/m/Y');
+                        $userName = $reservation->getPrenom() ?: 'Client';
+                        $smsMessage = sprintf(
+                            'Cher(e) %s, votre réservation pour le pack "%s" du %s a été confirmée avec succès. Merci de choisir Eventora pour votre événement !',
+                            $userName,
+                            $packName,
+                            $eventDate
+                        );
+
+                        // Send SMS via Twilio
+                        $this->twilioClient->messages->create(
+                            $reservation->getNumtel(),
+                            [
+                                'from' => $this->twilioFromNumber,
+                                'body' => $smsMessage
+                            ]
+                        );
+
+                        return new JsonResponse([
+                            'success' => true,
+                            'message' => $smsMessage
+                        ]);
+                    } catch (\Exception $e) {
+                        $this->logger->error('Error saving pack reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
+                        return new JsonResponse([
+                            'success' => false,
+                            'message' => 'Erreur serveur lors de la création de la réservation.'
+                        ], 500);
+                    }
                 }
 
                 $errors = [];
@@ -88,7 +132,7 @@ class UserReservationsController extends AbstractController
 
         if ($form->isSubmitted()) {
             $packValue = $form->get('pack')->getData();
-            error_log('Submitted pack: ' . ($packValue ? $packValue->getId() . ' - ' . $packValue->getNomPack() : 'null'));
+            $this->logger->info('Submitted pack: ' . ($packValue ? $packValue->getId() . ' - ' . $packValue->getNomPack() : 'null'));
             $errors = $form->getErrors(true);
             foreach ($errors as $error) {
                 $this->addFlash('error', $error->getMessage());
@@ -96,37 +140,45 @@ class UserReservationsController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($reservation);
-            $entityManager->flush();
-            $this->addFlash('success', 'Votre réservation pack a été créée avec succès !');
-            return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
+            try {
+                // Prepend +216 to numtel
+                $numtel = $form->get('numtel')->getData();
+                $reservation->setNumtel('+216' . $numtel);
+
+                $entityManager->persist($reservation);
+                $entityManager->flush();
+
+                // Generate personalized message
+                $packName = $reservation->getPack() ? $reservation->getPack()->getNomPack() : 'Non spécifié';
+                $eventDate = $reservation->getDate()->format('d/m/Y');
+                $userName = $reservation->getPrenom() ?: 'Client';
+                $successMessage = sprintf(
+                    'Cher(e) %s, votre réservation pour le pack "%s" du %s a été confirmée avec succès. Merci de choisir Eventora pour votre événement !',
+                    $userName,
+                    $packName,
+                    $eventDate
+                );
+
+                // Send SMS via Twilio
+                $this->twilioClient->messages->create(
+                    $reservation->getNumtel(),
+                    [
+                        'from' => $this->twilioFromNumber,
+                        'body' => $successMessage
+                    ]
+                );
+
+                $this->addFlash('success', $successMessage);
+                return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
+            } catch (\Exception $e) {
+                $this->logger->error('Error saving pack reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
+                $this->addFlash('error', 'Erreur serveur lors de la création de la réservation.');
+            }
         }
 
         return $this->render('admin/reservation/user_pack_new.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-
-    #[Route('/pack/search', name: 'user_pack_search', methods: ['GET'])]
-    public function searchPack(Request $request, PackRepository $packRepository): JsonResponse
-    {
-        $query = $request->query->get('q', '');
-        $packs = $packRepository->createQueryBuilder('p')
-            ->where('p.nomPack LIKE :query')
-            ->setParameter('query', '%' . $query . '%')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult();
-
-        $results = [];
-        foreach ($packs as $pack) {
-            $results[] = [
-                'id' => $pack->getId(),
-                'text' => $pack->getNomPack(),
-            ];
-        }
-
-        return new JsonResponse(['results' => $results]);
     }
 
     #[Route('/personnalise/new', name: 'user_reservation_personnalise_new', methods: ['GET', 'POST'])]
@@ -163,13 +215,46 @@ class UserReservationsController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
-                    $entityManager->persist($reservation);
-                    $entityManager->flush();
+                    try {
+                        // Prepend +216 to numtel
+                        $numtel = $form->get('numtel')->getData();
+                        $reservation->setNumtel('+216' . $numtel);
 
-                    return new JsonResponse([
-                        'success' => true,
-                        'message' => 'Votre réservation personnalisée a été créée avec succès !'
-                    ]);
+                        $entityManager->persist($reservation);
+                        $entityManager->flush();
+
+                        // Generate personalized message
+                        $services = $reservation->getServices();
+                        $servicesList = ($services === null || $services->isEmpty()) ? 'Non spécifié' : implode(', ', array_map(fn($s) => $s->getTitre(), $services->toArray()));
+                        $eventDate = $reservation->getDate()->format('d/m/Y');
+                        $userName = $reservation->getPrenom() ?: 'Client';
+                        $successMessage = sprintf(
+                            'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été confirmée avec succès. Eventora vous remercie pour votre confiance !',
+                            $userName,
+                            $servicesList,
+                            $eventDate
+                        );
+
+                        // Send SMS via Twilio
+                        $this->twilioClient->messages->create(
+                            $reservation->getNumtel(),
+                            [
+                                'from' => $this->twilioFromNumber,
+                                'body' => $successMessage
+                            ]
+                        );
+
+                        return new JsonResponse([
+                            'success' => true,
+                            'message' => $successMessage
+                        ]);
+                    } catch (\Exception $e) {
+                        $this->logger->error('Error saving personnalise reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
+                        return new JsonResponse([
+                            'success' => false,
+                            'message' => 'Erreur serveur lors de la création de la réservation.'
+                        ], 500);
+                    }
                 }
 
                 $errors = [];
@@ -189,16 +274,139 @@ class UserReservationsController extends AbstractController
             ], 400);
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($reservation);
-            $entityManager->flush();
+        if ($form->isSubmitted()) {
+            $this->logger->info('Submitted personnalise form data: ' . json_encode($form->getData()));
+            $errors = $form->getErrors(true);
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
+        }
 
-            $this->addFlash('success', 'Votre réservation personnalisée a été créée avec succès !');
-            return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                // Prepend +216 to numtel
+                $numtel = $form->get('numtel')->getData();
+                $reservation->setNumtel('+216' . $numtel);
+
+                $entityManager->persist($reservation);
+                $entityManager->flush();
+
+                // Generate personalized message
+                $services = $reservation->getServices();
+                $servicesList = ($services === null || $services->isEmpty()) ? 'Non spécifié' : implode(', ', array_map(fn($s) => $s->getTitre(), $services->toArray()));
+                $eventDate = $reservation->getDate()->format('d/m/Y');
+                $userName = $reservation->getPrenom() ?: 'Client';
+                $successMessage = sprintf(
+                    'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été confirmée avec succès. Eventora vous remercie pour votre confiance !',
+                    $userName,
+                    $servicesList,
+                    $eventDate
+                );
+
+                // Send SMS via Twilio
+                $this->twilioClient->messages->create(
+                    $reservation->getNumtel(),
+                    [
+                        'from' => $this->twilioFromNumber,
+                        'body' => $successMessage
+                    ]
+                );
+
+                $this->addFlash('success', $successMessage);
+                return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
+            } catch (\Exception $e) {
+                $this->logger->error('Error saving personnalise reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
+                $this->addFlash('error', 'Erreur serveur lors de la création de la réservation.');
+            }
         }
 
         return $this->render('admin/reservation/user_personnalise_new.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/pack/search', name: 'user_pack_search', methods: ['GET'])]
+    public function searchPack(Request $request, PackRepository $packRepository): JsonResponse
+    {
+        try {
+            $query = $request->query->get('q', '');
+            $packs = $packRepository->createQueryBuilder('p')
+                ->where('p.nomPack LIKE :query')
+                ->setParameter('query', '%' . $query . '%')
+                ->setMaxResults(10)
+                ->getQuery()
+                ->getResult();
+
+            $results = [];
+            foreach ($packs as $pack) {
+                $results[] = [
+                    'id' => $pack->getId(),
+                    'text' => $pack->getNomPack(),
+                ];
+            }
+
+            return new JsonResponse(['results' => $results]);
+        } catch (\Exception $e) {
+            $this->logger->error('Error in pack search: ' . $e->getMessage(), ['exception' => $e]);
+            return new JsonResponse(['results' => []], 500);
+        }
+    }
+
+    #[Route('/list', name: 'user_reservations', methods: ['GET'])]
+    public function index(
+        ReservationpackRepository $reservationpackRepository,
+        ReservationpersonnaliseRepository $reservationpersonnaliseRepository,
+        PaginatorInterface $paginator,
+        Request $request
+    ): Response {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $user = $this->getUser();
+        if (!$user instanceof Membre) {
+            throw $this->createAccessDeniedException('Utilisateur non connecté ou non valide.');
+        }
+
+        $userId = $user->getId();
+
+        $packReservations = $reservationpackRepository->findBy(['membre' => $userId]);
+        $personaliseReservations = $reservationpersonnaliseRepository->findBy(['membre' => $userId]);
+
+        $reservations = [];
+        foreach ($packReservations as $reservation) {
+            $reservations[] = [
+                'type' => 'Pack',
+                'IDReservationPack' => $reservation->getIDReservationPack(),
+                'IDReservationPersonalise' => null,
+                'nom' => $reservation->getNom(),
+                'prenom' => $reservation->getPrenom(),
+                'date' => $reservation->getDate(),
+                'pack' => $reservation->getPack(),
+                'services' => [],
+                'status' => $reservation->getStatus(),
+            ];
+        }
+        foreach ($personaliseReservations as $reservation) {
+            $reservations[] = [
+                'type' => 'Personnalisée',
+                'IDReservationPack' => null,
+                'IDReservationPersonalise' => $reservation->getIDReservationPersonalise(),
+                'nom' => $reservation->getNom(),
+                'prenom' => $reservation->getPrenom(),
+                'date' => $reservation->getDate(),
+                'pack' => null,
+                'services' => $reservation->getServices(),
+                'status' => $reservation->getStatus(),
+            ];
+        }
+
+        $pagination = $paginator->paginate(
+            $reservations,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+        return $this->render('admin/reservation/reservations.html.twig', [
+            'reservations' => $pagination,
         ]);
     }
 

@@ -3,11 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>Réservation Personnalisée #{{ reservation.IDReservationPersonalise }}</title>
-    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
     <style>
         body {
-            font-family: 'Work Sans', sans-serif;
+            font-family: Arial, Helvetica, sans-serif; /* System font fallback */
             margin: 0;
             padding: 0;
             color: #333;
@@ -37,7 +35,7 @@
             font-weight: 600;
         }
         .header span {
-            font-family: 'Sacramento', cursive;
+            font-family: cursive; /* Fallback for Sacramento */
             font-size: 20px;
             color: #007bff;
             display: block;
@@ -70,40 +68,6 @@
             padding: 10px 15px;
             background: #f8f9fa;
             border-radius: 5px;
-        }
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 18px;
-            border-radius: 25px;
-            font-size: 15px;
-            font-weight: 700;
-            color: #000;
-        }
-        .status-badge::before {
-            content: '';
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .status-pending {
-            background: #fde68a;
-        }
-        .status-pending::before {
-            background: #d97706;
-        }
-        .status-approved {
-            background: #6ee7b7;
-        }
-        .status-approved::before {
-            background: #059669;
-        }
-        .status-rejected {
-            background: #f87171;
-        }
-        .status-rejected::before {
-            background: #dc2626;
         }
         table {
             width: 100%;
@@ -142,7 +106,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ absolute_url(asset('assets/img/logo-ct-dark.png')) }}" alt="Eventora Logo">
+            <img src="file:///C:/Users/asus/Desktop/pidev/EventoraAppWEB/public/assets/img/logo-ct-dark.png" alt="Eventora Logo">
             <span>Votre Événement</span>
             <h1>Réservation Personnalisée #{{ reservation.IDReservationPersonalise }}</h1>
         </div>
@@ -169,17 +133,19 @@
                     <th>Prix</th>
                     <th>Location</th>
                 </tr>
-                {% for service in reservation.services %}
-                    <tr>
-                        <td>{{ service.titre|default('N/A') }}</td>
-                        <td>{{ service.prix|default('N/A') }}</td>
-                        <td>{{ service.location|default('N/A') }}</td>
-                    </tr>
+                {% if reservation.services is not null and reservation.services|length > 0 %}
+                    {% for service in reservation.services %}
+                        <tr>
+                            <td>{{ service.titre|default('N/A') }}</td>
+                            <td>{{ service.prix|default('N/A') }}</td>
+                            <td>{{ service.location|default('N/A') }}</td>
+                        </tr>
+                    {% endfor %}
                 {% else %}
                     <tr>
                         <td colspan="3" style="text-align: center;">Aucun service sélectionné</td>
                     </tr>
-                {% endfor %}
+                {% endif %}
             </table>
         </div>
         <div class="footer">
