@@ -19,10 +19,10 @@ security:
                 check_path: app_auth
                 default_target_path: login_check
                 username_parameter: "login_form[email]"
-                password_parameter: "login_form[password]"
+                password_parameter: "login_form[motDePasse]"  # Updated to match the form field
             logout:
                 path: app_logout
                 target: app_auth
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: PUBLIC_ACCESS } 

@@ -2,6 +2,7 @@ parameters:
     images_directory: '%kernel.project_dir%/public/uploads/images'
     brevo_api_key: '%env(BREVO_API_KEY)%'
     wkhtmltopdf_path: '%env(resolve:WKHTMLTOPDF_PATH)%'
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
 
 services:
     _defaults:

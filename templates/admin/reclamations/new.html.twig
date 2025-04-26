@@ -8,7 +8,7 @@
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
-         {% block stylesheets %}
+        {% block stylesheets %}
             <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
             <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
@@ -357,7 +357,7 @@
                                 </ul>
                             </li>
                             <li class="active"><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                            <li ><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
                             <li><a href="">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
@@ -389,7 +389,6 @@
                     </div>
                 </div>
             </nav>
-
 
             <div id="fh5co-event">
                 <div class="container">
@@ -475,6 +474,7 @@
         </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             if (typeof jQuery === 'undefined') {
                 console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
@@ -541,14 +541,26 @@
                             success: function(data) {
                                 console.log('Réponse AJAX reçue', data);
                                 if (data.success) {
-                                    // Afficher le message de succès une seule fois
-                                    $('.alert-success').remove();
-                                    $('.event-wrap').prepend(
-                                        '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
-                                        data.message +
-                                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                        '<span aria-hidden="true">×</span></button></div>'
-                                    );
+                                    // Afficher une pop-up SweetAlert2
+                                    Swal.fire({
+                                        title: 'Succès !',
+                                        text: data.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'Voir l\'historique',
+                                        confirmButtonColor: '#007bff',
+                                        backdrop: 'rgba(0,0,0,0.4)',
+                                        showClass: {
+                                            popup: 'animate__animated animate__fadeInDown'
+                                        },
+                                        hideClass: {
+                                            popup: 'animate__animated animate__fadeOutUp'
+                                        }
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // Rediriger vers la page d'historique
+                                            window.location.href = '{{ path('app_user_history') }}';
+                                        }
+                                    });
                                     form.reset();
                                 } else {
                                     if (data.errors) {
@@ -563,14 +575,21 @@
                                             }
                                         }
                                     }
-                                    // Afficher le message d'erreur une seule fois
-                                    $('.alert-danger').remove();
-                                    $('.event-wrap').prepend(
-                                        '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-                                        (data.message || 'Veuillez corriger les erreurs dans le formulaire.') +
-                                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                        '<span aria-hidden="true">×</span></button></div>'
-                                    );
+                                    // Afficher une pop-up d'erreur
+                                    Swal.fire({
+                                        title: 'Erreur',
+                                        text: data.message || 'Veuillez corriger les erreurs dans le formulaire.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#ff4d4d',
+                                        backdrop: 'rgba(0,0,0,0.4)',
+                                        showClass: {
+                                            popup: 'animate__animated animate__fadeInDown'
+                                        },
+                                        hideClass: {
+                                            popup: 'animate__animated animate__fadeOutUp'
+                                        }
+                                    });
                                 }
                             },
                             error: function(xhr, status, error) {
@@ -593,21 +612,35 @@
                                             }
                                         }
                                     }
-                                    $('.alert-danger').remove();
-                                    $('.event-wrap').prepend(
-                                        '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-                                        (data.message || 'Erreur de communication avec le serveur.') +
-                                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                        '<span aria-hidden="true">×</span></button></div>'
-                                    );
+                                    Swal.fire({
+                                        title: 'Erreur',
+                                        text: data.message || 'Erreur de communication avec le serveur.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#ff4d4d',
+                                        backdrop: 'rgba(0,0,0,0.4)',
+                                        showClass: {
+                                            popup: 'animate__animated animate__fadeInDown'
+                                        },
+                                        hideClass: {
+                                            popup: 'animate__animated animate__fadeOutUp'
+                                        }
+                                    });
                                 } catch (e) {
-                                    $('.alert-danger').remove();
-                                    $('.event-wrap').prepend(
-                                        '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-                                        'Erreur de communication avec le serveur. Veuillez réessayer.' +
-                                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                        '<span aria-hidden="true">×</span></button></div>'
-                                    );
+                                    Swal.fire({
+                                        title: 'Erreur',
+                                        text: 'Erreur de communication avec le serveur. Veuillez réessayer.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#ff4d4d',
+                                        backdrop: 'rgba(0,0,0,0.4)',
+                                        showClass: {
+                                            popup: 'animate__animated animate__fadeInDown'
+                                        },
+                                        hideClass: {
+                                            popup: 'animate__animated animate__fadeOutUp'
+                                        }
+                                    });
                                 }
                             }
                         });

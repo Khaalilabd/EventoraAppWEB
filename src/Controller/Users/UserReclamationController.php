@@ -77,7 +77,7 @@ class UserReclamationController extends AbstractController
                 ], 400);
             }
             $this->addFlash('error', 'Utilisateur invalide pour soumettre une réclamation.');
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_user_history');
         }
 
         $reclamation = new Reclamation();
@@ -101,7 +101,7 @@ class UserReclamationController extends AbstractController
                         $entityManager->flush();
 
                         // Générer l'URL pour télécharger le PDF avec ngrok (temporaire pour les tests locaux)
-                        $ngrokBaseUrl = 'https://63bc-197-17-125-97.ngrok-free.app';
+                        $ngrokBaseUrl = 'https://d660-197-17-125-97.ngrok-free.app';
                         $reclamationUrl = $ngrokBaseUrl . $this->generateUrl('app_reclamation_pdf', ['id' => $reclamation->getId()]);
                         $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($reclamationUrl);
                         $this->logger->info('URL du QR code générée', [
@@ -304,7 +304,7 @@ class UserReclamationController extends AbstractController
                 ]);
 
                 $this->addFlash('success', 'Votre réclamation a été soumise avec succès !');
-                return $this->redirectToRoute('app_home', ['_fragment' => 'fh5co-started']);
+                return $this->redirectToRoute('app_user_history');
             } catch (\Exception $e) {
                 $this->logger->error('Erreur lors de la soumission de la réclamation (non-AJAX)', [
                     'exception' => $e->getMessage(),
