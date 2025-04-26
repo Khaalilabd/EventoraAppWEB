@@ -1,6 +1,7 @@
 parameters:
     images_directory: '%kernel.project_dir%/public/uploads/images'
     brevo_api_key: '%env(BREVO_API_KEY)%'
+    wkhtmltopdf_path: '%env(resolve:WKHTMLTOPDF_PATH)%'
 
 services:
     _defaults:
@@ -16,7 +17,7 @@ services:
 
     Knp\Snappy\Pdf:
         arguments:
-            $binary: '/usr/local/bin/wkhtmltopdf'
+            $binary: '%wkhtmltopdf_path%'
             $options:
                 enable-local-file-access: true
                 enable-javascript: true
@@ -39,4 +40,3 @@ services:
     App\Controller\Users\ChatAiController:
         arguments:
             $geminiApiKey: '%env(GOOGLE_GEMINI_API_KEY)%'
-            

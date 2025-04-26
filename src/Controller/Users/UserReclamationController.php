@@ -101,7 +101,8 @@ class UserReclamationController extends AbstractController
                         $entityManager->flush();
 
                         // Générer l'URL pour télécharger le PDF avec ngrok (temporaire pour les tests locaux)
-                        $ngrokBaseUrl = 'https://dab8-2c0f-f698-4097-770e-818a-4c34-dd0-b9d7.ngrok-free.app';                        $reclamationUrl = $ngrokBaseUrl . $this->generateUrl('app_reclamation_pdf', ['id' => $reclamation->getId()]);
+                        $ngrokBaseUrl = 'https://63bc-197-17-125-97.ngrok-free.app';
+                        $reclamationUrl = $ngrokBaseUrl . $this->generateUrl('app_reclamation_pdf', ['id' => $reclamation->getId()]);
                         $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($reclamationUrl);
                         $this->logger->info('URL du QR code générée', [
                             'reclamation_id' => $reclamation->getId(),
@@ -224,7 +225,7 @@ class UserReclamationController extends AbstractController
                 $entityManager->flush();
 
                 // Générer l'URL pour télécharger le PDF avec ngrok (temporaire pour les tests locaux)
-                $ngrokBaseUrl = 'https://c487-197-17-125-97.ngrok-free.app'; // Remplace par ton URL ngrok réelle
+                $ngrokBaseUrl = 'https://63bc-197-17-125-97.ngrok-free.app';
                 $reclamationUrl = $ngrokBaseUrl . $this->generateUrl('app_reclamation_pdf', ['id' => $reclamation->getId()]);
                 $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($reclamationUrl);
                 $this->logger->info('URL du QR code générée', [
