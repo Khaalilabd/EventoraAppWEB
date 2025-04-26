@@ -24,20 +24,43 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Psr\Log\LoggerInterface;
 use Twilio\Rest\Client;
+use SendinBlue\Client\Configuration;
+use SendinBlue\Client\Api\TransactionalEmailsApi;
+use SendinBlue\Client\ApiException;
+use GuzzleHttp\Client as GuzzleClient;
 
 #[Route('/user/reservations')]
 class UserReservationsController extends AbstractController
 {
     private $twilioClient;
     private $twilioFromNumber;
+    private $emailApiInstance;
     private $logger;
+    private $brevoSenderEmail;
+    private $brevoSenderName;
 
-    public function __construct(string $twilioAccountSid, string $twilioAuthToken, string $twilioPhoneNumber, LoggerInterface $logger)
-    {
+    public function __construct(
+        string $twilioAccountSid,
+        string $twilioAuthToken,
+        string $twilioPhoneNumber,
+        string $brevoApiKey,
+        string $brevoSenderEmail,
+        string $brevoSenderName,
+        LoggerInterface $logger
+    ) {
+        // Initialize Twilio client
         $this->twilioClient = new Client($twilioAccountSid, $twilioAuthToken);
         $this->twilioFromNumber = $twilioPhoneNumber;
+
+        // Initialize Brevo email client
+        $config = Configuration::getDefaultConfiguration()->setApiKey('api-key', $brevoApiKey);
+        $this->emailApiInstance = new TransactionalEmailsApi(new GuzzleClient(), $config);
+        $this->brevoSenderEmail = $brevoSenderEmail;
+        $this->brevoSenderName = $brevoSenderName;
+
         $this->logger = $logger;
     }
+
     #[Route('/pack/new', name: 'user_reservation_pack_new', methods: ['GET', 'POST'])]
     public function newPack(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -77,6 +100,7 @@ class UserReservationsController extends AbstractController
                         $numtel = $form->get('numtel')->getData();
                         $reservation->setNumtel('+216' . $numtel);
 
+                        $recipientEmail = $form->get('email')->getData(); // Email from form
                         $entityManager->persist($reservation);
                         $entityManager->flush();
 
@@ -91,6 +115,26 @@ class UserReservationsController extends AbstractController
                             $eventDate
                         );
 
+                        // Send Email via Brevo
+                        $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
+                        $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
+                            'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
+                            'to' => [['email' => $recipientEmail, 'name' => $userName]],
+                            'templateId' => 3, // Replace with your actual template ID
+                            'params' => [
+                                'name' => $userName,
+                                'date' => $eventDate,
+                                'packName' => $packName
+                            ]
+                        ]);
+
+                        try {
+                            $result = $this->emailApiInstance->sendTransacEmail($emailData);
+                            $this->logger->info('Brevo API response: ' . json_encode($result));
+                        } catch (ApiException $e) {
+                            $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
+                        }
+
                         // Send SMS via Twilio
                         $this->twilioClient->messages->create(
                             $reservation->getNumtel(),
@@ -104,6 +148,24 @@ class UserReservationsController extends AbstractController
                             'success' => true,
                             'message' => $smsMessage
                         ]);
+                    } catch (ApiException $e) {
+                        $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
+                        // Proceed with SMS even if email fails
+                        try {
+                            $this->twilioClient->messages->create(
+                                $reservation->getNumtel(),
+                                [
+                                    'from' => $this->twilioFromNumber,
+                                    'body' => $smsMessage
+                                ]
+                            );
+                        } catch (\Exception $e) {
+                            $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
+                        }
+                        return new JsonResponse([
+                            'success' => false,
+                            'message' => 'Erreur lors de l\'envoi de l\'email.'
+                        ], 500);
                     } catch (\Exception $e) {
                         $this->logger->error('Error saving pack reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
                         return new JsonResponse([
@@ -145,6 +207,7 @@ class UserReservationsController extends AbstractController
                 $numtel = $form->get('numtel')->getData();
                 $reservation->setNumtel('+216' . $numtel);
 
+                $recipientEmail = $form->get('email')->getData(); // Email from form
                 $entityManager->persist($reservation);
                 $entityManager->flush();
 
@@ -159,6 +222,27 @@ class UserReservationsController extends AbstractController
                     $eventDate
                 );
 
+                // Send Email via Brevo
+                $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
+                $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
+                    'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
+                    'to' => [['email' => $recipientEmail, 'name' => $userName]],
+                    'templateId' => 3, // Replace with your actual template ID
+                    'params' => [
+                        'name' => $userName,
+                        'date' => $eventDate,
+                        'packName' => $packName
+                    ]
+                ]);
+
+                try {
+                    $result = $this->emailApiInstance->sendTransacEmail($emailData);
+                    $this->logger->info('Brevo API response: ' . json_encode($result));
+                } catch (ApiException $e) {
+                    $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
+                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi de l\'email.');
+                }
+
                 // Send SMS via Twilio
                 $this->twilioClient->messages->create(
                     $reservation->getNumtel(),
@@ -169,6 +253,23 @@ class UserReservationsController extends AbstractController
                 );
 
                 $this->addFlash('success', $successMessage);
+                return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
+            } catch (ApiException $e) {
+                $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
+                // Proceed with SMS even if email fails
+                try {
+                    $this->twilioClient->messages->create(
+                        $reservation->getNumtel(),
+                        [
+                            'from' => $this->twilioFromNumber,
+                            'body' => $successMessage
+                        ]
+                    );
+                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi de l\'email.');
+                } catch (\Exception $e) {
+                    $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
+                    $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email et SMS.');
+                }
                 return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
             } catch (\Exception $e) {
                 $this->logger->error('Error saving pack reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
@@ -220,6 +321,7 @@ class UserReservationsController extends AbstractController
                         $numtel = $form->get('numtel')->getData();
                         $reservation->setNumtel('+216' . $numtel);
 
+                        $recipientEmail = $form->get('email')->getData(); // Email from form
                         $entityManager->persist($reservation);
                         $entityManager->flush();
 
@@ -228,26 +330,64 @@ class UserReservationsController extends AbstractController
                         $servicesList = ($services === null || $services->isEmpty()) ? 'Non spécifié' : implode(', ', array_map(fn($s) => $s->getTitre(), $services->toArray()));
                         $eventDate = $reservation->getDate()->format('d/m/Y');
                         $userName = $reservation->getPrenom() ?: 'Client';
-                        $successMessage = sprintf(
+                        $smsMessage = sprintf(
                             'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été confirmée avec succès. Eventora vous remercie pour votre confiance !',
                             $userName,
                             $servicesList,
                             $eventDate
                         );
 
+                        // Send Email via Brevo
+                        $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
+                        $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
+                            'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
+                            'to' => [['email' => $recipientEmail, 'name' => $userName]],
+                            'templateId' => 3, // Replace with your actual template ID
+                            'params' => [
+                                'name' => $userName,
+                                'date' => $eventDate,
+                                'servicesList' => '<li>' . implode('</li><li>', array_map(fn($s) => $s->getTitre(), $services->toArray())) . '</li>'
+                            ]
+                        ]);
+
+                        try {
+                            $result = $this->emailApiInstance->sendTransacEmail($emailData);
+                            $this->logger->info('Brevo API response: ' . json_encode($result));
+                        } catch (ApiException $e) {
+                            $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
+                        }
+
                         // Send SMS via Twilio
                         $this->twilioClient->messages->create(
                             $reservation->getNumtel(),
                             [
                                 'from' => $this->twilioFromNumber,
-                                'body' => $successMessage
+                                'body' => $smsMessage
                             ]
                         );
 
                         return new JsonResponse([
                             'success' => true,
-                            'message' => $successMessage
+                            'message' => $smsMessage
                         ]);
+                    } catch (ApiException $e) {
+                        $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
+                        // Proceed with SMS even if email fails
+                        try {
+                            $this->twilioClient->messages->create(
+                                $reservation->getNumtel(),
+                                [
+                                    'from' => $this->twilioFromNumber,
+                                    'body' => $smsMessage
+                                ]
+                            );
+                        } catch (\Exception $e) {
+                            $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
+                        }
+                        return new JsonResponse([
+                            'success' => false,
+                            'message' => 'Erreur lors de l\'envoi de l\'email.'
+                        ], 500);
                     } catch (\Exception $e) {
                         $this->logger->error('Error saving personnalise reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
                         return new JsonResponse([
@@ -288,6 +428,7 @@ class UserReservationsController extends AbstractController
                 $numtel = $form->get('numtel')->getData();
                 $reservation->setNumtel('+216' . $numtel);
 
+                $recipientEmail = $form->get('email')->getData(); // Email from form
                 $entityManager->persist($reservation);
                 $entityManager->flush();
 
@@ -303,6 +444,27 @@ class UserReservationsController extends AbstractController
                     $eventDate
                 );
 
+                // Send Email via Brevo
+                $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
+                $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
+                    'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
+                    'to' => [['email' => $recipientEmail, 'name' => $userName]],
+                    'templateId' => 3, // Replace with your actual template ID
+                    'params' => [
+                        'name' => $userName,
+                        'date' => $eventDate,
+                        'servicesList' => '<li>' . implode('</li><li>', array_map(fn($s) => $s->getTitre(), $services->toArray())) . '</li>'
+                    ]
+                ]);
+
+                try {
+                    $result = $this->emailApiInstance->sendTransacEmail($emailData);
+                    $this->logger->info('Brevo API response: ' . json_encode($result));
+                } catch (ApiException $e) {
+                    $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
+                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi de l\'email.');
+                }
+
                 // Send SMS via Twilio
                 $this->twilioClient->messages->create(
                     $reservation->getNumtel(),
@@ -313,6 +475,23 @@ class UserReservationsController extends AbstractController
                 );
 
                 $this->addFlash('success', $successMessage);
+                return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
+            } catch (ApiException $e) {
+                $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
+                // Proceed with SMS even if email fails
+                try {
+                    $this->twilioClient->messages->create(
+                        $reservation->getNumtel(),
+                        [
+                            'from' => $this->twilioFromNumber,
+                            'body' => $successMessage
+                        ]
+                    );
+                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi de l\'email.');
+                } catch (\Exception $e) {
+                    $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
+                    $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email et SMS.');
+                }
                 return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
             } catch (\Exception $e) {
                 $this->logger->error('Error saving personnalise reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
@@ -358,7 +537,8 @@ class UserReservationsController extends AbstractController
         ReservationpersonnaliseRepository $reservationpersonnaliseRepository,
         PaginatorInterface $paginator,
         Request $request
-    ): Response {
+    ): Response
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $user = $this->getUser();

@@ -1,9 +1,12 @@
+# config/services.yaml
 parameters:
     images_directory: '%kernel.project_dir%/public/uploads/images'
-    brevo_api_key: '%env(BREVO_API_KEY)%'
     twilio_account_sid: '%env(TWILIO_ACCOUNT_SID)%'
     twilio_auth_token: '%env(TWILIO_AUTH_TOKEN)%'
     twilio_phone_number: '%env(TWILIO_PHONE_NUMBER)%'
+    brevo_api_key: '%env(BREVO_API_KEY)%'
+    brevo_sender_email: '%env(BREVO_SENDER_EMAIL)%'
+    brevo_sender_name: '%env(BREVO_SENDER_NAME)%'
 
 services:
     _defaults:
@@ -43,4 +46,6 @@ services:
             $twilioAccountSid: '%twilio_account_sid%'
             $twilioAuthToken: '%twilio_auth_token%'
             $twilioPhoneNumber: '%twilio_phone_number%'
-            $logger: '@logger'
+            $brevoApiKey: '%brevo_api_key%'
+            $brevoSenderEmail: '%brevo_sender_email%'
+            $brevoSenderName: '%brevo_sender_name%'
