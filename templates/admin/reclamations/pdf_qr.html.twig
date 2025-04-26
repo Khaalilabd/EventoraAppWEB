@@ -1,0 +1,155 @@
+{% apply spaceless %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Réclamation #{{ reclamation.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background: #f5f7fa;
+            color: #2d3748;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #4a90e2;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header img.logo {
+            max-width: 150px;
+            height: auto;
+        }
+        .header-text {
+            text-align: right;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #2d3748;
+            margin: 0;
+            font-weight: bold;
+        }
+        .header p {
+            font-size: 14px;
+            color: #718096;
+            margin: 4px 0;
+            font-weight: 300;
+        }
+        .content {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .content p {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+        }
+        .content strong {
+            width: 140px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .badge-en_attente {
+            background-color: #f6ad55;
+            color: #744210;
+        }
+        .badge-en_cours {
+            background-color: #4a90e2;
+        }
+        .badge-resolue {
+            background-color: #38a169;
+        }
+        .badge-rejetée {
+            background-color: #e53e3e;
+        }
+        .badge-reponse {
+            background-color: #e53e3e;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #718096;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+            font-weight: 300;
+        }
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://c487-197-17-125-97.ngrok-free.app/assets/img/EVENTORA.png" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+            <div class="header-text">
+                <h1>Réclamation #{{ reclamation.id }}</h1>
+                <p>Eventora Dashboard</p>
+                <p>Généré le {{ "now"|date("d/m/Y") }}</p>
+            </div>
+        </div>
+        <div class="content">
+            <p><strong>Titre :</strong> {{ reclamation.titre }}</p>
+            <p><strong>Description :</strong> {{ reclamation.description }}</p>
+            <p><strong>Type :</strong> {{ reclamation.Type }}</p>
+            <p><strong>Statut :</strong> 
+                {% if reclamation.statut %}
+                    {% set statut_class = reclamation.statut|lower|replace({'en_attente': 'en_attente', 'en_cours': 'en_cours', 'resolue': 'resolue', 'rejetée': 'rejetée'}) %}
+                    <span class="badge badge-{{ statut_class }}">{{ reclamation.statut }}</span>
+                {% else %}
+                    <span>Non défini</span>
+                {% endif %}
+            </p>
+            <p><strong>Date :</strong> {{ reclamation.date|date('Y-m-d') }}</p>
+            <p><strong>Utilisateur :</strong> {{ reclamation.membre.email }}</p>
+            {% if reclamation.statut in ['Resolue', 'Rejetée'] and reclamation.reclamationReps|length > 0 %}
+                <p><strong>Réponse :</strong> <span class="badge badge-reponse">{{ reclamation.reclamationReps[0].reponse }}</span></p>
+            {% endif %}
+        </div>
+        <div class="footer">
+            <p>Eventora - Tous droits réservés © {{ "now"|date("Y") }}</p>
+        </div>
+    </div>
+</body>
+</html>
+{% endapply %}

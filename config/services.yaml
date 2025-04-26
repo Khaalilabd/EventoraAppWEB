@@ -16,8 +16,13 @@ services:
 
     Knp\Snappy\Pdf:
         arguments:
-            $binary: '%kernel.project_dir%/bin/wkhtmltopdf' # Ajuste ce chemin selon l'emplacement de wkhtmltopdf
-            $options: []
+            $binary: '/usr/local/bin/wkhtmltopdf'
+            $options:
+                enable-local-file-access: true
+                enable-javascript: true
+                minimum-font-size: 12
+                image-dpi: 300
+                image-quality: 94
 
     App\Repository\TypepackRepository:
         arguments:
@@ -34,3 +39,4 @@ services:
     App\Controller\Users\ChatAiController:
         arguments:
             $geminiApiKey: '%env(GOOGLE_GEMINI_API_KEY)%'
+            

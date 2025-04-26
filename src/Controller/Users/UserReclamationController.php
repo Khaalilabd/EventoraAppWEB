@@ -101,8 +101,7 @@ class UserReclamationController extends AbstractController
                         $entityManager->flush();
 
                         // Générer l'URL pour télécharger le PDF avec ngrok (temporaire pour les tests locaux)
-                        $ngrokBaseUrl = 'https://abcd1234.ngrok.io'; // Remplace par ton URL ngrok réelle
-                        $reclamationUrl = $ngrokBaseUrl . $this->generateUrl('app_reclamation_pdf', ['id' => $reclamation->getId()]);
+                        $ngrokBaseUrl = 'https://dab8-2c0f-f698-4097-770e-818a-4c34-dd0-b9d7.ngrok-free.app';                        $reclamationUrl = $ngrokBaseUrl . $this->generateUrl('app_reclamation_pdf', ['id' => $reclamation->getId()]);
                         $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($reclamationUrl);
                         $this->logger->info('URL du QR code générée', [
                             'reclamation_id' => $reclamation->getId(),
@@ -225,7 +224,7 @@ class UserReclamationController extends AbstractController
                 $entityManager->flush();
 
                 // Générer l'URL pour télécharger le PDF avec ngrok (temporaire pour les tests locaux)
-                $ngrokBaseUrl = 'https://abcd1234.ngrok.io'; // Remplace par ton URL ngrok réelle
+                $ngrokBaseUrl = 'https://c487-197-17-125-97.ngrok-free.app'; // Remplace par ton URL ngrok réelle
                 $reclamationUrl = $ngrokBaseUrl . $this->generateUrl('app_reclamation_pdf', ['id' => $reclamation->getId()]);
                 $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($reclamationUrl);
                 $this->logger->info('URL du QR code générée', [
@@ -331,7 +330,7 @@ class UserReclamationController extends AbstractController
     {
         try {
             // Rendre le template HTML pour le PDF
-            $html = $this->twig->render('reclamation/pdf.html.twig', [
+            $html = $this->twig->render('admin/reclamations/pdf_qr.html.twig', [
                 'reclamation' => $reclamation,
             ]);
 
