@@ -185,4 +185,4 @@ client.on('interactionCreate', async interaction => {
 });
 
 // Connexion du bot avec votre token
-client.login('MTM2NTc3ODc5NzYwNTAzMTk3Ng.GZaHHU.FCYvq6evc5q16tI8d8CYSi6Oz1OexngbBRuRPA');
+client.login('MTM2NTc3ODc5NzYwNTAzMTk3Ng.GWItOK.XTta18CANU8r01cnfW-rZ-xchIS5REO2jy8JSs');
