@@ -28,6 +28,7 @@ use SendinBlue\Client\Configuration;
 use SendinBlue\Client\Api\TransactionalEmailsApi;
 use SendinBlue\Client\ApiException;
 use GuzzleHttp\Client as GuzzleClient;
+use App\Service\GoogleCalendarService;
 
 #[Route('/user/reservations')]
 class UserReservationsController extends AbstractController
@@ -38,6 +39,7 @@ class UserReservationsController extends AbstractController
     private $logger;
     private $brevoSenderEmail;
     private $brevoSenderName;
+    private $googleCalendarService;
 
     public function __construct(
         string $twilioAccountSid,
@@ -46,19 +48,17 @@ class UserReservationsController extends AbstractController
         string $brevoApiKey,
         string $brevoSenderEmail,
         string $brevoSenderName,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        GoogleCalendarService $googleCalendarService
     ) {
-        // Initialize Twilio client
         $this->twilioClient = new Client($twilioAccountSid, $twilioAuthToken);
         $this->twilioFromNumber = $twilioPhoneNumber;
-
-        // Initialize Brevo email client
         $config = Configuration::getDefaultConfiguration()->setApiKey('api-key', $brevoApiKey);
         $this->emailApiInstance = new TransactionalEmailsApi(new GuzzleClient(), $config);
+        $this->logger = $logger;
         $this->brevoSenderEmail = $brevoSenderEmail;
         $this->brevoSenderName = $brevoSenderName;
-
-        $this->logger = $logger;
+        $this->googleCalendarService = $googleCalendarService;
     }
 
     #[Route('/pack/new', name: 'user_reservation_pack_new', methods: ['GET', 'POST'])]
@@ -96,35 +96,39 @@ class UserReservationsController extends AbstractController
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
                     try {
-                        // Prepend +216 to numtel
                         $numtel = $form->get('numtel')->getData();
                         $reservation->setNumtel('+216' . $numtel);
-
-                        $recipientEmail = $form->get('email')->getData(); // Email from form
+                        $recipientEmail = $form->get('email')->getData();
                         $entityManager->persist($reservation);
                         $entityManager->flush();
 
-                        // Generate personalized message
+                        // Add Google Calendar event
+                        $calendarLink = $this->googleCalendarService->addEvent($reservation, 'pack');
+                        if (!$calendarLink) {
+                            $this->logger->warning('Failed to add Google Calendar event for pack reservation: ' . $reservation->getId());
+                        }
+
                         $packName = $reservation->getPack() ? $reservation->getPack()->getNomPack() : 'Non spécifié';
                         $eventDate = $reservation->getDate()->format('d/m/Y');
                         $userName = $reservation->getPrenom() ?: 'Client';
                         $smsMessage = sprintf(
-                            'Cher(e) %s, votre réservation pour le pack "%s" du %s a été confirmée avec succès. Merci de choisir Eventora pour votre événement !',
+                            'Cher(e) %s, votre réservation pour le pack "%s" du %s a été confirmée. %s Merci de choisir Eventora !',
                             $userName,
                             $packName,
-                            $eventDate
+                            $eventDate,
+                            $calendarLink ? "Consultez votre événement : $calendarLink" : ''
                         );
 
-                        // Send Email via Brevo
                         $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
                         $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
                             'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
                             'to' => [['email' => $recipientEmail, 'name' => $userName]],
-                            'templateId' => 3, // Replace with your actual template ID
+                            'templateId' => 4,
                             'params' => [
                                 'name' => $userName,
                                 'date' => $eventDate,
-                                'packName' => $packName
+                                'packName' => $packName,
+                                'calendarLink' => $calendarLink ?: 'N/A'
                             ]
                         ]);
 
@@ -136,13 +140,18 @@ class UserReservationsController extends AbstractController
                         }
 
                         // Send SMS via Twilio
-                        $this->twilioClient->messages->create(
-                            $reservation->getNumtel(),
-                            [
-                                'from' => $this->twilioFromNumber,
-                                'body' => $smsMessage
-                            ]
-                        );
+                        try {
+                            $this->twilioClient->messages->create(
+                                $reservation->getNumtel(),
+                                [
+                                    'from' => $this->twilioFromNumber,
+                                    'body' => $smsMessage
+                                ]
+                            );
+                            $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
+                        } catch (\Exception $e) {
+                            $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
+                        }
 
                         return new JsonResponse([
                             'success' => true,
@@ -150,7 +159,6 @@ class UserReservationsController extends AbstractController
                         ]);
                     } catch (ApiException $e) {
                         $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
-                        // Proceed with SMS even if email fails
                         try {
                             $this->twilioClient->messages->create(
                                 $reservation->getNumtel(),
@@ -203,35 +211,40 @@ class UserReservationsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                // Prepend +216 to numtel
                 $numtel = $form->get('numtel')->getData();
                 $reservation->setNumtel('+216' . $numtel);
-
-                $recipientEmail = $form->get('email')->getData(); // Email from form
+                $recipientEmail = $form->get('email')->getData();
                 $entityManager->persist($reservation);
                 $entityManager->flush();
 
-                // Generate personalized message
+                // Add Google Calendar event
+                $calendarLink = $this->googleCalendarService->addEvent($reservation, 'pack');
+                if (!$calendarLink) {
+                    $this->logger->warning('Failed to add Google Calendar event for pack reservation: ' . $reservation->getId());
+                    $this->addFlash('warning', 'Événement non ajouté au calendrier Google.');
+                }
+
                 $packName = $reservation->getPack() ? $reservation->getPack()->getNomPack() : 'Non spécifié';
                 $eventDate = $reservation->getDate()->format('d/m/Y');
                 $userName = $reservation->getPrenom() ?: 'Client';
                 $successMessage = sprintf(
-                    'Cher(e) %s, votre réservation pour le pack "%s" du %s a été confirmée avec succès. Merci de choisir Eventora pour votre événement !',
+                    'Cher(e) %s, votre réservation pour le pack "%s" du %s a été confirmée. %s Merci de choisir Eventora !',
                     $userName,
                     $packName,
-                    $eventDate
+                    $eventDate,
+                    $calendarLink ? "Consultez votre événement : $calendarLink" : ''
                 );
 
-                // Send Email via Brevo
                 $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
                 $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
                     'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
                     'to' => [['email' => $recipientEmail, 'name' => $userName]],
-                    'templateId' => 3, // Replace with your actual template ID
+                    'templateId' => 4,
                     'params' => [
                         'name' => $userName,
                         'date' => $eventDate,
-                        'packName' => $packName
+                        'packName' => $packName,
+                        'calendarLink' => $calendarLink ?: 'N/A'
                     ]
                 ]);
 
@@ -244,19 +257,24 @@ class UserReservationsController extends AbstractController
                 }
 
                 // Send SMS via Twilio
-                $this->twilioClient->messages->create(
-                    $reservation->getNumtel(),
-                    [
-                        'from' => $this->twilioFromNumber,
-                        'body' => $successMessage
-                    ]
-                );
+                try {
+                    $this->twilioClient->messages->create(
+                        $reservation->getNumtel(),
+                        [
+                            'from' => $this->twilioFromNumber,
+                            'body' => $successMessage
+                        ]
+                    );
+                    $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
+                } catch (\Exception $e) {
+                    $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
+                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi du SMS.');
+                }
 
                 $this->addFlash('success', $successMessage);
                 return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
             } catch (ApiException $e) {
                 $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
-                // Proceed with SMS even if email fails
                 try {
                     $this->twilioClient->messages->create(
                         $reservation->getNumtel(),
@@ -317,36 +335,40 @@ class UserReservationsController extends AbstractController
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
                     try {
-                        // Prepend +216 to numtel
                         $numtel = $form->get('numtel')->getData();
                         $reservation->setNumtel('+216' . $numtel);
-
-                        $recipientEmail = $form->get('email')->getData(); // Email from form
+                        $recipientEmail = $form->get('email')->getData();
                         $entityManager->persist($reservation);
                         $entityManager->flush();
 
-                        // Generate personalized message
+                        // Add Google Calendar event
+                        $calendarLink = $this->googleCalendarService->addEvent($reservation, 'personnalise');
+                        if (!$calendarLink) {
+                            $this->logger->warning('Failed to add Google Calendar event for personnalise reservation: ' . $reservation->getId());
+                        }
+
                         $services = $reservation->getServices();
                         $servicesList = ($services === null || $services->isEmpty()) ? 'Non spécifié' : implode(', ', array_map(fn($s) => $s->getTitre(), $services->toArray()));
                         $eventDate = $reservation->getDate()->format('d/m/Y');
                         $userName = $reservation->getPrenom() ?: 'Client';
                         $smsMessage = sprintf(
-                            'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été confirmée avec succès. Eventora vous remercie pour votre confiance !',
+                            'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été confirmée. %s Eventora vous remercie !',
                             $userName,
                             $servicesList,
-                            $eventDate
+                            $eventDate,
+                            $calendarLink ? "Consultez votre événement : $calendarLink" : ''
                         );
 
-                        // Send Email via Brevo
                         $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
                         $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
                             'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
                             'to' => [['email' => $recipientEmail, 'name' => $userName]],
-                            'templateId' => 3, // Replace with your actual template ID
+                            'templateId' => 4,
                             'params' => [
                                 'name' => $userName,
                                 'date' => $eventDate,
-                                'servicesList' => '<li>' . implode('</li><li>', array_map(fn($s) => $s->getTitre(), $services->toArray())) . '</li>'
+                                'servicesList' => $servicesList,
+                                'calendarLink' => $calendarLink ?: 'N/A'
                             ]
                         ]);
 
@@ -358,13 +380,18 @@ class UserReservationsController extends AbstractController
                         }
 
                         // Send SMS via Twilio
-                        $this->twilioClient->messages->create(
-                            $reservation->getNumtel(),
-                            [
-                                'from' => $this->twilioFromNumber,
-                                'body' => $smsMessage
-                            ]
-                        );
+                        try {
+                            $this->twilioClient->messages->create(
+                                $reservation->getNumtel(),
+                                [
+                                    'from' => $this->twilioFromNumber,
+                                    'body' => $smsMessage
+                                ]
+                            );
+                            $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
+                        } catch (\Exception $e) {
+                            $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
+                        }
 
                         return new JsonResponse([
                             'success' => true,
@@ -372,7 +399,6 @@ class UserReservationsController extends AbstractController
                         ]);
                     } catch (ApiException $e) {
                         $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
-                        // Proceed with SMS even if email fails
                         try {
                             $this->twilioClient->messages->create(
                                 $reservation->getNumtel(),
@@ -424,36 +450,41 @@ class UserReservationsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                // Prepend +216 to numtel
                 $numtel = $form->get('numtel')->getData();
                 $reservation->setNumtel('+216' . $numtel);
-
-                $recipientEmail = $form->get('email')->getData(); // Email from form
+                $recipientEmail = $form->get('email')->getData();
                 $entityManager->persist($reservation);
                 $entityManager->flush();
 
-                // Generate personalized message
+                // Add Google Calendar event
+                $calendarLink = $this->googleCalendarService->addEvent($reservation, 'personnalise');
+                if (!$calendarLink) {
+                    $this->logger->warning('Failed to add Google Calendar event for personnalise reservation: ' . $reservation->getId());
+                    $this->addFlash('warning', 'Événement non ajouté au calendrier Google.');
+                }
+
                 $services = $reservation->getServices();
                 $servicesList = ($services === null || $services->isEmpty()) ? 'Non spécifié' : implode(', ', array_map(fn($s) => $s->getTitre(), $services->toArray()));
                 $eventDate = $reservation->getDate()->format('d/m/Y');
                 $userName = $reservation->getPrenom() ?: 'Client';
                 $successMessage = sprintf(
-                    'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été confirmée avec succès. Eventora vous remercie pour votre confiance !',
+                    'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été confirmée. %s Eventora vous remercie !',
                     $userName,
                     $servicesList,
-                    $eventDate
+                    $eventDate,
+                    $calendarLink ? "Consultez votre événement : $calendarLink" : ''
                 );
 
-                // Send Email via Brevo
                 $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
                 $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
                     'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
                     'to' => [['email' => $recipientEmail, 'name' => $userName]],
-                    'templateId' => 3, // Replace with your actual template ID
+                    'templateId' => 4,
                     'params' => [
                         'name' => $userName,
                         'date' => $eventDate,
-                        'servicesList' => '<li>' . implode('</li><li>', array_map(fn($s) => $s->getTitre(), $services->toArray())) . '</li>'
+                        'servicesList' => $servicesList,
+                        'calendarLink' => $calendarLink ?: 'N/A'
                     ]
                 ]);
 
@@ -466,19 +497,24 @@ class UserReservationsController extends AbstractController
                 }
 
                 // Send SMS via Twilio
-                $this->twilioClient->messages->create(
-                    $reservation->getNumtel(),
-                    [
-                        'from' => $this->twilioFromNumber,
-                        'body' => $successMessage
-                    ]
-                );
+                try {
+                    $this->twilioClient->messages->create(
+                        $reservation->getNumtel(),
+                        [
+                            'from' => $this->twilioFromNumber,
+                            'body' => $successMessage
+                        ]
+                    );
+                    $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
+                } catch (\Exception $e) {
+                    $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
+                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi du SMS.');
+                }
 
                 $this->addFlash('success', $successMessage);
                 return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
             } catch (ApiException $e) {
                 $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
-                // Proceed with SMS even if email fails
                 try {
                     $this->twilioClient->messages->create(
                         $reservation->getNumtel(),
@@ -503,6 +539,7 @@ class UserReservationsController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/pack/search', name: 'user_pack_search', methods: ['GET'])]
     public function searchPack(Request $request, PackRepository $packRepository): JsonResponse

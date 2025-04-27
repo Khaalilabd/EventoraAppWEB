@@ -25,3 +25,11 @@ account_confirmed: Compte confirmé
 username: Nom d'utilisateur
 password: Mot de passe
 save_changes: Enregistrer les modifications
+event_title_pack: 'Eventora : Réservation Pack %pack%'
+event_title_personnalise: 'Eventora : Réservation Personnalisée'
+no_description: 'Aucune description fournie.'
+google_auth_success: 'Connexion à Google Calendar réussie !'
+google_auth_failed: 'Échec de la connexion à Google Calendar. Veuillez réessayer.'
+add_to_calendar: 'Ajouter au Google Calendar'
+success: 'Succès'
+error: 'Erreur'

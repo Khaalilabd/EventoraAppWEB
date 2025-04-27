@@ -277,6 +277,8 @@
                                 <div class="col-12 action-buttons">
                                     <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
                                     <a href="{{ path('admin_reservations_pack') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+                                    {# Addition: Google Calendar Button #}
+                                    <a href="{{ path('google_auth') }}" class="btn btn-info mt-3">{{ 'add_to_calendar'|trans }}</a>
                                 </div>
                             {{ form_end(form) }}
                         </div>
@@ -428,5 +430,31 @@
                 padding: 0.8rem;
             }
         }
+
+        {# Addition: Style for Google Calendar Button #}
+        .btn-info {
+            background: linear-gradient(90deg, #17a2b8, #20c997) !important;
+            border: none !important;
+            color: #fff !important;
+        }
     </style>
+
+    {# Addition: SweetAlert2 and Flash Message Handling #}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const flashes = document.querySelectorAll('.alert');
+            flashes.forEach(flash => {
+                const message = flash.textContent;
+                const type = flash.classList.contains('alert-success') ? 'success' : 'error';
+                Swal.fire({
+                    icon: type,
+                    title: type === 'success' ? '{{ 'success'|trans }}' : '{{ 'error'|trans }}',
+                    text: message,
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            });
+        });
+    </script>
 {% endblock %}

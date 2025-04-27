@@ -223,6 +223,15 @@
                 border-color: #545b62;
                 transform: translateY(-2px);
             }
+            .event-wrap .btn-info {
+                background-color: #17a2b8;
+                border-color: #17a2b8;
+            }
+            .event-wrap .btn-info:hover {
+                background-color: #138496;
+                border-color: #138496;
+                transform: translateY(-2px);
+            }
             .event-wrap .btn:disabled {
                 cursor: not-allowed;
                 opacity: 0.65;
@@ -455,6 +464,7 @@
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-primary btn-block">Créer la Réservation</button>
                                             <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
+                                            <a href="{{ path('google_auth') }}" class="btn btn-info btn-block">Ajouter au Google Calendar</a>
                                             <div class="loading-spinner"></div>
                                         </div>
                                     {{ form_end(form) }}
@@ -713,6 +723,18 @@
                     $(this).addClass('is-invalid');
                 }
             });
+
+            // Handle flash messages
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    Swal.fire({
+                        title: '{{ label == 'success' ? 'Succès' : 'Erreur' }}',
+                        text: '{{ message|raw }}',
+                        icon: '{{ label == 'success' ? 'success' : 'error' }}',
+                        confirmButtonText: 'OK'
+                    });
+                {% endfor %}
+            {% endfor %}
         });
     }
 </script>

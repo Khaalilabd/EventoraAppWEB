@@ -1,4 +1,3 @@
-# config/services.yaml
 parameters:
     images_directory: '%kernel.project_dir%/public/uploads/images'
     twilio_account_sid: '%env(TWILIO_ACCOUNT_SID)%'
@@ -49,3 +48,22 @@ services:
             $brevoApiKey: '%brevo_api_key%'
             $brevoSenderEmail: '%brevo_sender_email%'
             $brevoSenderName: '%brevo_sender_name%'
+            $logger: '@monolog.logger'
+
+    App\Controller\Admin\ReservationsController:
+        arguments:
+            $twilioAccountSid: '%twilio_account_sid%'
+            $twilioAuthToken: '%twilio_auth_token%'
+            $twilioPhoneNumber: '%twilio_phone_number%'
+            $brevoApiKey: '%brevo_api_key%'
+            $brevoSenderEmail: '%brevo_sender_email%'
+            $brevoSenderName: '%brevo_sender_name%'
+            $logger: '@monolog.logger'
+
+    App\Service\GoogleCalendarService:
+        arguments:
+            $credentialsPath: '%kernel.project_dir%/config/credentials.json'
+            $redirectUri: '%env(GOOGLE_CALENDAR_REDIRECT_URI)%'
+            $logger: '@monolog.logger'
+            $requestStack: '@request_stack'
+            $translator: '@translator'

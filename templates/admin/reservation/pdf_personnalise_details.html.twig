@@ -5,7 +5,7 @@
     <title>Réservation Personnalisée #{{ reservation.IDReservationPersonalise }}</title>
     <style>
         body {
-            font-family: Arial, Helvetica, sans-serif; /* System font fallback */
+            font-family: Arial, Helvetica, sans-serif;
             margin: 0;
             padding: 0;
             color: #333;
@@ -35,7 +35,7 @@
             font-weight: 600;
         }
         .header span {
-            font-family: cursive; /* Fallback for Sacramento */
+            font-family: cursive;
             font-size: 20px;
             color: #007bff;
             display: block;
@@ -106,7 +106,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="file:///C:/Users/asus/Desktop/pidev/EventoraAppWEB/public/assets/img/logo-ct-dark.png" alt="Eventora Logo">
             <span>Votre Événement</span>
             <h1>Réservation Personnalisée #{{ reservation.IDReservationPersonalise }}</h1>
         </div>
@@ -133,12 +132,12 @@
                     <th>Prix</th>
                     <th>Location</th>
                 </tr>
-                {% if reservation.services is not null and reservation.services|length > 0 %}
+                {% if reservation.services is not empty %}
                     {% for service in reservation.services %}
                         <tr>
-                            <td>{{ service.titre|default('N/A') }}</td>
-                            <td>{{ service.prix|default('N/A') }}</td>
-                            <td>{{ service.location|default('N/A') }}</td>
+                            <td>{{ service.titre|default('N/A')|e }}</td>
+                            <td>{{ service.prix|default('N/A')|e }}</td>
+                            <td>{{ service.location|default('N/A')|e }}</td>
                         </tr>
                     {% endfor %}
                 {% else %}
