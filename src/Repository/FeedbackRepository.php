@@ -17,6 +17,50 @@ class FeedbackRepository extends ServiceEntityRepository
     }
 
     /**
+     * Trouve des feedbacks aléatoires sans conditions spécifiques.
+     *
+     * @param int $limit Nombre maximum de feedbacks à retourner
+     * @return array
+     */
+    public function findRandomFeedbacks(int $limit = 3): array
+    {
+        // Compter le nombre total de feedbacks
+        $count = $this->createQueryBuilder('f')
+            ->select('COUNT(f.ID)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if ($count === 0) {
+            return [];
+        }
+
+        // Générer des IDs aléatoires
+        $randomIds = [];
+        $maxId = $this->createQueryBuilder('f')
+            ->select('MAX(f.ID)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        while (count($randomIds) < min($limit, $count)) {
+            $randomIds[] = mt_rand(1, $maxId);
+            $randomIds = array_unique($randomIds);
+        }
+
+        // Récupérer les feedbacks correspondant aux IDs aléatoires
+        $feedbacks = $this->createQueryBuilder('f')
+            ->leftJoin('f.membre', 'm')
+            ->where('f.ID IN (:ids)')
+            ->setParameter('ids', $randomIds)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        dump($feedbacks); // Débogage : vérifier ce que retourne la requête
+
+        return $feedbacks;
+    }
+
+    /**
      * Trouve les feedbacks avec pagination, tri et filtres.
      *
      * @param int $page
@@ -55,7 +99,7 @@ class FeedbackRepository extends ServiceEntityRepository
                 $queryBuilder->orderBy('f.date', $sortOrder);
                 break;
             case 'recommend':
-                $queryBuilder->orderBy('f.recommend', $sortOrder);
+                $queryBuilder->orderBy('f.Recommend', $sortOrder);
                 break;
         }
 
@@ -73,7 +117,7 @@ class FeedbackRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('f')
             ->leftJoin('f.membre', 'm')
-            ->select('COUNT(f.id)');
+            ->select('COUNT(f.ID)');
 
         if ($userFilter) {
             $queryBuilder->andWhere('m.email = :email')
