@@ -243,10 +243,15 @@
                     padding: 10px 0;
                     min-width: 150px;
                     z-index: 1001;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                    opacity: 0;
+                    visibility: hidden;
                 }
 
                 .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block !important;
+                    display: block;
+                    opacity: 1;
+                    visibility: visible;
                 }
 
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
@@ -522,6 +527,160 @@
                     text-align: center;
                 }
 
+                /* Styles pour la section Friends Wishes */
+                .friends-wishes-container {
+                    background: linear-gradient(135deg, #FAF0E6 0%, #D2B48C 100%) !important;
+                    position: relative;
+                    padding: 60px 0;
+                }
+
+                .friends-wishes-container .overlay {
+                    background: rgba(255, 255, 255, 0.7);
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+                }
+
+                .friends-wishes-container .container {
+                    position: relative;
+                    z-index: 2;
+                    max-width: 1200px;
+                    width: 90%;
+                    margin: 0 auto;
+                    padding: 0 15px;
+                }
+
+                .friends-wishes-container .fh5co-heading {
+                    margin-bottom: 40px;
+                    text-align: center;
+                }
+
+                .friends-wishes-container .fh5co-heading span {
+                    color: #A0522D;
+                    font-size: 18px;
+                    display: block;
+                    margin-bottom: 10px;
+                    font-family: 'Sacramento', cursive;
+                }
+
+                .friends-wishes-container .fh5co-heading h2 {
+                    color: #5C4033;
+                    font-size: 36px;
+                    margin: 0;
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 600;
+                }
+
+                .friends-wishes-container .wrap-testimony {
+                    position: relative;
+                }
+
+                .friends-wishes-container .testimony-slide {
+                    background: #fff;
+                    border-radius: 15px;
+                    padding: 30px;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                    margin: 15px;
+                    transition: transform 0.3s ease;
+                    opacity: 0;
+                    animation: fadeIn 0.5s forwards;
+                }
+
+                .friends-wishes-container .testimony-slide:hover {
+                    transform: translateY(-5px);
+                }
+
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .friends-wishes-container .testimony-slide .user-profile {
+                    display: flex;
+                    justify-content: center;
+                    margin-bottom: 20px;
+                }
+
+                .friends-wishes-container .testimony-slide .user-profile img {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    border: 2px solid #DAA520;
+                }
+
+                .friends-wishes-container .testimony-slide .star-rating {
+                    margin: 10px 0;
+                    font-size: 20px;
+                    color: #DAA520;
+                    text-align: center;
+                }
+
+                .friends-wishes-container .testimony-slide .star-rating .fas {
+                    margin-right: 5px;
+                }
+
+                .friends-wishes-container .testimony-slide .star-rating .fas.filled {
+                    color: #DAA520;
+                }
+
+                .friends-wishes-container .testimony-slide blockquote {
+                    font-size: 16px;
+                    color: #5C4033;
+                    line-height: 1.6;
+                    border-left: 4px solid #DAA520;
+                    padding-left: 15px;
+                    margin: 15px 0;
+                    font-family: 'Work Sans', sans-serif;
+                }
+
+                .friends-wishes-container .testimony-slide blockquote p {
+                    margin: 0;
+                }
+
+                .owl-carousel .owl-dots {
+                    text-align: center;
+                    margin-top: 20px;
+                }
+
+                .owl-carousel .owl-dot {
+                    display: inline-block;
+                    margin: 0 5px;
+                }
+
+                .owl-carousel .owl-dot span {
+                    width: 10px;
+                    height: 10px;
+                    background: #A0522D;
+                    border-radius: 50%;
+                    display: block;
+                    transition: background 0.3s ease;
+                }
+
+                .owl-carousel .owl-dot.active span {
+                    background: #DAA520;
+                }
+
+                /* Loader styles */
+                .fh5co-loader {
+                    position: fixed;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 9999;
+                    background: url('/images/loader.gif') center no-repeat #fff;
+                }
+
                 /* Responsive adjustments */
                 @media (max-width: 900px) {
                     body {
@@ -565,14 +724,17 @@
                         display: none;
                         box-shadow: none;
                         background-color: #f8f9fa;
+                        padding: 10px 0;
+                        opacity: 1;
+                        visibility: visible;
                     }
 
                     .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none !important;
+                        display: none;
                     }
 
                     .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block !important;
+                        display: block;
                     }
 
                     .event-wrap {
@@ -595,6 +757,19 @@
                     #fh5co-couple {
                         padding: 30px 0;
                     }
+
+                    .friends-wishes-container .fh5co-heading h2 {
+                        font-size: 28px;
+                    }
+
+                    .friends-wishes-container .testimony-slide {
+                        padding: 20px;
+                    }
+
+                    .friends-wishes-container .testimony-slide .user-profile img {
+                        width: 50px;
+                        height: 50px;
+                    }
                 }
 
                 @media (max-width: 480px) {
@@ -612,6 +787,15 @@
 
                     #fh5co-couple .fh5co-heading p {
                         font-size: 14px;
+                    }
+
+                    .friends-wishes-container .fh5co-heading h2 {
+                        font-size: 24px;
+                    }
+
+                    .friends-wishes-container .testimony-slide .user-profile img {
+                        width: 40px;
+                        height: 40px;
                     }
                 }
             </style>
@@ -660,33 +844,33 @@
                                 <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                                 <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
                                 <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                               <li class="has-dropdown">
-    <a href="#">
-        <span class="user-circle">
-            {% if app.user and app.user.image %}
-                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-            {% else %}
-                <i class="icon-user"></i>
-            {% endif %}
-        </span>
-        Contact
-    </a>
-    <ul class="dropdown">
-        {% if app.user %}
-            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-            <li><a href="{{ path('app_user_history') }}">Historique</a></li>
-            {% if is_granted('ROLE_ADMIN') %}
-                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-            {% endif %}
-            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-        {% else %}
-            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
-            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-        {% endif %}
-    </ul>
-</li>
+                                <li class="has-dropdown">
+                                    <a href="#">
+                                        <span class="user-circle">
+                                            {% if app.user and app.user.image %}
+                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <i class="icon-user"></i>
+                                            {% endif %}
+                                        </span>
+                                        Contact
+                                    </a>
+                                    <ul class="dropdown">
+                                        {% if app.user %}
+                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                            <li><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                        {% else %}
+                                            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -716,39 +900,38 @@
                     </div>
                 </header>
 
-             <div id="fh5co-couple">
-    <div id="fh5co-couple">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                <h2>Rejoignez notre communauté !</h2>
-                <h3>Planifiez vos événements avec Eventora</h3>
-                <p>Connectez-vous avec d'autres passionnés d'événements sur notre serveur Discord. Partagez vos idées et recevez des mises à jour en temps réel !</p>
-                <a href="{{ path('discord_login') }}" class="btn btn-discord">
-                    <i class="fab fa-discord"></i> Connexion avec Discord
-                </a>
-                <a href="https://discord.gg/VOTRE_INVITATION" target="_blank" class="btn btn-discord">
-                    <i class="fab fa-discord"></i> Rejoindre le Discord
-                </a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3 text-center animate-box">
-                <div class="event-wrap">
-                    <h3>Envoyez un message à la communauté</h3>
-                    <div id="discord-message-error" class="form-error" style="display: none;"></div>
-                    <form id="discord-message-form">
-                        <div class="form-group">
-                            <label for="message">Votre message</label>
-                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="Partagez une idée ou une question..." required></textarea>
+                <div id="fh5co-couple">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
+                                <h2>Rejoignez notre communauté !</h2>
+                                <h3>Planifiez vos événements avec Eventora</h3>
+                                <p>Connectez-vous avec d'autres passionnés d'événements sur notre serveur Discord. Partagez vos idées et recevez des mises à jour en temps réel !</p>
+                                <a href="{{ path('discord_login') }}" class="btn btn-discord">
+                                    <i class="fab fa-discord"></i> Connexion avec Discord
+                                </a>
+                                <a href="https://discord.gg/VOTRE_INVITATION" target="_blank" class="btn btn-discord">
+                                    <i class="fab fa-discord"></i> Rejoindre le Discord
+                                </a>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Envoyer au Discord</button>
-                    </form>
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-3 text-center animate-box">
+                                <div class="event-wrap">
+                                    <h3>Envoyez un message à la communauté</h3>
+                                    <div id="discord-message-error" class="form-error" style="display: none;"></div>
+                                    <form id="discord-message-form">
+                                        <div class="form-group">
+                                            <label for="message">Votre message</label>
+                                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="Partagez une idée ou une question..." required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Envoyer au Discord</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
 
                 <div id="fh5co-gallery" class="fh5co-section-gray">
                     <div class="container">
@@ -948,7 +1131,7 @@
                     </div>
                 </div>
 
-                <div id="fh5co-counter" class="fh5co-bg fh5co-counter" style="background-image:url(images/img_bg_5.jpg);">
+                <div id="fh5co-counter" class="fh5co-bg fh5co-counter friends-wishes-container" style="background-image:url(images/img_bg_5.jpg);">
                     <div class="overlay"></div>
                     <div class="container">
                         <div class="row">
@@ -961,33 +1144,61 @@
                             <div class="col-md-12 animate-box">
                                 <div class="wrap-testimony">
                                     <div class="owl-carousel-fullwidth">
-                                        <div class="item">
-                                            <div class="testimony-slide active text-center">
-                                                
-                                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
-                                                <blockquote>
-                                                    <p>"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics"</p>
-                                                </blockquote>
+                                        {% if feedbacks is defined %}
+                                            {% for feedback in feedbacks %}
+                                                <div class="item">
+                                                    <div class="testimony-slide active text-center">
+                                                        <div class="user-profile">
+                                                            <img src="{{ feedback.membre.image ? asset('Uploads/images/' ~ feedback.membre.image) : asset('Uploads/images/default-user.png') }}" alt="User Profile">
+                                                        </div>
+                                                        <div class="star-rating">
+                                                            {% for i in 1..5 %}
+                                                                <i class="fas fa-star {{ i <= feedback.Vote ? 'filled' : '' }}"></i>
+                                                            {% endfor %}
+                                                        </div>
+                                                        <blockquote>
+                                                            <p>{{ feedback.Description }}</p>
+                                                        </blockquote>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <div class="item">
+                                                    <div class="testimony-slide active text-center">
+                                                        <div class="user-profile">
+                                                            <img src="{{ asset('Uploads/images/default-user.png') }}" alt="Aucun utilisateur">
+                                                        </div>
+                                                        <div class="star-rating">
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                        </div>
+                                                        <blockquote>
+                                                            <p>Aucun feedback disponible pour le moment. Soyez le premier à partager votre expérience !</p>
+                                                        </blockquote>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="item">
+                                                <div class="testimony-slide active text-center">
+                                                    <div class="user-profile">
+                                                        <img src="{{ asset('Uploads/images/default-user.png') }}" alt="Aucun utilisateur">
+                                                    </div>
+                                                    <div class="star-rating">
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                    </div>
+                                                    <blockquote>
+                                                        <p>Erreur : aucun feedback chargé. Contactez l'administrateur.</p>
+                                                    </blockquote>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="testimony-slide active text-center">
-                                               
-                                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
-                                                <blockquote>
-                                                    <p>"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, at the coast of the Semantics, a large language ocean."</p>
-                                                </blockquote>
-                                            </div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="testimony-slide active text-center">
-                                                
-                                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
-                                                <blockquote>
-                                                    <p>"Far far away, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean."</p>
-                                                </blockquote>
-                                            </div>
-                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -1071,12 +1282,12 @@
                                     </span>
                                     <div class="feature-copy">
                                         <h3>Video Editing</h3>
-                                        <p>Facilis ipsum reprehenderit nemo molestias. Aut cum mollitia reprehenderit. Eos cumque dicta adipisci architecto culpa amet.</p>
+                                        <p>Facilis ipsum reprehenderit nemo molestias. Aut cum mollitiarepresent. Eos cumque dicta adipisci architecto culpa amet.</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 animate-box">
-                                <div class="fh5co-video fh5co-bg" style="background-image: url(images/img_bg_3.jpg); ">
+                                <div class="fh5co-video fh5co-bg" style="background-image: url(images/img_bg_3.jpg);">
                                     <a href="https://vimeo.com/channels/staffpicks/93951774" class="popup-vimeo"><i class="icon-video2"></i></a>
                                     <div class="overlay"></div>
                                 </div>
@@ -1105,85 +1316,59 @@
 
             {% block javascripts %}
                 <script src="{{ asset('js/jquery.min.js') }}"></script>
-                <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
+                <script src="{{ asset('js/jquery.waypoints.min.js') }}"></script>
                 <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
                 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
                 <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
                 <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-                <script src="{{ asset('js/simplyCountdown.js') }}"></script>
+                <script src="{{ asset('js/jquery.countTo.js') }}"></script>
                 <script src="{{ asset('js/main.js') }}"></script>
 
                 <script>
-                    var eventDate = new Date('2025-12-31');
-                    simplyCountdown('.simply-countdown-one', {
-                        year: eventDate.getFullYear(),
-                        month: eventDate.getMonth() + 1,
-                        day: eventDate.getDate(),
-                        enableUtc: false
-                    });
-$(document).ready(function() {
-    $('#discord-message-form').submit(function(e) {
-        e.preventDefault();
-        const message = $('#message').val();
-        const errorDiv = $('#discord-message-error');
-
-        if (!message) {
-            errorDiv.text('Veuillez entrer un message.').show();
-            return;
-        }
-
-        $.ajax({
-            url: '/api/send-discord-message',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ message: message }),
-            success: function(response) {
-                errorDiv.hide();
-                alert('Message envoyé avec succès !');
-                $('#message').val(''); // Réinitialise le formulaire
-            },
-            error: function(xhr) {
-                errorDiv.text('Erreur : ' + (xhr.responseJSON?.error || 'Impossible d\'envoyer le message')).show();
-            }
-        });
-    });
-});
-                    // Menu hamburger pour mobile
                     $(document).ready(function() {
-                        $('.menu-toggle').click(function() {
-                            $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                        });
-
-                        // Gestion des sous-menus sur mobile
-                        $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                            if ($(window).width() <= 768) {
-                                e.preventDefault();
-                                $(this).parent().toggleClass('active');
-                            }
-                        });
-
                         // Gestion du slider
-                        document.addEventListener('DOMContentLoaded', function() {
-                            var parent = document.querySelector('.splitview'),
-                                topPanel = parent.querySelector('.top'),
-                                handle = parent.querySelector('.handle'),
-                                skewHack = 0,
-                                delta = 0;
+                        var parent = document.querySelector('.splitview'),
+                            topPanel = parent ? parent.querySelector('.top') : null,
+                            handle = parent ? parent.querySelector('.handle') : null,
+                            skewHack = 0,
+                            delta = 0;
 
-                            // If the parent has .skewed class, set the skewHack var.
+                        if (parent) {
                             if (parent.className.indexOf('skewed') != -1) {
                                 skewHack = 1000;
                             }
 
                             parent.addEventListener('mousemove', function(event) {
-                                // Get the delta between the mouse position and center point.
                                 delta = (event.clientX - window.innerWidth / 2) * 0.5;
+                                if (handle) handle.style.left = event.clientX + delta + 'px';
+                                if (topPanel) topPanel.style.width = event.clientX + skewHack + delta + 'px';
+                            });
+                        }
 
-                                // Move the handle.
-                                handle.style.left = event.clientX + delta + 'px';
+                        // Gestion du formulaire Discord
+                        $('#discord-message-form').submit(function(e) {
+                            e.preventDefault();
+                            const message = $('#message').val();
+                            const errorDiv = $('#discord-message-error');
 
-                                // Adjust the top panel width.
-                                topPanel.style.width = event.clientX + skewHack + delta + 'px';
+                            if (!message) {
+                                errorDiv.text('Veuillez entrer un message.').show();
+                                return;
+                            }
+
+                            $.ajax({
+                                url: '/api/send-discord-message',
+                                method: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ message: message }),
+                                success: function(response) {
+                                    errorDiv.hide();
+                                    alert('Message envoyé avec succès !');
+                                    $('#message').val('');
+                                },
+                                error: function(xhr) {
+                                    errorDiv.text('Erreur : ' + (xhr.responseJSON?.error || 'Impossible d\'envoyer le message')).show();
+                                }
                             });
                         });
                     });
@@ -1191,4 +1376,4 @@ $(document).ready(function() {
             {% endblock %}
         </div>
     </body>
-</html>
+</html>     
