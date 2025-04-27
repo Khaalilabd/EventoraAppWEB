@@ -21,24 +21,14 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
             <style>
                 body {
-                    background-image: url({{ asset('images/img_bg_3.jpg') }});
+                    background: linear-gradient(135deg, #F5F5DC 0%, #8B4513 100%);
                     background-size: cover;
-                    background-position: center;
                     background-attachment: fixed;
                     min-height: 100vh;
                     margin: 0;
                     padding: 0;
                     position: relative;
-                }
-                body::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.4);
-                    z-index: -1;
+                    font-family: 'Work Sans', sans-serif;
                 }
                 #page {
                     min-height: 100vh;
@@ -134,9 +124,14 @@
                     padding: 10px 0;
                     min-width: 150px;
                     z-index: 1001;
+                    visibility: hidden;
+                    opacity: 0;
+                    transition: opacity 0.2s ease, visibility 0.2s ease;
                 }
                 .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
                     display: block !important;
+                    visibility: visible;
+                    opacity: 1;
                 }
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
                     margin: 0;
@@ -159,70 +154,203 @@
                     padding: 10px;
                 }
                 .event-wrap {
-                    background: rgba(0, 123, 255, 0.2);
-                    padding: 40px;
-                    border-radius: 10px;
-                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-                    max-width: 700px;
+                    background: rgba(255, 255, 255, 0.95);
+                    padding: 30px;
+                    border-radius: 20px;
+                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+                    max-width: 550px;
                     margin: 0 auto;
+                    border: 1px solid #D2B48C;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }
+                .event-wrap:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
                 }
                 .event-wrap h3 {
-                    color: #fff;
-                    margin-bottom: 30px;
-                    font-size: 24px;
-                    text-transform: uppercase;
+                    color: #8B4513;
+                    margin-bottom: 25px;
+                    font-size: 26px;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    position: relative;
+                    animation: slideIn 0.5s ease-out;
+                }
+                .event-wrap h3::after {
+                    content: '✨';
+                    font-size: 20px;
+                    color: #DAA520;
+                }
+                @keyframes slideIn {
+                    from {
+                        opacity: 0;
+                        transform: translateX(-20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
                 }
                 .event-wrap .form-group {
-                    margin-bottom: 20px;
+                    margin-bottom: 25px;
+                    position: relative;
                 }
                 .event-wrap .form-group label {
-                    color: #fff;
-                    font-weight: 500;
-                    margin-bottom: 5px;
-                    display: block;
+                    color: #5C4033;
+                    font-weight: 400;
+                    font-size: 14px;
+                    transition: color 0.3s ease, transform 0.3s ease;
+                    position: absolute;
+                    top: 12px;
+                    left: 5px;
+                    pointer-events: none;
+                }
+                .event-wrap .form-group .form-control:focus ~ label,
+                .event-wrap .form-group .form-control:not(:placeholder-shown) ~ label {
+                    transform: translateY(-25px);
+                    font-size: 12px;
+                    color: #8B4513;
                 }
                 .event-wrap .form-control {
-                    background: rgba(255, 255, 255, 0.1);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    color: #fff;
-                    border-radius: 5px;
-                    padding: 10px;
+                    background: #FAF0E6;
+                    border: none;
+                    border-bottom: 2px solid #D2B48C;
+                    color: #5C4033;
+                    border-radius: 0;
+                    padding: 12px 5px;
+                    font-size: 14px;
+                    transition: border-bottom 0.3s ease;
                 }
                 .event-wrap .form-control::placeholder {
-                    color: rgba(255, 255, 255, 0.7);
+                    color: transparent;
                 }
                 .event-wrap .form-control:focus {
-                    border-color: #007bff;
+                    border-bottom: 2px solid #8B4513;
                     box-shadow: none;
+                    outline: none;
                 }
                 .event-wrap .form-control.is-invalid {
-                    border-color: #ff4d4d;
+                    border-bottom: 2px solid #ff4d4d;
                 }
                 .event-wrap .form-control select {
-                    color: #fff;
-                    background: rgba(255, 255, 255, 0.1);
+                    color: #5C4033;
+                    background: #FAF0E6;
                 }
                 .event-wrap .form-control select option {
-                    color: #333;
-                    background: #fff;
+                    color: #5C4033;
+                    background: #FAF0E6;
                 }
                 .event-wrap .btn {
-                    margin-top: 10px;
-                    padding: 10px;
-                    border-radius: 5px;
+                    margin-top: 15px;
+                    padding: 12px;
+                    border-radius: 50px;
                     font-size: 16px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
                 }
                 .event-wrap .btn-primary {
-                    background-color: #007bff;
-                    border-color: #007bff;
+                    background: linear-gradient(90deg, #D2B48C, #8B4513);
+                    border: none;
+                    width: 100%;
+                    color: #fff;
+                }
+                .event-wrap .btn-primary:hover {
+                    background: linear-gradient(90deg, #C19A6B, #5C4033);
+                    transform: scale(1.05);
+                }
+                .event-wrap .btn-primary.loading::after {
+                    content: '';
+                    display: inline-block;
+                    width: 16px;
+                    height: 16px;
+                    border: 2px solid #fff;
+                    border-top: 2px solid transparent;
+                    border-radius: 50%;
+                    animation: spin 0.6s linear infinite;
+                    margin-left: 10px;
+                    vertical-align: middle;
+                }
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
                 }
                 .event-wrap .btn-secondary {
-                    background-color: #6c757d;
-                    border-color: #6c757d;
+                    background: #EDE4D3;
+                    border: none;
+                    width: 100%;
+                    color: #5C4033;
+                }
+                .event-wrap .btn-secondary:hover {
+                    background: #D2B48C;
+                    transform: scale(1.05);
+                }
+                .text-danger {
+                    font-size: 12px;
+                    margin-top: 5px;
+                    color: #ff4d4d;
+                    display: block;
+                    animation: fadeIn 0.3s ease;
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                .success-popup {
+                    display: none;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #FAF0E6;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    z-index: 10000;
+                    text-align: center;
+                    max-width: 350px;
+                    width: 90%;
+                    border: 1px solid #D2B48C;
+                }
+                .success-popup h5 {
+                    font-size: 20px;
+                    color: #8B4513;
+                    margin-bottom: 15px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                }
+                .success-popup h5::before {
+                    content: '✔';
+                    font-size: 24px;
+                    color: #28a745;
+                }
+                .success-popup p {
+                    color: #5C4033;
+                    font-size: 14px;
+                    margin: 15px 0;
+                }
+                .success-popup .btn-primary {
+                    padding: 8px 16px;
+                    font-size: 14px;
+                }
+                .popup-overlay {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 9999;
                 }
                 #fh5co-footer {
                     background: rgba(255, 255, 255, 0.9);
                     padding: 20px 0;
+                    margin-top: auto;
                 }
                 #fh5co-event {
                     margin-top: 60px;
@@ -242,39 +370,6 @@
                     color: #fff;
                     font-size: 36px;
                     margin: 0;
-                }
-                .event-wrap .form-check-label {
-                    color: #fff;
-                    margin-left: 10px;
-                }
-                .event-wrap .form-check-input {
-                    transform: scale(1.5);
-                }
-                .star-rating-container {
-                    display: flex;
-                    justify-content: center;
-                    font-size: 30px;
-                    gap: 10px;
-                }
-                .star-rating-container select {
-                    display: none;
-                }
-                .star-rating-container .stars {
-                    display: flex;
-                }
-                .star-rating-container .star {
-                    cursor: pointer;
-                    color: #ddd !important;
-                    transition: color 0.2s ease;
-                }
-                .star-rating-container .star.filled {
-                    color: #ffd700 !important;
-                }
-                .text-danger {
-                    font-size: 14px;
-                    margin-top: 5px;
-                    color: #ff4d4d;
-                    display: block;
                 }
                 @media (max-width: 768px) {
                     .menu-toggle {
@@ -318,6 +413,9 @@
                         max-width: 90%;
                         padding: 20px;
                     }
+                    .success-popup {
+                        max-width: 90%;
+                    }
                     .fh5co-heading h2 {
                         font-size: 28px;
                     }
@@ -336,7 +434,7 @@
                         <a href="{{ path('app_home') }}">Eventora</a>
                     </div>
                     <div class="menu-toggle">
-                        <i class="icon-menu"></i>
+                        <i class="fas fa-bars"></i>
                     </div>
                     <div class="menu-1">
                         <ul>
@@ -358,7 +456,7 @@
                             </li>
                             <li class="active"><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
                             <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="">Talk with Evi</a></li>
+                            <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
                                     <span class="user-circle">
@@ -380,6 +478,7 @@
                                         {% endif %}
                                         <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
                                     {% else %}
+                                        <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
                                         <li><a href="{{ path('app_auth') }}">Connexion</a></li>
                                         <li><a href="{{ path('app_auth') }}">Inscription</a></li>
                                     {% endif %}
@@ -429,21 +528,21 @@
                                                     </button>
                                                 </div>
                                             {% endfor %}
-                                            {{ form_start(form, {'attr': {'class': 'form', 'novalidate': 'novalidate', 'id': 'reclamation-form'}}) }}
+                                            {{ form_start(form, {'attr': {'class': 'form', 'id': 'reclamation-form'}}) }}
                                                 <div class="form-group">
                                                     <div class="text-danger">{{ form_errors(form.titre) }}</div>
-                                                    {{ form_label(form.titre) }}
-                                                    {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
+                                                    {{ form_label(form.titre, 'Titre de la réclamation', {'label_attr': {'class': 'form-label'}}) }}
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="text-danger">{{ form_errors(form.description) }}</div>
-                                                    {{ form_label(form.description) }}
-                                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': ' '}}) }}
+                                                    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="text-danger">{{ form_errors(form.Type) }}</div>
-                                                    {{ form_label(form.Type) }}
-                                                    {{ form_widget(form.Type, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_widget(form.Type, {'attr': {'class': 'form-control', 'placeholder': ' '}}) }}
+                                                    {{ form_label(form.Type, 'Type de réclamation', {'label_attr': {'class': 'form-label'}}) }}
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-primary btn-block">Soumettre</button>
@@ -459,6 +558,14 @@
                 </div>
             </div>
 
+            <!-- Pop-up de succès -->
+            <div id="successPopup" class="success-popup">
+                <h5>Réclamation Soumise !</h5>
+                <p>Votre réclamation a été soumise avec succès. Merci de nous avoir informés !</p>
+                <button type="button" class="btn btn-primary" id="closeSuccessPopup">Voir l'historique</button>
+            </div>
+            <div id="popupOverlay" class="popup-overlay"></div>
+
             <footer id="fh5co-footer" role="contentinfo">
                 <div class="container">
                     <div class="row copyright">
@@ -473,180 +580,151 @@
             </footer>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            if (typeof jQuery === 'undefined') {
-                console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
-            } else {
-                console.log("jQuery est chargé avec succès");
-                jQuery(document).ready(function($) {
-                    // Menu hamburger
-                    $('.menu-toggle').click(function() {
-                        console.log("Clic sur menu-toggle détecté");
-                        $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                    });
+        {% block javascripts %}
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+            <script>
+                if (typeof jQuery === 'undefined') {
+                    console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
+                } else {
+                    console.log("jQuery est chargé avec succès");
+                    jQuery(document).ready(function($) {
+                        // Menu hamburger
+                        $('.menu-toggle').click(function() {
+                            console.log("Clic sur menu-toggle détecté");
+                            $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                        });
 
-                    // Dropdowns sur mobile
-                    $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                        if ($(window).width() <= 768) {
-                            console.log("Clic sur dropdown détecté");
-                            e.preventDefault();
-                            $(this).parent().toggleClass('active');
-                        }
-                    });
+                        // Dropdowns sur mobile
+                        $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                            if ($(window).width() <= 768) {
+                                console.log("Clic sur dropdown détecté");
+                                e.preventDefault();
+                                $(this).parent().toggleClass('active');
+                            }
+                        });
 
-                    // Dropdowns sur desktop avec survol
-                    $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
-                        function() {
-                            console.log("Survol détecté sur un élément has-dropdown");
-                            $(this).find('.dropdown').css({
-                                'display': 'block',
-                                'position': 'absolute',
-                                'top': '100%',
-                                'right': '0',
-                                'visibility': 'visible',
-                                'opacity': '1',
-                                'z-index': '1001'
-                            });
-                        },
-                        function() {
-                            console.log("Fin du survol");
-                            $(this).find('.dropdown').css({
-                                'display': 'none',
-                                'visibility': 'hidden',
-                                'opacity': '0'
-                            });
-                        }
-                    );
-
-                    // Soumission AJAX
-                    $('#reclamation-form').on('submit', function(event) {
-                        event.preventDefault();
-                        const form = this;
-                        const formData = new FormData(form);
-
-                        // Réinitialiser les erreurs et styles
-                        $('.form-control').removeClass('is-invalid');
-                        $('.text-danger').empty();
-
-                        $.ajax({
-                            url: form.action,
-                            method: form.method,
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            dataType: 'json',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                            success: function(data) {
-                                console.log('Réponse AJAX reçue', data);
-                                if (data.success) {
-                                    // Afficher une pop-up SweetAlert2
-                                    Swal.fire({
-                                        title: 'Succès !',
-                                        text: data.message,
-                                        icon: 'success',
-                                        confirmButtonText: 'Voir l\'historique',
-                                        confirmButtonColor: '#007bff',
-                                        backdrop: 'rgba(0,0,0,0.4)',
-                                        showClass: {
-                                            popup: 'animate__animated animate__fadeInDown'
-                                        },
-                                        hideClass: {
-                                            popup: 'animate__animated animate__fadeOutUp'
-                                        }
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            // Rediriger vers la page d'historique
-                                            window.location.href = '{{ path('app_user_history') }}';
-                                        }
-                                    });
-                                    form.reset();
-                                } else {
-                                    if (data.errors) {
-                                        for (const field in data.errors) {
-                                            const errorMessage = data.errors[field][0];
-                                            const $field = $(`[name="reclamation[${field}]"]`);
-                                            if ($field.length) {
-                                                $field.addClass('is-invalid');
-                                                $field.closest('.form-group').find('.text-danger').text(errorMessage);
-                                            } else {
-                                                console.warn(`Champ ${field} non trouvé dans le formulaire.`);
-                                            }
-                                        }
-                                    }
-                                    // Afficher une pop-up d'erreur
-                                    Swal.fire({
-                                        title: 'Erreur',
-                                        text: data.message || 'Veuillez corriger les erreurs dans le formulaire.',
-                                        icon: 'error',
-                                        confirmButtonText: 'OK',
-                                        confirmButtonColor: '#ff4d4d',
-                                        backdrop: 'rgba(0,0,0,0.4)',
-                                        showClass: {
-                                            popup: 'animate__animated animate__fadeInDown'
-                                        },
-                                        hideClass: {
-                                            popup: 'animate__animated animate__fadeOutUp'
-                                        }
-                                    });
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Erreur AJAX :', {
-                                    status: status,
-                                    error: error,
-                                    response: xhr.responseText,
+                        // Dropdowns sur desktop avec survol
+                        $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
+                            function() {
+                                console.log("Survol détecté sur un élément has-dropdown");
+                                $(this).find('.dropdown').css({
+                                    'display': 'block',
+                                    'position': 'absolute',
+                                    'top': '100%',
+                                    'right': '0',
+                                    'visibility': 'visible',
+                                    'opacity': '1',
+                                    'z-index': '1001'
                                 });
-                                try {
-                                    const data = JSON.parse(xhr.responseText);
-                                    if (data.errors) {
-                                        for (const field in data.errors) {
-                                            const errorMessage = data.errors[field][0];
-                                            const $field = $(`[name="reclamation[${field}]"]`);
-                                            if ($field.length) {
-                                                $field.addClass('is-invalid');
-                                                $field.closest('.form-group').find('.text-danger').text(errorMessage);
-                                            } else {
-                                                console.warn(`Champ ${field} non trouvé dans le formulaire.`);
+                            },
+                            function() {
+                                console.log("Fin du survol");
+                                $(this).find('.dropdown').css({
+                                    'display': 'none',
+                                    'visibility': 'hidden',
+                                    'opacity': '0'
+                                });
+                            }
+                        );
+
+                        // Soumission AJAX
+                        $('#reclamation-form').on('submit', function(event) {
+                            event.preventDefault();
+                            const form = this;
+                            const $submitButton = $(this).find('.btn-primary');
+                            $submitButton.addClass('loading').prop('disabled', true);
+
+                            const formData = new FormData(form);
+
+                            // Réinitialiser les erreurs et styles
+                            $('.form-control').removeClass('is-invalid');
+                            $('.text-danger').empty();
+
+                            $.ajax({
+                                url: form.action,
+                                method: form.method,
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                dataType: 'json',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                                success: function(data) {
+                                    console.log('Réponse AJAX reçue', data);
+                                    $submitButton.removeClass('loading').prop('disabled', false);
+                                    if (data.success) {
+                                        $('#successPopup p').text(data.message);
+                                        $('#successPopup').fadeIn();
+                                        $('#popupOverlay').fadeIn();
+                                        $('#closeSuccessPopup').data('redirect-url', '{{ path('app_user_history') }}');
+                                        form.reset();
+                                    } else {
+                                        if (data.errors) {
+                                            for (const field in data.errors) {
+                                                const errorMessage = data.errors[field][0];
+                                                const $field = $(`[name="reclamation[${field}]"]`);
+                                                if ($field.length) {
+                                                    $field.addClass('is-invalid');
+                                                    $field.closest('.form-group').find('.text-danger').text(errorMessage);
+                                                } else {
+                                                    console.warn(`Champ ${field} non trouvé dans le formulaire.`);
+                                                }
                                             }
                                         }
+                                        alert(data.message || 'Veuillez corriger les erreurs dans le formulaire.');
                                     }
-                                    Swal.fire({
-                                        title: 'Erreur',
-                                        text: data.message || 'Erreur de communication avec le serveur.',
-                                        icon: 'error',
-                                        confirmButtonText: 'OK',
-                                        confirmButtonColor: '#ff4d4d',
-                                        backdrop: 'rgba(0,0,0,0.4)',
-                                        showClass: {
-                                            popup: 'animate__animated animate__fadeInDown'
-                                        },
-                                        hideClass: {
-                                            popup: 'animate__animated animate__fadeOutUp'
-                                        }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Erreur AJAX :', {
+                                        status: status,
+                                        error: error,
+                                        response: xhr.responseText,
                                     });
-                                } catch (e) {
-                                    Swal.fire({
-                                        title: 'Erreur',
-                                        text: 'Erreur de communication avec le serveur. Veuillez réessayer.',
-                                        icon: 'error',
-                                        confirmButtonText: 'OK',
-                                        confirmButtonColor: '#ff4d4d',
-                                        backdrop: 'rgba(0,0,0,0.4)',
-                                        showClass: {
-                                            popup: 'animate__animated animate__fadeInDown'
-                                        },
-                                        hideClass: {
-                                            popup: 'animate__animated animate__fadeOutUp'
+                                    $submitButton.removeClass('loading').prop('disabled', false);
+                                    try {
+                                        const data = JSON.parse(xhr.responseText);
+                                        if (data.errors) {
+                                            for (const field in data.errors) {
+                                                const errorMessage = data.errors[field][0];
+                                                const $field = $(`[name="reclamation[${field}]"]`);
+                                                if ($field.length) {
+                                                    $field.addClass('is-invalid');
+                                                    $field.closest('.form-group').find('.text-danger').text(errorMessage);
+                                                } else {
+                                                    console.warn(`Champ ${field} non trouvé dans le formulaire.`);
+                                                }
+                                            }
                                         }
-                                    });
+                                        alert(data.message || 'Erreur de communication avec le serveur.');
+                                    } catch (e) {
+                                        alert('Erreur de communication avec le serveur. Veuillez réessayer.');
+                                    }
                                 }
+                            });
+                        });
+
+                        // Fermer la pop-up et rediriger
+                        $('#closeSuccessPopup').on('click', function() {
+                            $('#successPopup').fadeOut();
+                            $('#popupOverlay').fadeOut();
+                            var redirectUrl = $(this).data('redirect-url');
+                            if (redirectUrl) {
+                                window.location.href = redirectUrl;
+                            }
+                        });
+
+                        // Fermer la pop-up en cliquant sur l'overlay
+                        $('#popupOverlay').on('click', function() {
+                            $('#successPopup').fadeOut();
+                            $('#popupOverlay').fadeOut();
+                            var redirectUrl = $('#closeSuccessPopup').data('redirect-url');
+                            if (redirectUrl) {
+                                window.location.href = redirectUrl;
                             }
                         });
                     });
-                });
-            }
-        </script>
+                }
+            </script>
+        {% endblock %}
     </body>
 </html>
