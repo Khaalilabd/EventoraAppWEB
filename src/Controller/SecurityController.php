@@ -21,10 +21,9 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\Mailer\MailerInterface;
- use Symfony\Component\Mime\Email;
- use App\Form\ResetPasswordRequestType;
- use App\Form\ResetPasswordFormType;
-
+use Symfony\Component\Mime\Email;
+use App\Form\ResetPasswordRequestType;
+use App\Form\ResetPasswordFormType;
 use Psr\Log\LoggerInterface;
 
 class SecurityController extends AbstractController
@@ -41,13 +40,23 @@ class SecurityController extends AbstractController
     {
         return $this->redirectToRoute('app_home_page');
     }
-
     #[Route('/home', name: 'app_home_page')]
-    public function homePage(): Response
+    public function homePage(FeedbackRepository $feedbackRepository): Response
     {
-        return $this->render('home/home.html.twig');
+        // Récupérer des feedbacks aléatoires
+        $feedbacks = $feedbackRepository->findRandomFeedbacks(10);
+    
+        // Ajouter un message flash si aucun feedback n'est trouvé
+        if (empty($feedbacks)) {
+            $this->addFlash('warning', 'Aucun feedback disponible pour le moment.');
+        }
+    
+        return $this->render('home/home.html.twig', [
+            'feedbacks' => $feedbacks,
+        ]);
     }
 
+    // Le reste du code reste inchangé
     #[Route('/auth', name: 'app_auth', methods: ['GET', 'POST'])]
     public function auth(
         AuthenticationUtils $authenticationUtils,
@@ -108,7 +117,7 @@ class SecurityController extends AbstractController
             }
         }
 
-        // Rendre la vue pour GET ou si reCAPTCHA est valide (laisser le pare-feu gérer POST)
+        // Rendre la vue pour GET ou si reCAPTCHA est valide
         return $this->render('security/auth.html.twig', [
             'registration_form' => $this->createForm(RegistrationFormType::class)->createView(),
             'login_form' => $formConnexion->createView(),
@@ -117,7 +126,6 @@ class SecurityController extends AbstractController
             'recaptcha_site_key' => $_ENV['EWZ_RECAPTCHA_SITE_KEY'] ?? '',
         ]);
     }
-
 
     #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
     public function register(
@@ -161,6 +169,7 @@ class SecurityController extends AbstractController
             'registration_form' => $form->createView(),
         ]);
     }
+
     #[Route('/reset-password', name: 'app_reset_password_request', methods: ['GET', 'POST'])]
     public function requestResetPassword(
         Request $request,
@@ -238,7 +247,7 @@ class SecurityController extends AbstractController
         $logger->info('Token reçu dans l\'URL : ' . $token);
 
         $membre = $entityManager->getRepository(Membre::class)->findOneBy(['token' => $token]);
-        
+
         if (!$membre) {
             $logger->error('Aucun utilisateur trouvé avec le token : ' . $token);
             $this->addFlash('error', 'Token invalide ou expiré.');
@@ -347,22 +356,22 @@ class SecurityController extends AbstractController
             $this->logger->info('Début de la méthode index pour admin_dashboard');
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-            // Handle date range for reclamations
+            // Gestion de la plage de dates pour les réclamations
             $startDate = $request->query->get('startDate');
             $endDate = $request->query->get('endDate');
 
-            // Default to last 30 days if no dates provided
+            // Par défaut, les 30 derniers jours si aucune date n'est fournie
             $endDateObj = $endDate ? new \DateTime($endDate) : new \DateTime();
             $startDateObj = $startDate ? new \DateTime($startDate) : (clone $endDateObj)->modify('-30 days');
 
-            // Ensure startDate is before endDate
+            // S'assurer que startDate est avant endDate
             if ($startDateObj > $endDateObj) {
                 $temp = $startDateObj;
                 $startDateObj = $endDateObj;
                 $endDateObj = $temp;
             }
 
-            // Réclamations for selected date range
+            // Réclamations pour la plage de dates sélectionnée
             $reclamationsByDateRaw = $reclamationRepository->createQueryBuilder('r')
                 ->select('r.date as date, COUNT(r.id) as count')
                 ->where('r.date BETWEEN :startDate AND :endDate')
@@ -373,7 +382,7 @@ class SecurityController extends AbstractController
                 ->getQuery()
                 ->getResult();
 
-            // Format dates in PHP
+            // Formatter les dates en PHP
             $reclamationsByDate = array_map(function ($item) {
                 $date = $item['date'] instanceof \DateTime ? $item['date'] : new \DateTime($item['date']);
                 return [
@@ -384,7 +393,7 @@ class SecurityController extends AbstractController
 
             $totalReclamationsSelected = array_sum(array_column($reclamationsByDate, 'count'));
 
-            // Existing Réclamations logic
+            // Logique existante pour les réclamations
             $totalReclamations = $reclamationRepository->count([]);
             $reclamationsTraitees = $reclamationRepository->count(['statut' => Reclamation::STATUT_RESOLU]);
             $pourcentageTraitees = $totalReclamations > 0 ? ($reclamationsTraitees / $totalReclamations) * 100 : 0;

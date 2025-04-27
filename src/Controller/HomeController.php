@@ -12,29 +12,13 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(FeedbackRepository $feedbackRepository): Response
     {
-        $feedbacks = [];
+        $feedbacks = $feedbackRepository->findRandomFeedbacks(10);
 
-        try {
-            // Essayer findRandomFeedbacks
-            $feedbacks = $feedbackRepository->findRandomFeedbacks(10);
-
-            // Si vide, essayer une requête simple comme fallback
-            if (empty($feedbacks)) {
-                $feedbacks = $feedbackRepository->createQueryBuilder('f')
-                    ->leftJoin('f.membre', 'm')
-                    ->setMaxResults(10)
-                    ->getQuery()
-                    ->getResult();
-            }
-        } catch (\Exception $e) {
-            // Loguer l'erreur pour débogage
-            $this->addFlash('error', 'Erreur lors de la récupération des feedbacks : ' . $e->getMessage());
-            $feedbacks = [];
+        if (empty($feedbacks)) {
+            $this->addFlash('warning', 'Aucun feedback disponible pour le moment.');
         }
 
-        dump($feedbacks); // Débogage : vérifier ce que contient $feedbacks
-
-        return $this->render('home.html.twig', [
+        return $this->render('home/home.html.twig', [
             'feedbacks' => $feedbacks,
         ]);
     }

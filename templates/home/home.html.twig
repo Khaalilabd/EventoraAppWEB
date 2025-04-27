@@ -1144,7 +1144,7 @@
                             <div class="col-md-12 animate-box">
                                 <div class="wrap-testimony">
                                     <div class="owl-carousel-fullwidth">
-                                        {% if feedbacks is defined %}
+                                        {% if feedbacks is defined and feedbacks is not empty %}
                                             {% for feedback in feedbacks %}
                                                 <div class="item">
                                                     <div class="testimony-slide active text-center">
@@ -1158,24 +1158,6 @@
                                                         </div>
                                                         <blockquote>
                                                             <p>{{ feedback.Description }}</p>
-                                                        </blockquote>
-                                                    </div>
-                                                </div>
-                                            {% else %}
-                                                <div class="item">
-                                                    <div class="testimony-slide active text-center">
-                                                        <div class="user-profile">
-                                                            <img src="{{ asset('Uploads/images/default-user.png') }}" alt="Aucun utilisateur">
-                                                        </div>
-                                                        <div class="star-rating">
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                            <i class="fas fa-star"></i>
-                                                        </div>
-                                                        <blockquote>
-                                                            <p>Aucun feedback disponible pour le moment. Soyez le premier à partager votre expérience !</p>
                                                         </blockquote>
                                                     </div>
                                                 </div>
@@ -1194,7 +1176,7 @@
                                                         <i class="fas fa-star"></i>
                                                     </div>
                                                     <blockquote>
-                                                        <p>Erreur : aucun feedback chargé. Contactez l'administrateur.</p>
+                                                        <p>Aucun feedback disponible pour le moment. Soyez le premier à partager votre expérience !</p>
                                                     </blockquote>
                                                 </div>
                                             </div>
@@ -1376,4 +1358,4 @@
             {% endblock %}
         </div>
     </body>
-</html>     
+</html>

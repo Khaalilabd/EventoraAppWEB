@@ -22,42 +22,30 @@ class FeedbackRepository extends ServiceEntityRepository
      * @param int $limit Nombre maximum de feedbacks à retourner
      * @return array
      */
-    public function findRandomFeedbacks(int $limit = 3): array
+    public function findRandomFeedbacks(int $limit): array
     {
-        // Compter le nombre total de feedbacks
-        $count = $this->createQueryBuilder('f')
-            ->select('COUNT(f.ID)')
+        // Récupérer tous les IDs des feedbacks
+        $ids = $this->createQueryBuilder('f')
+            ->select('f.ID')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getScalarResult();
 
-        if ($count === 0) {
+        // S'assurer qu'il y a des feedbacks
+        if (empty($ids)) {
             return [];
         }
 
-        // Générer des IDs aléatoires
-        $randomIds = [];
-        $maxId = $this->createQueryBuilder('f')
-            ->select('MAX(f.ID)')
-            ->getQuery()
-            ->getSingleScalarResult();
+        // Mélanger les IDs et prendre les $limit premiers
+        $ids = array_column($ids, 'ID');
+        shuffle($ids);
+        $randomIds = array_slice($ids, 0, min($limit, count($ids)));
 
-        while (count($randomIds) < min($limit, $count)) {
-            $randomIds[] = mt_rand(1, $maxId);
-            $randomIds = array_unique($randomIds);
-        }
-
-        // Récupérer les feedbacks correspondant aux IDs aléatoires
-        $feedbacks = $this->createQueryBuilder('f')
-            ->leftJoin('f.membre', 'm')
+        // Récupérer les feedbacks correspondant aux IDs sélectionnés
+        return $this->createQueryBuilder('f')
             ->where('f.ID IN (:ids)')
             ->setParameter('ids', $randomIds)
-            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
-
-        dump($feedbacks); // Débogage : vérifier ce que retourne la requête
-
-        return $feedbacks;
     }
 
     /**
