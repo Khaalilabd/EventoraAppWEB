@@ -40,21 +40,21 @@ class SecurityController extends AbstractController
     {
         return $this->redirectToRoute('app_home_page');
     }
-    #[Route('/home', name: 'app_home_page')]
-    public function homePage(FeedbackRepository $feedbackRepository): Response
-    {
-        // Récupérer des feedbacks aléatoires
-        $feedbacks = $feedbackRepository->findRandomFeedbacks(10);
-    
-        // Ajouter un message flash si aucun feedback n'est trouvé
-        if (empty($feedbacks)) {
-            $this->addFlash('warning', 'Aucun feedback disponible pour le moment.');
-        }
-    
-        return $this->render('home/home.html.twig', [
-            'feedbacks' => $feedbacks,
-        ]);
+#[Route('/home', name: 'app_home_page')]
+public function homePage(FeedbackRepository $feedbackRepository): Response
+{
+    // Récupérer des feedbacks aléatoires
+    $feedbacks = $feedbackRepository->findRandomFeedbacks(10);
+
+    // Ajouter un message flash si aucun feedback n'est trouvé
+    if (empty($feedbacks)) {
+        $this->addFlash('warning', 'Aucun feedback disponible pour le moment.');
     }
+
+    return $this->render('home/home.html.twig', [
+        'feedbacks' => $feedbacks,
+    ]);
+}
 
     // Le reste du code reste inchangé
     #[Route('/auth', name: 'app_auth', methods: ['GET', 'POST'])]

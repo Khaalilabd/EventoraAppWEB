@@ -5,7 +5,13 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Eventora - {{ pack.nomPack }}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
+        <!-- Open Graph meta tags for better social media sharing -->
+        <meta property="og:title" content="{{ pack.nomPack }} - Eventora">
+        <meta property="og:description" content="{{ pack.description|u.truncate(200, '...') }}">
+        <meta property="og:image" content="{{ absolute_url(asset(pack.imagePath ?: 'images/default-pack.jpg')) }}">
+        <meta property="og:url" content="{{ absolute_url(path('user_pack_details', {'id': pack.id})) }}">
+        <meta property="og:type" content="website">
+
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
         <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
@@ -24,18 +30,14 @@
         <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
         <!-- Font Awesome for icons -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
 
         <style>
-            /* Reset */
-            * {
-                box-sizing: border-box;
-            }
-
+            /* Background for the entire page, matching the packs list page */
             body {
-                background: linear-gradient(to bottom right, #2a1f30, #383d44);
+                background: #f2f2f2;
                 font-family: 'Work Sans', sans-serif;
                 margin: 0;
                 min-height: 100vh;
@@ -43,12 +45,247 @@
                 flex-direction: column;
             }
 
-            /* Navigation styles from the first file */
+            /* Main content wrapper */
+            .pack-content {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 70px 20px 40px; /* Adjusted for navbar height */
+                box-sizing: border-box;
+            }
+
+            /* Pack details container */
+            .pack-details-container {
+                width: 100%;
+                max-width: 1000px;
+                margin: 40px auto;
+                padding: 50px;
+                background: #fffdf9;
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .pack-details-container:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Header styling */
+            .pack-details-container h1 {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 3.5rem;
+                font-weight: 700;
+                color: #2a1f30;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            /* Pack type */
+            .pack-details-container .pack-type {
+                font-family: 'Work Sans', sans-serif;
+                font-size: 1.6rem;
+                font-weight: 500;
+                color: #777;
+                text-transform: uppercase;
+                margin-bottom: 30px;
+            }
+
+            /* Image styling with subtle overlay */
+            .pack-image-wrapper {
+                width: 100%;
+                height: 300px;
+                overflow: hidden;
+                border-radius: 15px;
+                margin-bottom: 40px;
+                position: relative;
+            }
+
+            .pack-image-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .pack-image-wrapper::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+                border-radius: 15px;
+            }
+
+            /* Details list */
+            .pack-details-list {
+                width: 90%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                margin-top: 30px;
+                margin-bottom: 40px;
+                padding: 0 20px;
+            }
+
+            .pack-details-list p {
+                width: 48%;
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.5rem;
+                color: #555;
+                margin: 15px 0;
+                line-height: 1.7;
+            }
+
+            .pack-details-list p strong {
+                font-weight: 700;
+                font-size: 1.6rem;
+                color: #2a1f30;
+            }
+
+            /* Services list */
+            .pack-details-list .services {
+                width: 100%;
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.4rem;
+                color: #555;
+                margin: 15px 0;
+                line-height: 1.6;
+            }
+
+            .pack-details-list .services strong {
+                font-weight: 700;
+                font-size: 1.5rem;
+                color: #2a1f30;
+            }
+
+            .pack-details-list .services ul {
+                margin: 10px 0 0 20px;
+                padding: 0;
+                list-style-type: disc;
+            }
+
+            .pack-details-list .services ul li {
+                margin-bottom: 8px;
+            }
+
+            /* Buttons */
+            .back-button, .reserve-button, .favorite-button {
+                display: inline-block;
+                margin: 1rem 0.5rem 0 0;
+                padding: 14px 35px;
+                background: linear-gradient(135deg, #934D1A, #D9822B);
+                color: #fff;
+                text-decoration: none;
+                border-radius: 30px;
+                font-family: 'Work Sans', sans-serif;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: background 0.3s ease, transform 0.3s ease;
+                text-align: center;
+            }
+
+            .back-button:hover, .reserve-button:hover, .favorite-button:hover {
+                background: linear-gradient(135deg, #7a3914, #b66b1d);
+                transform: scale(1.05);
+            }
+
+            .favorite-button.favorited {
+                background: linear-gradient(135deg, #d32f2f, #f57c00);
+            }
+
+            .favorite-button.favorited:hover {
+                background: linear-gradient(135deg, #b71c1c, #d66d00);
+            }
+
+            /* Social media buttons */
+            .social-share-buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .social-share-button {
+                display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 18px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+            }
+
+            .social-share-button::before {
+    content: "";
+    position: absolute;
+    width: 120%;
+    height: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.5s ease;
+}
+
+.social-share-button:hover::before {
+    height: 500%;
+}
+
+            .social-share-button:hover {
+                    transform: translateY(-3px) scale(1.05);
+            }
+
+            .social-share-button i {
+margin-right: 8px;
+    font-size: 1.2rem;            }
+
+            .facebook-share {
+background: linear-gradient(135deg, #1877f2, #3b5998);            }
+
+            .twitter-share {
+background: linear-gradient(135deg, #1da1f2, #0d8ddb);            }
+
+            .whatsapp-share {
+background: linear-gradient(135deg, #25d366, #128c7e);            }
+
+            .linkedin-share {
+                background: #0077b5;
+            }
+
+            /* Price highlight */
+            .price-highlight {
+                color: #d9822b;
+                font-weight: 700;
+                font-size: 1.5rem;
+            }
+
+            /* Ensure footer sticks to bottom */
+            #fh5co-footer {
+                margin-top: auto;
+            }
+
+            /* Navbar styles */
             #page {
                 min-height: 100vh;
                 display: flex;
                 flex-direction: column;
-                padding-top: 70px; /* Adjusted for fixed navbar */
+                padding-top: 70px;
             }
 
             .fh5co-nav {
@@ -170,7 +407,7 @@
             }
 
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                color: #007bff;
+                color: #f57c00;
             }
 
             .menu-toggle {
@@ -181,134 +418,7 @@
                 padding: 10px;
             }
 
-            /* Main content wrapper */
-            .pack-content {
-                flex: 1;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 100px 20px 40px;
-                box-sizing: border-box;
-            }
-
-            /* Pack details container */
-            .pack-details-container {
-                max-width: 900px;
-                margin: 0 auto;
-                padding: 30px;
-                background: #fff;
-                border-radius: 15px;
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-            }
-
-            .pack-details-container:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-            }
-
-            /* Header styling */
-            .pack-details-container h1 {
-                font-family: 'Cormorant Garamond', serif;
-                font-size: 2.8rem;
-                font-weight: 700;
-                color: #2a1f30;
-                margin-bottom: 0.5rem;
-                text-align: center;
-                letter-spacing: 1px;
-            }
-
-            /* Pack type */
-            .pack-details-container .pack-type {
-                font-family: 'Work Sans', sans-serif;
-                font-size: 1.1rem;
-                color: #777;
-                text-transform: uppercase;
-                letter-spacing: 1.5px;
-                text-align: center;
-                margin-bottom: 1.5rem;
-            }
-
-            /* Image styling with subtle overlay */
-            .pack-image-wrapper {
-                position: relative;
-                margin-bottom: 2rem;
-            }
-
-            .pack-details-container img {
-                width: 100%;
-                max-height: 450px;
-                object-fit: cover;
-                border-radius: 10px;
-                display: block;
-            }
-
-            .pack-image-wrapper::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
-                border-radius: 10px;
-            }
-
-            /* Details list */
-            .pack-details-list {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1.5rem;
-                margin-bottom: 2rem;
-            }
-
-            .pack-details-list p {
-                font-family: 'Roboto', sans-serif;
-                font-size: 1.1rem;
-                color: #555;
-                margin: 0;
-                padding: 0.5rem 0;
-                display: flex;
-                align-items: center;
-            }
-
-            .pack-details-list p strong {
-                font-weight: 600;
-                color: #222;
-                margin-right: 0.5rem;
-                flex-shrink: 0;
-            }
-
-            /* Back button */
-            .back-button {
-                display: inline-block;
-                margin-top: 2rem;
-                padding: 12px 30px;
-                background: linear-gradient(135deg, #007bff, #0056b3);
-                color: #fff;
-                text-decoration: none;
-                border-radius: 25px;
-                font-family: 'Work Sans', sans-serif;
-                font-weight: 500;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                transition: background 0.3s ease, transform 0.3s ease;
-                text-align: center;
-            }
-
-            .back-button:hover {
-                background: linear-gradient(135deg, #0056b3, #003d82);
-                transform: scale(1.05);
-            }
-
-            /* Footer */
-            #fh5co-footer {
-                margin-top: auto;
-                background: rgba(255, 255, 255, 0.9);
-                padding: 20px 0;
-            }
-
-            /* Responsive adjustments */
+            /* Responsive adjustments for navbar */
             @media (max-width: 768px) {
                 .menu-toggle {
                     display: block;
@@ -354,52 +464,9 @@
                 .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
                     display: block !important;
                 }
-
-                .pack-details-container {
-                    max-width: 700px;
-                    padding: 25px;
-                }
-
-                .pack-details-container h1 {
-                    font-size: 2.5rem;
-                }
-
-                .pack-details-container img {
-                    max-height: 400px;
-                }
-
-                .pack-details-list {
-                    grid-template-columns: 1fr;
-                    gap: 1rem;
-                }
-            }
-
-            @media screen and (max-width: 640px) {
-                .pack-details-container {
-                    margin: 80px 15px 20px;
-                    padding: 20px;
-                }
-
-                .pack-details-container h1 {
-                    font-size: 2rem;
-                }
-
-                .pack-details-container img {
-                    max-height: 300px;
-                }
-
-                .pack-details-list p {
-                    font-size: 1rem;
-                }
-
-                .back-button {
-                    padding: 10px 25px;
-                    font-size: 0.9rem;
-                }
             }
         </style>
 
-        <!-- Modernizr JS -->
         <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
         <!-- FOR IE9 below -->
         <!--[if lt IE 9]>
@@ -409,13 +476,14 @@
     <body>
         <div class="fh5co-loader"></div>
         <div id="page">
+            <!-- Navbar -->
             <nav class="fh5co-nav" role="navigation">
                 <div class="container">
                     <div class="fh5co-logo">
                         <a href="{{ path('app_home') }}">Eventora</a>
                     </div>
                     <div class="menu-toggle">
-                        <i class="fas fa-bars"></i>
+                        <i class="icon-menu"></i>
                     </div>
                     <div class="menu-1">
                         <ul>
@@ -423,12 +491,18 @@
                             <li class="has-dropdown">
                                 <a href="#">Réservation</a>
                                 <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Réservation personnalisée</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Réservation Pack</a></li>
                                 </ul>
                             </li>
-                            <li class="active">
-                                <a href="{{ path('user_packs') }}">Packs</a>
+                            <li class="has-dropdown active">
+                                <a href="#">Packs</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
+                                    {% if not is_granted('ROLE_ADMIN') %}
+                                    <li><a href="{{ path('user_favorites') }}"> American Samoa</a></li>
+                                    {% endif %}
+                                </ul>
                             </li>
                             <li class="has-dropdown">
                                 <a href="#">Services</a>
@@ -437,16 +511,16 @@
                                     <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
                                 </ul>
                             </li>
-                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
                             <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                            <li><a href="#">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
                                     <span class="user-circle">
                                         {% if app.user and app.user.image %}
                                             <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
                                         {% else %}
-                                            <i class="fas fa-user"></i>
+                                            <i class="icon-user"></i>
                                         {% endif %}
                                     </span>
                                     Contact
@@ -461,7 +535,6 @@
                                         {% endif %}
                                         <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
                                     {% else %}
-                                        <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
                                         <li><a href="{{ path('app_auth') }}">Connexion</a></li>
                                         <li><a href="{{ path('app_auth') }}">Inscription</a></li>
                                     {% endif %}
@@ -472,20 +545,61 @@
                 </div>
             </nav>
 
+            <!-- Pack details content -->
             <div class="pack-content">
                 <div class="pack-details-container">
                     <h1>{{ pack.nomPack }}</h1>
-                    <div class="pack-type">{{ pack.type }}</div>
+                    <div class="pack-type">{{ pack.typepack ? pack.typepack.type : (pack.type ?: 'Non spécifié') }}</div>
                     <div class="pack-image-wrapper">
                         <img src="{{ asset(pack.imagePath ?: 'images/default-pack.jpg') }}" alt="{{ pack.nomPack }}">
                     </div>
                     <div class="pack-details-list">
                         <p><strong>Description:</strong> {{ pack.description }}</p>
-                        <p><strong>Prix:</strong> {{ pack.prix }} dt</p>
+                        <p><strong>Prix:</strong> <span class="price-highlight">{{ pack.prix }} dt</span></p>
                         <p><strong>Lieu:</strong> {{ pack.location }}</p>
                         <p><strong>Invités:</strong> {{ pack.nbrGuests }}</p>
+                        <div class="services">
+                            <strong>Services:</strong>
+                            {% if pack.services|length > 0 %}
+                                <ul>
+                                    {% for service in pack.services %}
+                                        <li>{{ service.titre }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No services included.</p>
+                            {% endif %}
+                        </div>
                     </div>
-                    <a href="{{ path('user_packs') }}" class="back-button">Back to Packs</a>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 2rem;">
+                        <a href="{{ path('user_packs') }}" class="back-button">Back to Packs</a>
+                        {% if not is_granted('ROLE_ADMIN')  %}
+                        <a href="{{ path('user_reservation_pack_new', {'packId': pack.id}) }}" class="reserve-button">Réserver</a>
+                        {% endif %}
+{% if app.user and not is_granted('ROLE_ADMIN')  %}
+                            <button id="favorite-button" class="favorite-button {{ isFavorited ? 'favorited' : '' }}" data-pack-id="{{ pack.id }}" data-is-favorited="{{ isFavorited ? 'true' : 'false' }}" data-csrf-token="{{ csrf_token('toggle-favorite') }}">
+                                <i class="{{ isFavorited ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+                                {{ isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+                            </button>
+                        {% elseif not is_granted('ROLE_ADMIN')  %}
+                            <a href="{{ path('app_auth') }}" class="favorite-button">Connexion pour ajouter aux favoris</a>
+                        {% endif %}
+                    </div>
+                    <!-- Social media share buttons -->
+                    <div class="social-share-buttons">
+                        <a href="#" class="social-share-button facebook-share" onclick="shareOnFacebook()">
+                            <i class="fab fa-facebook-f"></i> Share on Facebook
+                        </a>
+                        <a href="#" class="social-share-button twitter-share" onclick="shareOnTwitter()">
+                            <i class="fab fa-twitter"></i> Share on Twitter
+                        </a>
+                        <a href="#" class="social-share-button whatsapp-share" onclick="shareOnWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> Share on WhatsApp
+                        </a>
+                        <a href="#" class="social-share-button linkedin-share" onclick="shareOnLinkedIn()">
+                            <i class="fab fa-linkedin-in"></i> Share on LinkedIn
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -495,7 +609,7 @@
                         <div class="col-md-12 text-center">
                             <p>
                                 <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                                <small class="block">Designed by Nadhem Hmida</small>
+                                <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
                             </p>
                         </div>
                     </div>
@@ -504,32 +618,113 @@
         </div>
 
         <div class="gototop js-top">
-            <a href="#" class="js-gotop"><i class="fas fa-arrow-up"></i></a>
+            <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
         </div>
 
+        <!-- Scripts -->
         <script src="{{ asset('js/jquery.min.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
         <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
         <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+        <script src="{{ asset('js/simplyCountdown.js') }}"></script>
+        <!-- Add countTo script -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-countto/1.2.0/jquery.countTo.min.js"></script>
         <script src="{{ asset('js/main.js') }}"></script>
 
+        <!-- Navbar and Favorite Button JavaScript -->
         <script>
-            // Menu hamburger pour mobile
             $(document).ready(function() {
+                // Debug logs
+                console.log('jQuery loaded:', typeof $ !== 'undefined');
+                console.log('Favorite button found:', $('#favorite-button').length);
+
+                // Navbar toggle for mobile
                 $('.menu-toggle').click(function() {
+                    console.log('Menu toggle clicked');
                     $('.fh5co-nav .menu-1 ul').toggleClass('active');
                 });
 
-                // Gestion des sous-menus sur mobile
                 $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
                     if ($(window).width() <= 768) {
+                        console.log('Dropdown clicked on mobile');
                         e.preventDefault();
                         $(this).parent().toggleClass('active');
                     }
                 });
+
+                // Favorite button logic
+                const favoriteButton = $('#favorite-button');
+                if (favoriteButton.length) {
+                    favoriteButton.click(function() {
+                        console.log('Favorite button clicked');
+                        const packId = $(this).data('pack-id');
+                        const isFavorited = $(this).data('is-favorited');
+                        const csrfToken = $(this).data('csrf-token');
+
+                        console.log('Pack ID:', packId);
+                        console.log('Is Favorited:', isFavorited);
+                        console.log('CSRF Token:', csrfToken);
+                        console.log('AJAX URL:', '{{ path('user_toggle_favorite', {'id': 0}) }}'.replace('0', packId));
+
+                        $.ajax({
+                            url: '{{ path('user_toggle_favorite', {'id': 0}) }}'.replace('0', packId),
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            data: {
+                                token: csrfToken
+                            },
+                            success: function(response) {
+                                console.log('AJAX Success:', response);
+                                if (response.isFavorited !== undefined) {
+                                    favoriteButton.data('is-favorited', response.isFavorited);
+                                    favoriteButton.toggleClass('favorited', response.isFavorited);
+                                    favoriteButton.html(
+                                        `<i class="${response.isFavorited ? 'fas fa-heart' : 'far fa-heart'}"></i> ` +
+                                        (response.isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris')
+                                    );
+                                } else {
+                                    console.error('Unexpected response:', response);
+                                    alert('Une erreur est survenue.');
+                                }
+                            },
+                            error: function(xhr) {
+                                console.error('AJAX Error:', xhr.responseText);
+                                alert('Une erreur est survenue lors de la mise à jour des favoris.');
+                            }
+                        });
+                    });
+                }
             });
+
+            // Social media sharing functions
+            function shareOnFacebook() {
+                const url = encodeURIComponent(window.location.href);
+                const title = encodeURIComponent('{{ pack.nomPack }} on Eventora');
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&title=${title}`, '_blank');
+            }
+
+            function shareOnTwitter() {
+                const url = encodeURIComponent(window.location.href);
+                const text = encodeURIComponent('Check out {{ pack.nomPack }} on Eventora! {{ pack.description|u.truncate(100, '...') }}');
+                window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+            }
+
+            function shareOnWhatsApp() {
+                const url = encodeURIComponent(window.location.href);
+                const text = encodeURIComponent('Check out {{ pack.nomPack }} on Eventora: {{ pack.description|u.truncate(100, '...') }}');
+                window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
+            }
+
+            function shareOnLinkedIn() {
+                const url = encodeURIComponent(window.location.href);
+                const title = encodeURIComponent('{{ pack.nomPack }} on Eventora');
+                const summary = encodeURIComponent('{{ pack.description|u.truncate(200, '...') }}');
+                window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=${summary}`, '_blank');
+            }
         </script>
     </body>
 </html>

@@ -109,7 +109,7 @@
 {% endblock %}
 
 {% block body %}
-    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
         <div class="sidenav-header">
             <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
                 <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
@@ -208,21 +208,14 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_moderators' ? 'active' : '' }}" href="{{ path('admin_moderators') }}">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_agent_index' ? 'active' : '' }}" href="{{ path('app_agent_index') }}">
                                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                                         <i class="fas fa-user-shield text-dark"></i>
                                     </div>
-                                    <span class="nav-link-text ms-1">Modérateurs</span>
+                                    <span class="nav-link-text ms-1">Agents</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="{{ path('admin_admins') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-cog text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Admins</span>
-                                </a>
-                            </li>
+                           
                         </ul>
                     </div>
                 </li>

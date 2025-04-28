@@ -1,13 +1,23 @@
 parameters:
     images_directory: '%kernel.project_dir%/public/uploads/images'
+    twilio_account_sid: '%env(TWILIO_ACCOUNT_SID)%'
+    twilio_auth_token: '%env(TWILIO_AUTH_TOKEN)%'
+    twilio_phone_number: '%env(TWILIO_PHONE_NUMBER)%'
     brevo_api_key: '%env(BREVO_API_KEY)%'
+    brevo_sender_email: '%env(BREVO_SENDER_EMAIL)%'
+    brevo_sender_name: '%env(BREVO_SENDER_NAME)%'
     wkhtmltopdf_path: '%env(resolve:WKHTMLTOPDF_PATH)%'
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+    stripe_key: '%env(STRIPE_KEY)%'
+    stripe_secret: '%env(STRIPE_SECRET)%'
+    brevo_transactional_api_key: '%env(BREVO_TRANSACTIONAL_API_KEY)%'
+    app.name: 'Eventora'
 
 services:
     _defaults:
         autowire: true
         autoconfigure: true
+    Symfony\Component\Security\Http\Logout\LogoutUrlGenerator: '@security.logout_url_generator'
 
     App\:
         resource: '../src/'
@@ -38,6 +48,57 @@ services:
             $apiKey: '%env(GEMINI_API_KEY)%'
             $apiEndpoint: '%env(GEMINI_API_ENDPOINT)%'
 
+    App\Service\TransactionalEmailSender:
+        arguments:
+            $params: '@parameter_bag'
+            $logger: '@monolog.logger'
+
+
+
+    App\Controller\Users\UserReservationsController:
+        arguments:
+            $twilioAccountSid: '%twilio_account_sid%'
+            $twilioAuthToken: '%twilio_auth_token%'
+            $twilioPhoneNumber: '%twilio_phone_number%'
+            $brevoApiKey: '%brevo_api_key%'
+            $brevoSenderEmail: '%brevo_sender_email%'
+            $brevoSenderName: '%brevo_sender_name%'
+            $logger: '@monolog.logger'
+
+    App\Controller\Admin\ReservationsController:
+        arguments:
+            $twilioAccountSid: '%twilio_account_sid%'
+            $twilioAuthToken: '%twilio_auth_token%'
+            $twilioPhoneNumber: '%twilio_phone_number%'
+            $brevoApiKey: '%brevo_api_key%'
+            $brevoSenderEmail: '%brevo_sender_email%'
+            $brevoSenderName: '%brevo_sender_name%'
+            $logger: '@monolog.logger'
+    
     App\Controller\Users\ChatAiController:
         arguments:
             $geminiApiKey: '%env(GOOGLE_GEMINI_API_KEY)%'
+
+
+    App\Service\GoogleCalendarService:
+        arguments:
+            $credentialsPath: '%kernel.project_dir%/config/credentials.json'
+            $redirectUri: '%env(GOOGLE_CALENDAR_REDIRECT_URI)%'
+            $logger: '@monolog.logger'
+            $requestStack: '@request_stack'
+            $translator: '@translator'
+
+    App\Service\BrevoEmailSender:
+        arguments:
+            $params: '@parameter_bag'
+            $logger: '@monolog.logger'
+
+    App\Service\EmailNotificationService:
+        arguments:
+            $membreRepository: '@App\Repository\MembreRepository'
+            $emailSender: '@App\Service\TransactionalEmailSender'
+            $params: '@parameter_bag'
+            $twig: '@twig'
+            $logger: '@monolog.logger'
+
+        

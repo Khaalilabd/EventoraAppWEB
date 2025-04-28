@@ -1,0 +1,88 @@
+{% extends 'admin/dashboard.html.twig' %}
+
+{% block title %}Détails du Membre{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .membre-details-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .membre-details-card h5 {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: #fff;
+            padding: 15px;
+            border-radius: 12px 12px 0 0;
+            margin: -20px -20px 20px -20px;
+        }
+        .membre-details-card p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        .membre-details-card .badge {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 12px;
+            color: #fff;
+        }
+        .badge-membre {
+            background-color: #28a745;
+        }
+        .badge-agent {
+            background-color: #ffc107;
+            color: #333;
+        }
+        .badge-admin {
+            background-color: #dc3545;
+        }
+        .btn-back {
+            margin-top: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg membre-container">
+        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
+            <div class="container-fluid py-1 px-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_membres') }}">Membres</a></li>
+                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Détails</li>
+                    </ol>
+                    <h6 class="font-weight-bolder mb-0">Détails du Membre</h6>
+                </nav>
+            </div>
+        </nav>
+
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="membre-details-card">
+                        <h5>Détails du Membre #{{ membre.id }}</h5>
+                        <p><strong>Nom :</strong> {{ membre.nom }} {{ membre.prenom }}</p>
+                        <p><strong>Email :</strong> {{ membre.email }}</p>
+                        <p><strong>CIN :</strong> {{ membre.cin }}</p>
+                        <p><strong>Téléphone :</strong> {{ membre.numTel }}</p>
+                        <p><strong>Adresse :</strong> {{ membre.adresse }}</p>
+                        <p><strong>Rôle :</strong> <span class="badge badge-{{ membre.role|lower }}">{{ membre.role }}</span></p>
+                        <p><strong>Confirmé :</strong> {{ membre.isConfirmed ? 'Oui' : 'Non' }}</p>
+                        <p><strong>Date de naissance :</strong> {{ membre.dateOfBirth ? membre.dateOfBirth|date('d/m/Y') : 'Non spécifiée' }}</p>
+                        <p><strong>Genre :</strong> {{ membre.gender ?? 'Non spécifié' }}</p>
+                        <p><strong>Nom d'utilisateur :</strong> {{ membre.username ?? 'Non spécifié' }}</p>
+                        <p><strong>Nombre de feedbacks :</strong> {{ membre.feedbacks|length }}</p>
+                        <p><strong>Nombre de réclamations :</strong> {{ membre.reclamations|length }}</p>
+                        <p><strong>Nombre de réservations de packs :</strong> {{ membre.reservationpacks|length }}</p>
+                        <p><strong>Nombre de réservations personnalisées :</strong> {{ membre.reservationpersonnalises|length }}</p>
+                        <a href="{{ path('admin_membres') }}" class="btn btn-sm btn-primary btn-back">Retour à la liste</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

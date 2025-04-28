@@ -19,6 +19,7 @@ h1 {
     font-weight: bold;
     margin: 0;
     font-size: 24px;
+    color: #D0A877;
 }
 
 h2 {
@@ -47,7 +48,7 @@ a {
 button, a.ghost {
     border-radius: 25px;
     border: none;
-    background-color: #ff5e62;
+    background-color: #D0A877;
     color: #FFFFFF;
     font-size: 16px;
     font-weight: bold;
@@ -61,7 +62,7 @@ button, a.ghost {
 }
 
 button:hover, a.ghost:hover {
-    background-color: #e05559;
+    background-color: #c1a583;
 }
 
 button:focus {
@@ -232,7 +233,7 @@ input {
     height: 40px;
     width: 40px;
     background-color: #f0f0f0;
-    color: #333;
+    color: #D0A877;
     font-size: 16px;
 }
 

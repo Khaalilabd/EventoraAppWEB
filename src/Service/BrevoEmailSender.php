@@ -24,8 +24,7 @@ class BrevoEmailSender
         string $toName,
         string $subject,
         string $htmlContent,
-        string $senderEmail = 'eventoraeventora@gmail.com
-',
+        string $senderEmail = 'eventoraeventora@gmail.com',
         string $senderName = 'Eventora'
     ): bool {
         try {

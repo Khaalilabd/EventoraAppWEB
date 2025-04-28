@@ -4,22 +4,9 @@
 
 {% block body %}
     <video autoplay loop muted playsinline class="background-video">
-        <source src="{{ asset('images/video2.mp4') }}" type="video/mp4">
+        <source src="{{ asset('images/fireworks loop.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
-
-    <div class="flash-messages">
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-        {% endfor %}
-        {% for message in app.flashes('error') %}
-            <div class="alert alert-danger">
-                {{ message }}
-            </div>
-        {% endfor %}
-    </div>
 
     <div class="container" id="container">
         <div class="form-container sign-up-container">
@@ -30,7 +17,7 @@
                     <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
-                <span>or use your email for registration</span>
+                <span>or use-services: ['email', 'password', 'recaptcha'] your email for registration</span>
                 <div class="form-columns">
                     <div class="form-column">
                         {{ form_row(registration_form.nom) }}
@@ -61,11 +48,30 @@
                     <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <span>or use your account</span>
-                {% if error %}
-                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                {% endif %}
+                <div class="flash-messages">
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+                </div>
                 {{ form_row(login_form.email) }}
-                {{ form_row(login_form.motDePasse) }}
+                <div class="password-container">
+                    {{ form_row(login_form.motDePasse, {'attr': {'class': 'password-input'}}) }}
+                    <span class="toggle-password" onclick="togglePasswordVisibility()">
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                    </span>
+                </div>
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
                 <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
                 <a href="{{ path('app_reset_password_request') }}" class="forgot-password">Forgot your password?</a>
@@ -82,7 +88,7 @@
                     <button class="ghost" id="signIn">Sign In</button>
                 </div>
                 <div class="overlay-panel overlay-right">
-                    <img src="{{ asset('images/partybackground.png') }}" alt="Background" class="welcome-image">
+                    <img src="https://i.pinimg.com/736x/4f/02/9c/4f029c9bfa1290dc2a401046d528ac43.jpg" alt="Background" class="welcome-image">
                 </div>
             </div>
         </div>
@@ -106,16 +112,15 @@
             z-index: -1;
         }
         .flash-messages {
-            margin: 20px auto;
-            max-width: 600px;
-            position: relative;
-            z-index: 1;
+            margin: 10px 0;
+            width: 100%;
         }
         .alert {
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 10px;
+            margin-bottom: 10px;
             border-radius: 5px;
             text-align: center;
+            font-size: 14px;
         }
         .alert-success {
             background-color: #d4edda;
@@ -178,7 +183,7 @@
             display: block;
             margin-top: 10px;
             padding: 10px 20px;
-            background-color: #ff4b5c;
+            background-color:rgb(208, 168, 119);
             color: #fff;
             text-decoration: none;
             border-radius: 25px;
@@ -188,11 +193,11 @@
             transition: background-color 0.3s;
         }
         .form-container.sign-in-container .ghost:hover {
-            background-color: #e04352;
+            background-color: rgb(208, 168, 119);
         }
         .overlay-panel.overlay-left .ghost {
             padding: 10px 20px;
-            background-color: #ff4b5c;
+            background-color: rgb(208, 168, 119);
             color: #fff;
             text-decoration: none;
             border-radius: 25px;
@@ -202,7 +207,7 @@
             transition: background-color 0.3s;
         }
         .overlay-panel.overlay-left .ghost:hover {
-            background-color: #e04352;
+            background-color: rgb(208, 168, 119);
         }
         .overlay-panel.overlay-right .ghost {
             display: none;
@@ -220,14 +225,14 @@
         .form-container.sign-in-container .forgot-password {
             display: block;
             margin: 10px 0;
-            color: #ff4b5c;
+            color: #rgb(208, 168, 119);
             text-decoration: none;
             text-align: center;
             font-size: 14px;
             transition: color 0.3s;
         }
         .form-container.sign-in-container .forgot-password:hover {
-            color: #e04352;
+            color:rgb(208, 168, 119);
         }
         footer {
             position: relative;
@@ -243,17 +248,37 @@
             color: #333;
         }
         footer a {
-            color: #ff4b5c;
+            color:rgb(208, 168, 119);
             text-decoration: none;
         }
         footer a:hover {
-            color: #e04352;
+            color: rgb(208, 168, 119);
         }
         footer .fa-heart {
-            color: #ff4b5c;
+            color: rgb(208, 168, 119);
         }
         .g-recaptcha {
             margin: 20px 0;
+        }
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+        .password-container .password-input {
+            width: 100%;
+            padding-right: 40px;
+            box-sizing: border-box;
+        }
+        .password-container .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+        .password-container .toggle-password:hover {
+            color: #333;
         }
     </style>
 {% endblock %}
@@ -274,6 +299,20 @@
             signInButton.addEventListener('click', () => {
                 container.classList.remove('right-panel-active');
             });
+        }
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.querySelector('.password-input');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
         }
     </script>
 {% endblock %}

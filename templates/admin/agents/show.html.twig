@@ -1,0 +1,82 @@
+{% extends 'admin/dashboard.html.twig' %}
+
+{% block title %}Détails de l'Agent{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .agent-details-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .agent-details-card h5 {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: #fff;
+            padding: 15px;
+            border-radius: 12px 12px 0 0;
+            margin: -20px -20px 20px -20px;
+        }
+        .agent-details-card p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        .agent-details-card .badge {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 12px;
+            color: #fff;
+        }
+        .badge-agent {
+            background-color: #ffc107;
+            color: #333;
+        }
+        .btn-back, .btn-edit {
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg agent-container">
+        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
+            <div class="container-fluid py-1 px-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('app_agent_index') }}">Agents</a></li>
+                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Détails</li>
+                    </ol>
+                    <h6 class="font-weight-bolder mb-0">Détails de l'Agent</h6>
+                </nav>
+            </div>
+        </nav>
+
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="agent-details-card">
+                        <h5>Détails de l'Agent #{{ agent.id }}</h5>
+                        <p><strong>Nom :</strong> {{ agent.nom }} {{ agent.prenom }}</p>
+                        <p><strong>Email :</strong> {{ agent.email }}</p>
+                        <p><strong>CIN :</strong> {{ agent.cin }}</p>
+                        <p><strong>Téléphone :</strong> {{ agent.numTel }}</p>
+                        <p><strong>Adresse :</strong> {{ agent.adresse }}</p>
+                        <p><strong>Rôle :</strong> <span class="badge badge-agent">{{ agent.role }}</span></p>
+                        <p><strong>Confirmé :</strong> {{ agent.isConfirmed ? 'Oui' : 'Non' }}</p>
+                        <p><strong>Date de naissance :</strong> {{ agent.dateOfBirth ? agent.dateOfBirth|date('d/m/Y') : 'Non spécifiée' }}</p>
+                        <p><strong>Genre :</strong> {{ agent.gender ?? 'Non spécifié' }}</p>
+                        <p><strong>Nom d'utilisateur :</strong> {{ agent.username ?? 'Non spécifié' }}</p>
+                        <div class="d-flex">
+                            <a href="{{ path('app_agent_edit', {'id': agent.id}) }}" class="btn btn-sm btn-warning btn-edit">Modifier</a>
+                            <a href="{{ path('app_agent_index') }}" class="btn btn-sm btn-primary btn-back">Retour à la liste</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

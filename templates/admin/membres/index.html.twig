@@ -1,6 +1,6 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Liste des Membres{% endblock %}
+{% block title %}Liste des Membres - Eventora{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -14,13 +14,11 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             background-color: #fff;
-            height: 320px;
+            min-height: 250px;
             width: 100%;
-            display: flex;
-            flex-direction: column;
         }
         .membre-card:hover {
-            transform: scale(1.02);
+            transform: translateY(-5px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
         .card-body {
@@ -29,14 +27,6 @@
             background: rgba(255, 255, 255, 0.95);
             padding: 20px;
             font-size: 1rem;
-            flex-grow: 1;
-            overflow: hidden;
-        }
-        .card-body p {
-            margin-bottom: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         .card-header {
             background: linear-gradient(90deg, #007bff, #0056b3);
@@ -44,7 +34,6 @@
             padding: 15px;
             border-radius: 12px 12px 0 0;
             font-size: 1.1rem;
-            flex-shrink: 0;
         }
         .card-footer {
             position: relative;
@@ -52,9 +41,6 @@
             padding: 15px;
             background: #f8f9fa;
             border-radius: 0 0 12px 12px;
-            flex-shrink: 0;
-            display: flex;
-            gap: 10px;
         }
         .badge {
             font-size: 0.8rem;
@@ -65,14 +51,10 @@
             min-width: 80px;
             text-align: center;
         }
-        .badge-membre {
+        .badge-confirmed {
             background-color: #28a745;
         }
-        .badge-agent {
-            background-color: #ffc107;
-            color: #333;
-        }
-        .badge-admin {
+        .badge-not-confirmed {
             background-color: #dc3545;
         }
         .btn-sm {
@@ -80,73 +62,26 @@
             padding: 8px 12px;
             font-size: 0.9rem;
         }
-        .lock-toggle {
+        .toggle-confirmed {
             cursor: pointer;
             font-size: 1.2rem;
-            transition: color 0.3s ease;
-        }
-        .lock-toggle.confirmed { color: #28a745; }
-        .lock-toggle.unconfirmed { color: #dc3545; }
-        .lock-toggle:hover { opacity: 0.8; }
-
-        /* Navbar Styling */
-        .navbar-main {
-            background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            z-index: 1020;
-        }
-        .navbar-main .input-group {
-            background-color: #f1f3f5;
-            border-radius: 20px;
-            padding: 5px;
-            max-width: 250px;
-        }
-        .navbar-main .input-group .form-control {
-            border: none;
-            background: transparent;
-            font-size: 0.95rem;
-            color: #333;
-        }
-        .navbar-main .input-group .form-control::placeholder {
-            color: #888;
-        }
-        .navbar-main .input-group .input-group-text {
-            background: transparent;
-            border: none;
             color: #007bff;
         }
-        .navbar-main .nav-link {
-            color: #333;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-        .navbar-main .nav-link:hover {
-            background-color: #e9ecef;
-        }
-        .navbar-main .nav-link i {
-            font-size: 1.2rem;
-            color: #007bff;
+        .toggle-confirmed:hover {
+            color: #0056b3;
         }
 
-        /* Barre latérale de tri */
+        /* Filter Sidebar */
         .filter-sidebar {
             position: fixed;
-            top: 120px; /* Adjusted to start below the navbar */
+            top: 80px;
             right: 0;
             width: 300px;
-            height: calc(100vh - 120px);
-            background-color: #fff;
+            height: calc(100vh - 80px);
+            background-color: #f8f9fa;
             border-radius: 12px 0 0 12px;
             box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            padding: 15px;
             transition: transform 0.3s ease;
             z-index: 1000;
             overflow-y: auto;
@@ -159,27 +94,21 @@
             color: #fff;
             border: none;
             border-radius: 8px;
-            padding: 10px 15px;
+            padding: 8px 15px;
             cursor: pointer;
             transition: background-color 0.3s ease;
             width: 100%;
             text-align: center;
-            font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .filter-toggle-btn:hover { background-color: #0056b3; }
         .filter-content { margin-top: 15px; }
-        .filter-content h6 {
-            font-size: 1.1rem;
-            color: #333;
-            margin-bottom: 15px;
-        }
 
-        /* Bouton flottant */
+        /* Filter Toggle Icon */
         .filter-toggle-icon {
             position: fixed;
-            top: 130px; /* Adjusted to align below navbar */
-            right: 15px;
+            top: 100px;
+            right: 10px;
             background-color: #007bff;
             color: #fff;
             border: none;
@@ -198,7 +127,7 @@
         .filter-toggle-icon:hover { background-color: #0056b3; }
         .filter-toggle-icon.visible { display: flex; }
 
-        /* Boutons de tri */
+        /* Sort Buttons */
         .btn-group .btn {
             padding: 8px 15px;
             font-size: 0.9rem;
@@ -206,14 +135,12 @@
             align-items: center;
             justify-content: center;
             gap: 5px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
         }
         .btn-group .btn i { font-size: 1rem; }
         .btn-group .btn.active { background-color: #007bff; color: #fff; }
         .btn-group .btn:hover { background-color: #0056b3; color: #fff; }
 
-        /* Contenu principal */
+        /* Main Content */
         .membre-content {
             margin-right: 320px;
             padding: 0 15px;
@@ -232,44 +159,29 @@
             padding: 8px 12px;
             border-radius: 8px;
             transition: all 0.3s ease;
-            font-size: 0.95rem;
         }
         .pagination .page-item.active .page-link {
             background-color: #007bff;
             color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .pagination .page-link:hover {
             background-color: #0056b3;
             color: #fff;
         }
-        .pagination .page-item.disabled .page-link {
-            color: #ccc;
-            cursor: not-allowed;
-        }
+        .pagination .page-item.disabled .page-link { color: #ccc; }
 
-        /* Ajustement pour sidebar gauche */
+        /* Adjust for Left Sidebar */
         .membre-container { margin-left: 270px; }
-
-        /* Sidebar gauche */
-        .sidenav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 250px;
-            z-index: 1030;
-        }
 
         /* Responsive Design */
         @media (max-width: 992px) {
             .membre-container { margin-left: 0; }
             .membre-content { margin-right: 0; }
             .filter-sidebar {
-                top: 0;
                 width: 100%;
                 height: auto;
                 position: relative;
+                top: 0;
                 border-radius: 12px;
                 margin-top: 20px;
             }
@@ -280,32 +192,12 @@
             }
             .filter-sidebar.collapsed .filter-content { display: none; }
             .filter-toggle-icon { display: none; }
-            .sidenav {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-            .navbar-main {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .navbar-main .input-group {
-                max-width: 100%;
-                margin-bottom: 10px;
-            }
-            .navbar-main .nav-link {
-                justify-content: center;
-            }
         }
         @media (max-width: 768px) {
-            .membre-card {
-                height: 280px;
-            }
+            .membre-card { min-height: 200px; }
             .card-body { padding: 15px; font-size: 0.9rem; }
             .card-header { font-size: 1rem; }
             .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
-            .pagination .page-link { padding: 6px 10px; font-size: 0.85rem; }
-            .navbar-main { padding: 10px; }
         }
     </style>
 {% endblock %}
@@ -326,6 +218,14 @@
                             <i class="fas fa-tachometer-alt text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
+                        <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-tachometer-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Home</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -385,13 +285,13 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'true' : 'false' }}">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'true' : 'false' }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-users text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Utilisateurs</span>
                     </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'show' : '' }}" id="usersMenu">
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'show' : '' }}" id="usersMenu">
                         <ul class="navbar-nav ms-3">
                             <li class="nav-item">
                                 <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
@@ -402,14 +302,13 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_moderators' ? 'active' : '' }}" href="{{ path('admin_moderators') }}">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_agent' ? 'active' : '' }}" href="{{ path('app_agent_index') }}">
                                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-shield text-dark"></i>
+                                        <i class="fas fa-user-cog text-dark"></i>
                                     </div>
-                                    <span class="nav-link-text ms-1">Modérateurs</span>
+                                    <span class="nav-link-text ms-1">Agents</span>
                                 </a>
                             </li>
-                           
                         </ul>
                     </div>
                 </li>
@@ -486,7 +385,7 @@
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Pages</a></li>
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Membres</li>
                     </ol>
                     <h6 class="font-weight-bolder mb-0">
@@ -520,35 +419,37 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
 
             <div class="membre-content">
                 <div class="row" id="membreList">
                     {% if membres|length > 0 %}
                         {% for membre in membres %}
                             <div class="col-lg-6 col-md-6 col-sm-12 mb-4 membre-card-container">
-                                <div class="card membre-card">
+                                <div class="card membre-card h-100">
                                     <div class="card-header">
                                         <h6 class="mb-0">Membre #{{ membre.id }}</h6>
                                     </div>
                                     <div class="card-body">
-                                        <p class="text-sm"><strong>Nom :</strong> {{ membre.nom }} {{ membre.prenom }}</p>
-                                        <p class="text-sm"><strong>Email :</strong> {{ membre.email }}</p>
-                                        <p class="text-sm"><strong>CIN :</strong> {{ membre.cin }}</p>
-                                        <p class="text-sm"><strong>Téléphone :</strong> {{ membre.numTel }}</p>
-                                        <p class="text-sm"><strong>Adresse :</strong> {{ membre.adresse }}</p>
-                                        <p class="text-sm">
-                                            <strong>Rôle :</strong>
-                                            <span class="badge badge-{{ membre.role|lower }}">{{ membre.role }}</span>
-                                        </p>
-                                        <p class="text-sm">
-                                            <strong>Confirmé :</strong>
-                                            <i class="fas {{ membre.isConfirmed ? 'fa-lock-open' : 'fa-lock' }} lock-toggle {{ membre.isConfirmed ? 'confirmed' : 'unconfirmed' }}"
-                                               data-membre-id="{{ membre.id }}"
-                                               data-csrf-token="{{ csrf_token('toggle' ~ membre.id) }}"
-                                               title="{{ membre.isConfirmed ? 'Désactiver le compte' : 'Activer le compte' }}"></i>
+                                        <p class="text-sm mb-2"><strong>Nom :</strong> {{ membre.nom }} {{ membre.prenom }}</p>
+                                        <p class="text-sm mb-2"><strong>Email :</strong> {{ membre.email }}</p>
+                                        <p class="text-sm mb-2"><strong>CIN :</strong> {{ membre.cin }}</p>
+                                        <p class="text-sm mb-2"><strong>Téléphone :</strong> {{ membre.numTel }}</p>
+                                        <p class="text-sm mb-2">
+                                            <strong>Statut :</strong>
+                                            <span class="badge badge-{{ membre.isConfirmed ? 'confirmed' : 'not-confirmed' }}">
+                                                {{ membre.isConfirmed ? 'Confirmé' : 'Non Confirmé' }}
+                                            </span>
+                                            <i class="fas fa-{{ membre.isConfirmed ? 'unlock' : 'lock' }} toggle-confirmed ms-2" data-membre-id="{{ membre.id }}" data-csrf-token="{{ csrf_token('toggle' ~ membre.id) }}"></i>
                                         </p>
                                     </div>
                                     <div class="card-footer">
+                                        <a href="{{ path('admin_membres_details', {'id': membre.id}) }}" class="btn btn-sm btn-info">Détails</a>
                                         <a href="{{ path('admin_membres_edit', {'id': membre.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
                                         <a href="#" class="btn btn-sm btn-danger" onclick="if(confirm('Voulez-vous vraiment supprimer ce membre ?')) { document.getElementById('delete-form-{{ membre.id }}').submit(); } return false;">Supprimer</a>
                                         <form id="delete-form-{{ membre.id }}" method="post" action="{{ path('admin_membres_delete', {'id': membre.id}) }}" style="display: none;">
@@ -653,7 +554,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Recherche en temps réel
+        // Real-time search
         document.getElementById('searchMembre').addEventListener('input', function(e) {
             const searchText = e.target.value.toLowerCase();
             const cards = document.querySelectorAll('.membre-card-container');
@@ -664,7 +565,7 @@
             });
         });
 
-        // Toggle pour la barre latérale de tri
+        // Toggle filter sidebar
         function toggleFilterSidebar() {
             const sidebar = document.getElementById('filterSidebar');
             const btn = sidebar.querySelector('.filter-toggle-btn');
@@ -674,40 +575,37 @@
             icon.classList.toggle('visible', sidebar.classList.contains('collapsed'));
         }
 
-        // Toggle du statut de confirmation
-        document.querySelectorAll('.lock-toggle').forEach(lock => {
-            lock.addEventListener('click', function() {
-                const membreId = this.dataset.membreId;
-                const csrfToken = this.dataset.csrfToken;
-                const isConfirmed = this.classList.contains('confirmed');
-                const action = isConfirmed ? 'désactiver' : 'activer';
+        // Toggle isConfirmed status
+        document.querySelectorAll('.toggle-confirmed').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const membreId = this.getAttribute('data-membre-id');
+                const csrfToken = this.getAttribute('data-csrf-token');
+                const badge = this.parentElement.querySelector('.badge');
+                const isConfirmed = this.classList.contains('fa-unlock');
 
-                if (confirm(`Voulez-vous vraiment ${action} ce compte ?`)) {
-                    fetch(`{{ path('admin_membres_toggle_confirm', {'id': '__ID__'}) }}`.replace('__ID__', membreId), {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-Token': csrfToken
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            this.classList.toggle('fa-lock-open', data.isConfirmed);
-                            this.classList.toggle('fa-lock', !data.isConfirmed);
-                            this.classList.toggle('confirmed', data.isConfirmed);
-                            this.classList.toggle('unconfirmed', !data.isConfirmed);
-                            this.title = data.isConfirmed ? 'Désactiver le compte' : 'Activer le compte';
-                            alert(data.message);
-                        } else {
-                            alert(data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erreur:', error);
-                        alert('Une erreur est survenue lors de la mise à jour.');
-                    });
-                }
+                fetch(`{{ path('admin_membres_toggle_confirm', {'id': '__ID__'}) }}`.replace('__ID__', membreId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.classList.toggle('fa-lock', !isConfirmed);
+                        this.classList.toggle('fa-unlock', isConfirmed);
+                        badge.textContent = data.isConfirmed ? 'Confirmé' : 'Non Confirmé';
+                        badge.className = `badge badge-${data.isConfirmed ? 'confirmed' : 'not-confirmed'}`;
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Une erreur est survenue lors de la mise à jour du statut.');
+                });
             });
         });
     </script>

@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html class="no-js">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title %}Eventora{% endblock %}</title>
+        <title>{% block title %}eventora{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
@@ -31,202 +30,9 @@
             <!-- Fonts for card hover effect -->
             <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700|Playfair+Display:700" rel="stylesheet">
             <!-- Font Awesome for icons -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax Superman/libs/font-awesome/5.15.4/css/all.min.css">
             <style>
-                /* Navigation fixe */
-                #page {
-                    min-height: 100vh;
-                    display: flex;
-                    flex-direction: column;
-                    padding-top: 70px;
-                }
-
-                .fh5co-nav {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    z-index: 2000;
-                    background: rgba(255, 255, 255, 0.9);
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
-                }
-
-                .fh5co-nav .container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px 15px;
-                    max-width: 1200px;
-                    margin: 0 auto;
-                }
-
-                .fh5co-logo a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-weight: 700;
-                    font-size: 24px;
-                    color: #934D1A;
-                    text-decoration: none;
-                }
-
-                .user-circle {
-                    display: inline-block;
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
-                    text-align: center;
-                    border-radius: 50%;
-                    background-color: #f0f0f0;
-                    color: #333;
-                    font-size: 20px;
-                    vertical-align: middle;
-                    margin-right: 8px;
-                }
-
-                .user-circle img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 50%;
-                }
-
-                .fh5co-nav .menu-1 {
-                    display: block;
-                }
-
-                .fh5co-nav .menu-1 ul {
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    margin: 0;
-                    padding: 0;
-                    list-style: none;
-                }
-
-                .fh5co-nav .menu-1 ul li {
-                    margin: 0 15px;
-                    position: relative;
-                }
-
-                .fh5co-nav .menu-1 ul li a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-size: 16px;
-                    color: #333;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    transition: color 0.3s ease;
-                }
-
-                .fh5co-nav .menu-1 ul li a:hover {
-                    color: #934D1A;
-                }
-
-                .fh5co-nav .menu-1 ul li.active a {
-                    color: #934D1A !important;
-                    font-weight: 600;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown {
-                    position: relative;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    right: 0;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    list-style: none;
-                    padding: 10px 0;
-                    min-width: 150px;
-                    z-index: 2001;
-                    transition: opacity 0.3s ease, visibility 0.3s ease;
-                    opacity: 0;
-                    visibility: hidden;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block;
-                    opacity: 1;
-                    visibility: visible;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                    margin: 0;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                    padding: 10px 20px;
-                    display: block;
-                    font-size: 14px;
-                    text-transform: none;
-                    color: #333;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                    color: #007bff;
-                }
-
-                .menu-toggle {
-                    display: none;
-                    font-size: 24px;
-                    cursor: pointer;
-                    color: #333;
-                    padding: 10px;
-                }
-
-                /* Responsive adjustments */
-                @media (max-width: 768px) {
-                    .menu-toggle {
-                        display: block;
-                    }
-
-                    .fh5co-nav .menu-1 ul {
-                        display: none;
-                        flex-direction: column;
-                        position: absolute;
-                        top: 60px;
-                        left: 0;
-                        width: 100%;
-                        background-color: #fff;
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                        padding: 20px 0;
-                    }
-
-                    .fh5co-nav .menu-1 ul.active {
-                        display: flex;
-                    }
-
-                    .fh5co-nav .menu-1 ul li {
-                        margin: 10px 0;
-                        text-align: center;
-                    }
-
-                    .user-circle {
-                        margin-right: 0;
-                        margin-bottom: 5px;
-                    }
-
-                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                        position: static;
-                        display: none;
-                        box-shadow: none;
-                        background-color: #f8f9fa;
-                        opacity: 1;
-                        visibility: visible;
-                    }
-
-                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none;
-                    }
-
-                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block;
-                    }
-                }
-
-                /* Existing styles for cards and details */
+                /* Existing styles remain unchanged */
                 .services-intro {
                     text-align: center;
                     padding: 40px 20px;
@@ -359,7 +165,7 @@
                     position: relative;
                     overflow: hidden;
                     border-radius: 12px;
-                    margin-bottom: 20px;
+                    margin-bottom: 20-syncedpx;
                     height: 200px;
                 }
 
@@ -393,7 +199,7 @@
                     justify-content: center;
                     align-items: center;
                     z-index: 1000;
-                    background: rgba(0, 0, 0, 0.5);
+                    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
                     visibility: hidden;
                     opacity: 0;
                     transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -407,7 +213,7 @@
                 .details-content {
                     background: #ffffff;
                     border-radius: 16px;
-                    max-width: 800px;
+                    max-width: 800px; /* Increased width */
                     width: 90%;
                     padding: 32px;
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -433,14 +239,14 @@
                 }
 
                 .details-content h2 {
-                    font-size: 2.2rem;
+                    font-size: 2.2rem; /* Increased font size */
                     font-weight: 700;
                     color: #1a202c;
                     margin-bottom: 16px;
                 }
 
                 .details-content p {
-                    font-size: 1.2rem;
+                    font-size: 1.2rem; /* Increased font size */
                     color: #4a5568;
                     margin-bottom: 16px;
                 }
@@ -450,8 +256,8 @@
                 }
 
                 .details-content .badge {
-                    font-size: 1.1rem;
-                    padding: 10px 16px;
+                    font-size: 1.1rem; /* Increased font size */
+                    padding: 10px 16px; /* Slightly larger padding for readability */
                 }
 
                 .details-content .close-btn {
@@ -480,6 +286,68 @@
                     filter: blur(5px);
                 }
 
+                /* Styles pour le bouton de panier flottant */
+                .cart-button {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background-color: #934D1A; /* Couleur cohérente avec le thème */
+                    color: #ffffff;
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                    cursor: pointer;
+                    transition: transform 0.3s ease, background-color 0.3s ease;
+                    z-index: 1001; /* Au-dessus des autres éléments */
+                }
+
+                .cart-button:hover {
+                    background-color: #7a3e0f; /* Couleur légèrement plus foncée au survol */
+                    transform: scale(1.1);
+                }
+
+                .cart-button i {
+                    font-size: 24px;
+                }
+
+                .cart-count {
+                    position: absolute;
+                    top: -8px;
+                    right: -8px;
+                    background-color: #ff6b6b; /* Couleur de badge cohérente avec le thème */
+                    color: #ffffff;
+                    font-size: 12px;
+                    font-weight: 600;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                /* Assurer la responsivité pour le bouton de panier */
+                @media (max-width: 480px) {
+                    .cart-button {
+                        width: 50px;
+                        height: 50px;
+                    }
+
+                    .cart-button i {
+                        font-size: 20px;
+                    }
+
+                    .cart-count {
+                        font-size: 10px;
+                        width: 18px;
+                        height: 18px;
+                    }
+                }
+
                 @media (max-width: 768px) {
                     .card-container {
                         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -487,7 +355,7 @@
                     }
 
                     .card {
-                        height: 400px;
+                        height: +)400px;
                     }
 
                     .title {
@@ -511,7 +379,7 @@
                     }
 
                     .details-content {
-                        max-width: 700px;
+                        max-width: 700px; /* Slightly smaller increase for medium screens */
                         width: 95%;
                         padding: 24px;
                     }
@@ -521,15 +389,15 @@
                     }
 
                     .details-content h2 {
-                        font-size: 2rem;
+                        font-size: 2rem; /* Adjusted for medium screens */
                     }
 
                     .details-content p {
-                        font-size: 1.1rem;
+                        font-size: 1.1rem; /* Adjusted for medium screens */
                     }
 
                     .details-content .badge {
-                        font-size: 1rem;
+                        font-size: 1rem; /* Adjusted for medium screens */
                         padding: 8px 14px;
                     }
                 }
@@ -549,7 +417,7 @@
                     }
 
                     .details-content {
-                        max-width: 90%;
+                        max-width: 90%; /* Full width for small screens */
                         padding: 16px;
                     }
 
@@ -558,17 +426,178 @@
                     }
 
                     .details-content h2 {
-                        font-size: 1.8rem;
+                        font-size: 1.8rem; /* Adjusted for small screens */
                     }
 
                     .details-content p {
-                        font-size: 1rem;
+                        font-size: 1rem; /* Adjusted for small screens */
                     }
 
                     .details-content .badge {
-                        font-size: 0.9rem;
+                        font-size: 0.9rem; /* Adjusted for small screens */
                         padding: 6px 12px;
                     }
+                }
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    padding-top: 70px; /* Ajusté pour une navbar plus compacte */
+                }
+
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background: rgba(255, 255, 255, 0.9);
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
+
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+
+                .fh5co-logo a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 24px;
+                    color: #934D1A;
+                    text-decoration: none;
+                }
+
+                .user-circle {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 20px;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                }
+
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
+
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 15px;
+                    position: relative;
+                }
+
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #934D1A;
+                }
+
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #934D1A !important;
+                    font-weight: 600;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 150px;
+                    z-index: 1001;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block !important;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #007bff;
+                }
+
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                    padding: 10px;
+                }
+                /* Styles pour le bouton Réserver */
+                .reserve-btn {
+                    background-color: #934D1A; /* Couleur cohérente avec le thème */
+                    color: #ffffff;
+                    padding: 12px 24px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease, transform 0.3s ease;
+                    margin-top: 16px;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                .reserve-btn:hover {
+                    background-color: #7a3e0f; /* Couleur plus foncée au survol */
+                    transform: scale(1.05);
+                }
+
+                .reserve-btn:focus {
+                    outline: 2px solid #934D1A;
+                    outline-offset: 2px;
                 }
             </style>
         {% endblock %}
@@ -582,69 +611,65 @@
     <body>
         <div class="fh5co-loader"></div>
         {% block body %}
-        <div id="page">
-           <nav class="fh5co-nav" role="navigation" aria-label="Main navigation">
-                <div class="container">
-                    <div class="fh5co-logo">
-                        <a href="{{ path('app_home') }}">Eventora</a>
-                    </div>
-                    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-                        <i class="icon-menu"></i>
-                    </button>
-                    <div class="menu-1">
-                        <ul role="menubar">
-                            <li class="active" role="none"><a href="{{ path('app_home') }}" role="menuitem">Home</a></li>
-                            <li class="has-dropdown" role="none">
-                                <a href="#" role="menuitem" aria-haspopup="true" aria-expanded="false">Réservation</a>
-                                <ul class="dropdown" role="menu">
-                                    <li role="none"><a href="{{ path('user_reservation_personnalise_new') }}" role="menuitem">Reservation personnalisée</a></li>
-                                    <li role="none"><a href="{{ path('user_reservation_pack_new') }}" role="menuitem">Reservation Pack</a></li>
-                                </ul>
-                            </li>
-                            <li class="has-dropdown" role="none">
-                                <a href="{{ path('user_packs') }}" role="menuitem">Packs</a>
-                            </li>
-                            <li class="has-dropdown" role="none">
-                                <a href="#" role="menuitem" aria-haspopup="true" aria-expanded="false">Services</a>
-                                <ul class="dropdown" role="menu">
-                                    <li role="none"><a href="{{ path('user_services') }}" role="menuitem">Service</a></li>
-                                    <li role="none"><a href="{{ path('user_sponsor') }}" role="menuitem">Partenaire</a></li>
-                                </ul>
-                            </li>
-                            <li role="none"><a href="{{ path('app_reclamation_new') }}" role="menuitem">Reclamation</a></li>
-                            <li role="none"><a href="{{ path('app_feedback_new') }}" role="menuitem">Feedback</a></li>
-                            <li role="none"><a href="{{ path('user_chat_ai') }}" role="menuitem">Talk with Evi</a></li>
-                            <li class="has-dropdown" role="none">
-                                <a href="#" role="menuitem" aria-haspopup="true" aria-expanded="false">
-                                    <span class="user-circle">
-                                        {% if app.user and app.user.image %}
-                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                        {% else %}
-                                            <i class="icon-user"></i>
-                                        {% endif %}
-                                    </span>
-                                    Contact
-                                </a>
-                                <ul class="dropdown" role="menu">
-                                    {% if app.user %}
-                                        <li role="none"><a href="{{ path('app_settings') }}" role="menuitem">Paramètres</a></li>
-                                        <li role="none"><a href="{{ path('app_home') }}" role="menuitem">Notifications</a></li>
-                                        <li role="none"><a href="{{ path('app_user_history') }}" role="menuitem">Historique</a></li>
-                                        {% if is_granted('ROLE_ADMIN') %}
-                                            <li role="none"><a href="{{ path('admin_dashboard') }}" role="menuitem">Dashboard</a></li>
-                                        {% endif %}
-                                        <li role="none"><a href="{{ path('app_logout') }}" role="menuitem">Déconnexion</a></li>
-                                    {% else %}
-                                        <li role="none"><a href="{{ path('discord_login') }}" role="menuitem">Connexion avec Discord</a></li>
-                                        <li role="none"><a href="{{ path('app_auth') }}" role="menuitem">Connexion</a></li>
-                                        <li role="none"><a href="{{ path('app_auth') }}" role="menuitem">Inscription</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+        <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
                 </div>
-            </nav>
+                <div class="menu-1">
+                    <ul>
+                        <li ><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Réservation</a>
+                             <ul class="dropdown">
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                </ul>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="{{ path('user_packs') }}">Packs</a>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="#services-section">Services</a>
+                            <ul class="dropdown">
+                                <li class="active"><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="page">
             <header id="fh5co-header" class="fh5co-cover" role="banner">
                 <div id="app" class="container">
                     <card data-image="https://i.pinimg.com/474x/15/49/c6/1549c6e76659befe1795734071a36ea7.jpg">
@@ -702,6 +727,11 @@
                     {% endfor %}
                 </div>
             </section>
+            <!-- Bouton de panier flottant -->
+            <div class="cart-button" id="cartButton" role="button" aria-label="Ouvrir le panier" tabindex="0">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
         </div>
         <!-- Details Container -->
         <div class="details-container" id="detailsContainer" role="dialog" aria-labelledby="details-title">
@@ -716,228 +746,331 @@
                 <p><strong>Partenaire:</strong> <span id="details-partenaire"></span></p>
                 <p><strong>Description: </strong><span id="details-description"></span></p>
                 <p><strong>Prix:</strong> <span id="details-price"></span></p>
+                <!-- Bouton Réserver -->
+                <button class="reserve-btn" id="reserveButton" aria-label="Réserver ce service">Réserver</button>
             </div>
         </div>
         {% endblock %}
         {% block javascripts %}
+            <!-- Charger d'abord jQuery -->
             <script src="{{ asset('js/jquery.min.js') }}"></script>
+            <!-- Ensuite, Waypoints.js -->
             <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
+            <!-- Ensuite Stellar.js -->
             <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
+            <!-- Ensuite les autres scripts -->
             <script src="{{ asset('js/bootstrap.min.js') }}"></script>
             <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
             <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
             <script src="{{ asset('js/simplyCountdown.js') }}"></script>
             <script src="{{ asset('js/main.js') }}"></script>
+            <!-- Vue.js for card hover effect -->
             <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+            <!-- AOS for animations -->
             <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
             <script>
-                (function($) {
-                    var eventDate = new Date('2025-12-31');
-                    simplyCountdown('.simply-countdown-one', {
-                        year: eventDate.getFullYear(),
-                        month: eventDate.getMonth() + 1,
-                        day: eventDate.getDate(),
-                        enableUtc: false
-                    });
-
-                    $(document).ready(function() {
-                        // Gestion du menu hamburger
-                        $('.menu-toggle').click(function() {
-                            const $menu = $('.fh5co-nav .menu-1 ul');
-                            const isExpanded = $menu.toggleClass('active').hasClass('active');
-                            $(this).attr('aria-expanded', isExpanded);
-                        });
-
-                        // Gestion des sous-menus
-                        $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                            if ($(window).width() <= 768) {
-                                e.preventDefault();
-                                const $parent = $(this).parent();
-                                const isExpanded = !$parent.hasClass('active');
-                                $('.fh5co-nav .menu-1 ul li.has-dropdown').not($parent).removeClass('active').find('a').attr('aria-expanded', false);
-                                $parent.toggleClass('active');
-                                $(this).attr('aria-expanded', isExpanded);
+                var eventDate = new Date('2025-12-31'); // Date mise à jour dynamiquement
+                simplyCountdown('.simply-countdown-one', {
+                    year: eventDate.getFullYear(),
+                    month: eventDate.getMonth() + 1,
+                    day: eventDate.getDate(),
+                    enableUtc: false
+                });
+            
+                document.addEventListener('DOMContentLoaded', () => {
+                    try {
+                        // Initialisation des éléments de l'interface
+                        const cards = document.querySelectorAll('.card');
+                        const detailsContainer = document.getElementById('detailsContainer');
+                        const detailsContent = detailsContainer.querySelector('.details-content');
+                        const closeBtn = detailsContainer.querySelector('.close-btn');
+                        const pageContent = document.getElementById('page');
+                        const detailsImage = document.getElementById('details-image');
+                        const detailsTitle = document.getElementById('details-title');
+                        const detailsLocation = document.getElementById('details-location');
+                        const detailsType = document.getElementById('details-type');
+                        const detailsDescription = document.getElementById('details-description');
+                        const detailsPrice = document.getElementById('details-price');
+                        const detailsPartenaire = document.getElementById('details-partenaire');
+                        const cartButton = document.getElementById('cartButton');
+                        const cartCount = document.getElementById('cartCount');
+                        const reserveButton = document.getElementById('reserveButton');
+            
+                        // Panier : stocker les services ajoutés
+                        let cartItems = [];
+            
+                        // Récupérer les éléments du panier depuis la session au chargement
+                        fetch('{{ path('app_panier_get') }}', {
+                            method: 'GET',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
                             }
-                        });
-
-                        // Fermer le menu si clic en dehors
-                        $(document).click(function(e) {
-                            if ($(window).width() <= 768 && !$(e.target).closest('.fh5co-nav').length) {
-                                $('.fh5co-nav .menu-1 ul').removeClass('active');
-                                $('.fh5co-nav .menu-1 ul li.has-dropdown').removeClass('active').find('a').attr('aria-expanded', false);
-                                $('.menu-toggle').attr('aria-expanded', false);
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
                             }
+                            return response.json();
+                        })
+                        .then(data => {
+                            cartItems = data.cartItems || [];
+                            updateCartCount(cartItems.length);
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors de la récupération du panier:', error);
+                            cartItems = [];
+                            updateCartCount(0);
                         });
-
-                        // Fermer le menu sur Escape
-                        $(document).keydown(function(e) {
-                            if (e.key === 'Escape' && $('.fh5co-nav .menu-1 ul').hasClass('active')) {
-                                $('.fh5co-nav .menu-1 ul').removeClass('active');
-                                $('.fh5co-nav .menu-1 ul li.has-dropdown').removeClass('active').find('a').attr('aria-expanded', false);
-                                $('.menu-toggle').attr('aria-expanded', false);
-                            }
-                        });
-                    });
-
-                    // Details container logic
-                    document.addEventListener('DOMContentLoaded', () => {
-                        try {
-                            const cards = document.querySelectorAll('.card');
-                            const detailsContainer = document.getElementById('detailsContainer');
-                            const detailsContent = detailsContainer.querySelector('.details-content');
-                            const closeBtn = detailsContainer.querySelector('.close-btn');
-                            const pageContent = document.getElementById('page');
-                            const detailsImage = document.getElementById('details-image');
-                            const detailsTitle = document.getElementById('details-title');
-                            const detailsLocation = document.getElementById('details-location');
-                            const detailsType = document.getElementById('details-type');
-                            const detailsDescription = document.getElementById('details-description');
-                            const detailsPrice = document.getElementById('details-price');
-                            const detailsPartenaire = document.getElementById('details-partenaire');
-
-                            cards.forEach(card => {
-                                card.addEventListener('click', () => {
-                                    detailsImage.src = card.dataset.serviceImage;
-                                    detailsImage.alt = `Image de ${card.dataset.serviceTitle}`;
-                                    detailsTitle.textContent = card.dataset.serviceTitle;
-                                    detailsLocation.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${card.dataset.serviceLocation}`;
-                                    detailsType.innerHTML = `<i class="fas fa-concierge-bell"></i> ${card.dataset.serviceType}`;
-                                    detailsDescription.textContent = card.dataset.serviceDescription;
-                                    detailsPrice.textContent = card.dataset.servicePrice;
-                                    detailsPartenaire.textContent = card.dataset.servicePartenaire;
-
-                                    detailsContainer.classList.add('active');
-                                    pageContent.classList.add('blur-active');
-                                    closeBtn.focus();
-                                });
+            
+                        // Gestion des clics sur les cartes pour afficher les détails
+                        cards.forEach(card => {
+                            card.addEventListener('click', () => {
+                                detailsImage.src = card.dataset.serviceImage;
+                                detailsImage.alt = `Image de ${card.dataset.serviceTitle}`;
+                                detailsTitle.textContent = card.dataset.serviceTitle;
+                                detailsLocation.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${card.dataset.serviceLocation}`;
+                                detailsType.innerHTML = `<i class="fas fa-concierge-bell"></i> ${card.dataset.serviceType}`;
+                                detailsDescription.textContent = card.dataset.serviceDescription;
+                                detailsPrice.textContent = card.dataset.servicePrice;
+                                detailsPartenaire.textContent = card.dataset.servicePartenaire;
+            
+                                // Stocker l'ID du service pour le bouton Réserver
+                                reserveButton.dataset.serviceId = card.dataset.serviceId;
+            
+                                // Afficher la fenêtre modale et appliquer le flou
+                                detailsContainer.classList.add('active');
+                                pageContent.classList.add('blur-active');
+            
+                                // Focus sur le bouton de fermeture pour l'accessibilité
+                                closeBtn.focus();
                             });
-
-                            closeBtn.addEventListener('click', () => {
+                        });
+            
+                        // Fermer la fenêtre modale
+                        closeBtn.addEventListener('click', () => {
+                            detailsContainer.classList.remove('active');
+                            pageContent.classList.remove('blur-active');
+                        });
+            
+                        // Fermer en cliquant à l'extérieur
+                        detailsContainer.addEventListener('click', (e) => {
+                            if (e.target === detailsContainer) {
                                 detailsContainer.classList.remove('active');
                                 pageContent.classList.remove('blur-active');
-                            });
-
-                            detailsContainer.addEventListener('click', (e) => {
-                                if (e.target === detailsContainer) {
-                                    detailsContainer.classList.remove('active');
-                                    pageContent.classList.remove('blur-active');
+                            }
+                        });
+            
+                        // Fermer avec la touche Échap
+                        document.addEventListener('keydown', (e) => {
+                            if (e.key === 'Escape' && detailsContainer.classList.contains('active')) {
+                                detailsContainer.classList.remove('active');
+                                pageContent.classList.remove('blur-active');
+                            }
+                        });
+            
+                        // Gestion du focus dans la fenêtre modale pour l'accessibilité
+                        const focusableElements = detailsContent.querySelectorAll('button, [tabindex]');
+                        const firstFocusable = focusableElements[0];
+                        const lastFocusable = focusableElements[focusableElements.length - 1];
+            
+                        detailsContent.addEventListener('keydown', (e) => {
+                            if (e.key === 'Tab') {
+                                if (e.shiftKey && document.activeElement === firstFocusable) {
+                                    e.preventDefault();
+                                    lastFocusable.focus();
+                                } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+                                    e.preventDefault();
+                                    firstFocusable.focus();
                                 }
-                            });
-
-                            document.addEventListener('keydown', (e) => {
-                                if (e.key === 'Escape' && detailsContainer.classList.contains('active')) {
-                                    detailsContainer.classList.remove('active');
-                                    pageContent.classList.remove('blur-active');
-                                }
-                            });
-
-                            const focusableElements = detailsContent.querySelectorAll('button, [tabindex]');
-                            const firstFocusable = focusableElements[0];
-                            const lastFocusable = focusableElements[focusableElements.length - 1];
-
-                            detailsContent.addEventListener('keydown', (e) => {
-                                if (e.key === 'Tab') {
-                                    if (e.shiftKey && document.activeElement === firstFocusable) {
-                                        e.preventDefault();
-                                        lastFocusable.focus();
-                                    } else if (!e.shiftKey && document.activeElement === lastFocusable) {
-                                        e.preventDefault();
-                                        firstFocusable.focus();
-                                    }
-                                }
-                            });
-
-                            if (typeof AOS !== 'undefined') {
-                                AOS.init({
-                                    duration: 800,
-                                    once: true,
-                                    offset: 100
+                            }
+                        });
+            
+                        // Gestion du bouton Réserver
+                        reserveButton.addEventListener('click', () => {
+                            const serviceId = reserveButton.dataset.serviceId;
+                            const service = {
+                                id: serviceId,
+                                quantity: 1 // Données minimales attendues par le contrôleur
+                            };
+            
+                            // Vérifier si le service est déjà dans le panier
+                            if (!cartItems.some(item => item.id === serviceId)) {
+                                // Ajouter à l'affichage local du panier
+                                cartItems.push({
+                                    id: serviceId,
+                                    title: detailsTitle.textContent,
+                                    price: detailsPrice.textContent,
+                                    location: detailsLocation.textContent.replace('<i class="fas fa-map-marker-alt"></i> ', ''),
+                                    type: detailsType.textContent.replace('<i class="fas fa-concierge-bell"></i> ', ''),
+                                    quantity: 1
                                 });
+                                updateCartCount(cartItems.length);
+            
+                                // Envoyer le nouveau service au serveur via AJAX
+                                fetch('{{ path('app_panier_add') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'X-CSRF-Token': '{{ csrf_token('panier') }}' // Ajout du token CSRF
+                                    },
+                                    body: JSON.stringify({ cartItems: [service] }) // Envoyer uniquement le nouveau service
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.success) {
+                                        alert(`Service "${detailsTitle.textContent}" ajouté au panier !`);
+                                    } else {
+                                        alert(data.message || 'Erreur lors de l\'ajout au panier.');
+                                        // Revenir à l'état précédent du panier si l'ajout échoue
+                                        cartItems = cartItems.filter(item => item.id !== serviceId);
+                                        updateCartCount(cartItems.length);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Erreur AJAX:', error);
+                                    alert('Erreur lors de la communication avec le serveur: ' + error.message);
+                                    // Revenir à l'état précédent du panier
+                                    cartItems = cartItems.filter(item => item.id !== serviceId);
+                                    updateCartCount(cartItems.length);
+                                });
+                            } else {
+                                alert(`Service "${detailsTitle.textContent}" est déjà dans le panier.`);
                             }
-                        } catch (error) {
-                            console.error('Error initializing service cards:', error);
+                        });
+            
+                        // Gestion du bouton de panier
+                        cartButton.addEventListener('click', () => {
+                            window.location.href = '{{ path('app_panier_index') }}';
+                        });
+            
+                        // Accessibilité : activer le clic au clavier pour le bouton de panier
+                        cartButton.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                cartButton.click();
+                            }
+                        });
+            
+                        // Accessibilité : activer le clic au clavier pour le bouton Réserver
+                        reserveButton.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                reserveButton.click();
+                            }
+                        });
+            
+                        // Fonction pour mettre à jour le compteur du panier
+                        function updateCartCount(count) {
+                            cartCount.textContent = count;
                         }
-                    });
-
-                    // Vue.js Card Hover Effect
-                    Vue.config.devtools = true;
-
-                    Vue.component('card', {
-                        template: `
-                            <div class="card-wrap"
-                                @mousemove="handleMouseMove"
-                                @mouseenter="handleMouseEnter"
-                                @mouseleave="handleMouseLeave"
-                                ref="card">
-                                <div class="card"
-                                    :style="cardStyle">
-                                    <div class="card-bg" :style="[cardBgTransform, cardBgImage]"></div>
-                                    <div class="card-info">
-                                        <slot name="header"></slot>
-                                        <slot name="content"></slot>
-                                    </div>
+            
+                        // Initialisation AOS pour les animations
+                        if (typeof AOS !== 'undefined') {
+                            AOS.init({
+                                duration: 800,
+                                once: true,
+                                offset: 100
+                            });
+                        }
+            
+                        // Accessibilité : focus sur les cartes
+                        document.querySelectorAll('.card').forEach(card => {
+                            card.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    card.click(); // Simuler un clic pour ouvrir les détails
+                                }
+                            });
+                        });
+                    } catch (error) {
+                        console.error('Erreur lors de l\'initialisation des cartes de service:', error);
+                    }
+                });
+            
+                // Vue.js Card Hover Effect
+                Vue.config.devtools = true;
+            
+                Vue.component('card', {
+                    template: `
+                        <div class="card-wrap"
+                            @mousemove="handleMouseMove"
+                            @mouseenter="handleMouseEnter"
+                            @mouseleave="handleMouseLeave"
+                            ref="card">
+                            <div class="card"
+                                :style="cardStyle">
+                                <div class="card-bg" :style="[cardBgTransform, cardBgImage]"></div>
+                                <div class="card-info">
+                                    <slot name="header"></slot>
+                                    <slot name="content"></slot>
                                 </div>
-                            </div>`,
-                        mounted() {
-                            this.width = this.$refs.card.offsetWidth;
-                            this.height = this.$refs.card.offsetHeight;
+                            </div>
+                        </div>`,
+                    mounted() {
+                        this.width = this.$refs.card.offsetWidth;
+                        this.height = this.$refs.card.offsetHeight;
+                    },
+                    props: ['dataImage'],
+                    data: () => ({
+                        width: 0,
+                        height: 0,
+                        mouseX: 0,
+                        mouseY: 0,
+                        mouseLeaveDelay: null
+                    }),
+                    computed: {
+                        mousePX() {
+                            return this.mouseX / this.width;
                         },
-                        props: ['dataImage'],
-                        data: () => ({
-                            width: 0,
-                            height: 0,
-                            mouseX: 0,
-                            mouseY: 0,
-                            mouseLeaveDelay: null
-                        }),
-                        computed: {
-                            mousePX() {
-                                return this.mouseX / this.width;
-                            },
-                            mousePY() {
-                                return this.mouseY / this.height;
-                            },
-                            cardStyle() {
-                                const rX = this.mousePX * 30;
-                                const rY = this.mousePY * -30;
-                                return {
-                                    transform: `rotateY(${rX}deg) rotateX(${rY}deg)`
-                                };
-                            },
-                            cardBgTransform() {
-                                const tX = this.mousePX * -40;
-                                const tY = this.mousePY * -40;
-                                return {
-                                    transform: `translateX(${tX}px) translateY(${tY}px)`
-                                }
-                            },
-                            cardBgImage() {
-                                return {
-                                    backgroundImage: `url(${this.dataImage})`
-                                }
-                            }
+                        mousePY() {
+                            return this.mouseY / this.height;
                         },
-                        methods: {
-                            handleMouseMove(e) {
-                                this.mouseX = e.pageX - this.$refs.card.offsetLeft - this.width/2;
-                                this.mouseY = e.pageY - this.$refs.card.offsetTop - this.height/2;
-                            },
-                            handleMouseEnter() {
-                                clearTimeout(this.mouseLeaveDelay);
-                            },
-                            handleMouseLeave() {
-                                this.mouseLeaveDelay = setTimeout(() => {
-                                    this.mouseX = 0;
-                                    this.mouseY = 0;
-                                }, 1000);
-                            }
+                        cardStyle() {
+                            const rX = this.mousePX * 30;
+                            const rY = this.mousePY * -30;
+                            return {
+                                transform: `rotateY(${rX}deg) rotateX(${rY}deg)`
+                            };
+                        },
+                        cardBgTransform() {
+                            const tX = this.mousePX * -40;
+                            const tY = this.mousePY * -40;
+                            return {
+                                transform: `translateX(${tX}px) translateY(${tY}px)`
+                            };
+                        },
+                        cardBgImage() {
+                            return {
+                                backgroundImage: `url(${this.dataImage})`
+                            };
                         }
-                    });
-
-                    const app = new Vue({
-                        el: '#app'
-                    });
-                })(jQuery);
+                    },
+                    methods: {
+                        handleMouseMove(e) {
+                            this.mouseX = e.pageX - this.$refs.card.offsetLeft - this.width / 2;
+                            this.mouseY = e.pageY - this.$refs.card.offsetTop - this.height / 2;
+                        },
+                        handleMouseEnter() {
+                            clearTimeout(this.mouseLeaveDelay);
+                        },
+                        handleMouseLeave() {
+                            this.mouseLeaveDelay = setTimeout(() => {
+                                this.mouseX = 0;
+                                this.mouseY = 0;
+                            }, 1000);
+                        }
+                    }
+                });
+            
+                const app = new Vue({
+                    el: '#app'
+                });
             </script>
         {% endblock %}
     </body>

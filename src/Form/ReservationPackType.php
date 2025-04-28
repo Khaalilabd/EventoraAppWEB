@@ -16,6 +16,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ReservationPackType extends AbstractType
@@ -72,11 +74,21 @@ class ReservationPackType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'Le numéro de téléphone est requis.']),
                     new Length([
-                        'max' => 20,
-                        'maxMessage' => 'Le numéro de téléphone ne peut pas dépasser {{ limit }} caractères.',
+                        'min' => 8,
+                        'max' => 8,
+                        'minMessage' => 'Le numéro de téléphone doit contenir exactement 8 chiffres.',
+                        'maxMessage' => 'Le numéro de téléphone doit contenir exactement 8 chiffres.',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[0-9]{8}$/',
+                        'message' => 'Le numéro de téléphone doit contenir exactement 8 chiffres (ex. 12345678).',
                     ]),
                 ],
-                'attr' => ['class' => 'form-control'],
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => '12345678',
+                ],
+                'help' => 'Entrez un numéro tunisien de 8 chiffres (ex. 12345678).',
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
@@ -91,7 +103,7 @@ class ReservationPackType extends AbstractType
             ->add('pack', EntityType::class, [
                 'class' => Pack::class,
                 'choice_label' => 'nomPack',
-                'choices' => $initialPacks, // Pre-load initial packs
+                'choices' => $initialPacks,
                 'constraints' => [
                     new NotBlank(['message' => 'Vous devez sélectionner un pack.']),
                 ],
@@ -99,7 +111,7 @@ class ReservationPackType extends AbstractType
                     'class' => 'form-control select2',
                     'data-ajax--url' => '/user/reservations/pack/search',
                     'data-ajax--delay' => 250,
-                    'data-minimum-input-length' => 0, // Allow dropdown without typing
+                    'data-minimum-input-length' => 0,
                 ],
             ]);
 

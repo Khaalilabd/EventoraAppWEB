@@ -24,7 +24,6 @@ class Pack
     private ?string $nomPack = null;
 
     #[ORM\Column(type: 'string', nullable: false)]
-    #[Assert\NotBlank(message: 'La description ne peut pas être vide.')]
     private ?string $description = null;
 
     #[ORM\Column(type: 'decimal', nullable: false)]

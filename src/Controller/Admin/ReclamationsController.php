@@ -9,7 +9,7 @@ use App\Form\ReclamationRepType;
 use App\Repository\ReclamationRepository;
 use App\Service\AiResponseGenerator;
 use Doctrine\ORM\EntityManagerInterface;
-use Dompdf\Dompdf;
+use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,7 +40,6 @@ class ReclamationsController extends AbstractController
             ->leftJoin('r.membre', 'm')
             ->orderBy("r.$sortBy", $sortOrder);
 
-        // Gestion des filtres par statut
         if ($statusFilter === 'non_traitees') {
             $queryBuilder->andWhere('r.statut IN (:statuses)')
                 ->setParameter('statuses', ['En_Attente', 'En_Cours']);
@@ -123,7 +122,6 @@ class ReclamationsController extends AbstractController
         $reclamationRep = new ReclamationRep();
         $reclamationRep->setReclamation($reclamation);
 
-        // Générer une suggestion de réponse initiale
         $suggestedResponse = $aiResponseGenerator->generateResponse(
             $reclamation->getTitre(),
             $reclamation->getDescription(),
@@ -168,20 +166,15 @@ class ReclamationsController extends AbstractController
     }
 
     #[Route('/{id}/export-pdf', name: 'admin_reclamations_export_pdf', methods: ['GET'])]
-    public function exportPdf(Reclamation $reclamation): Response
+    public function exportPdf(Reclamation $reclamation, Pdf $knpSnappyPdf): Response
     {
         try {
             $html = $this->renderView('admin/reclamations/pdf.html.twig', [
                 'reclamation' => $reclamation,
             ]);
 
-            $dompdf = new Dompdf();
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'portrait');
-            $dompdf->render();
-
             return new Response(
-                $dompdf->output(),
+                $knpSnappyPdf->getOutputFromHtml($html),
                 200,
                 [
                     'Content-Type' => 'application/pdf',

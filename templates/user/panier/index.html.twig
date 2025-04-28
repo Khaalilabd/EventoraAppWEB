@@ -1,0 +1,507 @@
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% block title %}eventora{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
+
+        {% block stylesheets %}
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+            <!-- Animate.css -->
+            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+            <!-- Icomoon Icon Fonts -->
+            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+            <!-- Bootstrap -->
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <!-- Magnific Popup -->
+            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+            <!-- Owl Carousel -->
+            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+            <!-- Theme style -->
+            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <!-- Navbar -->
+            <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+            <!-- header -->
+            <link rel="stylesheet" href="{{ asset('css/header_service.css') }}">
+            <!-- Fonts for card hover effect -->
+            <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700|Playfair+Display:700" rel="stylesheet">
+            <!-- Font Awesome for icons -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+            <!-- Font Awesome pour le design du panier -->
+            <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+            <style>
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    padding-top: 70px;
+                }
+
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background: rgba(255, 255, 255, 0.9);
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
+
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+
+                .fh5co-logo a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 24px;
+                    color: #934D1A;
+                    text-decoration: none;
+                }
+
+                .user-circle {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 20px;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                }
+
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
+
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 15px;
+                    position: relative;
+                }
+
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #934D1A;
+                }
+
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #934D1A !important;
+                    font-weight: 600;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 150px;
+                    z-index: 1001;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block !important;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #007bff;
+                }
+
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                    padding: 10px;
+                }
+
+                /* Styles pour le panier */
+                .img-cart {
+                    display: block;
+                    max-width: 50px;
+                    height: auto;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+
+                table tr td {
+                    border: 1px solid #FFFFFF;    
+                }
+
+                table tr th {
+                    background: #eee;    
+                }
+
+                .panel-shadow {
+                    box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px;
+                }
+
+                .panel-info > .panel-heading {
+                    background-color: #934D1A;
+                    color: #fff;
+                    border-color: #934D1A;
+                }
+
+                .panel-info {
+                    border-color: #934D1A;
+                }
+
+                .btn-primary {
+                    background-color: #934D1A;
+                    border-color: #934D1A;
+                }
+
+                .btn-primary:hover {
+                    background-color: #7a3e0f;
+                    border-color: #7a3e0f;
+                }
+
+                .btn-success {
+                    background-color: #5cb85c;
+                    border-color: #4cae4c;
+                }
+
+                .btn-success:hover {
+                    background-color: #449d44;
+                    border-color: #398439;
+                }
+
+                .img-circle.img-thumbnail {
+                    width: 60px;
+                    height: 60px;
+                    margin-right: 10px;
+                }
+
+                .panel-heading h3 {
+                    display: flex;
+                    align-items: center;
+                }
+
+                /* Styles pour les messages flash */
+                .alert {
+                    padding: 15px;
+                    margin-bottom: 20px;
+                    border: 1px solid transparent;
+                    border-radius: 4px;
+                }
+                .alert-success {
+                    color: #3c763d;
+                    background-color: #dff0d8;
+                    border-color: #d6e9c6;
+                }
+                .alert-danger {
+                    color: #a94442;
+                    background-color: #f2dede;
+                    border-color: #ebccd1;
+                }
+            </style>
+        {% endblock %}
+
+        <!-- Modernizr JS -->
+        <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
+        <!-- FOR IE9 below -->
+        <script src="{{ asset('js/respond.min.js') }}"></script>
+        {% block javascripts_head %}{% endblock %}
+    </head>
+    <body>
+        <div class="fh5co-loader"></div>
+        {% block body %}
+        <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li ><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Réservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="{{ path('user_packs') }}">Packs</a>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="#services-section">Services</a>
+                            <ul class="dropdown">
+                                <li class="active"><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="page">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+            <div class="container bootstrap snippets bootdey">
+                <div class="col-md-9 col-sm-8 content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ol class="breadcrumb">
+                                <li><a href="{{ path('app_home') }}">Home</a></li>
+                                <li class="active">Cart</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% if cartItems|length > 0 %}
+                                <div class="panel panel-info panel-shadow">
+                                    <div class="panel-heading">
+                                        <h3>
+                                            {% if app.user and app.user.image %}
+                                                <img class="img-circle img-thumbnail" src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <img class="img-circle img-thumbnail" src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Profile">
+                                            {% endif %}
+                                            {{ app.user ? app.user.nom : 'Utilisateur' }}
+                                        </h3>
+                                    </div>
+                                    <div class="panel-body"> 
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Produit</th>
+                                                        <th>Quantité</th>
+                                                        <th>Prix</th>
+                                                        <th>Total</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for item in cartItems %}
+                                                        <tr>
+                                                            <td><strong>{{ item.title }}</strong><p>Type : {{ item.type }}</p></td>
+                                                            <td>
+                                                                {{ form_start(forms[item.id], {'attr': {'class': 'form-inline'}}) }}
+                                                                {{ form_widget(forms[item.id].id) }}
+                                                                {{ form_widget(forms[item.id].quantity) }}
+                                                                <button type="submit" class="btn btn-default update-qty" data-href="{{ path('app_panier_update') }}"><i class="fa fa-pencil"></i></button>
+                                                                {{ form_end(forms[item.id]) }}
+                                                            </td>
+                                                            <td>{{ item.price }}</td>
+                                                            <td>{{ (item.price|replace({' ': ''})|number_format(2, '.', '') * item.quantity)|number_format(2, ',', ' ') }} dt</td>
+                                                            <td>
+                                                                <a href="{{ path('app_panier_remove', {'id': item.id}) }}" class="btn btn-primary remove-item" data-id="{{ item.id }}"><i class="fa fa-trash-o"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    <tr>
+                                                        <td colspan="5"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="4" class="text-right">Total Produits</td>
+                                                        <td>{{ total }}</td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td colspan="4" class="text-right"><strong>Total</strong></td>
+                                                        <td>{{ (total|replace({' ': ''})|number_format(2, '.', '') )|number_format(2, ',', ' ') }} </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="{{ path('user_services') }}" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left"></span> Continuer les achats</a>
+                            <a href="{{ path('app_stripe') }}" class="btn btn-primary pull-right">Suivant<i class="fas fa-chevron-right"></i></a>                            {% else %}
+                                <div class="panel panel-info panel-shadow">
+                                    <div class="panel-body">
+                                        <p class="alert alert-info">Votre panier est vide.</p>
+                                    </div>
+                                </div>
+                                <a href="{{ path('user_services') }}" class="btn btn-success"><span class="glyphicon glyphicon-arrow-left"></span> Continuer les achats</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            // JavaScript pour gérer la mise à jour de la quantité
+            document.querySelectorAll('.update-qty').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const form = button.closest('form');
+                    const itemId = form.querySelector('input[name$="[id]"]').value;
+                    const quantity = form.querySelector('input[name$="[quantity]"]').value;
+
+                    if (isNaN(quantity) || quantity < 1) {
+                        alert('Veuillez entrer une quantité valide.');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('{{ path('app_panier_update') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-Token': '{{ csrf_token('panier') }}',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                id: itemId,
+                                quantity: quantity
+                            })
+                        });
+
+                        const data = await response.json();
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Erreur:', error);
+                        alert('Erreur lors de la mise à jour de la quantité.');
+                    }
+                });
+            });
+
+            // JavaScript pour gérer la suppression d'un article
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const itemId = button.dataset.id;
+
+                    try {
+                        const response = await fetch('{{ path('app_panier_remove', {'id': 'ITEM_ID'}) }}'.replace('ITEM_ID', itemId), {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-Token': '{{ csrf_token('panier') }}',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        const data = await response.json();
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Erreur:', error);
+                        alert('Erreur lors de la suppression de l\'article.');
+                    }
+                });
+            });
+        </script>
+        {% endblock %}
+        {% block javascripts %}
+            <script src="{{ asset('js/jquery.min.js') }}"></script>
+            <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
+            <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
+            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+            <script src="{{ asset('js/simplyCountdown.js') }}"></script>
+            <script src="{{ asset('js/main.js') }}"></script>
+            <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+            <script>
+                var eventDate = new Date('2025-12-31');
+                simplyCountdown('.simply-countdown-one', {
+                    year: eventDate.getFullYear(),
+                    month: eventDate.getMonth() + 1,
+                    day: eventDate.getDate(),
+                    enableUtc: false
+                });
+            </script>
+        {% endblock %}
+    </body>
+</html>

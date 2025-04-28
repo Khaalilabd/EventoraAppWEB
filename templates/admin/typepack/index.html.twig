@@ -202,7 +202,7 @@
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                     <div class="input-group">
                         <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                        <input type="text" class="form-control" placeholder="Rechercher..." id="searchInput">
+                        <input type="text" class="form-control" placeholder="Rechercher par type..." id="searchTypepack" value="{{ search_query|default('')|e('html_attr') }}">
                     </div>
                 </div>
                 <ul class="navbar-nav justify-content-end">
@@ -217,68 +217,69 @@
         </div>
     </nav>
 
-    <div class="container-fluid py-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="card mb-4 shadow-lg border-radius-xl">
-                    <div class="card-header p-4 d-flex justify-content-between align-items-center bg-gradient-primary text-white">
-                        <h6 class="font-weight-bolder mb-0">Liste des Types de Packs</h6>
-                        <a href="{{ path('admin_typepacks_create') }}" class="custom-btn-ajouter">
-                            <i class="fas fa-plus me-2"></i> Ajouter un type de pack
-                        </a>
+    <div class="custom-container">
+        <div class="custom-card-container">
+            <div class="custom-card-header">
+                <h6 class="custom-header-title">Liste des Types de Packs</h6>
+                <a href="{{ path('admin_typepacks_create') }}" class="custom-btn-ajouter">
+                    <i class="fas fa-plus me-2"></i> Ajouter un type de pack
+                </a>
+            </div>
+            <div class="custom-card-body">
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <div class="card-body p-4">
-                        {% for message in app.flashes('success') %}
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
-                        {% for message in app.flashes('error') %}
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
-                        {% for message in app.flashes('info') %}
-                            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
+                {% endfor %}
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('info') %}
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
 
-                        {% if typepacks is defined and typepacks is not empty %}
-                            <div class="row" id="typepackContainer">
-                                {% for typepack in typepacks %}
-                                    <div class="col-lg-4 col-md-6 col-sm-12 mb-4 typepack-card-wrapper">
-                                        <div class="card typepack-card h-100 shadow-lg border-radius-xl"
-                                             data-type="{{ typepack.type }}">
-                                            <div class="card-header p-4 text-white text-center">
-                                                <h5 class="mb-0 typepack-title">{{ typepack.type }}</h5>
-                                            </div>
-                                            <div class="card-footer p-3 d-flex justify-content-between align-items-center">
-                                                <a href="{{ path('admin_typepacks_edit', {'id': typepack.id}) }}" class="custom-btn-modifier">
-                                                    <i class="fas fa-edit me-1"></i> Modifier
-                                                </a>
-                                                <form method="post" action="{{ path('admin_typepacks_delete', {'id': typepack.id}) }}" class="action-form" onsubmit="return confirm('Voulez-vous vraiment supprimer ce type de pack ?');">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ typepack.id) }}">
-                                                    <button type="submit" class="custom-btn-supprimer">
-                                                        <i class="fas fa-trash me-1"></i> Supprimer
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
+                {% if typepacks is defined and typepacks is not empty %}
+                    <div class="custom-card-grid" id="typepackContainer">
+                        {% for typepack in typepacks %}
+                            <div class="typepack-custom-card-wrapper">
+                                <div class="typepack-custom-card"
+                                     data-type="{{ typepack.type|default('Non défini')|lower }}">
+                                    <div class="custom-text">
+                                        <span>{{ typepack.type|default('Non défini') }}</span>
+                                        <p class="custom-subtitle">Type de pack</p>
                                     </div>
-                                {% endfor %}
+                                    <div class="custom-icons">
+                                        <a class="custom-action-btn" href="{{ path('admin_typepacks_edit', {'id': typepack.id}) }}">
+                                            <svg class="custom-svg-icon" viewBox="0 0 20 20">
+                                                <path d="M13.586,2.586c-0.781-0.781-2.047-0.781-2.828,0L2.414,10.93c-0.375,0.375-0.586,0.884-0.586,1.414v4.656c0,1.104,0.896,2,2,2h4.656c0.53,0,1.039-0.211,1.414-0.586l8.344-8.344c0.781-0.781,0.781-2.047,0-2.828L13.586,2.586z M9.07,16H4.828v-4.242l7.414-7.414l4.242,4.242L9.07,16z M17,8.414l-1.414,1.414l-4.242-4.242L12.758,4.172L17,8.414z"></path>
+                                            </svg>
+                                        </a>
+                                        <form method="post" action="{{ path('admin_typepacks_delete', {'id': typepack.id}) }}" class="action-form" onsubmit="return confirm('Voulez-vous vraiment supprimer ce type de pack ? Cela supprimera également tous les packs associés.');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ typepack.id) }}">
+                                            <button type="submit" class="custom-action-btn">
+                                                <svg class="custom-svg-icon" viewBox="0 0 20 20">
+                                                    <path d="M17.114,3.923h-4.589V2.427c0-0.252-0.207-0.459-0.459-0.459H7.935c-0.252,0-0.459,0.207-0.459,0.459v1.496h-4.59c-0.252,0-0.459,0.207-0.459,0.459v1.832c0,0.252,0.207,0.459,0.459,0.459h1.832v11.496c0,0.252,0.207,0.459,0.459,0.459h9.174c0.252,0,0.459-0.207,0.459-0.459V6.673h1.832c0.252,0,0.459-0.207,0.459-0.459V4.382C17.573,4.13,17.366,3.923,17.114,3.923z M11.505,2.886v0.918H8.495V2.886H11.505z M15.282,17.611H4.718V6.673h10.564V17.611z M6.55,9.174c0-0.252,0.207-0.459,0.459-0.459h0.918c0.252,0,0.459,0.207,0.459,0.459v5.954c0,0.252-0.207,0.459-0.459,0.459H7.009c-0.252,0-0.459-0.207-0.459-0.459V9.174z M10,9.174c0-0.252,0.207-0.459,0.459-0.459h0.918c0.252,0,0.459,0.207,0.459,0.459v5.954c0,0.252-0.207,0.459-0.459,0.459h-0.918c-0.252,0-0.459-0.207-0.459-0.459V9.174z M13.45,9.174c0-0.252,0.207-0.459,0.459-0.459h0.918c0.252,0,0.459,0.207,0.459,0.459v5.954c0,0.252-0.207,0.459-0.459,0.459h-0.918c-0.252,0-0.459-0.207-0.459-0.459V9.174z"></path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                        {% else %}
-                            <div class="text-center p-5">
-                                <i class="fas fa-tags text-muted" style="font-size: 3rem;"></i>
-                                <p class="text-muted mt-3 fs-5">Aucun type de pack trouvé.</p>
-                            </div>
-                        {% endif %}
+                        {% endfor %}
                     </div>
-                </div>
+                {% else %}
+                    <div class="custom-text-center" id="noResults">
+                        <i class="fas fa-tags text-muted" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-3 fs-5">Aucun type de pack trouvé.</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -296,18 +297,18 @@
         }
         .sidenav-header { padding: 15px; }
         .navbar-brand { display: flex; align-items: center; color: #333; }
-        .navbar-brand:hover { color: #00897B; } /* Teal on hover */
+        .navbar-brand:hover { color: #00897B; }
         .navbar-nav .nav-link { padding: 12px 15px; color: #555; transition: all 0.3s ease; }
-        .navbar-nav .nav-link:hover { background-color: #00897B; color: #fff; } /* Teal on hover */
-        .navbar-nav .nav-link.active { background-color: #00897B; color: #fff; } /* Teal for active */
+        .navbar-nav .nav-link:hover { background-color: #00897B; color: #fff; }
+        .navbar-nav .nav-link.active { background-color: #00897B; color: #fff; }
         .navbar-nav .nav-link .icon { width: 30px; height: 30px; background-color: #fff; transition: background-color 0.3s ease; }
-        .navbar-nav .nav-link:hover .icon, .navbar-nav .nav-link.active .icon { background-color: #00897B; } /* Teal for icon background */
+        .navbar-nav .nav-link:hover .icon, .navbar-nav .nav-link.active .icon { background-color: #00897B; }
         .navbar-nav .nav-link .icon i { font-size: 16px; }
         .navbar-nav .dropdown-toggle::after { margin-left: 10px; transition: transform 0.3s ease; }
         .navbar-nav .dropdown-toggle[aria-expanded="true"]::after { transform: rotate(180deg); }
         .collapse { transition: all 0.3s ease; }
         .navbar-nav .collapse .nav-link { padding-left: 40px; font-size: 0.9em; }
-        .navbar-nav .collapse .nav-link:hover { background-color: #26A69A; } /* Lighter teal for sub-items */
+        .navbar-nav .collapse .nav-link:hover { background-color: #26A69A; }
         hr.horizontal { border: 0; height: 1px; background-color: #ddd; }
 
         /* Navbar styles */
@@ -320,7 +321,7 @@
         }
         .breadcrumb { font-size: 0.9rem; }
         .breadcrumb-item a { color: #6c757d; transition: color 0.3s ease; }
-        .breadcrumb-item a:hover { color: #00897B; } /* Teal on hover */
+        .breadcrumb-item a:hover { color: #00897B; }
         .breadcrumb-item.active { color: #2d3436; font-weight: 500; }
         .navbar-main h6 { font-size: 1.25rem; font-weight: 600; color: #2d3436; }
         .nav-link.text-body {
@@ -331,7 +332,7 @@
             color: #2d3436 !important;
             transition: color 0.3s ease;
         }
-        .nav-link.text-body:hover { color: #00897B !important; } /* Teal on hover */
+        .nav-link.text-body:hover { color: #00897B !important; }
         .nav-link.text-body i { font-size: 1.1rem; }
 
         /* Main Content */
@@ -340,137 +341,158 @@
             min-height: 100vh;
         }
 
+        /* Custom Container */
+        .custom-container {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Custom Card Container */
+        .custom-card-container {
+            width: 100%;
+            max-width: 1200px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .custom-card-header {
+            background: #1abc9c;
+            border-radius: 20px 20px 0 0;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .custom-card-header h6 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0;
+            color: #fff;
+        }
+        .custom-card-body {
+            padding: 20px;
+        }
+
+        /* Custom Card Grid */
+        .custom-card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
         /* Enhanced Card Styles */
-        .typepack-card-wrapper {
+        .typepack-custom-card-wrapper {
             animation: fadeIn 0.6s ease-in-out forwards;
             opacity: 0;
             animation-delay: calc(var(--delay) * 0.1s);
+            flex: 0 0 250px;
         }
-        .typepack-card-wrapper:nth-child(1) { --delay: 1; }
-        .typepack-card-wrapper:nth-child(2) { --delay: 2; }
-        .typepack-card-wrapper:nth-child(3) { --delay: 3; }
-        .typepack-card-wrapper:nth-child(4) { --delay: 4; }
-        .typepack-card-wrapper:nth-child(5) { --delay: 5; }
-        .typepack-card-wrapper:nth-child(6) { --delay: 6; }
+        .typepack-custom-card-wrapper:nth-child(1) { --delay: 1; }
+        .typepack-custom-card-wrapper:nth-child(2) { --delay: 2; }
+        .typepack-custom-card-wrapper:nth-child(3) { --delay: 3; }
+        .typepack-custom-card-wrapper:nth-child(4) { --delay: 4; }
+        .typepack-custom-card-wrapper:nth-child(5) { --delay: 5; }
+        .typepack-custom-card-wrapper:nth-child(6) { --delay: 6; }
         @keyframes fadeIn {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-        .typepack-card {
-            border-radius: 20px;
-            overflow: hidden;
-            background: linear-gradient(145deg, #ffffff, #f7f7f7);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            position: relative;
-            height: 150px;
+        .typepack-custom-card {
+            width: 250px;
+            height: 200px;
+            border-radius: 15px;
+            background: rgba(100, 90, 150, 0.9); /* darker purple, more saturated */
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            position: relative;
+            overflow: visible;
         }
-        .typepack-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
-        }
-        .typepack-card .card-header {
-            background: linear-gradient(135deg, #00897B, #26A69A); /* Teal gradient */
-            border-bottom: none;
+        .custom-text {
             flex-grow: 1;
+            padding: 15px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .typepack-title {
-            font-family: 'Poppins', sans-serif;
+            flex-direction: column;
+            color: #f0f8ff; /* Keeping the light color */
             font-weight: 700;
-            font-size: 1.3rem;
-            letter-spacing: 0.5px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            font-size: 1.1em;
+        }
+        .custom-text span {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .card-footer {
-            flex-shrink: 0;
+        .custom-subtitle {
+            font-size: 0.7em;
+            font-weight: 400;
+            color: rgba(240, 248, 255, 0.7); /* Keeping the light color */
+        }
+        .custom-icons {
+            position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* even space between icons */
+        }
+        .custom-action-btn {
+           background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+        }
+        .custom-svg-icon {
+            width: 25px;
+            height: 25px;
+            stroke: rgb(38, 59, 126);
+            fill: none;
+        }
+        .custom-action-btn:hover {
+background: none; /* No background on hover */
+    transform: scale(1.1); /* Just a small zoom effect on hover */        }
+        .action-form {
             background: transparent;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            margin: 0;
+            padding: 0;
+            display: inline-flex;
+            border: none;
         }
 
         /* Custom Button Styles */
-        .custom-btn-ajouter,
-        .custom-btn-modifier,
-        .custom-btn-supprimer {
+        .custom-btn-ajouter {
             font-size: 0.9rem;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 25px;
-            border: none;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc;
             display: inline-flex;
             align-items: center;
             gap: 5px;
             font-weight: 500;
             line-height: 1;
-            height: 40px;
-            min-width: 110px;
+            height: 36px;
             justify-content: center;
             text-decoration: none;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-        }
-        .custom-btn-ajouter {
-            background: linear-gradient(135deg, #ffffff, #e9ecef);
-            color: #00897B; /* Teal text */
+            transition: background 0.3s ease, border-color 0.3s ease;
+            background: #fff;
+            color: #00897B;
         }
         .custom-btn-ajouter:hover {
-            background: linear-gradient(135deg, #e9ecef, #d3d6da);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            background: #f8f9fa;
+            border-color: #00897B;
         }
         .custom-btn-ajouter:focus,
         .custom-btn-ajouter:active {
-            background: linear-gradient(135deg, #e9ecef, #d3d6da);
-            transform: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            background: #f8f9fa;
             outline: none;
-        }
-        .custom-btn-modifier {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: #fff;
-        }
-        .custom-btn-modifier:hover {
-            background: linear-gradient(135deg, #0056b3, #003d80);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-        }
-        .custom-btn-modifier:focus,
-        .custom-btn-modifier:active {
-            background: linear-gradient(135deg, #0056b3, #003d80);
-            transform: none;
-            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
-            outline: none;
-        }
-        .custom-btn-supprimer {
-            background: linear-gradient(135deg, #dc3545, #b02a37);
-            color: #fff;
-        }
-        .custom-btn-supprimer:hover {
-            background: linear-gradient(135deg, #b02a37, #8b1e2a);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-        }
-        .custom-btn-supprimer:focus,
-        .custom-btn-supprimer:active {
-            background: linear-gradient(135deg, #b02a37, #8b1e2a);
-            transform: none;
-            box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
-            outline: none;
-        }
-        .action-form {
-            display: inline-flex;
-            margin: 0;
-            padding: 0;
-            vertical-align: middle;
         }
 
         /* Alerts */
@@ -519,44 +541,22 @@
             opacity: 1;
         }
 
-        /* Card Container */
-        .card {
-            border: none;
-            border-radius: 20px;
-            background: #f8f9fa;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        .card-header {
-            background: linear-gradient(135deg, #00897B, #26A69A); /* Teal gradient */
-            border-radius: 20px 20px 0 0;
-            padding: 20px 25px;
-        }
-        .card-header h6 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin: 0;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Text Center */
-        .text-center {
+        /* Custom Text Center */
+        .custom-text-center {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             gap: 10px;
+            padding: 40px 0;
         }
-        .text-center i {
+        .custom-text-center i {
             transition: transform 0.3s ease;
         }
-        .text-center:hover i {
+        .custom-text-center:hover i {
             transform: scale(1.1);
         }
-        .text-center p {
+        .custom-text-center p {
             font-size: 1.2rem;
             font-weight: 500;
         }
@@ -564,23 +564,51 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('searchInput');
+            const searchInput = document.getElementById('searchTypepack');
             const typepackContainer = document.getElementById('typepackContainer');
+            let noResultsDiv = document.getElementById('noResults');
 
-            // Search functionality
-            searchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const typepackCards = typepackContainer.querySelectorAll('.typepack-card-wrapper');
+            if (searchInput && typepackContainer) {
+                // Real-time search for typepacks
+                searchInput.addEventListener('input', (e) => {
+                    const searchText = e.target.value.toLowerCase().trim();
+                    const cards = typepackContainer.querySelectorAll('.typepack-custom-card-wrapper');
+                    let visibleCards = 0;
 
-                typepackCards.forEach(card => {
-                    const type = card.querySelector('.typepack-card').getAttribute('data-type').toLowerCase();
-                    if (type.includes(searchTerm)) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
+                    // Filter cards based on search text
+                    cards.forEach(card => {
+                        const type = card.querySelector('.typepack-custom-card').getAttribute('data-type').toLowerCase();
+                        const isVisible = type.includes(searchText);
+                        card.style.display = isVisible ? '' : 'none';
+                        if (isVisible) visibleCards++;
+                    });
+
+                    // Handle no-results message
+                    if (visibleCards === 0 && searchText) {
+                        if (!noResultsDiv) {
+                            noResultsDiv = document.createElement('div');
+                            noResultsDiv.id = 'noResults';
+                            noResultsDiv.className = 'custom-text-center';
+                            typepackContainer.parentElement.appendChild(noResultsDiv);
+                        }
+                        noResultsDiv.innerHTML = `
+                            <i class="fas fa-tags text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3 fs-5">Aucun type de pack trouvé pour la recherche "${searchText}".</p>
+                        `;
+                    } else if (noResultsDiv) {
+                        noResultsDiv.remove();
+                        noResultsDiv = null;
                     }
                 });
-            });
+
+                // Trigger search on page load if there's a search query
+                const initialSearch = searchInput.value.toLowerCase().trim();
+                if (initialSearch) {
+                    searchInput.dispatchEvent(new Event('input'));
+                }
+            } else {
+                console.error('Search input or typepack container not found');
+            }
         });
     </script>
 </main>

@@ -14,43 +14,88 @@ use App\Entity\PackService;
 use App\Entity\GService;
 use App\Form\PackType;
 use App\Repository\PackRepository;
+use App\Repository\TypepackRepository;
+use App\Service\PackDescriptionGenerator;
+use App\Service\EmailNotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 
 #[Route("/admin/pack")]
 final class PackController extends AbstractController
 {
     private $slugger;
+    private $emailNotificationService;
 
-    public function __construct(SluggerInterface $slugger)
-    {
+    public function __construct(
+        SluggerInterface $slugger,
+        EmailNotificationService $emailNotificationService
+    ) {
         $this->slugger = $slugger;
+        $this->emailNotificationService = $emailNotificationService;
     }
 
     #[Route('/', name: 'admin_packs', methods: ['GET'])]
-    public function index(Request $request, PackRepository $packRepository): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+public function index(Request $request, PackRepository $packRepository, TypepackRepository $typepackRepository): Response
+{
+    $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        // Récupérer le paramètre de pagination depuis la requête
-        $page = $request->query->getInt('page', 1); // Page actuelle (par défaut : 1)
-        $limit = 3; // Nombre de packs par page
+    // Get sort, order, page, type, location, minPrice, and maxPrice parameters
+    $sort = $request->query->get('sort', 'nomPack');
+    $order = $request->query->get('order', 'ASC');
+    $page = $request->query->getInt('page', 1);
+    $type = $request->query->get('type', '');
+    $location = $request->query->get('location', '');
+    $minPriceRaw = $request->query->get('minPrice', '');
+    $maxPriceRaw = $request->query->get('maxPrice', '');
+    $limit = 3; // Packs per page
 
-        // Récupérer les packs avec typepack et services via la méthode paginée
-        $packs = $packRepository->findAllPaginated($page, $limit);
+    // Convert price filters to float or null, treat 0 as null to disable filter
+    $minPrice = $minPriceRaw !== '' ? (float) $minPriceRaw : null;
+    $maxPrice = $maxPriceRaw !== '' ? (float) $maxPriceRaw : null;
+    $minPrice = ($minPrice === 0.0) ? null : $minPrice;
+    $maxPrice = ($maxPrice === 0.0) ? null : $maxPrice;
 
-        // Calculer le nombre total de packs pour la pagination
-        $totalPacks = $packRepository->count([]);
-        $totalPages = ceil($totalPacks / $limit);
-
-        return $this->render('admin/Pack/index.html.twig', [
-            'packs' => $packs,
-            'current_page' => $page,
-            'total_pages' => $totalPages,
-        ]);
+    // Validate sort field
+    $validSortFields = ['nomPack', 'prix', 'nbrGuests'];
+    if (!in_array($sort, $validSortFields)) {
+        $sort = 'nomPack';
     }
 
+    // Validate order
+    if (!in_array(strtoupper($order), ['ASC', 'DESC'])) {
+        $order = 'ASC';
+    }
+
+    // Validate location
+    $validLocations = ['HOTEL', 'MAISON_D_HOTE', 'ESPACE_VERT', 'SALLE_DE_FETE', 'AUTRE'];
+    if ($location && !in_array($location, $validLocations)) {
+        $location = '';
+    }
+
+    // Fetch packs with pagination, sorting, and filters
+    $result = $packRepository->findAllPaginated($page, $limit, $sort, $order, $type, $location, $minPrice, $maxPrice);
+    $packs = $result['packs'];
+    $totalPacks = $result['total'];
+    $totalPages = ceil($totalPacks / $limit);
+
+    // Fetch all typepacks for filter dropdown
+    $typepacks = $typepackRepository->findAll();
+
+    return $this->render('admin/Pack/index.html.twig', [
+        'packs' => $packs,
+        'current_page' => $page,
+        'total_pages' => $totalPages,
+        'sort' => $sort,
+        'order' => $order,
+        'type' => $type,
+        'location' => $location,
+        'minPrice' => $minPrice,
+        'maxPrice' => $maxPrice,
+        'typepacks' => $typepacks,
+    ]);
+}
+
     #[Route('/new', name: 'admin_packs_create', methods: ['GET', 'POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager, PackRepository $packRepository): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, PackRepository $packRepository, PackDescriptionGenerator $descriptionGenerator): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -68,9 +113,15 @@ final class PackController extends AbstractController
                 ]);
             }
 
-            // Set type based on selected typepack
-            if ($pack->getTypepack()) {
-                $pack->setType($pack->getTypepack()->getType());
+            // Generate description if empty
+            if (!$pack->getDescription()) {
+                $newDescription = $descriptionGenerator->generateDescription($pack);
+                $pack->setDescription($newDescription ?: sprintf(
+                    'Description générique pour %s, un pack pour %d invités à %.2f €.',
+                    $pack->getNomPack() ?? 'ce pack',
+                    $pack->getNbrGuests() ?? 0,
+                    $pack->getPrix() ?? 0.0
+                ));
             }
 
             // Handle the image upload
@@ -95,7 +146,10 @@ final class PackController extends AbstractController
             }
             $entityManager->flush();
 
-            $this->addFlash('success', 'Le pack a été ajouté avec succès.');
+            // Notify members of the new pack
+            $this->emailNotificationService->notifyMembersOfNewPack($pack);
+
+            $this->addFlash('success', 'Le pack a été ajouté avec succès et les membres ont été notifiés.');
             return $this->redirectToRoute('admin_packs');
         }
 
@@ -105,12 +159,21 @@ final class PackController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_packs_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Pack $pack, EntityManagerInterface $entityManager, PackRepository $packRepository): Response
+    public function edit(Request $request, Pack $pack, EntityManagerInterface $entityManager, PackRepository $packRepository, PackDescriptionGenerator $descriptionGenerator): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
+        // Store original values to detect changes
+        $originalNomPack = $pack->getNomPack();
+        $originalPrix = $pack->getPrix();
+        $originalLocation = $pack->getLocation();
+        $originalNbrGuests = $pack->getNbrGuests();
+        $originalType = $pack->getType();
+
         // Preload services for the form
         $currentServices = $entityManager->getRepository(PackService::class)->findBy(['pack_id' => $pack->getId()]);
+        $originalServiceTitres = array_map(fn($packService) => $packService->getService_titre(), $currentServices);
+        sort($originalServiceTitres); // Sort for consistent comparison
         $serviceEntities = [];
         foreach ($currentServices as $packService) {
             $service = $entityManager->getRepository(GService::class)->findOneBy(['titre' => $packService->getService_titre()]);
@@ -134,9 +197,29 @@ final class PackController extends AbstractController
                 ]);
             }
 
-            // Set type based on selected typepack
-            if ($pack->getTypepack()) {
-                $pack->setType($pack->getTypepack()->getType());
+            // Check for changes in relevant fields (exclude description and image_path)
+            $services = $form->get('services')->getData();
+            $newServiceTitres = array_map(fn($service) => $service->getTitre(), $services);
+            sort($newServiceTitres); // Sort for consistent comparison
+            $newType = $pack->getType();
+            $hasChanges = (
+                $pack->getNomPack() !== $originalNomPack ||
+                $pack->getPrix() != $originalPrix ||
+                $pack->getLocation() !== $originalLocation ||
+                $pack->getNbrGuests() !== $originalNbrGuests ||
+                $newType !== $originalType ||
+                $newServiceTitres !== $originalServiceTitres
+            );
+
+            // Regenerate description if relevant fields changed
+            if ($hasChanges) {
+                $newDescription = $descriptionGenerator->generateDescription($pack);
+                $pack->setDescription($newDescription ?: sprintf(
+                    'Description générique pour %s, un pack pour %d invités à %.2f €.',
+                    $pack->getNomPack() ?? 'ce pack',
+                    $pack->getNbrGuests() ?? 0,
+                    $pack->getPrix() ?? 0.0
+                ));
             }
 
             // Handle the image upload
@@ -162,7 +245,6 @@ final class PackController extends AbstractController
             $entityManager->clear(PackService::class);
 
             // Add new pack_service entries
-            $services = $form->get('services')->getData();
             foreach ($services as $service) {
                 $packService = new PackService();
                 $packService->setPack_id($pack->getId());
