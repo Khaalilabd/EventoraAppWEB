@@ -9,8 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,6 +31,14 @@ class ReservationPackType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // Récupérer les données de l'utilisateur depuis les options, ou valeurs par défaut vides
+        $userData = $options['user_data'] ?? [
+            'nom' => '',
+            'prenom' => '',
+            'email' => '',
+            'numtel' => ''
+        ];
+
         // Fetch initial packs (e.g., first 50, ordered by nomPack)
         $initialPacks = $this->entityManager->getRepository(Pack::class)
             ->createQueryBuilder('p')
@@ -49,6 +57,7 @@ class ReservationPackType extends AbstractType
                     ]),
                 ],
                 'attr' => ['class' => 'form-control'],
+                'data' => $userData['nom'], // Pré-remplir avec le nom de l'utilisateur
             ])
             ->add('prenom', TextType::class, [
                 'constraints' => [
@@ -59,6 +68,7 @@ class ReservationPackType extends AbstractType
                     ]),
                 ],
                 'attr' => ['class' => 'form-control'],
+                'data' => $userData['prenom'], // Pré-remplir avec le prénom de l'utilisateur
             ])
             ->add('email', EmailType::class, [
                 'constraints' => [
@@ -69,6 +79,7 @@ class ReservationPackType extends AbstractType
                     ]),
                 ],
                 'attr' => ['class' => 'form-control'],
+                'data' => $userData['email'], // Pré-remplir avec l'email de l'utilisateur
             ])
             ->add('numtel', TelType::class, [
                 'constraints' => [
@@ -89,6 +100,7 @@ class ReservationPackType extends AbstractType
                     'placeholder' => '12345678',
                 ],
                 'help' => 'Entrez un numéro tunisien de 8 chiffres (ex. 12345678).',
+                'data' => $userData['numtel'], // Pré-remplir avec le numéro de téléphone (sans +216)
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
@@ -136,6 +148,9 @@ class ReservationPackType extends AbstractType
             'data_class' => Reservationpack::class,
             'is_admin' => false,
             'step' => 1,
+            'user_data' => null, // Nouvelle option pour les données de l'utilisateur
         ]);
+
+        $resolver->setAllowedTypes('user_data', ['array', 'null']);
     }
 }

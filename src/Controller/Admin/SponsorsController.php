@@ -15,16 +15,44 @@ use Doctrine\Persistence\ManagerRegistry;
 #[Route("/admin/sponsors")]
 final class SponsorsController extends AbstractController
 {
-    #[Route('/', name: 'admin_sponsors' , methods:['Get'])]
-    public function index(SponsorRepository $SponsorRepository): Response
+    #[Route('/', name: 'admin_sponsors', methods: ['GET'])]
+    public function index(SponsorRepository $SponsorRepository, Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $Sponsor = $SponsorRepository->findAll();
+    
+        $page = $request->query->getInt('page', 1);
+        $limit = 6; // 3 éléments par page, comme dans ServicesController
+        $searchTerm = $request->query->get('search', '');
+        $sortBy = $request->query->get('sort_by', 'id_partenaire'); // Par défaut, trier par ID
+        $sortOrder = $request->query->get('sort_order', 'asc'); // Par défaut, ordre croissant
+    
+        // Créer une requête avec QueryBuilder
+        $queryBuilder = $SponsorRepository->createQueryBuilder('s')
+            ->orderBy("s.$sortBy", $sortOrder);
+    
+        if ($searchTerm) {
+            $queryBuilder->andWhere('s.nom_partenaire LIKE :search OR s.email_partenaire LIKE :search OR s.telephone_partenaire LIKE :search OR s.adresse_partenaire LIKE :search OR s.site_web LIKE :search OR s.type_partenaire LIKE :search')
+                ->setParameter('search', '%' . $searchTerm . '%');
+        }
+    
+        $totalSponsors = count($queryBuilder->getQuery()->getResult());
+        $totalPages = ceil($totalSponsors / $limit);
+    
+        $sponsors = $queryBuilder
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    
         return $this->render('admin/sponsors/index.html.twig', [
-            'Sponsor' => $Sponsor,
+            'Sponsor' => $sponsors, // Liste des sponsors pour la page actuelle
+            'current_page' => $page,
+            'total_pages' => $totalPages,
+            'searchTerm' => $searchTerm,
+            'sort_by' => $sortBy,
+            'sort_order' => $sortOrder,
         ]);
     }
-
     #[Route('/{id_partenaire}/edit', name: 'admin_sponsors_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Sponsor $Sponsor, EntityManagerInterface $entityManager): Response
     {

@@ -7,10 +7,17 @@ use App\Entity\Reclamation;
 use App\Form\RegistrationFormType;
 use App\Form\LoginFormType;
 use App\Repository\ReclamationRepository;
+use App\Repository\MembreRepository; // Correct
+use App\Repository\GServiceRepository; // Correct
+use App\Repository\PackRepository; // Correct
+use App\Repository\SponsorRepository; // Correct
+use App\Repository\TypepackRepository; // Correct
 use App\Repository\FeedbackRepository;
 use App\Repository\ReservationpackRepository;
 use App\Repository\ReservationpersonnaliseRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Logging\DebugStack;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,23 +47,23 @@ class SecurityController extends AbstractController
     {
         return $this->redirectToRoute('app_home_page');
     }
-#[Route('/home', name: 'app_home_page')]
-public function homePage(FeedbackRepository $feedbackRepository): Response
-{
-    // Récupérer des feedbacks aléatoires
-    $feedbacks = $feedbackRepository->findRandomFeedbacks(10);
 
-    // Ajouter un message flash si aucun feedback n'est trouvé
-    if (empty($feedbacks)) {
-        $this->addFlash('warning', 'Aucun feedback disponible pour le moment.');
+    #[Route('/home', name: 'app_home_page')]
+    public function homePage(FeedbackRepository $feedbackRepository): Response
+    {
+        // Récupérer des feedbacks aléatoires
+        $feedbacks = $feedbackRepository->findRandomFeedbacks(10);
+
+        // Ajouter un message flash si aucun feedback n'est trouvé
+        if (empty($feedbacks)) {
+            $this->addFlash('warning', 'Aucun feedback disponible pour le moment.');
+        }
+
+        return $this->render('home/home.html.twig', [
+            'feedbacks' => $feedbacks,
+        ]);
     }
 
-    return $this->render('home/home.html.twig', [
-        'feedbacks' => $feedbacks,
-    ]);
-}
-
-    // Le reste du code reste inchangé
     #[Route('/auth', name: 'app_auth', methods: ['GET', 'POST'])]
     public function auth(
         AuthenticationUtils $authenticationUtils,
@@ -143,7 +150,7 @@ public function homePage(FeedbackRepository $feedbackRepository): Response
                 $hashedPassword = $userPasswordHasher->hashPassword($membre, $plainPassword);
                 $membre->setMotDePasse($hashedPassword);
                 $membre->setRole('MEMBRE');
-                $membre->setIsConfirmed(false);
+                $membre->setIsConfirmed(true);
 
                 $imageFile = $form->get('image')->getData();
                 if ($imageFile) {
@@ -336,6 +343,19 @@ public function homePage(FeedbackRepository $feedbackRepository): Response
     {
         if ($security->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = $this->getUser();
+            if (!$user instanceof Membre) {
+                $this->addFlash('error', 'Utilisateur invalide.');
+                return $this->redirectToRoute('app_auth');
+            }
+
+            // Vérifier si le compte est confirmé
+            if (!$user->isConfirmed()) {
+                $this->addFlash('error', 'Compte bloqué. Veuillez contacter l\'administrateur.');
+                // Déconnecter l'utilisateur
+                $this->container->get('security.token_storage')->setToken(null);
+                return $this->redirectToRoute('app_auth');
+            }
+
             if (in_array('ROLE_ADMIN', $user->getRoles())) {
                 return $this->redirectToRoute('admin_dashboard');
             }
@@ -350,196 +370,263 @@ public function homePage(FeedbackRepository $feedbackRepository): Response
         FeedbackRepository $feedbackRepository,
         ReservationpackRepository $reservationpackRepository,
         ReservationpersonnaliseRepository $reservationpersonnaliseRepository,
-        Request $request
+        MembreRepository $membreRepository,
+        GServiceRepository $gServiceRepository,
+        PackRepository $packRepository,
+        SponsorRepository $sponsorRepository,
+        TypepackRepository $typepackRepository,
+        Request $request,
+        Connection $connection
     ): Response {
-        try {
-            $this->logger->info('Début de la méthode index pour admin_dashboard');
-            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $this->logger->info('Début de la méthode index pour admin_dashboard');
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-            // Gestion de la plage de dates pour les réclamations
-            $startDate = $request->query->get('startDate');
-            $endDate = $request->query->get('endDate');
+        // Configurer DebugStack pour logger les requêtes SQL
+        $debugStack = new DebugStack();
+        $connection->getConfiguration()->setSQLLogger($debugStack);
 
-            // Par défaut, les 30 derniers jours si aucune date n'est fournie
-            $endDateObj = $endDate ? new \DateTime($endDate) : new \DateTime();
-            $startDateObj = $startDate ? new \DateTime($startDate) : (clone $endDateObj)->modify('-30 days');
+        // Gestion de la plage de dates
+        $startDate = $request->query->get('startDate');
+        $endDate = $request->query->get('endDate');
+        $endDateObj = $endDate ? new \DateTime($endDate) : new \DateTime();
+        $startDateObj = $startDate ? new \DateTime($startDate) : (clone $endDateObj)->modify('-30 days');
 
-            // S'assurer que startDate est avant endDate
-            if ($startDateObj > $endDateObj) {
-                $temp = $startDateObj;
-                $startDateObj = $endDateObj;
-                $endDateObj = $temp;
-            }
-
-            // Réclamations pour la plage de dates sélectionnée
-            $reclamationsByDateRaw = $reclamationRepository->createQueryBuilder('r')
-                ->select('r.date as date, COUNT(r.id) as count')
-                ->where('r.date BETWEEN :startDate AND :endDate')
-                ->setParameter('startDate', $startDateObj->format('Y-m-d'))
-                ->setParameter('endDate', $endDateObj->format('Y-m-d'))
-                ->groupBy('r.date')
-                ->orderBy('r.date', 'ASC')
-                ->getQuery()
-                ->getResult();
-
-            // Formatter les dates en PHP
-            $reclamationsByDate = array_map(function ($item) {
-                $date = $item['date'] instanceof \DateTime ? $item['date'] : new \DateTime($item['date']);
-                return [
-                    'date' => $date->format('Y-m-d'),
-                    'count' => (int) $item['count']
-                ];
-            }, $reclamationsByDateRaw);
-
-            $totalReclamationsSelected = array_sum(array_column($reclamationsByDate, 'count'));
-
-            // Logique existante pour les réclamations
-            $totalReclamations = $reclamationRepository->count([]);
-            $reclamationsTraitees = $reclamationRepository->count(['statut' => Reclamation::STATUT_RESOLU]);
-            $pourcentageTraitees = $totalReclamations > 0 ? ($reclamationsTraitees / $totalReclamations) * 100 : 0;
-            $pourcentageNonTraitees = 100 - $pourcentageTraitees;
-
-            $reclamationsParType = $reclamationRepository->createQueryBuilder('r')
-                ->select('r.Type as type, COUNT(r.id) as count')
-                ->groupBy('r.Type')
-                ->getQuery()
-                ->getResult();
-            $allTypes = Reclamation::TYPES;
-            $reclamationsParTypeFormatted = array_map(function ($type) use ($reclamationsParType) {
-                $found = array_filter($reclamationsParType, fn($item) => $item['type'] === $type);
-                return [
-                    'type' => $type,
-                    'count' => !empty($found) ? reset($found)['count'] : 0
-                ];
-            }, $allTypes);
-
-            $reclamationsParStatut = $reclamationRepository->createQueryBuilder('r')
-                ->select('r.statut, COUNT(r.id) as count')
-                ->groupBy('r.statut')
-                ->getQuery()
-                ->getResult();
-
-            // Feedbacks
-            $avgVote = $feedbackRepository->createQueryBuilder('f')
-                ->select('AVG(f.Vote) as avgVote')
-                ->getQuery()
-                ->getSingleScalarResult() ?? 0;
-            $avgVoteTrend = 0;
-
-            $recommendOui = $feedbackRepository->count(['Recommend' => 'Oui']);
-            $recommendNon = $feedbackRepository->count(['Recommend' => 'Non']);
-            $totalFeedbacks = $feedbackRepository->count([]);
-            $npsScore = $totalFeedbacks > 0 ? (($recommendOui - $recommendNon) / $totalFeedbacks) * 100 : 0;
-
-            $feedbacksWithImage = $feedbackRepository->createQueryBuilder('f')
-                ->select('COUNT(f.ID)')
-                ->where('f.Souvenirs IS NOT NULL')
-                ->getQuery()
-                ->getSingleScalarResult() ?? 0;
-
-            $imageFeedbackRate = $totalFeedbacks > 0 ? ($feedbacksWithImage / $totalFeedbacks) * 100 : 0;
-
-            $feedbacksByVote = $feedbackRepository->createQueryBuilder('f')
-                ->select('f.Vote as vote, COUNT(f.ID) as count')
-                ->groupBy('f.Vote')
-                ->orderBy('f.Vote', 'ASC')
-                ->getQuery()
-                ->getResult();
-
-            $userEngagement = $feedbackRepository->createQueryBuilder('f')
-                ->select('m.email, COUNT(f.ID) as feedbackCount, AVG(f.Vote) as avgVote')
-                ->leftJoin('f.membre', 'm')
-                ->groupBy('m.id')
-                ->orderBy('feedbackCount', 'DESC')
-                ->setMaxResults(50)
-                ->getQuery()
-                ->getResult();
-
-            // Réservations
-            $totalPackReservations = $reservationpackRepository->count([]);
-            $totalPersonaliseReservations = $reservationpersonnaliseRepository->count([]);
-            $totalReservations = $totalPackReservations + $totalPersonaliseReservations;
-
-            $refusedPackReservations = $reservationpackRepository->count(['status' => 'Refusé']);
-            $refusedPersonaliseReservations = $reservationpersonnaliseRepository->count(['status' => 'Refusé']);
-            $totalRefusedReservations = $refusedPackReservations + $refusedPersonaliseReservations;
-            $refusalRate = $totalReservations > 0 ? ($totalRefusedReservations / $totalReservations) * 100 : 0;
-
-            $avgPackValue = $reservationpackRepository->createQueryBuilder('rp')
-                ->select('AVG(p.prix) as avgValue')
-                ->leftJoin('rp.pack', 'p')
-                ->where('rp.status = :status')
-                ->setParameter('status', 'Validé')
-                ->getQuery()
-                ->getSingleScalarResult() ?? 0;
-
-            $avgPersonaliseValue = 0;
-            try {
-                $avgPersonaliseValue = $reservationpersonnaliseRepository->createQueryBuilder('rp')
-                    ->select('AVG(s.prix) as avgValue')
-                    ->leftJoin('rp.services', 's')
-                    ->where('rp.status = :status')
-                    ->setParameter('status', 'Validé')
-                    ->getQuery()
-                    ->getSingleScalarResult() ?? 0;
-            } catch (\Doctrine\ORM\NoResultException $e) {
-                $this->logger->warning('No valid personalised reservations found for avgPersonaliseValue: ' . $e->getMessage());
-                $avgPersonaliseValue = 0;
-            }
-
-            $avgReservationValue = ($avgPackValue + $avgPersonaliseValue) / 2;
-
-            $reservationsByType = [
-                ['type' => 'Pack', 'count' => $totalPackReservations],
-                ['type' => 'Personnalise', 'count' => $totalPersonaliseReservations]
-            ];
-
-            $packReservationsByStatus = $reservationpackRepository->createQueryBuilder('rp')
-                ->select('rp.status as status, COUNT(rp.IDReservationPack) as count')
-                ->groupBy('rp.status')
-                ->getQuery()
-                ->getResult();
-
-            $personaliseReservationsByStatus = $reservationpersonnaliseRepository->createQueryBuilder('rp')
-                ->select('rp.status as status, COUNT(rp.IDReservationPersonalise) as count')
-                ->groupBy('rp.status')
-                ->getQuery()
-                ->getResult();
-
-            $reservationsByStatus = [];
-            $statuses = ['En attente', 'Validé', 'Refusé'];
-            foreach ($statuses as $status) {
-                $packCount = array_filter($packReservationsByStatus, fn($item) => $item['status'] === $status);
-                $personaliseCount = array_filter($personaliseReservationsByStatus, fn($item) => $item['status'] === $status);
-                $totalCount = (!empty($packCount) ? reset($packCount)['count'] : 0) + (!empty($personaliseCount) ? reset($personaliseCount)['count'] : 0);
-                $reservationsByStatus[] = ['status' => $status, 'count' => $totalCount];
-            }
-
-            return $this->render('admin/dashboard.html.twig', [
-                'total_reclamations' => $totalReclamations,
-                'pourcentage_traitees' => $pourcentageTraitees,
-                'pourcentage_non_traitees' => $pourcentageNonTraitees,
-                'reclamations_par_type' => $reclamationsParTypeFormatted,
-                'reclamations_par_statut' => $reclamationsParStatut,
-                'reclamations_by_date' => $reclamationsByDate,
-                'total_reclamations_selected' => $totalReclamationsSelected,
-                'start_date' => $startDateObj->format('Y-m-d'),
-                'end_date' => $endDateObj->format('Y-m-d'),
-                'avg_vote' => $avgVote,
-                'avg_vote_trend' => $avgVoteTrend,
-                'nps_score' => $npsScore,
-                'image_feedback_rate' => $imageFeedbackRate,
-                'feedbacks_by_vote' => $feedbacksByVote,
-                'user_engagement' => $userEngagement,
-                'total_reservations' => $totalReservations,
-                'refusal_rate' => $refusalRate,
-                'avg_reservation_value' => $avgReservationValue,
-                'reservations_by_type' => $reservationsByType,
-                'reservations_by_status' => $reservationsByStatus,
-            ]);
-        } catch (\Exception $e) {
-            $this->logger->error('Erreur globale dans admin_dashboard: ' . $e->getMessage());
-            throw new \Exception('Erreur détaillée : ' . $e->getMessage());
+        if ($startDateObj > $endDateObj) {
+            $temp = $startDateObj;
+            $startDateObj = $endDateObj;
+            $endDateObj = $temp;
         }
+
+        // Réclamations
+        $reclamationsByDateRaw = $reclamationRepository->createQueryBuilder('r')
+            ->select('r.date as date, COUNT(r.id) as count')
+            ->where('r.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
+            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
+            ->groupBy('r.date')
+            ->orderBy('r.date', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $reclamationsByDate = array_map(function ($item) {
+            $date = $item['date'] instanceof \DateTime ? $item['date'] : new \DateTime($item['date']);
+            return [
+                'date' => $date->format('Y-m-d'),
+                'count' => (int) $item['count']
+            ];
+        }, $reclamationsByDateRaw);
+
+        $totalReclamationsSelected = array_sum(array_column($reclamationsByDate, 'count'));
+        $totalReclamations = $reclamationRepository->count([]);
+        $reclamationsTraitees = $reclamationRepository->count(['statut' => 'Resolue']);
+        $pourcentageTraitees = $totalReclamations > 0 ? ($reclamationsTraitees / $totalReclamations) * 100 : 0;
+        $pourcentageNonTraitees = 100 - $pourcentageTraitees;
+
+        $reclamationsParType = $reclamationRepository->createQueryBuilder('r')
+            ->select('r.Type as type, COUNT(r.id) as count')
+            ->where('r.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
+            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
+            ->groupBy('r.Type')
+            ->getQuery()
+            ->getResult();
+
+        $reclamationsParStatut = $reclamationRepository->createQueryBuilder('r')
+            ->select('r.statut as statut, COUNT(r.id) as count')
+            ->where('r.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
+            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
+            ->groupBy('r.statut')
+            ->getQuery()
+            ->getResult();
+
+        // Feedbacks
+        $feedbacks = $feedbackRepository->findBy([], [], 100);
+        $avgVote = count($feedbacks) > 0 ? array_sum(array_map(fn($f) => $f->getVote(), $feedbacks)) / count($feedbacks) : 0;
+        $feedbacksWithImage = count(array_filter($feedbacks, fn($f) => !is_null($f->getSouvenirs())));
+        $imageFeedbackRate = count($feedbacks) > 0 ? ($feedbacksWithImage / count($feedbacks)) * 100 : 0;
+        $npsScore = $feedbackRepository->calculateNps($startDateObj, $endDateObj);
+        $avgVoteTrend = 0; // À implémenter si historique disponible
+
+        $feedbacksByVote = $feedbackRepository->createQueryBuilder('f')
+            ->select('f.Vote as vote, COUNT(f.ID) as count')
+            ->where('f.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
+            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
+            ->groupBy('f.Vote')
+            ->orderBy('f.Vote', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        $userEngagement = $feedbackRepository->createQueryBuilder('f')
+            ->select('m.email as email, COUNT(f.ID) as feedbackCount')
+            ->join('f.membre', 'm')
+            ->where('f.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
+            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
+            ->groupBy('m.email')
+            ->orderBy('feedbackCount', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+
+        // Réservations
+        $totalReservations = $reservationpackRepository->countAll() + $reservationpersonnaliseRepository->count([]);
+        $reservationsByType = [
+            ['type' => 'Pack', 'count' => $reservationpackRepository->countAll()],
+            ['type' => 'Personnalisé', 'count' => $reservationpersonnaliseRepository->count([])],
+        ];
+        $reservationsByStatus = $reservationpackRepository->createQueryBuilder('rp')
+            ->select('rp.status as status, COUNT(rp.status) as count')
+            ->where('rp.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
+            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
+            ->groupBy('rp.status')
+            ->getQuery()
+            ->getResult();
+
+        $refusedReservations = $reservationpackRepository->countByStatus('Refusé') + $reservationpersonnaliseRepository->count(['status' => 'Refusé']);
+        $refusalRate = $totalReservations > 0 ? ($refusedReservations / $totalReservations) * 100 : 0;
+
+        $avgReservationValue = $reservationpackRepository->createQueryBuilder('rp')
+            ->select('AVG(p.prix) as avgPrice')
+            ->join('rp.pack', 'p')
+            ->where('rp.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
+            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
+
+        // Membres
+        $totalMembers = $membreRepository->count([]);
+        $activeMembers = $membreRepository->count(['isConfirmed' => true]);
+        $membersByRole = $membreRepository->createQueryBuilder('m')
+            ->select('m.role as role, COUNT(m.id) as count')
+            ->groupBy('m.role')
+            ->getQuery()
+            ->getResult();
+        $recentRegistrations = $membreRepository->createQueryBuilder('m')
+            ->select('COUNT(m.id) as count')
+            ->where('m.id >= :minId')
+            ->setParameter('minId', $membreRepository->createQueryBuilder('m2')
+                ->select('MIN(m2.id)')
+                ->where('m2.id > :threshold')
+                ->setParameter('threshold', max(0, $totalMembers - 100))
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0)
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
+
+        // Services (GService)
+        $totalServices = $gServiceRepository->count([]);
+        $avgServicePriceResult = $connection->executeQuery(
+            "SELECT AVG(prix + 0) as avgPrice 
+             FROM g_service 
+             WHERE prix REGEXP '^[0-9]+\\.?[0-9]*$'"
+        )->fetchOne();
+        $avgServicePrice = $avgServicePriceResult ? (float) $avgServicePriceResult : 0;
+
+        $servicesByType = $gServiceRepository->createQueryBuilder('s')
+            ->select('s.type_service as type_service, COUNT(s.id) as count')
+            ->groupBy('s.type_service')
+            ->getQuery()
+            ->getResult();
+        $topServices = $reservationpersonnaliseRepository->createQueryBuilder('rp')
+            ->select('s.titre as titre, COUNT(rp.IDReservationPersonalise) as count')
+            ->join('rp.services', 's')
+            ->where('rp.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
+            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
+            ->groupBy('s.titre')
+            ->orderBy('count', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        // Packs
+        $totalPacks = $packRepository->count([]);
+        $avgPackPrice = $packRepository->createQueryBuilder('p')
+            ->select('AVG(p.prix) as avgPrice')
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
+        $packsByType = $packRepository->countByType();
+        $popularPacks = $reservationpackRepository->createQueryBuilder('rp')
+            ->select('p.nomPack as nomPack, COUNT(rp.status) as count')
+            ->join('rp.pack', 'p')
+            ->where('rp.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
+            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
+            ->groupBy('p.nomPack')
+            ->orderBy('count', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        // Sponsors
+        $totalSponsors = $sponsorRepository->count([]);
+        $activeSponsors = $sponsorRepository->createQueryBuilder('sp')
+            ->select('COUNT(DISTINCT sp.id_partenaire) as count')
+            ->join('sp.gServices', 's')
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
+        $avgServicesPerSponsor = $totalSponsors > 0 ? ($gServiceRepository->count([]) / $totalSponsors) : 0;
+        $newSponsors = $sponsorRepository->createQueryBuilder('sp')
+            ->select('COUNT(sp.id_partenaire) as count')
+            ->where('sp.id_partenaire >= :minId')
+            ->setParameter('minId', $sponsorRepository->createQueryBuilder('sp2')
+                ->select('MIN(sp2.id_partenaire)')
+                ->where('sp2.id_partenaire > :threshold')
+                ->setParameter('threshold', max(0, $totalSponsors - 50))
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0)
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
+
+        // Logger les requêtes SQL capturées par DebugStack
+        foreach ($debugStack->queries as $query) {
+            $this->logger->debug('SQL Query: ' . $query['sql'], [
+                'params' => $query['params'],
+                'executionMS' => $query['executionMS']
+            ]);
+        }
+
+        return $this->render('admin/dashboard.html.twig', [
+            'start_date' => $startDateObj->format('Y-m-d'),
+            'end_date' => $endDateObj->format('Y-m-d'),
+            'total_reclamations' => $totalReclamations,
+            'total_reclamations_selected' => $totalReclamationsSelected,
+            'pourcentage_traitees' => $pourcentageTraitees,
+            'pourcentage_non_traitees' => $pourcentageNonTraitees,
+            'reclamations_by_date' => $reclamationsByDate,
+            'reclamations_par_type' => $reclamationsParType,
+            'reclamations_par_statut' => $reclamationsParStatut,
+            'avg_vote' => $avgVote,
+            'nps_score' => $npsScore,
+            'image_feedback_rate' => $imageFeedbackRate,
+            'avg_vote_trend' => $avgVoteTrend,
+            'feedbacks_by_vote' => $feedbacksByVote,
+            'user_engagement' => $userEngagement,
+            'total_reservations' => $totalReservations,
+            'reservations_by_type' => $reservationsByType,
+            'reservations_by_status' => $reservationsByStatus,
+            'refusal_rate' => $refusalRate,
+            'avg_reservation_value' => $avgReservationValue,
+            'total_members' => $totalMembers,
+            'active_members' => $activeMembers,
+            'members_by_role' => $membersByRole,
+            'recent_registrations' => $recentRegistrations,
+            'total_services' => $totalServices,
+            'avg_service_price' => $avgServicePrice,
+            'services_by_type' => $servicesByType,
+            'top_services' => $topServices,
+            'total_packs' => $totalPacks,
+            'avg_pack_price' => $avgPackPrice,
+            'packs_by_type' => $packsByType,
+            'popular_packs' => $popularPacks,
+            'total_sponsors' => $totalSponsors,
+            'active_sponsors' => $activeSponsors,
+            'avg_services_per_sponsor' => $avgServicesPerSponsor,
+            'new_sponsors' => $newSponsors,
+        ]);
     }
 }

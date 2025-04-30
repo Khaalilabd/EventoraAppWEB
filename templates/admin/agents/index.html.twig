@@ -7,42 +7,70 @@
     <style>
         /* Card Styling */
         .agent-card {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: none;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            min-height: 250px;
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid #6f42c1; /* Bordure violette pour les agents */
             width: 100%;
         }
         .agent-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
-        .card-body {
-            position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            font-size: 1rem;
+        .agent-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            background-color: #e0e0e0; /* Placeholder pour l'avatar */
         }
-        .card-header {
-            background: linear-gradient(90deg, #007bff, #0056b3);
+        .agent-info {
+            flex-grow: 1;
+        }
+        .agent-info h6 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .agent-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 10px;
             color: #fff;
-            padding: 15px;
-            border-radius: 12px 12px 0 0;
-            font-size: 1.1rem;
+            background-color: #6f42c1; /* Violet pour les agents */
+            margin-left: 10px;
+            animation: pulse 2s infinite;
         }
-        .card-footer {
-            position: relative;
-            z-index: 1;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 0 0 12px 12px;
+        .agent-label:hover {
+            animation: bounce 0.5s;
         }
-        .badge {
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .agent-info .role {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .agent-info p {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .agent-info .badge {
             font-size: 0.8rem;
             padding: 5px 10px;
             border-radius: 12px;
@@ -57,75 +85,31 @@
         .badge-not-confirmed {
             background-color: #dc3545;
         }
-        .btn-sm {
-            margin-right: 5px;
-            padding: 8px 12px;
-            font-size: 0.9rem;
+        .agent-actions {
+            display: flex;
+            gap: 10px;
         }
-        .toggle-confirmed {
-            cursor: pointer;
-            font-size: 1.2rem;
+        .agent-actions a {
             color: #007bff;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
         }
-        .toggle-confirmed:hover {
+        .agent-actions a:hover {
             color: #0056b3;
         }
 
-        /* Filter Sidebar */
-        .filter-sidebar {
-            position: fixed;
-            top: 80px;
-            right: 0;
-            width: 300px;
-            height: calc(100vh - 80px);
+        /* Filter Section */
+        .filter-section {
             background-color: #f8f9fa;
-            border-radius: 12px 0 0 12px;
-            box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            overflow-y: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: fit-content;
         }
-        .filter-sidebar.collapsed {
-            transform: translateX(100%);
-        }
-        .filter-toggle-btn {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%;
-            text-align: center;
+        .filter-section h6 {
             margin-bottom: 15px;
+            font-weight: bold;
         }
-        .filter-toggle-btn:hover { background-color: #0056b3; }
-        .filter-content { margin-top: 15px; }
-
-        /* Filter Toggle Icon */
-        .filter-toggle-icon {
-            position: fixed;
-            top: 100px;
-            right: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
-            z-index: 1001;
-            display: none;
-        }
-        .filter-toggle-icon:hover { background-color: #0056b3; }
-        .filter-toggle-icon.visible { display: flex; }
 
         /* Sort Buttons */
         .btn-group .btn {
@@ -142,7 +126,6 @@
 
         /* Main Content */
         .agent-content {
-            margin-right: 320px;
             padding: 0 15px;
         }
 
@@ -176,28 +159,22 @@
         /* Responsive Design */
         @media (max-width: 992px) {
             .agent-container { margin-left: 0; }
-            .agent-content { margin-right: 0; }
-            .filter-sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                top: 0;
-                border-radius: 12px;
+            .filter-section {
                 margin-top: 20px;
             }
-            .filter-sidebar.collapsed {
-                transform: translateX(0);
-                height: 50px;
-                overflow: hidden;
-            }
-            .filter-sidebar.collapsed .filter-content { display: none; }
-            .filter-toggle-icon { display: none; }
         }
         @media (max-width: 768px) {
-            .agent-card { min-height: 200px; }
-            .card-body { padding: 15px; font-size: 0.9rem; }
-            .card-header { font-size: 1rem; }
-            .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
+            .agent-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .agent-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            .agent-actions {
+                margin-top: 10px;
+            }
         }
     </style>
 {% endblock %}
@@ -220,7 +197,7 @@
                         <span class="nav-link-text ms-1">Dashboard</span>
                     </a>
                 </li>
-                 <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
                         <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-tachometer-alt text-dark"></i>
@@ -285,13 +262,13 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'app_agent' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'app_agent' ? 'true' : 'false' }}">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'true' : 'false' }}">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-users text-dark"></i>
                         </div>
                         <span class="nav-link-text ms-1">Utilisateurs</span>
                     </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'app_agent' ? 'show' : '' }}" id="usersMenu">
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'show' : '' }}" id="usersMenu">
                         <ul class="navbar-nav ms-3">
                             <li class="nav-item">
                                 <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
@@ -301,7 +278,6 @@
                                     <span class="nav-link-text ms-1">Membres</span>
                                 </a>
                             </li>
-                            
                             <li class="nav-item">
                                 <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_agent' ? 'active' : '' }}" href="{{ path('app_agent_index') }}">
                                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -420,135 +396,144 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
 
             <div class="agent-content">
-                <div class="row" id="agentList">
-                    {% if agents|length > 0 %}
-                        {% for agent in agents %}
-                            <div class="col-lg-6 col-md-6 col-sm-12 mb-4 agent-card-container">
-                                <div class="card agent-card h-100">
-                                    <div class="card-header">
-                                        <h6 class="mb-0">Agent #{{ agent.id }}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="text-sm mb-2"><strong>Nom :</strong> {{ agent.nom }} {{ agent.prenom }}</p>
-                                        <p class="text-sm mb-2"><strong>Email :</strong> {{ agent.email }}</p>
-                                        <p class="text-sm mb-2"><strong>Rôle :</strong> {{ agent.role }}</p>
-                                        <p class="text-sm mb-2">
-                                            <strong>Statut :</strong>
-                                            <span class="badge badge-{{ agent.isConfirmed ? 'confirmed' : 'not-confirmed' }}">
-                                                {{ agent.isConfirmed ? 'Confirmé' : 'Non Confirmé' }}
-                                            </span>
-                                            <i class="fas fa-{{ agent.isConfirmed ? 'unlock' : 'lock' }} toggle-confirmed ms-2" data-agent-id="{{ agent.id }}" data-csrf-token="{{ csrf_token('toggle' ~ agent.id) }}"></i>
-                                        </p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a href="{{ path('app_agent_show', {'id': agent.id}) }}" class="btn btn-sm btn-info">Détails</a>
-                                        <a href="{{ path('app_agent_edit', {'id': agent.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
-                                        <a href="#" class="btn btn-sm btn-danger" onclick="if(confirm('Voulez-vous vraiment supprimer cet agent ?')) { document.getElementById('delete-form-{{ agent.id }}').submit(); } return false;">Supprimer</a>
-                                        <form id="delete-form-{{ agent.id }}" method="post" action="{{ path('app_agent_delete', {'id': agent.id}) }}" style="display: none;">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ agent.id) }}">
-                                        </form>
+                <div class="row">
+                    <!-- Liste des agents -->
+                    <div class="col-lg-9 col-md-12" id="agentList">
+                        {% if agents|length > 0 %}
+                            {% for agent in agents %}
+                                <div class="mb-4 agent-card-container">
+                                    <div class="agent-card">
+                                        <!-- Avatar -->
+                                        <div class="agent-avatar">
+                                            <!-- Placeholder pour l'avatar, remplacez par une image si disponible -->
+                                            <!-- <img src="{{ asset('path/to/avatar.jpg') }}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%;"> -->
+                                        </div>
+                                        <!-- Informations -->
+                                        <div class="agent-info">
+                                            <h6>{{ agent.nom }} {{ agent.prenom }} <span class="agent-label">Agent</span></h6>
+                                            <div class="role">Agent #{{ agent.id }} - Rôle: {{ agent.role }}</div>
+                                            <p><strong>Email :</strong> {{ agent.email }}</p>
+                                            <p>
+                                                <strong>Statut :</strong>
+                                                <span class="badge badge-{{ agent.isConfirmed ? 'confirmed' : 'not-confirmed' }}">
+                                                    {{ agent.isConfirmed ? 'Confirmé' : 'Non Confirmé' }}
+                                                </span>
+                                                <i class="fas fa-{{ agent.isConfirmed ? 'unlock' : 'lock' }} toggle-confirmed ms-2" data-agent-id="{{ agent.id }}" data-csrf-token="{{ csrf_token('toggle' ~ agent.id) }}"></i>
+                                            </p>
+                                        </div>
+                                        <!-- Actions -->
+                                        <div class="agent-actions">
+                                            <a href="{{ path('app_agent_show', {'id': agent.id}) }}" title="Détails"><i class="fas fa-eye"></i></a>
+                                            <a href="{{ path('app_agent_edit', {'id': agent.id}) }}" title="Modifier"><i class="fas fa-edit"></i></a>
+                                            <a href="#" onclick="if(confirm('Voulez-vous vraiment supprimer cet agent ?')) { document.getElementById('delete-form-{{ agent.id }}').submit(); } return false;" title="Supprimer"><i class="fas fa-trash-alt"></i></a>
+                                            <form id="delete-form-{{ agent.id }}" method="post" action="{{ path('app_agent_delete', {'id': agent.id}) }}" style="display: none;">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ agent.id) }}">
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="col-12">
-                            <div class="alert alert-info text-center" role="alert">
-                                Aucun agent trouvé.
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-
-                {% if total_pages > 1 %}
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ path('app_agent_index', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Previous">
-                                    <span aria-hidden="true">«</span>
-                                </a>
-                            </li>
-                            {% for i in 1..total_pages %}
-                                <li class="page-item {{ current_page == i ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ path('app_agent_index', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}">{{ i }}</a>
-                                </li>
                             {% endfor %}
-                            <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ path('app_agent_index', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Next">
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                {% endif %}
-            </div>
+                        {% else %}
+                            <div class="col-12">
+                                <div class="alert alert-info text-center" role="alert">
+                                    Aucun agent trouvé.
+                                </div>
+                            </div>
+                        {% endif %}
 
-            <div class="filter-sidebar" id="filterSidebar">
-                <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">Masquer</button>
-                <div class="filter-content">
-                    <h6 class="mb-3 text-dark font-weight-bold"><i class="fas fa-filter me-2"></i>Options de Tri et Filtrage</h6>
-                    <form method="get" action="{{ path('app_agent_index') }}" class="row g-3 align-items-center">
-                        <div class="col-12">
-                            <label for="status_filter" class="form-label text-sm font-weight-bold">Filtrer par Statut</label>
-                            <select name="status_filter" id="status_filter" class="form-select" onchange="this.form.submit()">
-                                {% for value, label in statuses %}
-                                    <option value="{{ value }}" {{ status_filter == value ? 'selected' : '' }}>{{ label }}</option>
-                                {% endfor %}
-                            </select>
+                        {% if total_pages > 1 %}
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ path('app_agent_index', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Previous">
+                                            <span aria-hidden="true">«</span>
+                                        </a>
+                                    </li>
+                                    {% for i in 1..total_pages %}
+                                        <li class="page-item {{ current_page == i ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ path('app_agent_index', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}">{{ i }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ path('app_agent_index', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Next">
+                                            <span aria-hidden="true">»</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    </div>
+
+                    <!-- Menu de tri -->
+                    <div class="col-lg-3 col-md-12">
+                        <div class="filter-section">
+                            <h6 class="text-dark font-weight-bold"><i class="fas fa-filter me-2"></i>Options de Tri et Filtrage</h6>
+                            <form method="get" action="{{ path('app_agent_index') }}" class="row g-3 align-items-center">
+                                <div class="col-12">
+                                    <label for="status_filter" class="form-label text-sm font-weight-bold">Filtrer par Statut</label>
+                                    <select name="status_filter" id="status_filter" class="form-select" onchange="this.form.submit()">
+                                        {% for value, label in statuses %}
+                                            <option value="{{ value }}" {{ status_filter == value ? 'selected' : '' }}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Nom</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'nom', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'nom' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'nom', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'nom' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Email</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'email', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'email' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'email', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'email' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Confirmation</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'isConfirmed', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'isConfirmed' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'isConfirmed', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'isConfirmed' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex align-items-end">
+                                    <a href="{{ path('app_agent_index') }}" class="btn btn-outline-secondary w-100">
+                                        <i class="fas fa-undo me-1"></i> Réinitialiser
+                                    </a>
+                                </div>
+                            </form>
                         </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Nom</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('app_agent_index', {'sort_by': 'nom', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'nom' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('app_agent_index', {'sort_by': 'nom', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'nom' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Email</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('app_agent_index', {'sort_by': 'email', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'email' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('app_agent_index', {'sort_by': 'email', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'email' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Confirmation</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('app_agent_index', {'sort_by': 'isConfirmed', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'isConfirmed' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('app_agent_index', {'sort_by': 'isConfirmed', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'isConfirmed' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-12 d-flex align-items-end">
-                            <a href="{{ path('app_agent_index') }}" class="btn btn-outline-secondary w-100">
-                                <i class="fas fa-undo me-1"></i> Réinitialiser
-                            </a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-
-            <button class="filter-toggle-icon" id="filterToggleIcon" onclick="toggleFilterSidebar()">
-                <i class="fas fa-filter"></i>
-            </button>
         </div>
     </main>
 {% endblock %}
@@ -561,21 +546,11 @@
             const searchText = e.target.value.toLowerCase();
             const cards = document.querySelectorAll('.agent-card-container');
             cards.forEach(card => {
-                const nom = card.querySelector('.card-body p:nth-child(1)').textContent.toLowerCase();
-                const email = card.querySelector('.card-body p:nth-child(2)').textContent.toLowerCase();
+                const nom = card.querySelector('.agent-info h6').textContent.toLowerCase();
+                const email = card.querySelector('.agent-info p:nth-child(2)').textContent.toLowerCase();
                 card.style.display = nom.includes(searchText) || email.includes(searchText) ? '' : 'none';
             });
         });
-
-        // Toggle filter sidebar
-        function toggleFilterSidebar() {
-            const sidebar = document.getElementById('filterSidebar');
-            const btn = sidebar.querySelector('.filter-toggle-btn');
-            const icon = document.getElementById('filterToggleIcon');
-            sidebar.classList.toggle('collapsed');
-            btn.textContent = sidebar.classList.contains('collapsed') ? 'Afficher' : 'Masquer';
-            icon.classList.toggle('visible', sidebar.classList.contains('collapsed'));
-        }
 
         // Toggle isConfirmed status
         document.querySelectorAll('.toggle-confirmed').forEach(icon => {

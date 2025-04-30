@@ -37,6 +37,8 @@ class LoginFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'attr' => ['novalidate' => 'novalidate'], // Désactive la validation HTML5
+
 
         ]);
     }

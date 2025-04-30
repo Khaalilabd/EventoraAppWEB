@@ -131,6 +131,8 @@ class RegistrationFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Membre::class,
             'is_edit' => false, // Option pour gérer le mode édition
+            
+            
         ]);
 
         $resolver->setAllowedTypes('is_edit', 'bool');

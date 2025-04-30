@@ -36,8 +36,9 @@ class PackType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
-                'attr' => ['class' => 'form-control'],
-            ])
+                'required' => false,
+                'empty_data' => '',
+            ])  
             ->add('prix', NumberType::class, [
                 'label' => 'Prix',
                 'attr' => ['class' => 'form-control', 'step' => '0.01'],

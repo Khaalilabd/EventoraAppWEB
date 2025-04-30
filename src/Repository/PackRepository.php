@@ -378,5 +378,12 @@ class PackRepository extends ServiceEntityRepository
 
         return $this->populateTypepackAndServices($packs);
     }
-    
+    public function countByType(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.type as typepack, COUNT(p.id) as count')
+            ->groupBy('p.type')
+            ->getQuery()
+            ->getResult();
+    }
 }

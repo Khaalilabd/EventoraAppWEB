@@ -71,12 +71,12 @@ class PacksController extends AbstractController
         /** @var Membre|null $user */
         $user = $this->getUser();
         if ($user instanceof Membre && !$this->isGranted('ROLE_ADMIN')) {
-            // Fetch user's favorite packs
+            // Fetch user's favor   ite packs
             $favorites = $favorisRepository->findBy(['membre' => $user]);
             $favoritedPackIds = array_map(fn($favorite) => $favorite->getPack()->getId(), $favorites);
 
             // Fetch recommended packs based on favorites
-            $recommendedPacks = $packRepository->findSimilarPacks($favorites, 3);
+            $recommendedPacks = $packRepository->findSimilarPacks($favorites, 5);
         }
 
         return $this->render('user/packs/index.html.twig', [

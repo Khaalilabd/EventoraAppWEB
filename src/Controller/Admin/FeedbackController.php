@@ -24,6 +24,7 @@ class FeedbackController extends AbstractController
         $sortOrder = $request->query->get('sort_order', 'desc');
         $selectedUser = $request->query->get('user_filter', null);
         $selectedDate = $request->query->get('date_filter', null);
+        $selectedRating = $request->query->get('rating_filter', null); // Nouveau paramètre pour le filtre de note
         $page = $request->query->getInt('page', 1); // Page actuelle (par défaut : 1)
         $limit = 6; // Nombre de feedbacks par page
 
@@ -54,6 +55,12 @@ class FeedbackController extends AbstractController
         if ($selectedDate) {
             $queryBuilder->andWhere('DATE(f.date) = :selected_date')
                          ->setParameter('selected_date', $selectedDate);
+        }
+
+        // Filtrer par note si sélectionnée
+        if ($selectedRating !== null && is_numeric($selectedRating) && $selectedRating >= 1 && $selectedRating <= 5) {
+            $queryBuilder->andWhere('f.Vote = :rating')
+                         ->setParameter('rating', (int)$selectedRating);
         }
 
         // Appliquer le tri
@@ -87,6 +94,11 @@ class FeedbackController extends AbstractController
         if ($selectedDate) {
             $countQueryBuilder->andWhere('DATE(f.date) = :selected_date')
                              ->setParameter('selected_date', $selectedDate);
+        }
+
+        if ($selectedRating !== null && is_numeric($selectedRating) && $selectedRating >= 1 && $selectedRating <= 5) {
+            $countQueryBuilder->andWhere('f.Vote = :rating')
+                              ->setParameter('rating', (int)$selectedRating);
         }
 
         $totalFeedbacks = $countQueryBuilder->getQuery()->getSingleScalarResult();
@@ -141,12 +153,14 @@ class FeedbackController extends AbstractController
             'sort_order' => $sortOrder,
             'selected_user' => $selectedUser,
             'selected_date' => $selectedDate,
+            'selected_rating' => $selectedRating, // Ajout de la variable
             'users' => $userEmails,
             'current_page' => $page,
             'total_pages' => $totalPages,
         ]);
     }
 
+    // Les autres méthodes (show, edit, delete) restent inchangées
     #[Route('/{id}', name: 'admin_feedback_show', methods: ['GET'])]
     public function show(Feedback $feedback): Response
     {

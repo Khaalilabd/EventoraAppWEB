@@ -101,7 +101,7 @@ class UserReclamationController extends AbstractController
                         $entityManager->flush();
 
                         // Générer l'URL pour télécharger le PDF avec ngrok (temporaire pour les tests locaux)
-                        $ngrokBaseUrl = 'https://d660-197-17-125-97.ngrok-free.app';
+                        $ngrokBaseUrl = 'https://38cb-197-3-6-252.ngrok-free.app';
                         $reclamationUrl = $ngrokBaseUrl . $this->generateUrl('app_reclamation_pdf', ['id' => $reclamation->getId()]);
                         $qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($reclamationUrl);
                         $this->logger->info('URL du QR code générée', [

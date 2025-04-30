@@ -1,9 +1,368 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Gestion des sponsors{% endblock %}
+{% block title %}Gestion des Partenaires{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- Inclusion explicite de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Importation de la police Roboto */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        /* Général */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            overflow-x: hidden;
+        }
+
+        /* Conteneur principal */
+        .sponsor-container {
+            margin-left: 270px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Carte de visite */
+        .business-card {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            min-height: 180px; /* Hauteur augmentée pour tout afficher */
+            display: flex;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e5e7eb;
+            overflow: visible;
+        }
+        .business-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        .business-card .card-content {
+            flex-grow: 1;
+        }
+        .business-card .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .business-card .card-header h6 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1f2937;
+        }
+        .business-card .badge {
+            color: #ffffff;
+            font-size: 0.75rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+        /* Couleurs spécifiques pour chaque type */
+        .badge-traiteur {
+            background: #f97316; /* Orange */
+        }
+        .badge-photographe {
+            background: #22c55e; /* Vert */
+        }
+        .badge-decoration {
+            background: #ec4899; /* Rose */
+        }
+        .badge-sono {
+            background: #3b82f6; /* Bleu */
+        }
+        .badge-autres {
+            background: #6b7280; /* Gris */
+        }
+        .business-card .card-body {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        .business-card .card-body p {
+            margin: 0 0 4px;
+            line-height: 1.2;
+        }
+        .business-card .site-link {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+        .business-card .site-link:hover {
+            text-decoration: underline;
+        }
+        .business-card .icon-container {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .business-card .actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px; /* Réduit pour mieux s'adapter */
+            z-index: 10;
+        }
+        .business-card .actions a {
+            color: #ffffff;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: transform 0.2s ease;
+            text-decoration: none;
+        }
+        .business-card .actions a:hover {
+            transform: scale(1.1);
+        }
+        .action-info {
+            background: #06b6d4;
+        }
+        .action-edit {
+            background: #4f46e5;
+        }
+        .action-delete {
+            background: #ef4444;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        /* Barre de recherche et actions */
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .search-bar .input-group {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            max-width: 350px;
+            background: #ffffff;
+        }
+        .search-bar .form-control {
+            border: none;
+            font-size: 0.9rem;
+            padding: 10px;
+        }
+        .search-bar .input-group-text {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .add-btn, .export-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #ffffff;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .add-btn {
+            background: #4f46e5;
+        }
+        .add-btn:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+        .export-btn {
+            background: #16a34a;
+        }
+        .export-btn:hover {
+            background: #15803d;
+            transform: translateY(-2px);
+        }
+
+        /* Section de tri */
+        .filter-section {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            padding: 20px;
+        }
+        .filter-section h6 {
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+        .form-label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #1f2937;
+        }
+        .btn-group .btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .btn-group .btn i {
+            font-size: 1rem;
+        }
+        .btn-group .btn.active {
+            background: #4f46e5;
+            color: #ffffff;
+            border-color: #4f46e5;
+        }
+        .btn-group .btn:hover {
+            background: #e0f2fe;
+            color: #1f2937;
+        }
+        .btn-reset {
+            background: #f8f9fa;
+            border: 1px solid #d1d5db;
+            color: #1f2937;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s ease;
+        }
+        .btn-reset:hover {
+            background: #e5e7eb;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 8px;
+        }
+        .pagination .page-item .page-link {
+            color: #4f46e5;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .pagination .page-item.active .page-link {
+            background: #4f46e5;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        .pagination .page-item .page-link:hover {
+            background: #e0f2fe;
+            color: #4338ca;
+            transform: translateY(-2px);
+        }
+        .pagination .page-item.disabled .page-link {
+            color: #d1d5db;
+            background: #f8f9fa;
+            box-shadow: none;
+        }
+
+        /* Modale */
+        .modal-content {
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            background: #1f2937;
+            color: #ffffff;
+            border-radius: 12px 12px 0 0;
+            padding: 15px 20px;
+        }
+        .modal-body {
+            padding: 20px;
+            font-size: 0.9rem;
+            background: #ffffff;
+        }
+        .modal-body p {
+            margin: 8px 0;
+            color: #1f2937;
+        }
+        .modal-footer {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 0 0 12px 12px;
+        }
+        .modal-footer .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sponsor-container {
+                margin-left: 0;
+            }
+            .filter-section {
+                margin-top: 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            .business-card {
+                font-size: 0.8rem;
+                min-height: 160px; /* Légèrement plus petit pour les petits écrans */
+            }
+            .business-card .card-header h6 {
+                font-size: 0.9rem;
+            }
+            .business-card .card-body p {
+                font-size: 0.8rem;
+            }
+            .business-card .icon-container {
+                width: 32px;
+                height: 32px;
+            }
+            .business-card .actions a {
+                width: 20px;
+                height: 20px;
+                font-size: 0.8rem;
+            }
+            .search-bar .input-group {
+                max-width: 100%;
+            }
+            .table-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            .action-buttons {
+                justify-content: center;
+            }
+            .pagination .page-link {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
         <div class="sidenav-header">
             <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
                 <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
@@ -109,7 +468,6 @@
                                     <span class="nav-link-text ms-1">Agents</span>
                                 </a>
                             </li>
-                           
                         </ul>
                     </div>
                 </li>
@@ -181,296 +539,7 @@
         </div>
     </aside>
 
-    <style>
-        /* Sidebar Styling */
-        .sidenav {
-            background-color: #f8f9fa;
-            width: 250px;
-            height: 100vh;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .sidenav-header {
-            padding: 15px;
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            color: #333;
-        }
-
-        .navbar-brand:hover {
-            color: #ff6200;
-        }
-
-        .navbar-nav .nav-link {
-            padding: 12px 15px;
-            color: #555;
-            transition: all 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover {
-            background-color: #ff6200;
-            color: #fff;
-        }
-
-        .navbar-nav .nav-link.active {
-            background-color: #ff6200;
-            color: #fff;
-        }
-
-        .navbar-nav .nav-link .icon {
-            width: 30px;
-            height: 30px;
-            background-color: #fff;
-            transition: background-color 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover .icon,
-        .navbar-nav .nav-link.active .icon {
-            background-color: #ff6200;
-        }
-
-        .navbar-nav .nav-link .icon i {
-            font-size: 16px;
-        }
-
-        .navbar-nav .dropdown-toggle::after {
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .navbar-nav .dropdown-toggle[aria-expanded="true"]::after {
-            transform: rotate(180deg);
-        }
-
-        .collapse {
-            transition: all 0.3s ease;
-        }
-
-        .navbar-nav .collapse .nav-link {
-            padding-left: 40px;
-            font-size: 0.9em;
-        }
-
-        .navbar-nav .collapse .nav-link:hover {
-            background-color: #ff8c00;
-        }
-
-        hr.horizontal {
-            border: 0;
-            height: 1px;
-            background-color: #ddd;
-        }
-
-        /* Conteneur global */
-        .table-container {
-            max-width: 100%;
-            overflow-x: auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Style général du tableau */
-        .modern-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        /* En-têtes */
-        .modern-table thead {
-            background-color: #4a90e2;
-            color: #fff;
-        }
-
-        .modern-table th {
-            padding: 15px;
-            text-align: center;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        /* Corps du tableau */
-        .modern-table tbody tr {
-            transition: background-color 0.3s ease;
-        }
-
-        .modern-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-
-        .modern-table tbody tr:hover {
-            background-color: #e9ecef;
-            transform: translateY(-2px);
-        }
-
-        /* Cellules */
-        .modern-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e9ecef;
-            color: #333;
-            font-size: 0.9rem;
-        }
-
-        /* Style pour les liens de site web */
-        .site-link {
-            color: #4a90e2;
-            text-decoration: none;
-        }
-
-        .site-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Cellule des actions */
-        .action-cell {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Boutons d'action */
-        .action-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 12px;
-            font-size: 0.85rem;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        /* Bouton de détail */
-        .detail-btn {
-            background-color: transparent;
-            border: 1px solid #17a2b8;
-            color: #17a2b8;
-        }
-        .detail-btn:hover {
-            background-color: #17a2b8;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Bouton d'édition */
-        .edit-btn {
-            background-color: transparent;
-            border: 1px solid #4a90e2;
-            color: #4a90e2;
-        }
-
-        .edit-btn:hover {
-            background-color: #4a90e2;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Bouton de suppression */
-        .delete-btn {
-            background-color: transparent;
-            border: 1px solid #dc3545;
-            color: #dc3545;
-        }
-
-        .delete-btn:hover {
-            background-color: #dc3545;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Style des boutons de tri */
-        .sort-btn {
-            background: none;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 0;
-            color: inherit;
-            text-align: left;
-        }
-
-        .sort-btn:hover {
-            color: #d1e7ff;
-        }
-
-        .sort-icon {
-            margin-left: 5px;
-            font-size: 0.8em;
-        }
-
-        .sort-asc .sort-icon::after {
-            content: '↑';
-        }
-
-        .sort-desc .sort-icon::after {
-            content: '↓';
-        }
-
-        /* Style du champ de recherche */
-        .input-group {
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .input-group-text {
-            background-color: #f8f9fa;
-            border: none;
-            color: #4a90e2;
-        }
-
-        #searchInput {
-            border: none;
-            padding: 10px;
-            font-size: 0.9rem;
-        }
-
-        #searchInput:focus {
-            outline: none;
-            box-shadow: inset 0 0 5px rgba(74, 144, 226, 0.3);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .modern-table th,
-            .modern-table td {
-                padding: 10px;
-                font-size: 0.8rem;
-            }
-
-            .action-cell {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .action-btn {
-                width: 100%;
-                text-align: center;
-            }
-
-            .input-group {
-                max-width: 100%;
-                margin-bottom: 10px;
-            }
-        }
-    </style>
-
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg sponsor-container">
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
@@ -482,9 +551,9 @@
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                        <div class="input-group">
+                        <div class="input-group search-bar">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Rechercher...">
+                            <input type="text" class="form-control" placeholder="Rechercher..." id="searchSponsor" aria-label="Rechercher des partenaires">
                         </div>
                     </div>
                     <ul class="navbar-nav justify-content-end">
@@ -500,195 +569,212 @@
         </nav>
 
         <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-4 shadow-sm border-radius-xl">
-                        <div class="card-header p-3 d-flex justify-content-between align-items-center">
-                            <h6 class="font-weight-bolder mb-0">Liste des Partenaires</h6>
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="input-group" style="max-width: 300px;">
-                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                    <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un partenaire...">
-                                </div>
-                                <a href="{{ path('admin_sponsors_create') }}" class="btn btn-sm btn-outline-success">
-                                    <i class="fas fa-plus"></i> Ajouter un partenaire
-                                </a>
-                            </div>
-                        </div>
-                        <div class="card-body p-3">
-                            {# Affichage des messages flash #}
-                            {% for message in app.flashes('success') %}
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
-                            {% for message in app.flashes('error') %}
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
+            <!-- En-tête avec recherche et actions -->
+            <div class="table-header">
+                <div class="search-bar">
+                    <div class="input-group">
+                        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" placeholder="Rechercher par nom, email..." id="searchSponsor" aria-label="Rechercher des partenaires">
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a href="{{ path('admin_sponsors_create') }}" class="add-btn" aria-label="Ajouter un partenaire"><i class="fas fa-plus me-1"></i> Ajouter</a>
+                    <a href="#" class="export-btn" onclick="exportToCSV()" aria-label="Exporter en CSV"><i class="fas fa-download me-1"></i> Exporter</a>
+                </div>
+            </div>
 
-                            {% if Sponsor is defined and Sponsor is not empty %}
-                                <div class="table-responsive">
-                                    <div class="table-container">
-                                        <table class="modern-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="id_partenaire">ID Partenaire <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="nom_partenaire">Nom Partenaire <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="email_partenaire">Email Partenaire <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="telephone_partenaire">Téléphone Partenaire <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="adresse_partenaire">Adresse Partenaire <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="site_web">Site Web <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="type_partenaire">Type Partenaire <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for Sponsor in Sponsor %}
-                                                    <tr>
-                                                        <td data-label="id_partenaire">{{ Sponsor.id_partenaire }}</td>
-                                                        <td data-label="nom_partenaire">{{ Sponsor.nom_partenaire }}</td>
-                                                        <td data-label="email_partenaire">{{ Sponsor.email_partenaire }}</td>
-                                                        <td data-label="telephone_partenaire">{{ Sponsor.telephone_partenaire }}</td>
-                                                        <td data-label="adresse_partenaire">{{ Sponsor.adresse_partenaire|length > 30 ? Sponsor.adresse_partenaire|slice(0, 30) ~ '...' : Sponsor.adresse_partenaire }}</td>
-                                                        <td data-label="site_web">
-                                                            <a href="{{ Sponsor.site_web }}" target="_blank" class="site-link">
-                                                                {{ Sponsor.site_web|length > 25 ? Sponsor.site_web|slice(0, 25) ~ '...' : Sponsor.site_web }}
-                                                            </a>
-                                                        </td>
-                                                        <td data-label="type_partenaire">{{ Sponsor.type_partenaire }}</td>
-                                                        <td class="action-cell">
-                                                            <a href="{{ path('admin_sponsors_show', {'id': Sponsor.id_partenaire}) }}" class="action-btn detail-btn">
-                                                                <i class="fas fa-eye"></i> Détail
-                                                            </a>
-                                                            <a href="{{ path('admin_sponsors_edit', {'id_partenaire': Sponsor.id_partenaire}) }}" class="action-btn edit-btn">
-                                                                <i class="fas fa-edit"></i> Modifier
-                                                            </a>
-                                                            <form method="post" action="{{ path('admin_sponsors_delete', {'id_partenaire': Sponsor.id_partenaire}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce partenaire ?');">
-                                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Sponsor.id_partenaire) }}">
-                                                                <button class="action-btn delete-btn">
-                                                                    <i class="fas fa-trash"></i> Supprimer
-                                                                </button>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+            <div class="row">
+                <!-- Liste des sponsors -->
+                <div class="col-lg-9 col-md-12">
+                    <div class="row" id="sponsorList">
+                        {% if Sponsor|length > 0 %}
+                            {% for sponsor in Sponsor %}
+                                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                                    <div class="business-card">
+                                        <div class="icon-container">
+                                            <i class="fas fa-handshake text-primary"></i>
+                                        </div>
+                                        <div class="actions">
+                                            <a href="#" class="action-info" data-bs-toggle="modal" data-bs-target="#sponsorModal-{{ sponsor.id_partenaire }}" aria-label="Voir les détails du partenaire"><i class="fas fa-eye"></i></a>
+                                            <a href="{{ path('admin_sponsors_edit', {'id_partenaire': sponsor.id_partenaire}) }}" class="action-edit" aria-label="Modifier le partenaire"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="action-delete" onclick="if(confirm('Voulez-vous vraiment supprimer ce partenaire ?')) { document.getElementById('delete-form-{{ sponsor.id_partenaire }}').submit(); } return false;" aria-label="Supprimer le partenaire"><i class="fas fa-trash"></i><span class="sr-only">Supprimer</span></a>
+                                            <form id="delete-form-{{ sponsor.id_partenaire }}" method="post" action="{{ path('admin_sponsors_delete', {'id_partenaire': sponsor.id_partenaire}) }}" style="display: none;">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sponsor.id_partenaire) }}">
+                                            </form>
+                                        </div>
+                                        <div class="card-content" style="margin-left: 60px; margin-right: 40px;">
+                                            <div class="card-header">
+                                                <h6>{{ sponsor.nom_partenaire }}</h6>
+                                                <span class="badge badge-{{ sponsor.type_partenaire|lower|replace({'é': 'e', ' ': '-'}) }}">{{ sponsor.type_partenaire }}</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <p><strong>Email :</strong> {{ sponsor.email_partenaire }}</p>
+                                                <p><strong>Tél :</strong> {{ sponsor.telephone_partenaire }}</p>
+                                                <p><strong>Site :</strong> 
+                                                    <a href="{{ sponsor.site_web }}" target="_blank" class="site-link">
+                                                        {{ sponsor.site_web|length > 20 ? sponsor.site_web|slice(0, 20) ~ '...' : sponsor.site_web }}
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            {% else %}
-                                <div class="text-center p-4">
-                                    <i class="fas fa-exclamation-circle text-muted" style="font-size: 2rem;"></i>
-                                    <p class="text-muted mt-2">Aucun partenaire trouvé.</p>
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-12">
+                                <div class="alert alert-info text-center" role="alert">
+                                    Aucun partenaire trouvé.
                                 </div>
-                            {% endif %}
-                        </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if total_pages > 1 %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
+                                    <a class="page-link" href="{{ path('admin_sponsors', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Précédent">
+                                        <span aria-hidden="true">«</span>
+                                    </a>
+                                </li>
+                                {% for i in 1..total_pages %}
+                                    <li class="page-item {{ current_page == i ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ path('admin_sponsors', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}">{{ i }}</a>
+                                    </li>
+                                {% endfor %}
+                                <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
+                                    <a class="page-link" href="{{ path('admin_sponsors', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Suivant">
+                                        <span aria-hidden="true">»</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    {% endif %}
+                </div>
+
+                <!-- Menu de tri -->
+                <div class="col-lg-3 col-md-12">
+                    <div class="filter-section">
+                        <h6><i class="fas fa-sort me-2"></i>Options de tri</h6>
+                        <form method="get" action="{{ path('admin_sponsors') }}" class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Trier par Nom</label>
+                                <div class="btn-group w-100">
+                                    <a href="{{ path('admin_sponsors', {'sort_by': 'nom_partenaire', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'nom_partenaire' and sort_order == 'asc' ? 'active' : '' }}"
+                                       aria-label="Trier par nom croissant">
+                                        <i class="fas fa-arrow-up me-1"></i> Croissant
+                                    </a>
+                                    <a href="{{ path('admin_sponsors', {'sort_by': 'nom_partenaire', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'nom_partenaire' and sort_order == 'desc' ? 'active' : '' }}"
+                                       aria-label="Trier par nom décroissant">
+                                        <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Trier par Type</label>
+                                <div class="btn-group w-100">
+                                    <a href="{{ path('admin_sponsors', {'sort_by': 'type_partenaire', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'type_partenaire' and sort_order == 'asc' ? 'active' : '' }}"
+                                       aria-label="Trier par type croissant">
+                                        <i class="fas fa-arrow-up me-1"></i> Croissant
+                                    </a>
+                                    <a href="{{ path('admin_sponsors', {'sort_by': 'type_partenaire', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'type_partenaire' and sort_order == 'desc' ? 'active' : '' }}"
+                                       aria-label="Trier par type décroissant">
+                                        <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Trier par Email</label>
+                                <div class="btn-group w-100">
+                                    <a href="{{ path('admin_sponsors', {'sort_by': 'email_partenaire', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'email_partenaire' and sort_order == 'asc' ? 'active' : '' }}"
+                                       aria-label="Trier par email croissant">
+                                        <i class="fas fa-arrow-up me-1"></i> Croissant
+                                    </a>
+                                    <a href="{{ path('admin_sponsors', {'sort_by': 'email_partenaire', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'email_partenaire' and sort_order == 'desc' ? 'active' : '' }}"
+                                       aria-label="Trier par email décroissant">
+                                        <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <a href="{{ path('admin_sponsors') }}" class="btn btn-reset w-100" aria-label="Réinitialiser les tris"><i class="fas fa-undo me-1"></i> Réinitialiser</a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
+
+            <!-- Modales pour détails -->
+            {% for sponsor in Sponsor %}
+                <div class="modal fade" id="sponsorModal-{{ sponsor.id_partenaire }}" tabindex="-1" aria-labelledby="sponsorModalLabel-{{ sponsor.id_partenaire }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="sponsorModalLabel-{{ sponsor.id_partenaire }}">{{ sponsor.nom_partenaire }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>ID :</strong> {{ sponsor.id_partenaire }}</p>
+                                <p><strong>Email :</strong> {{ sponsor.email_partenaire }}</p>
+                                <p><strong>Téléphone :</strong> {{ sponsor.telephone_partenaire }}</p>
+                                <p><strong>Adresse :</strong> {{ sponsor.adresse_partenaire }}</p>
+                                <p><strong>Site Web :</strong> <a href="{{ sponsor.site_web }}" target="_blank" class="site-link">{{ sponsor.site_web }}</a></p>
+                                <p><strong>Type :</strong> {{ sponsor.type_partenaire }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                <a href="{{ path('admin_sponsors_edit', {'id_partenaire': sponsor.id_partenaire}) }}" class="btn btn-primary">Modifier</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </main>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('searchInput');
-            const table = document.querySelector('.modern-table');
-            const tbody = table.querySelector('tbody');
-            const rows = tbody.querySelectorAll('tr');
-
-            // Recherche dynamique
-            searchInput.addEventListener('input', () => {
-                const searchTerm = searchInput.value.toLowerCase();
-
-                rows.forEach(row => {
-                    const cells = row.querySelectorAll('td');
-                    let match = false;
-
-                    cells.forEach(cell => {
-                        if (cell.textContent.toLowerCase().includes(searchTerm)) {
-                            match = true;
-                        }
-                    });
-
-                    row.style.display = match ? '' : 'none';
-                });
+        // Recherche en temps réel
+        document.getElementById('searchSponsor').addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('#sponsorList .col-lg-4');
+            cards.forEach(card => {
+                const nom = card.querySelector('.card-header h6').textContent.toLowerCase();
+                const email = card.querySelector('.card-body p:nth-child(1)').textContent.toLowerCase();
+                const telephone = card.querySelector('.card-body p:nth-child(2)').textContent.toLowerCase();
+                const site = card.querySelector('.card-body p:nth-child(3)').textContent.toLowerCase();
+                const type = card.querySelector('.card-header .badge').textContent.toLowerCase();
+                card.style.display = nom.includes(searchText) || email.includes(searchText) || telephone.includes(searchText) || site.includes(searchText) || type.includes(searchText) ? '' : 'none';
             });
-
-            // Tri du tableau
-            const headers = table.querySelectorAll('.sort-btn');
-            let currentSortColumn = null;
-            let isAsc = true;
-
-            headers.forEach(header => {
-                header.addEventListener('click', () => {
-                    const sortKey = header.getAttribute('data-sort');
-                    if (currentSortColumn === sortKey) {
-                        isAsc = !isAsc;
-                    } else {
-                        isAsc = true;
-                        headers.forEach(h => {
-                            h.classList.remove('sort-asc', 'sort-desc');
-                            h.querySelector('.sort-icon').innerHTML = '↕';
-                        });
-                    }
-                    currentSortColumn = sortKey;
-
-                    // Mettre à jour l'icône de tri
-                    header.classList.add(isAsc ? 'sort-asc' : 'sort-desc');
-                    header.classList.remove(isAsc ? 'sort-desc' : 'sort-asc');
-
-                    // Trier les lignes
-                    sortTable(sortKey, isAsc);
-                });
-            });
-
-            function sortTable(column, asc) {
-                const rowsArray = Array.from(rows);
-
-                rowsArray.sort((a, b) => {
-                    let aValue = a.querySelector(`td[data-label="${column}"]`).textContent.trim();
-                    let bValue = b.querySelector(`td[data-label="${column}"]`).textContent.trim();
-
-                    // Gestion des valeurs vides
-                    if (!aValue && !bValue) return 0;
-                    if (!aValue) return asc ? 1 : -1;
-                    if (!bValue) return asc ? -1 : 1;
-
-                    // Gestion des nombres pour ID Partenaire
-                    if (column === 'id_partenaire') {
-                        aValue = parseInt(aValue) || 0;
-                        bValue = parseInt(bValue) || 0;
-                        return asc ? aValue - bValue : bValue - aValue;
-                    }
-
-                    // Tri alphabétique pour les autres colonnes
-                    return asc
-                        ? aValue.localeCompare(bValue)
-                        : bValue.localeCompare(aValue);
-                });
-
-                // Réinsérer les lignes triées
-                tbody.innerHTML = '';
-                rowsArray.forEach(row => tbody.appendChild(row));
-            }
         });
+
+        // Exportation en CSV
+        function exportToCSV() {
+            const cards = document.querySelectorAll('#sponsorList .col-lg-4');
+            let csvContent = 'ID,Nom,Email,Téléphone,Adresse,Site Web,Type\n';
+            cards.forEach(card => {
+                const id = card.querySelector('.card-header h6').textContent.replace('Partenaire #', '');
+                const nom = card.querySelector('.card-header h6').textContent.replace(/,/g, '');
+                const email = card.querySelector('.card-body p:nth-child(1)').textContent.replace('Email : ', '').replace(/,/g, '');
+                const telephone = card.querySelector('.card-body p:nth-child(2)').textContent.replace('Tél : ', '').replace(/,/g, '');
+                const site = card.querySelector('.card-body p:nth-child(3)').textContent.replace('Site : ', '').replace(/,/g, '');
+                const type = card.querySelector('.card-header .badge').textContent.replace(/,/g, '');
+                csvContent += `${id},${nom},${email},${telephone},,${site},${type}\n`; // Adresse non affichée, laissée vide
+            });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'partenaires.csv';
+            link.click();
+        }
     </script>
 {% endblock %}

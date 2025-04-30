@@ -1,154 +1,147 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Feedbacks{% endblock %}
+{% block title %}Feedbacks - Tableau{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        /* Card Styling */
-        .feedback-card {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: none;
+        /* Importation de la police Roboto */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        /* Général */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #eff6ff;
+            color: #1f2937;
+            overflow-x: hidden;
+        }
+
+        /* Conteneur principal */
+        .feedback-container {
+            margin-left: 270px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Tableau */
+        .feedback-table {
+            background: #fff;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            min-height: 350px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .feedback-table table {
             width: 100%;
+            border-collapse: collapse;
         }
-        .feedback-image-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 0;
-        }
-        .feedback-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: blur(10px);
-            transition: filter 0.3s ease;
-        }
-        .feedback-card:hover .feedback-image-container { opacity: 0.5; }
-        .feedback-card:hover .feedback-image { filter: blur(0); }
-        .card-body {
-            position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 25px;
-            font-size: 1.1rem;
-        }
-        .card-header {
-            background: linear-gradient(90deg, #343a40, #495057);
-            color: #fff;
-            padding: 15px;
-            border-radius: 12px 12px 0 0;
-            font-size: 1.2rem;
-        }
-        .card-footer {
-            position: relative;
-            z-index: 1;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 0 0 12px 12px;
-        }
-        .star-rating-display {
-            display: inline-flex;
-            font-size: 18px;
-            gap: 5px;
-            vertical-align: middle;
-            margin-left: 5px;
-        }
-        .star-rating-display .star { color: #ddd; }
-        .star-rating-display .star.filled { color: #ffd700; }
-        .btn-sm {
-            margin-right: 5px;
-            padding: 8px 12px;
+        .feedback-table th, .feedback-table td {
+            padding: 12px 15px;
+            text-align: left;
             font-size: 0.9rem;
         }
-        .form-check .recommend-checkbox { width: 1.25em; height: 1.25em; }
-        .form-check .recommend-yes { background-color: #28a745 !important; border-color: #28a745 !important; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e") !important; }
-        .form-check .recommend-no { background-color: #dc3545 !important; border-color: #dc3545 !important; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 6l8 8m0-8l-8 8'/%3e%3c/svg%3e") !important; }
-
-        /* Barre latérale de tri complètement à droite */
-        .filter-sidebar {
-            position: fixed;
-            top: 80px;
-            right: 0;
-            width: 366px;
-            height: calc(100vh - 80px);
-            background-color: #f8f9fa;
-            border-radius: 12px 0 0 12px;
-            box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        .filter-sidebar.collapsed {
-            transform: translateX(100%);
-        }
-        .filter-toggle-btn {
-            background-color: #ff6200;
+        .feedback-table th {
+            background: #1f2937;
             color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%;
-            text-align: center;
-            margin-bottom: 15px;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.85rem;
         }
-        .filter-toggle-btn:hover { background-color: #e65a00; }
-        .filter-content { margin-top: 15px; }
-
-        /* Bouton pour réafficher le menu */
-        .filter-toggle-icon {
-            position: fixed;
-            top: 100px;
-            right: 10px;
-            background-color: #ff6200;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+        .feedback-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+        .feedback-table tr:hover {
+            background: #e0f2fe;
+            transition: background 0.2s ease;
+        }
+        .star-rating {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
-            z-index: 1001;
-            display: none; /* Masqué par défaut */
+            gap: 4px;
+            font-size: 14px;
         }
-        .filter-toggle-icon:hover { background-color: #e65a00; }
-        .filter-toggle-icon.visible { display: flex; }
+        .star-rating .star { color: #d1d5db; }
+        .star-rating .star.filled { color: #facc15; }
+        .recommend-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .recommend-badge.yes { background: #dcfce7; color: #16a34a; }
+        .recommend-badge.no { background: #fee2e2; color: #dc2626; }
+        .description-cell {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .action-buttons .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            margin-right: 5px;
+        }
+        .btn-primary { background: #4f46e5; border-color: #4f46e5; color: #fff; }
+        .btn-primary:hover { background: #4338ca; }
+        .btn-info { background: #06b6d4; border-color: #06b6d4; color: #fff; }
+        .btn-info:hover { background: #0891b2; }
+        .btn-danger { background: #ef4444; border-color: #ef4444; color: #fff; }
+        .btn-danger:hover { background: #dc2626; }
 
-        /* Ajustement des boutons Croissant/Décroissant */
+        /* Filter Section */
+        .filter-section {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: fit-content;
+        }
+        .filter-section h6 {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Sort Buttons */
         .btn-group .btn {
             padding: 8px 15px;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px; /* Espacement entre l'icône et le texte */
+            gap: 5px;
         }
         .btn-group .btn i { font-size: 1rem; }
-        .btn-group .btn.active { background-color: #ff6200; color: #fff; }
-        .btn-group .btn:hover { background-color: #ff8c00; color: #fff; }
+        .btn-group .btn.active { background-color: #007bff; color: #fff; }
+        .btn-group .btn:hover { background-color: #0056b3; color: #fff; }
 
-        /* Contenu principal */
-        .feedback-content {
-            margin-right: 270px;
-            padding: 0 15px;
+        /* Recherche et exportation */
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 15px;
         }
+        .search-bar .input-group {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 300px;
+        }
+        .search-bar .form-control {
+            border: none;
+            font-size: 0.9rem;
+        }
+        .export-btn {
+            background: #16a34a;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s ease;
+        }
+        .export-btn:hover { background: #15803d; }
 
         /* Pagination */
         .pagination {
@@ -157,52 +150,51 @@
             margin-top: 20px;
         }
         .pagination .page-item .page-link {
-            color: #ff6200;
+            color: #4f46e5;
             border: none;
-            margin: 0 5px;
-            padding: 8px 12px;
+            margin: 0 6px;
+            padding: 8px 14px;
             border-radius: 8px;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
         .pagination .page-item.active .page-link {
-            background-color: #ff6200;
+            background: #4f46e5;
             color: #fff;
         }
         .pagination .page-item .page-link:hover {
-            background-color: #ff8c00;
-            color: #fff;
+            background: #e0f2fe;
+            color: #4338ca;
         }
-        .pagination .page-item.disabled .page-link { color: #ccc; }
+        .pagination .page-item.disabled .page-link { color: #d1d5db; }
 
-        /* Ajustement pour la sidebar principale à gauche */
-        .feedback-container { margin-left: 270px; }
+        /* Modale pour détails */
+        .modal-content {
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            background: #1f2937;
+            color: #fff;
+            border-radius: 12px 12px 0 0;
+        }
+        .modal-body p {
+            font-size: 0.9rem;
+            margin: 10px 0;
+        }
 
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 992px) {
             .feedback-container { margin-left: 0; }
-            .feedback-content { margin-right: 0; }
-            .filter-sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                top: 0;
-                border-radius: 12px;
+            .filter-section {
                 margin-top: 20px;
             }
-            .filter-sidebar.collapsed {
-                transform: translateX(0);
-                height: 50px;
-                overflow: hidden;
-            }
-            .filter-sidebar.collapsed .filter-content { display: none; }
-            .filter-toggle-icon { display: none; }
         }
         @media (max-width: 768px) {
-            .feedback-card { min-height: 300px; }
-            .card-body { padding: 15px; font-size: 1rem; }
-            .card-header { font-size: 1rem; }
-            .star-rating-display { font-size: 16px; }
-            .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
+            .feedback-table th, .feedback-table td { font-size: 0.8rem; padding: 10px; }
+            .action-buttons .btn-sm { padding: 4px 8px; font-size: 0.75rem; }
+            .search-bar .input-group { max-width: 100%; }
+            .table-header { flex-direction: column; gap: 10px; }
         }
     </style>
 {% endblock %}
@@ -314,7 +306,6 @@
                                     <span class="nav-link-text ms-1">Agents</span>
                                 </a>
                             </li>
-                           
                         </ul>
                     </div>
                 </li>
@@ -392,18 +383,18 @@
                     <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Pages</a></li>
                         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_reclamations') }}">Réclamations</a></li>
-                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Feedback</li>
+                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Feedbacks</li>
                     </ol>
                     <h6 class="font-weight-bolder mb-0">
                         Liste des Feedbacks
-                        <a href="{{ path('app_feedback_new') }}" class="btn btn-sm btn-success ms-2">Ajouter un Feedback</a>
+                        <a href="{{ path('app_feedback_new') }}" class="btn btn-sm btn-primary ms-2">Ajouter un Feedback</a>
                     </h6>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                        <div class="input-group">
+                        <div class="input-group search-bar">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Rechercher..." id="searchFeedback">
+                            <input type="text" class="form-control" placeholder="Rechercher..." id="searchFeedback" aria-label="Rechercher des feedbacks">
                         </div>
                     </div>
                     <ul class="navbar-nav justify-content-end">
@@ -419,143 +410,228 @@
         </nav>
 
         <div class="container-fluid py-4">
-            <!-- Contenu principal : Les cartes de feedback -->
-            <div class="feedback-content">
+            <!-- En-tête avec recherche et exportation -->
+            <div class="table-header">
+                <div class="search-bar">
+                    <div class="input-group">
+                        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" placeholder="Rechercher par description..." id="searchFeedback" aria-label="Rechercher des feedbacks">
+                    </div>
+                </div>
+                <a href="#" class="export-btn" onclick="exportToCSV()" aria-label="Exporter en CSV"><i class="fas fa-download me-1"></i> Exporter</a>
+            </div>
+
+            <div class="row">
                 <!-- Liste des feedbacks -->
-                <div class="row" id="feedbackList">
-                    {% if feedbacks|length > 0 %}
-                        {% for feedback in feedbacks %}
-                            <div class="col-lg-6 col-md-6 col-sm-12 mb-4 feedback-card-container">
-                                <div class="card feedback-card h-100">
-                                    <div class="card-header">
-                                        <h6 class="mb-0">Feedback #{{ feedback.ID }}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        {% if feedback.souvenirsBase64 %}
-                                            <div class="feedback-image-container">
-                                                <img src="{{ feedback.souvenirsBase64 }}" alt="Feedback image" class="feedback-image">
-                                            </div>
-                                        {% endif %}
-                                        <p class="text-sm mb-2"><strong>Membre :</strong> {{ feedback.membre ? feedback.membre.email : 'Anonyme' }}</p>
-                                        <p class="text-sm mb-2">
-                                            <strong>Note :</strong>
-                                            <span class="star-rating-display">
-                                                {% for i in 1..5 %}
-                                                    <span class="star {% if i <= feedback.Vote %}filled{% endif %}">★</span>
-                                                {% endfor %}
-                                            </span>
-                                        </p>
-                                        <p class="text-sm mb-2"><strong>Description :</strong> {{ feedback.description }}</p>
-                                        <p class="text-sm mb-2"><strong>Date :</strong> {{ feedback.date ? feedback.date|date('Y-m-d') : 'Non définie' }}</p>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input recommend-checkbox {% if feedback.recommend|lower == 'oui' %}recommend-yes{% else %}recommend-no{% endif %}" 
-                                                   type="checkbox" 
-                                                   {{ feedback.recommend|lower == 'oui' ? 'checked' : '' }} 
-                                                   disabled>
-                                            <label class="form-check-label">Recommandé ({{ feedback.recommend|default('non défini') }})</label>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a href="{{ path('admin_feedback_show', {'id': feedback.ID}) }}" class="btn btn-sm btn-info">Détails</a>
-                                        <a href="{{ path('admin_feedback_edit_recommend', {'id': feedback.ID}) }}" class="btn btn-sm btn-primary">Modifier</a>
-                                        <a href="#" class="btn btn-sm btn-danger" onclick="if(confirm('Voulez-vous vraiment supprimer ce feedback ?')) { document.getElementById('delete-form-{{ feedback.ID }}').submit(); } return false;">Supprimer</a>
-                                        <form id="delete-form-{{ feedback.ID }}" method="post" action="{{ path('admin_feedback_delete', {'id': feedback.ID}) }}" style="display: none;">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ feedback.ID) }}">
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="col-12">
-                            <div class="alert alert-info text-center" role="alert">
-                                Aucun feedback trouvé.
-                            </div>
-                        </div>
+                <div class="col-lg-9 col-md-12">
+                    <!-- Tableau des feedbacks -->
+                    <div class="feedback-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Utilisateur</th>
+                                    <th>Note</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Recommandé</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feedbackTableBody">
+                                {% if feedbacks|length > 0 %}
+                                    {% for feedback in feedbacks %}
+                                        <tr>
+                                            <td>{{ feedback.ID }}</td>
+                                            <td>{{ feedback.membre ? feedback.membre.email : 'Anonyme' }}</td>
+                                            <td>
+                                                <span class="star-rating">
+                                                    {% for i in 1..5 %}
+                                                        <span class="star {% if i <= feedback.Vote %}filled{% endif %}">★</span>
+                                                    {% endfor %}
+                                                </span>
+                                            </td>
+                                            <td class="description-cell" title="{{ feedback.description }}">{{ feedback.description }}</td>
+                                            <td>{{ feedback.date ? feedback.date|date('Y-m-d') : 'Non définie' }}</td>
+                                            <td>
+                                                <span class="recommend-badge {{ feedback.recommend|lower == 'oui' ? 'yes' : 'no' }}">
+                                                    {{ feedback.recommend|default('Non défini') }}
+                                                </span>
+                                            </td>
+                                            <td class="action-buttons">
+                                                <a href="#" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#feedbackModal-{{ feedback.ID }}" aria-label="Voir les détails du feedback"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ path('admin_feedback_edit_recommend', {'id': feedback.ID}) }}" class="btn btn-sm btn-primary" aria-label="Modifier le feedback"><i class="fas fa-edit"></i></a>
+                                                <a href="#" class="btn btn-sm btn-danger" onclick="if(confirm('Voulez-vous vraiment supprimer ce feedback ?')) { document.getElementById('delete-form-{{ feedback.ID }}').submit(); } return false;" aria-label="Supprimer le feedback"><i class="fas fa-trash"></i></a>
+                                                <form id="delete-form-{{ feedback.ID }}" method="post" action="{{ path('admin_feedback_delete', {'id': feedback.ID}) }}" style="display: none;">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ feedback.ID) }}">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="7" class="text-center">Aucun feedback trouvé.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if total_pages > 1 %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
+                                    <a class="page-link" href="{{ path('admin_feedback', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating}) }}" aria-label="Précédent">
+                                        <span aria-hidden="true">«</span>
+                                    </a>
+                                </li>
+                                {% for i in 1..total_pages %}
+                                    <li class="page-item {{ current_page == i ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ path('admin_feedback', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating}) }}">{{ i }}</a>
+                                    </li>
+                                {% endfor %}
+                                <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
+                                    <a class="page-link" href="{{ path('admin_feedback', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating}) }}" aria-label="Suivant">
+                                        <span aria-hidden="true">»</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                     {% endif %}
                 </div>
 
-                <!-- Pagination -->
-                {% if total_pages > 1 %}
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ path('admin_feedback', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'user_filter': selected_user, 'date_filter': selected_date}) }}" aria-label="Previous">
-                                    <span aria-hidden="true">«</span>
-                                </a>
-                            </li>
-                            {% for i in 1..total_pages %}
-                                <li class="page-item {{ current_page == i ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ path('admin_feedback', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'user_filter': selected_user, 'date_filter': selected_date}) }}">{{ i }}</a>
-                                </li>
-                            {% endfor %}
-                            <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ path('admin_feedback', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'user_filter': selected_user, 'date_filter': selected_date}) }}" aria-label="Next">
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                {% endif %}
-            </div>
-
-            <!-- Barre latérale de tri à droite -->
-            <div class="filter-sidebar" id="filterSidebar">
-                <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">Masquer</button>
-                <div class="filter-content">
-                    <h6 class="mb-3 text-dark font-weight-bold"><i class="fas fa-filter me-2"></i>Options de Tri et Filtrage</h6>
-                    <form method="get" action="{{ path('admin_feedback') }}" class="row g-3 align-items-center">
-                        <div class="col-12">
-                            <label for="user_filter" class="form-label text-sm font-weight-bold">Filtrer par Utilisateur</label>
-                            <select name="user_filter" id="user_filter" class="form-select" onchange="this.form.submit()">
-                                <option value="">Tous les utilisateurs</option>
-                                {% for user in users %}
-                                    <option value="{{ user }}" {{ selected_user == user ? 'selected' : '' }}>{{ user }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Note</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('admin_feedback', {'sort_by': 'Vote', 'sort_order': 'asc', 'user_filter': selected_user, 'date_filter': selected_date, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'Vote' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-star me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('admin_feedback', {'sort_by': 'Vote', 'sort_order': 'desc', 'user_filter': selected_user, 'date_filter': selected_date, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'Vote' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-star me-1"></i> Décroissant
-                                </a>
+                <!-- Menu de tri et filtres -->
+                <div class="col-lg-3 col-md-12">
+                    <div class="filter-section">
+                        <h6 class="text-dark font-weight-bold"><i class="fas fa-filter me-2"></i>Filtres & Tri</h6>
+                        <form method="get" action="{{ path('admin_feedback') }}" class="row g-3 align-items-center">
+                            <div class="col-12">
+                                <label for="user_filter" class="form-label text-sm font-weight-bold">Utilisateur</label>
+                                <select name="user_filter" id="user_filter" class="form-select" onchange="this.form.submit()" aria-label="Filtrer par utilisateur">
+                                    <option value="">Tous les utilisateurs</option>
+                                    {% for user in users %}
+                                        <option value="{{ user }}" {{ selected_user == user ? 'selected' : '' }}>{{ user }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Date</label>
-                            <div class="input-group">
-                                <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ selected_date }}" onchange="this.form.submit()">
-                                <div class="btn-group" role="group">
-                                    <a href="{{ path('admin_feedback', {'sort_by': 'date', 'sort_order': 'asc', 'user_filter': selected_user, 'date_filter': selected_date, 'page': current_page}) }}"
-                                       class="btn btn-outline-primary {{ sort_by == 'date' and sort_order == 'asc' ? 'active' : '' }}">
-                                        <i class="fas fa-arrow-up"></i>
+                            <div class="col-12">
+                                <label for="rating_filter" class="form-label text-sm font-weight-bold">Note</label>
+                                <select name="rating_filter" id="rating_filter" class="form-select" onchange="this.form.submit()" aria-label="Filtrer par note">
+                                    <option value="">Toutes les notes</option>
+                                    {% for i in 1..5 %}
+                                        <option value="{{ i }}" {{ selected_rating == i ? 'selected' : '' }}>{{ i }} étoile{{ i > 1 ? 's' : '' }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label for="date_filter" class="form-label text-sm font-weight-bold">Date</label>
+                                <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ selected_date }}" onchange="this.form.submit()" aria-label="Filtrer par date">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-sm font-weight-bold">Trier par Date</label>
+                                <div class="btn-group w-100" role="group">
+                                    <a href="{{ path('admin_feedback', {'sort_by': 'date', 'sort_order': 'asc', 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'date' and sort_order == 'asc' ? 'active' : '' }}"
+                                       aria-label="Trier par date croissante">
+                                        <i class="fas fa-arrow-up me-1"></i> Croissant
                                     </a>
-                                    <a href="{{ path('admin_feedback', {'sort_by': 'date', 'sort_order': 'desc', 'user_filter': selected_user, 'date_filter': selected_date, 'page': current_page}) }}"
-                                       class="btn btn-outline-primary {{ sort_by == 'date' and sort_order == 'desc' ? 'active' : '' }}">
-                                        <i class="fas fa-arrow-down"></i>
+                                    <a href="{{ path('admin_feedback', {'sort_by': 'date', 'sort_order': 'desc', 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'date' and sort_order == 'desc' ? 'active' : '' }}"
+                                       aria-label="Trier par date décroissante">
+                                        <i class="fas fa-arrow-down me-1"></i> Décroissant
                                     </a>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-12 d-flex align-items-end">
-                            <a href="{{ path('admin_feedback') }}" class="btn btn-outline-secondary w-100">
-                                <i class="fas fa-undo me-1"></i> Réinitialiser
-                            </a>
-                        </div>
-                    </form>
+                            <div class="col-12">
+                                <label class="form-label text-sm font-weight-bold">Trier par Note</label>
+                                <div class="btn-group w-100" role="group">
+                                    <a href="{{ path('admin_feedback', {'sort_by': 'Vote', 'sort_order': 'asc', 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'Vote' and sort_order == 'asc' ? 'active' : '' }}"
+                                       aria-label="Trier par note croissante">
+                                        <i class="fas fa-arrow-up me-1"></i> Croissant
+                                    </a>
+                                    <a href="{{ path('admin_feedback', {'sort_by': 'Vote', 'sort_order': 'desc', 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'Vote' and sort_order == 'desc' ? 'active' : '' }}"
+                                       aria-label="Trier par note décroissante">
+                                        <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-sm font-weight-bold">Trier par Email</label>
+                                <div class="btn-group w-100" role="group">
+                                    <a href="{{ path('admin_feedback', {'sort_by': 'membre.email', 'sort_order': 'asc', 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'membre.email' and sort_order == 'asc' ? 'active' : '' }}"
+                                       aria-label="Trier par email croissante">
+                                        <i class="fas fa-arrow-up me-1"></i> Croissant
+                                    </a>
+                                    <a href="{{ path('admin_feedback', {'sort_by': 'membre.email', 'sort_order': 'desc', 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'membre.email' and sort_order == 'desc' ? 'active' : '' }}"
+                                       aria-label="Trier par email décroissante">
+                                        <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-sm font-weight-bold">Trier par Recommandation</label>
+                                <div class="btn-group w-100" role="group">
+                                    <a href="{{ path('admin_feedback', {'sort_by': 'recommend', 'sort_order': 'asc', 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'recommend' and sort_order == 'asc' ? 'active' : '' }}"
+                                       aria-label="Trier par recommandation croissante">
+                                        <i class="fas fa-arrow-up me-1"></i> Croissant
+                                    </a>
+                                    <a href="{{ path('admin_feedback', {'sort_by': 'recommend', 'sort_order': 'desc', 'user_filter': selected_user, 'date_filter': selected_date, 'rating_filter': selected_rating, 'page': current_page}) }}"
+                                       class="btn btn-outline-primary {{ sort_by == 'recommend' and sort_order == 'desc' ? 'active' : '' }}"
+                                       aria-label="Trier par recommandation décroissante">
+                                        <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12 d-flex align-items-end">
+                                <a href="{{ path('admin_feedback') }}" class="btn btn-outline-secondary w-100" aria-label="Réinitialiser les filtres"><i class="fas fa-undo me-1"></i> Réinitialiser</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
-            <!-- Bouton flottant pour réafficher le menu -->
-            <button class="filter-toggle-icon" id="filterToggleIcon" onclick="toggleFilterSidebar()">
-                <i class="fas fa-filter"></i>
-            </button>
+            <!-- Modales pour détails -->
+            {% for feedback in feedbacks %}
+                <div class="modal fade" id="feedbackModal-{{ feedback.ID }}" tabindex="-1" aria-labelledby="feedbackModalLabel-{{ feedback.ID }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="feedbackModalLabel-{{ feedback.ID }}">Feedback #{{ feedback.ID }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Utilisateur :</strong> {{ feedback.membre ? feedback.membre.email : 'Anonyme' }}</p>
+                                <p>
+                                    <strong>Note :</strong>
+                                    <span class="star-rating">
+                                        {% for i in 1..5 %}
+                                            <span class="star {% if i <= feedback.Vote %}filled{% endif %}">★</span>
+                                        {% endfor %}
+                                    </span>
+                                </p>
+                                <p><strong>Description :</strong> {{ feedback.description }}</p>
+                                <p><strong>Date :</strong> {{ feedback.date ? feedback.date|date('Y-m-d') : 'Non définie' }}</p>
+                                <p>
+                                    <strong>Recommandé :</strong>
+                                    <span class="recommend-badge {{ feedback.recommend|lower == 'oui' ? 'yes' : 'no' }}">
+                                        {{ feedback.recommend|default('Non défini') }}
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                <a href="{{ path('admin_feedback_edit_recommend', {'id': feedback.ID}) }}" class="btn btn-primary">Modifier</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </main>
 {% endblock %}
@@ -566,21 +642,34 @@
         // Recherche en temps réel
         document.getElementById('searchFeedback').addEventListener('input', function(e) {
             const searchText = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.feedback-card-container');
-            cards.forEach(card => {
-                const description = card.querySelector('.card-body p:nth-child(3)').textContent.toLowerCase();
-                card.style.display = description.includes(searchText) ? '' : 'none';
+            const rows = document.querySelectorAll('#feedbackTableBody tr');
+            rows.forEach(row => {
+                const description = row.querySelector('.description-cell').textContent.toLowerCase();
+                row.style.display = description.includes(searchText) ? '' : 'none';
             });
         });
 
-        // Toggle pour la barre latérale de tri
-        function toggleFilterSidebar() {
-            const sidebar = document.getElementById('filterSidebar');
-            const btn = sidebar.querySelector('.filter-toggle-btn');
-            const icon = document.getElementById('filterToggleIcon');
-            sidebar.classList.toggle('collapsed');
-            btn.textContent = sidebar.classList.contains('collapsed') ? 'Afficher' : 'Masquer';
-            icon.classList.toggle('visible', sidebar.classList.contains('collapsed'));
+        // Exportation en CSV (exemple de fonction client-side)
+        function exportToCSV() {
+            const rows = document.querySelectorAll('#feedbackTableBody tr');
+            let csvContent = 'ID,Utilisateur,Note,Description,Date,Recommandé\n';
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length > 0) {
+                    const id = cells[0].textContent;
+                    const user = cells[1].textContent;
+                    const rating = cells[2].textContent.replace(/★/g, '*');
+                    const description = cells[3].textContent.replace(/,/g, '');
+                    const date = cells[4].textContent;
+                    const recommend = cells[5].textContent;
+                    csvContent += `${id},${user},${rating},${description},${date},${recommend}\n`;
+                }
+            });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'feedbacks.csv';
+            link.click();
         }
     </script>
 {% endblock %}

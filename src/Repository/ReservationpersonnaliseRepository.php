@@ -24,4 +24,14 @@ class ReservationpersonnaliseRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function countByDateRange(\DateTimeInterface $startDate, \DateTimeInterface $endDate): int
+{
+    return (int) $this->createQueryBuilder('r')
+        ->select('COUNT(r.IDReservationPersonalise)')
+        ->where('r.date BETWEEN :start AND :end')
+        ->setParameter('start', $startDate)
+        ->setParameter('end', $endDate)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
 }

@@ -119,4 +119,43 @@ class FeedbackRepository extends ServiceEntityRepository
 
         return (int) $queryBuilder->getQuery()->getSingleScalarResult();
     }
+    public function calculateNps(\DateTime $startDate, \DateTime $endDate): float
+    {
+        $promoters = $this->createQueryBuilder('f')
+        ->select('COUNT(f.ID) as count')
+        ->where('f.Recommend = :recommend')
+        ->andWhere('f.date BETWEEN :startDate AND :endDate')
+        ->setParameter('recommend', 'Oui')
+        ->setParameter('startDate', $startDate->format('Y-m-d'))
+        ->setParameter('endDate', $endDate->format('Y-m-d'))
+        ->getQuery()
+        ->getSingleScalarResult();
+
+        // Compter les détracteurs (Recommend = 'Non')
+        $detractors = $this->createQueryBuilder('f')
+            ->select('COUNT(f.ID) as count')
+            ->where('f.Recommend = :recommend')
+            ->andWhere('f.date BETWEEN :startDate AND :endDate')
+            ->setParameter('recommend', 'Non')
+            ->setParameter('startDate', $startDate->format('Y-m-d'))
+            ->setParameter('endDate', $endDate->format('Y-m-d'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Compter le total de feedbacks dans la plage de dates
+        $total = $this->createQueryBuilder('f')
+            ->select('COUNT(f.ID) as count')
+            ->where('f.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate->format('Y-m-d'))
+            ->setParameter('endDate', $endDate->format('Y-m-d'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Calculer les pourcentages
+        $promotersPercentage = $total > 0 ? ($promoters / $total) * 100 : 0;
+        $detractorsPercentage = $total > 0 ? ($detractors / $total) * 100 : 0;
+
+        // Calculer le NPS
+        return $promotersPercentage - $detractorsPercentage;
+    }
 }

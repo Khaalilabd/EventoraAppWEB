@@ -7,10 +7,10 @@
     <style>
         /* Card Styling */
         .edit-card {
-            border: none;
+            border: 2px solid #6f42c1; /* Bordure violette pour les agents */
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            background: #fff;
             transition: transform 0.3s ease;
         }
         .edit-card:hover {
@@ -18,12 +18,36 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
         }
         .card-header {
-            background: linear-gradient(90deg, #007bff, #0056b3);
-            color: #fff;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
             border-radius: 12px 12px 0 0;
             padding: 20px;
             font-size: 1.2rem;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .agent-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 10px;
+            color: #fff;
+            background-color: #6f42c1; /* Violet pour les agents */
+            animation: pulse 2s infinite;
+        }
+        .agent-label:hover {
+            animation: bounce 0.5s;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
         /* Form Styling */
@@ -32,35 +56,35 @@
             color: #333;
             margin-bottom: 8px;
             font-size: 0.95rem;
+            line-height: 1.5; /* Hauteur de ligne fixe pour alignement */
+            display: block;
+            min-height: 24px; /* Hauteur minimale pour éviter les décalages */
         }
-        .form-control {
+        .form-control, .form-select {
             border: 1px solid #ced4da;
             border-radius: 8px;
             padding: 10px 15px;
             font-size: 0.95rem;
             transition: all 0.3s ease;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            width: 100%; /* S'assurer que tous les champs prennent toute la largeur */
+            height: 40px; /* Hauteur fixe pour alignement */
         }
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+        .form-control:focus, .form-select:focus {
+            border-color: #6f42c1; /* Violet pour les agents */
+            box-shadow: 0 0 8px rgba(111, 66, 193, 0.3);
             outline: none;
         }
         .form-control::placeholder {
             color: #adb5bd;
         }
-        .form-select {
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-            padding: 10px 15px;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-        .form-select:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
-            outline: none;
+        .form-control.is-invalid, .form-select.is-invalid {
+            border-color: #dc3545;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linecap='round' d='M3.5 8.5l5-5zm5 0l-5-5z'/%3e%3ccircle cx='6' cy='6' r='4.5' transform='rotate(180 6 6)'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
         }
 
         /* Custom Checkbox Toggle */
@@ -68,6 +92,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-top: 10px; /* Alignement avec les champs */
         }
         .custom-switch input {
             display: none;
@@ -107,19 +132,19 @@
 
         /* Buttons */
         .btn-primary {
-            background: linear-gradient(90deg, #fd7e14, #ff9f43);
+            background: linear-gradient(90deg, #6f42c1, #5a32a3); /* Dégradé violet pour les agents */
             border: none;
             border-radius: 8px;
             padding: 10px 20px;
             font-weight: 600;
             font-size: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(253, 126, 20, 0.3);
+            box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
         }
         .btn-primary:hover {
-            background: linear-gradient(90deg, #ff9f43, #fd7e14);
+            background: linear-gradient(90deg, #5a32a3, #6f42c1);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(253, 126, 20, 0.4);
+            box-shadow: 0 4px 12px rgba(111, 66, 193, 0.4);
         }
         .btn-secondary {
             background-color: #6c757d;
@@ -137,7 +162,32 @@
             box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
         }
 
+        /* Error Messages */
+        .form-error-message {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 5px;
+            display: block;
+            width: 100%;
+            min-height: 20px; /* Réserve de l'espace pour éviter les décalages */
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 20px; /* Espacement uniforme entre les champs */
+        }
+
+        /* Adjust for Left Sidebar */
+        .edit-container {
+            margin-left: 270px;
+        }
+
         /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .edit-container {
+                margin-left: 0;
+            }
+        }
         @media (max-width: 768px) {
             .card-header {
                 font-size: 1.1rem;
@@ -146,6 +196,7 @@
             .form-control, .form-select {
                 font-size: 0.9rem;
                 padding: 8px 12px;
+                height: 36px; /* Hauteur ajustée pour mobile */
             }
             .btn-primary, .btn-secondary {
                 font-size: 0.9rem;
@@ -155,113 +206,306 @@
     </style>
 {% endblock %}
 
-{% block content %}
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
-        <div class="container-fluid py-1 px-3">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('app_agent_index') }}">Agents</a></li>
-                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modifier</li>
-                </ol>
-                <h6 class="font-weight-bolder mb-0">Modifier un Agent</h6>
-            </nav>
+{% block body %}
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+        <div class="sidenav-header">
+            <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
+                <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+            </a>
         </div>
-    </nav>
-
-    <div class="container-fluid py-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10 col-sm-12">
-                <div class="card edit-card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Modifier Agent #{{ agent.id }}</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        {{ form_errors(form) }} {# Afficher les erreurs globales (ex. CSRF) #}
-                        {{ form_start(form) }}
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.nom, {'attr': {'class': 'form-control' ~ (form.nom.vars.valid == false ? ' is-invalid' : '')}}) }}
-                                    {{ form_errors(form.nom) }}
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control' ~ (form.prenom.vars.valid == false ? ' is-invalid' : '')}}) }}
-                                    {{ form_errors(form.prenom) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.valid == false ? ' is-invalid' : '')}}) }}
-                                    {{ form_errors(form.email) }}
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.cin, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.cin, {'attr': {'class': 'form-control' ~ (form.cin.vars.valid == false ? ' is-invalid' : '')}}) }}
-                                    {{ form_errors(form.cin) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.numTel, 'Numéro de Téléphone', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.numTel, {'attr': {'class': 'form-control' ~ (form.numTel.vars.valid == false ? ' is-invalid' : '')}}) }}
-                                    {{ form_errors(form.numTel) }}
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.adresse, null, {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.adresse, {'attr': {'class': 'form-control' ~ (form.adresse.vars.valid == false ? ' is-invalid' : '')}}) }}
-                                    {{ form_errors(form.adresse) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.dateOfBirth, 'Date de naissance', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.dateOfBirth, {'attr': {'class': 'form-control' ~ (form.dateOfBirth.vars.valid == false ? ' is-invalid' : ''), 'placeholder': 'JJ/MM/AAAA'}}) }}
-                                    {{ form_errors(form.dateOfBirth) }}
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.gender, 'Genre', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.gender, {'attr': {'class': 'form-select' ~ (form.gender.vars.valid == false ? ' is-invalid' : '')}}) }}
-                                    {{ form_errors(form.gender) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.username, "Nom d'utilisateur", {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.username, {'attr': {'class': 'form-control' ~ (form.username.vars.valid == false ? ' is-invalid' : '')}}) }}
-                                    {{ form_errors(form.username) }}
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.motDePasse, 'Mot de Passe (laisser vide pour ne pas modifier)', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.motDePasse, {'attr': {'class': 'form-control' ~ (form.motDePasse.vars.valid == false ? ' is-invalid' : '')}}) }}
-                                    {{ form_errors(form.motDePasse) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    {{ form_label(form.role, 'Rôle', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.role, {'attr': {'class': 'form-select' ~ (form.role.vars.valid == false ? ' is-invalid' : ''), 'readonly': 'readonly'}}) }}
-                                    {{ form_errors(form.role) }}
-                                </div>
-                                <div class="col-md-6 mb-3 d-flex align-items-end">
-                                    <div class="custom-switch">
-                                        {{ form_widget(form.isConfirmed, {'attr': {'class': 'custom-control-input'}}) }}
-                                        <label class="custom-switch-label" for="{{ form.isConfirmed.vars.id }}"></label>
-                                        <span>Compte confirmé</span>
+        <hr class="horizontal dark mt-0">
+        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}" href="{{ path('admin_dashboard') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-tachometer-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
+                        <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-tachometer-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reservationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-calendar-check text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Réservations</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'show' : '' }}" id="reservationsMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_pack' ? 'active' : '' }}" href="{{ path('admin_reservations_pack') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-box text-dark"></i>
                                     </div>
-                                    {{ form_errors(form.isConfirmed) }}
+                                    <span class="nav-link-text ms-1">Réservations Pack</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_personnalise' ? 'active' : '' }}" href="{{ path('admin_reservations_personnalise') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-calendar-alt text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Réservations Personnalisées</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reclamationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-exclamation-triangle text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Réclamations</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'show' : '' }}" id="reclamationsMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reclamations' ? 'active' : '' }}" href="{{ path('admin_reclamations') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-exclamation-circle text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Réclamations</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="{{ path('admin_feedback') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-comment-dots text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Feedback</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-users text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Utilisateurs</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'show' : '' }}" id="usersMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-user-friends text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Membres</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_agent' ? 'active' : '' }}" href="{{ path('app_agent_index') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-user-cog text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Agents</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-box text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Packs</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'show' : '' }}" id="packsMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-box-open text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Packs</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_typepacks' ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-tags text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Types de Packs</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-concierge-bell text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Services</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'show' : '' }}" id="servicesMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_services' ? 'active' : '' }}" href="{{ path('admin_services') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-tools text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Services</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="{{ path('admin_sponsors') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-handshake text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Partenaires</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_logout') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-sign-out-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Déconnexion</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg edit-container">
+        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
+            <div class="container-fluid py-1 px-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('app_agent_index') }}">Agents</a></li>
+                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modifier</li>
+                    </ol>
+                    <h6 class="font-weight-bolder mb-0">Modifier un Agent</h6>
+                </nav>
+                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item d-flex align-items-center">
+                            <a href="#" class="nav-link text-body font-weight-bold px-0">
+                                <i class="fa fa-user me-sm-1"></i>
+                                <span class="d-sm-inline d-none">{{ app.user.email ?? 'Utilisateur' }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10 col-sm-12">
+                    <div class="card edit-card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Modifier Agent #{{ agent.id }}</h5>
+                            <span class="agent-label">Agent</span>
+                        </div>
+                        <div class="card-body p-4">
+                            {{ form_errors(form) }}
+
+                            {{ form_start(form) }}
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.nom, {'attr': {'class': 'form-control' ~ (form.nom.vars.valid == false ? ' is-invalid' : '')}}) }}
+                                        {{ form_errors(form.nom) }}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.prenom, {'attr': {'class': 'form-control' ~ (form.prenom.vars.valid == false ? ' is-invalid' : '')}}) }}
+                                        {{ form_errors(form.prenom) }}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="d-flex justify-content-end gap-3 mt-4">
-                                <button type="submit" class="btn btn-primary">Modifier</button>
-                                <a href="{{ path('app_agent_index') }}" class="btn btn-secondary">Retour</a>
-                            </div>
-                        {{ form_end(form) }}
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.email, {'attr': {'class': 'form-control' ~ (form.email.vars.valid == false ? ' is-invalid' : '')}}) }}
+                                        {{ form_errors(form.email) }}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.cin, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.cin, {'attr': {'class': 'form-control' ~ (form.cin.vars.valid == false ? ' is-invalid' : '')}}) }}
+                                        {{ form_errors(form.cin) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.numTel, 'Numéro de Téléphone', {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.numTel, {'attr': {'class': 'form-control' ~ (form.numTel.vars.valid == false ? ' is-invalid' : '')}}) }}
+                                        {{ form_errors(form.numTel) }}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.adresse, null, {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.adresse, {'attr': {'class': 'form-control' ~ (form.adresse.vars.valid == false ? ' is-invalid' : '')}}) }}
+                                        {{ form_errors(form.adresse) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.dateOfBirth, 'Date de naissance', {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.dateOfBirth, {'attr': {'class': 'form-control' ~ (form.dateOfBirth.vars.valid == false ? ' is-invalid' : ''), 'placeholder': 'AAAA-MM-JJ'}}) }}
+                                        {{ form_errors(form.dateOfBirth) }}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.gender, 'Genre', {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.gender, {'attr': {'class': 'form-select' ~ (form.gender.vars.valid == false ? ' is-invalid' : '')}}) }}
+                                        {{ form_errors(form.gender) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.username, "Nom d'utilisateur", {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.username, {'attr': {'class': 'form-control' ~ (form.username.vars.valid == false ? ' is-invalid' : '')}}) }}
+                                        {{ form_errors(form.username) }}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.motDePasse, 'Mot de Passe (laisser vide pour ne pas modifier)', {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.motDePasse, {'attr': {'class': 'form-control' ~ (form.motDePasse.vars.valid == false ? ' is-invalid' : '')}}) }}
+                                        {{ form_errors(form.motDePasse) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        {{ form_label(form.role, 'Rôle', {'label_attr': {'class': 'form-label'}}) }}
+                                        {{ form_widget(form.role, {'attr': {'class': 'form-select' ~ (form.role.vars.valid == false ? ' is-invalid' : ''), 'readonly': 'readonly'}}) }}
+                                        {{ form_errors(form.role) }}
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <div class="custom-switch">
+                                            {{ form_widget(form.isConfirmed, {'attr': {'class': 'custom-control-input'}}) }}
+                                            <label class="custom-switch-label" for="{{ form.isConfirmed.vars.id }}"></label>
+                                            <span>Compte confirmé</span>
+                                        </div>
+                                        {{ form_errors(form.isConfirmed) }}
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-3 mt-4">
+                                    <button type="submit" class="btn btn-primary">Modifier</button>
+                                    <a href="{{ path('app_agent_index') }}" class="btn btn-secondary">Retour</a>
+                                </div>
+
+                            {{ form_end(form) }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 {% endblock %}

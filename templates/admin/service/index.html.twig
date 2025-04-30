@@ -1,9 +1,363 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Gestion des services{% endblock %}
+{% block title %}Gestion des Services{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- Inclusion explicite de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Importation de la police Roboto */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        /* Général */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            overflow-x: hidden;
+        }
+
+        /* Conteneur principal */
+        .service-container {
+            margin-left: 270px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Fiche spécialisée (mini cadre) */
+        .service-fiche {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 12px;
+            height: 220px; /* Hauteur fixe pour uniformité */
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+        .service-fiche:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+        .service-fiche .fiche-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-shrink: 0;
+        }
+        .service-fiche .fiche-header h6 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1f2937;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+        .service-fiche .badge {
+            color: #ffffff;
+            font-size: 0.65rem;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-left: 6px;
+            flex-shrink: 0;
+        }
+        /* Couleurs spécifiques pour chaque type de partenaire */
+        .badge-traiteur { background: #f97316; }
+        .badge-photographe { background: #22c55e; }
+        .badge-decoration { background: #ec4899; }
+        .badge-sono { background: #3b82f6; }
+        .badge-autres { background: #6b7280; }
+        .service-fiche .fiche-body {
+            font-size: 0.8rem;
+            color: #6b7280;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        .service-fiche .fiche-body p {
+            margin: 0 0 3px;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .description-truncated {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+        .service-fiche .actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            z-index: 10;
+        }
+        .service-fiche .actions a {
+            color: #ffffff;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            transition: transform 0.2s ease;
+            text-decoration: none;
+        }
+        .service-fiche .actions a:hover {
+            transform: scale(1.1);
+        }
+        .action-info { background: #06b6d4; }
+        .action-edit { background: #4f46e5; }
+        .action-delete { background: #ef4444; }
+
+        /* Barre de recherche et actions */
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .search-bar .input-group {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            max-width: 350px;
+            background: #ffffff;
+        }
+        .search-bar .form-control {
+            border: none;
+            font-size: 0.9rem;
+            padding: 10px;
+        }
+        .search-bar .input-group-text {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .add-btn, .export-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #ffffff;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .add-btn { background: #4f46e5; }
+        .add-btn:hover { background: #4338ca; transform: translateY(-2px); }
+        .export-btn { background: #16a34a; }
+        .export-btn:hover { background: #15803d; transform: translateY(-2px); }
+
+        /* Barre latérale de tri */
+        .filter-sidebar {
+            position: fixed;
+            top: 80px;
+            right: 0;
+            width: 300px;
+            height: calc(100vh - 80px);
+            background-color: #f8f9fa;
+            border-radius: 12px 0 0 12px;
+            box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .filter-sidebar.collapsed {
+            transform: translateX(100%);
+        }
+        .filter-toggle-btn {
+            background-color: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .filter-toggle-btn:hover { background-color: #4338ca; }
+        .filter-content { margin-top: 15px; }
+        .filter-toggle-icon {
+            position: fixed;
+            top: 100px;
+            right: 10px;
+            background-color: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+            z-index: 1001;
+            display: none;
+        }
+        .filter-toggle-icon:hover { background-color: #4338ca; }
+        .filter-toggle-icon.visible { display: flex; }
+        .btn-group .btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .btn-group .btn i { font-size: 1rem; }
+        .btn-group .btn.active { background-color: #4f46e5; color: #fff; }
+        .btn-group .btn:hover { background-color: #e0f2fe; color: #1f2937; }
+
+        /* Contenu principal */
+        .service-content {
+            margin-right: 320px;
+            padding: 0 15px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 8px;
+        }
+        .pagination .page-item .page-link {
+            color: #4f46e5;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .pagination .page-item.active .page-link {
+            background: #4f46e5;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        .pagination .page-item .page-link:hover {
+            background: #e0f2fe;
+            color: #4338ca;
+            transform: translateY(-2px);
+        }
+        .pagination .page-item.disabled .page-link {
+            color: #d1d5db;
+            background: #f8f9fa;
+            box-shadow: none;
+        }
+
+        /* Modale */
+        .modal-content {
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            background: #1f2937;
+            color: #ffffff;
+            border-radius: 12px 12px 0 0;
+            padding: 15px 20px;
+        }
+        .modal-body {
+            padding: 20px;
+            font-size: 0.9rem;
+            background: #ffffff;
+        }
+        .modal-body p {
+            margin: 8px 0;
+            color: #1f2937;
+        }
+        .modal-footer {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 0 0 12px 12px;
+        }
+        .modal-footer .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .service-container { margin-left: 0; }
+            .service-content { margin-right: 0; }
+            .filter-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-radius: 12px;
+                margin-top: 20px;
+            }
+            .filter-sidebar.collapsed {
+                transform: translateX(0);
+                height: 50px;
+                overflow: hidden;
+            }
+            .filter-sidebar.collapsed .filter-content { display: none; }
+            .filter-toggle-icon { display: none; }
+        }
+        @media (max-width: 768px) {
+            .service-fiche {
+                font-size: 0.75rem;
+                height: 200px;
+            }
+            .service-fiche .fiche-header h6 {
+                font-size: 0.85rem;
+            }
+            .service-fiche .fiche-body p {
+                font-size: 0.75rem;
+            }
+            .service-fiche .actions a {
+                width: 18px;
+                height: 18px;
+                font-size: 0.7rem;
+            }
+            .search-bar .input-group {
+                max-width: 100%;
+            }
+            .table-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            .action-buttons {
+                justify-content: center;
+            }
+            .pagination .page-link {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-      <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
         <div class="sidenav-header">
             <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
                 <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
@@ -109,7 +463,6 @@
                                     <span class="nav-link-text ms-1">Agents</span>
                                 </a>
                             </li>
-                           
                         </ul>
                     </div>
                 </li>
@@ -180,304 +533,8 @@
             </ul>
         </div>
     </aside>
-    <style>
-        /* Sidebar Styling */
-        .sidenav {
-            background-color: #f8f9fa;
-            width: 250px;
-            height: 100vh;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        .sidenav-header {
-            padding: 15px;
-        }
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            color: #333;
-        }
-        .navbar-brand:hover {
-            color: #ff6200;
-        }
-        .navbar-nav .nav-link {
-            padding: 12px 15px;
-            color: #555;
-            transition: all 0.3s ease;
-        }
-        .navbar-nav .nav-link:hover {
-            background-color: #ff6200;
-            color: #fff;
-        }
-        .navbar-nav .nav-link.active {
-            background-color: #ff6200;
-            color: #fff;
-        }
-        .navbar-nav .nav-link .icon {
-            width: 30px;
-            height: 30px;
-            background-color: #fff;
-            transition: background-color 0.3s ease;
-        }
-        .navbar-nav .nav-link:hover .icon,
-        .navbar-nav .nav-link.active .icon {
-            background-color: #ff6200;
-        }
-        .navbar-nav .nav-link .icon i {
-            font-size: 16px;
-        }
-        .navbar-nav .dropdown-toggle::after {
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-        .navbar-nav .dropdown-toggle[aria-expanded="true"]::after {
-            transform: rotate(180deg);
-        }
-        .collapse {
-            transition: all 0.3s ease;
-        }
-        .navbar-nav .collapse .nav-link {
-            padding-left: 40px;
-            font-size: 0.9em;
-        }
-        .navbar-nav .collapse .nav-link:hover {
-            background-color: #ff8c00;
-        }
-        hr.horizontal {
-            border: 0;
-            height: 1px;
-            background-color: #ddd;
-        }
-        /* Conteneur global */
-        .table-container {
-            max-width: 100%;
-            overflow-x: auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-        /* Style général du tableau */
-        .modern-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        /* En-têtes */
-        .modern-table thead {
-            background-color: #4a90e2;
-            color: #fff;
-        }
-        .modern-table th {
-            padding: 15px;
-            text-align: center;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        /* Corps du tableau */
-        .modern-table tbody tr {
-            transition: background-color 0.3s ease;
-        }
-        .modern-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        .modern-table tbody tr:hover {
-            background-color: #e9ecef;
-            transform: translateY(-2px);
-        }
-        /* Cellules */
-        .modern-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e9ecef;
-            color: #333;
-            font-size: 0.9rem;
-        }
-        /* Cellule des actions */
-        .action-cell {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-        }
-        /* Boutons d'action */
-        .action-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 12px;
-            font-size: 0.85rem;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        /* Bouton de détail */
-        .detail-btn {
-            background-color: transparent;
-            border: 1px solid #17a2b8;
-            color: #17a2b8;
-        }
-        .detail-btn:hover {
-            background-color: #17a2b8;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        /* Bouton d'édition */
-        .edit-btn {
-            background-color: transparent;
-            border: 1px solid #4a90e2;
-            color: #4a90e2;
-        }
-        .edit-btn:hover {
-            background-color: #4a90e2;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        /* Bouton de suppression */
-        .delete-btn {
-            background-color: transparent;
-            border: 1px solid #dc3545;
-            color: #dc3545;
-        }
-        .delete-btn:hover {
-            background-color: #dc3545;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        /* Style des boutons de tri */
-        .sort-btn {
-            background: none;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 0;
-            color: inherit;
-            text-align: left;
-        }
-        .sort-btn:hover {
-            color: #d1e7ff;
-        }
-        .sort-icon {
-            margin-left: 5px;
-            font-size: 0.8em;
-        }
-        .sort-asc .sort-icon::after {
-            content: '↑';
-        }
-        .sort-desc .sort-icon::after {
-            content: '↓';
-        }
-        /* Style du champ de recherche */
-        .input-group {
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        .input-group-text {
-            background-color: #f8f9fa;
-            border: none;
-            color: #4a90e2;
-        }
-        #searchInput {
-            border: none;
-            padding: 10px;
-            font-size: 0.9rem;
-        }
-        #searchInput:focus {
-            outline: none;
-            box-shadow: inset 0 0 5px rgba(74, 144, 226, 0.3);
-        }
-        /* Nouveau style pour la pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 30px;
-            gap: 8px;
-            font-family: 'Arial', sans-serif;
-        }
-        .pagination .page-item {
-            display: inline-flex;
-            align-items: center;
-        }
-        .pagination .page-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 40px;
-            height: 40px;
-            padding: 0;
-            background-color: #ffffff;
-            color: #4a90e2;
-            border: 2px solid #4a90e2;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .pagination .page-link:hover {
-            background-color: #4a90e2;
-            color: #ffffff;
-            border-color: #4a90e2;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .pagination .page-item.active .page-link {
-            background-color: #ff6200;
-            border-color: #ff6200;
-            color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .pagination .page-item.disabled .page-link {
-            background-color: #f8f9fa;
-            border-color: #dee2e6;
-            color: #6c757d;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        .pagination .page-item.disabled .page-link:hover {
-            background-color: #f8f9fa;
-            color: #6c757d;
-            transform: none;
-            box-shadow: none;
-        }
-        /* Responsive */
-        @media (max-width: 768px) {
-            .modern-table th,
-            .modern-table td {
-                padding: 10px;
-                font-size: 0.8rem;
-            }
-            .action-cell {
-                flex-direction: column;
-                gap: 5px;
-            }
-            .action-btn {
-                width: 100%;
-                text-align: center;
-            }
-            .input-group {
-                max-width: 100%;
-                margin-bottom: 10px;
-            }
-            .pagination .page-link {
-                min-width: 35px;
-                height: 35px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
 
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg service-container">
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
@@ -489,9 +546,9 @@
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                        <div class="input-group">
+                        <div class="input-group search-bar">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Rechercher...">
+                            <input type="text" class="form-control" placeholder="Rechercher..." id="searchService" aria-label="Rechercher des services">
                         </div>
                     </div>
                     <ul class="navbar-nav justify-content-end">
@@ -507,213 +564,238 @@
         </nav>
 
         <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-4 shadow-sm border-radius-xl">
-                        <div class="card-header p-3 d-flex justify-content-between align-items-center">
-                            <h6 class="font-weight-bolder mb-0">Liste des Services</h6>
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="input-group" style="max-width: 300px;">
-                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                    <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un service...">
+            <!-- En-tête avec recherche et actions -->
+            <div class="table-header">
+                <div class="search-bar">
+                    <div class="input-group">
+                        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" placeholder="Rechercher par titre, partenaire..." id="searchService" aria-label="Rechercher des services">
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a href="{{ path('admin_service_create') }}" class="add-btn" aria-label="Ajouter un service"><i class="fas fa-plus me-1"></i> Ajouter</a>
+                    <a href="#" class="export-btn" onclick="exportToCSV()" aria-label="Exporter en CSV"><i class="fas fa-download me-1"></i> Exporter</a>
+                </div>
+            </div>
+
+            <!-- Contenu principal : Les fiches de services -->
+            <div class="service-content">
+                <div class="row" id="serviceList">
+                    {% if GServices|length > 0 %}
+                        {% for Gservice in GServices %}
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                                <div class="service-fiche">
+                                    <div class="actions">
+                                        <a href="#" class="action-info" data-bs-toggle="modal" data-bs-target="#serviceModal-{{ Gservice.id }}" aria-label="Voir les détails du service"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="action-edit" aria-label="Modifier le service"><i class="fas fa-edit"></i></a>
+                                        <a href="#" class="action-delete" onclick="if(confirm('Voulez-vous vraiment supprimer ce service ?')) { document.getElementById('delete-form-{{ Gservice.id }}').submit(); } return false;" aria-label="Supprimer le service"><i class="fas fa-trash"></i><span class="sr-only">Supprimer</span></a>
+                                        <form id="delete-form-{{ Gservice.id }}" method="post" action="{{ path('admin_service_delete', {'id': Gservice.id}) }}" style="display: none;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Gservice.id) }}">
+                                        </form>
+                                    </div>
+                                    <div class="fiche-header">
+                                        <h6>{{ Gservice.titre }}</h6>
+                                        <span class="badge badge-{{ Gservice.sponsor.type_partenaire|lower|replace({'é': 'e', ' ': '-'}) }}">{{ Gservice.sponsor.type_partenaire }}</span>
+                                    </div>
+                                    <div class="fiche-body">
+                                        <p><strong>Partenaire :</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
+                                        <p><strong>Type :</strong> {{ Gservice.type_service }}</p>
+                                        <p><strong>Prix :</strong> {{ Gservice.prix }} €</p>
+                                        <p><strong>Location :</strong> {{ Gservice.Location }}</p>
+                                        <p><strong>Description :</strong> <span class="description-truncated">{{ Gservice.description }}</span></p>
+                                    </div>
                                 </div>
-                                <a href="{{ path('admin_service_create') }}" class="btn btn-sm btn-outline-success">
-                                    <i class="fas fa-plus"></i> Ajouter un service
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12">
+                            <div class="alert alert-info text-center" role="alert">
+                                Aucun service trouvé.
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Pagination -->
+                {% if total_pages > 1 %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ path('admin_services', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Précédent">
+                                    <span aria-hidden="true">«</span>
+                                </a>
+                            </li>
+                            {% for i in 1..total_pages %}
+                                <li class="page-item {{ current_page == i ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ path('admin_services', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ path('admin_services', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Suivant">
+                                    <span aria-hidden="true">»</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+
+            <!-- Barre latérale de tri à droite -->
+            <div class="filter-sidebar" id="filterSidebar">
+                <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">Masquer</button>
+                <div class="filter-content">
+                    <h6><i class="fas fa-sort me-2"></i>Options de tri</h6>
+                    <form method="get" action="{{ path('admin_services') }}" class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">Trier par Partenaire</label>
+                            <div class="btn-group w-100">
+                                <a href="{{ path('admin_services', {'sort_by': 'sponsor.nom_partenaire', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par partenaire croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="{{ path('admin_services', {'sort_by': 'sponsor.nom_partenaire', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par partenaire décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
                                 </a>
                             </div>
                         </div>
-                        <div class="card-body p-3">
-                            {# Affichage des messages flash #}
-                            {% for message in app.flashes('success') %}
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
-                            {% for message in app.flashes('error') %}
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
+                        <div class="col-12">
+                            <label class="form-label">Trier par Type de Service</label>
+                            <div class="btn-group w-100">
+                                <a href="{{ path('admin_services', {'sort_by': 'type_service', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'type_service' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par type de service croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="{{ path('admin_services', {'sort_by': 'type_service', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'type_service' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par type de service décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Trier par Titre</label>
+                            <div class="btn-group w-100">
+                                <a href="{{ path('admin_services', {'sort_by': 'titre', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'titre' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par titre croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="{{ path('admin_services', {'sort_by': 'titre', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'titre' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par titre décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Trier par Prix</label>
+                            <div class="btn-group w-100">
+                                <a href="{{ path('admin_services', {'sort_by': 'prix', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'prix' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par prix croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="{{ path('admin_services', {'sort_by': 'prix', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'prix' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par prix décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <a href="{{ path('admin_services') }}" class="btn btn-outline-secondary w-100" aria-label="Réinitialiser les tris"><i class="fas fa-undo me-1"></i> Réinitialiser</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-                            {% if GServices is defined and GServices is not empty %}
-                                <div class="table-responsive">
-                                    <div class="table-container">
-                                        <table class="modern-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="id">ID <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="id_partenaire">Nom Partenaire <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="titre">Titre <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="location">Location <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="type_service">Type Service <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="description">Description <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="prix">Prix <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for Gservice in GServices %}
-                                                    <tr>
-                                                        <td data-label="id">{{ Gservice.id }}</td>
-                                                        <td data-label="id_partenaire">{{ Gservice.sponsor.nom_partenaire }}</td>
-                                                        <td data-label="titre">{{ Gservice.titre }}</td>
-                                                        <td data-label="location">{{ Gservice.Location }}</td>
-                                                        <td data-label="type_service">{{ Gservice.type_service }}</td>
-                                                        <td data-label="description" data-full-description="{{ Gservice.description }}">
-                                                            {{ Gservice.description|length > 50 ? Gservice.description|slice(0, 50) ~ '...' : Gservice.description }}
-                                                        </td>
-                                                        <td data-label="prix">{{ Gservice.prix }}</td>
-                                                        <td class="action-cell">
-                                                            <a href="{{ path('admin_service_show', {'id': Gservice.id}) }}" class="action-btn detail-btn">
-                                                                <i class="fas fa-eye"></i> Détail
-                                                            </a>
-                                                            <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="action-btn edit-btn">
-                                                                <i class="fas fa-edit"></i> Modifier
-                                                            </a>
-                                                            <form method="post" action="{{ path('admin_service_delete', {'id': Gservice.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce service ?');">
-                                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Gservice.id) }}">
-                                                                <button class="action-btn delete-btn">
-                                                                    <i class="fas fa-trash"></i> Supprimer
-                                                                </button>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                {# Afficher la pagination uniquement si plus de 3 services #}
-                                {% if GServices.getTotalItemCount > 3 %}
-                                    <div class="pagination mt-4 d-flex justify-content-center">
-                                        {{ knp_pagination_render(GServices, null, {}, {
-                                            'align': 'center',
-                                            'size': 'medium',
-                                            'rounded': true
-                                        }) }}
-                                    </div>
-                                {% endif %}
-                            {% else %}
-                                <div class="text-center p-4">
-                                    <i class="fas fa-exclamation-circle text-muted" style="font-size: 2rem;"></i>
-                                    <p class="text-muted mt-2">Aucun service trouvé.</p>
-                                </div>
-                            {% endif %}
+            <!-- Bouton flottant pour réafficher le menu -->
+            <button class="filter-toggle-icon" id="filterToggleIcon" onclick="toggleFilterSidebar()">
+                <i class="fas fa-filter"></i>
+            </button>
+        </div>
+
+        <!-- Modales pour détails -->
+        {% for Gservice in GServices %}
+            <div class="modal fade" id="serviceModal-{{ Gservice.id }}" tabindex="-1" aria-labelledby="serviceModalLabel-{{ Gservice.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="serviceModalLabel-{{ Gservice.id }}">{{ Gservice.titre }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>ID :</strong> {{ Gservice.id }}</p>
+                            <p><strong>Partenaire :</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
+                            <p><strong>Type de Partenaire :</strong> {{ Gservice.sponsor.type_partenaire }}</p>
+                            <p><strong>Titre :</strong> {{ Gservice.titre }}</p>
+                            <p><strong>Description :</strong> {{ Gservice.description }}</p>
+                            <p><strong>Location :</strong> {{ Gservice.Location }}</p>
+                            <p><strong>Type de Service :</strong> {{ Gservice.type_service }}</p>
+                            <p><strong>Prix :</strong> {{ Gservice.prix }} €</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="btn btn-primary">Modifier</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endfor %}
     </main>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('searchInput');
-            const table = document.querySelector('.modern-table');
-            const tbody = table ? table.querySelector('tbody') : null;
-            const rows = tbody ? tbody.querySelectorAll('tr') : [];
-
-            // Recherche dynamique
-            if (searchInput && rows.length) {
-                searchInput.addEventListener('input', () => {
-                    const searchTerm = searchInput.value.toLowerCase();
-
-                    rows.forEach(row => {
-                        const cells = row.querySelectorAll('td');
-                        let match = false;
-
-                        cells.forEach(cell => {
-                            if (cell.textContent.toLowerCase().includes(searchTerm)) {
-                                match = true;
-                            }
-                        });
-
-                        row.style.display = match ? '' : 'none';
-                    });
-                });
-            }
-
-            // Tri du tableau
-            const headers = table ? table.querySelectorAll('.sort-btn') : [];
-            let currentSortColumn = null;
-            let isAsc = true;
-
-            headers.forEach(header => {
-                header.addEventListener('click', () => {
-                    const sortKey = header.getAttribute('data-sort');
-                    if (currentSortColumn === sortKey) {
-                        isAsc = !isAsc;
-                    } else {
-                        isAsc = true;
-                        headers.forEach(h => {
-                            h.classList.remove('sort-asc', 'sort-desc');
-                            h.querySelector('.sort-icon').innerHTML = '↕';
-                        });
-                    }
-                    currentSortColumn = sortKey;
-
-                    // Mettre à jour l'icône de tri
-                    header.classList.add(isAsc ? 'sort-asc' : 'sort-desc');
-                    header.classList.remove(isAsc ? 'sort-desc' : 'sort-asc');
-                    header.querySelector('.sort-icon').innerHTML = isAsc ? '↑' : '↓';
-
-                    // Trier les lignes
-                    sortTable(sortKey, isAsc);
-                });
+        // Recherche en temps réel
+        document.getElementById('searchService').addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase().trim();
+            const fiches = document.querySelectorAll('#serviceList .col-lg-3');
+            fiches.forEach(fiche => {
+                const titre = fiche.querySelector('.fiche-header h6').textContent.toLowerCase();
+                const partenaire = fiche.querySelector('.fiche-body p:nth-child(1)').textContent.toLowerCase();
+                const typeService = fiche.querySelector('.fiche-body p:nth-child(2)').textContent.toLowerCase();
+                const prix = fiche.querySelector('.fiche-body p:nth-child(3)').textContent.toLowerCase();
+                const location = fiche.querySelector('.fiche-body p:nth-child(4)').textContent.toLowerCase();
+                const description = fiche.querySelector('.fiche-body p:nth-child(5)').textContent.toLowerCase();
+                fiche.style.display = titre.includes(searchText) || partenaire.includes(searchText) || typeService.includes(searchText) || prix.includes(searchText) || location.includes(searchText) || description.includes(searchText) ? '' : 'none';
             });
-
-            function sortTable(column, asc) {
-                const rowsArray = Array.from(rows);
-                const isNumeric = ['id', 'prix'].includes(column);
-
-                rowsArray.sort((a, b) => {
-                    let aValue = column === 'description'
-                        ? (a.querySelector(`td[data-label="${column}"]`).getAttribute('data-full-description') || a.querySelector(`td[data-label="${column}"]`).textContent.trim())
-                        : a.querySelector(`td[data-label="${column}"]`).textContent.trim();
-                    let bValue = column === 'description'
-                        ? (b.querySelector(`td[data-label="${column}"]`).getAttribute('data-full-description') || b.querySelector(`td[data-label="${column}"]`).textContent.trim())
-                        : b.querySelector(`td[data-label="${column}"]`).textContent.trim();
-
-                    // Gestion des valeurs vides
-                    if (!aValue && !bValue) return 0;
-                    if (!aValue) return asc ? 1 : -1;
-                    if (!bValue) return asc ? -1 : 1;
-
-                    // Tri numérique pour id et prix
-                    if (isNumeric) {
-                        aValue = parseFloat(aValue) || 0;
-                        bValue = parseFloat(bValue) || 0;
-                        return asc ? aValue - bValue : bValue - aValue;
-                    }
-
-                    // Tri textuel pour les autres colonnes
-                    return asc
-                        ? aValue.localeCompare(bValue, undefined, { sensitivity: 'base' })
-                        : bValue.localeCompare(aValue, undefined, { sensitivity: 'base' });
-                });
-
-                // Réinsérer les lignes triées
-                if (tbody) {
-                    tbody.innerHTML = '';
-                    rowsArray.forEach(row => tbody.appendChild(row));
-                }
-            }
         });
+
+        // Toggle pour la barre latérale de tri
+        function toggleFilterSidebar() {
+            const sidebar = document.getElementById('filterSidebar');
+            const btn = sidebar.querySelector('.filter-toggle-btn');
+            const icon = document.getElementById('filterToggleIcon');
+            sidebar.classList.toggle('collapsed');
+            btn.textContent = sidebar.classList.contains('collapsed') ? 'Afficher' : 'Masquer';
+            icon.classList.toggle('visible', sidebar.classList.contains('collapsed'));
+        }
+
+        // Exportation en CSV
+        function exportToCSV() {
+            const fiches = document.querySelectorAll('#serviceList .col-lg-3');
+            let csvContent = 'ID,Titre,Partenaire,Type de Service,Prix,Location,Description\n';
+            fiches.forEach(fiche => {
+                const id = fiche.querySelector('.fiche-header h6').textContent.replace('Service #', '');
+                const titre = fiche.querySelector('.fiche-header h6').textContent.replace(/,/g, '');
+                const partenaire = fiche.querySelector('.fiche-body p:nth-child(1)').textContent.replace('Partenaire : ', '').replace(/,/g, '');
+                const typeService = fiche.querySelector('.fiche-body p:nth-child(2)').textContent.replace('Type : ', '').replace(/,/g, '');
+                const prix = fiche.querySelector('.fiche-body p:nth-child(3)').textContent.replace('Prix : ', '').replace(/,/g, '');
+                const location = fiche.querySelector('.fiche-body p:nth-child(4)').textContent.replace('Location : ', '').replace(/,/g, '');
+                const description = fiche.querySelector('.fiche-body p:nth-child(5)').textContent.replace('Description : ', '').replace(/,/g, '');
+                csvContent += `${id},${titre},${partenaire},${typeService},${prix},${location},${description}\n`;
+            });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'services.csv';
+            link.click();
+        }
     </script>
 {% endblock %}

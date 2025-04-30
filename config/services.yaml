@@ -18,7 +18,10 @@ services:
         autowire: true
         autoconfigure: true
     Symfony\Component\Security\Http\Logout\LogoutUrlGenerator: '@security.logout_url_generator'
-
+    
+    App\Controller\SecurityController:
+        arguments:
+            $logger: '@monolog.logger'
     App\:
         resource: '../src/'
         exclude:

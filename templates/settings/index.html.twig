@@ -1,672 +1,1070 @@
-{% extends 'home/home.html.twig' %}
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        {% block title %}{{ 'settings'|trans }} - Eventora{% endblock %}
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
-{% block title %}{{ 'settings'|trans }} - Eventora{% endblock %}
+        {% block stylesheets %}
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond:400,500,500i,600,600i,700,700i" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,600" rel="stylesheet">
+            <!-- Animate.css -->
+            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+            <!-- Icomoon Icon Fonts -->
+            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+            <!-- Bootstrap -->
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <!-- Navbar -->
+            <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+            <!-- Magnific Popup -->
+            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+            <!-- Owl Carousel -->
+            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+            <!-- Theme style -->
+            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <!-- Font Awesome -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+            <!-- Custom styles for navbar and settings -->
+            <style>
+                /* Reset */
+                * {
+                    box-sizing: border-box;
+                }
 
-{% block stylesheets %}
-    <style>
-        :root {
-            --primary-color: #934D1A;
-            --secondary-color: #BE6C2A;
-            --text-color: #1f2937;
-            --bg-color: #f9fafb;
-            --sidebar-bg: #ffffff;
-            --border-color: #e5e7eb;
-            --error-color: #dc2626;
-            --success-color: #16a34a;
-        }
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-family: 'Work Sans', sans-serif;
+                    min-height: 100vh;
+                    position: relative;
+                    overflow-x: hidden;
+                    background: none; /* Supprime tout fond statique */
+                }
 
-        .settings-wrapper {
-            display: flex;
-            min-height: 100vh;
-            background-color: var(--bg-color);
-            font-family: 'Inter', sans-serif;
-        }
+                /* Video Background */
+                #background-video {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    z-index: -2;
+                }
 
-        /* Sidebar */
-        .sidebar {
-            width: 300px;
-            background-color: var(--sidebar-bg);
-            padding: 2.5rem 2rem;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            overflow-y: auto;
-            transition: width 0.3s ease;
-        }
+                body::before {
+                    content: '';
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.6); /* Overlay plus sombre pour meilleure lisibilité */
+                    z-index: -1;
+                }
 
-        .sidebar h2 {
-            font-size: 1.75rem;
-            color: var(--text-color);
-            margin-bottom: 2.5rem;
-            font-weight: 600;
-        }
+                /* Message d'erreur pour la vidéo */
+                #video-error {
+                    display: none;
+                    position: fixed;
+                    top: 10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(255, 77, 77, 0.9);
+                    color: #fff;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    z-index: 1001;
+                    font-family: 'Work Sans', sans-serif;
+                    text-align: center;
+                }
 
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
+                /* Navigation fixe */
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    padding-top: 70px;
+                }
 
-        .sidebar li {
-            margin-bottom: 1.25rem;
-            position: relative;
-            opacity: 0;
-            transform: translateX(-20px);
-            animation: slideIn 0.5s ease forwards;
-            animation-delay: calc(var(--index) * 0.1s);
-        }
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background: rgba(255, 255, 255, 0.95);
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
 
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
 
-        .sidebar li a {
-            display: block;
-            padding: 1rem 1.25rem;
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 1.1rem;
-            border-radius: 6px;
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-        }
+                .fh5co-logo a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 24px;
+                    color: #934D1A;
+                    text-decoration: none;
+                }
 
-        .sidebar li a:hover {
-            background-color: #BE6C2A;
-            color: #ffffff;
-            transform: translateX(5px);
-        }
+                .user-circle {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 20px;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                }
 
-        .sidebar li.active a {
-            background-color: #934D1A;
-            color: #ffffff;
-            font-weight: 500;
-        }
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
 
-        .language-menu .language-toggle {
-            cursor: pointer;
-        }
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
 
-        .language-submenu {
-            display: none;
-            padding-left: 1.5rem;
-            margin-top: 0.5rem;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
 
-        .language-submenu.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 15px;
+                    position: relative;
+                }
 
-        .language-submenu a {
-            font-size: 1rem;
-            padding: 0.75rem 1.25rem;
-        }
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
 
-        .help-item.hidden {
-            display: none;
-        }
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #934D1A;
+                }
 
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 2.5rem;
-            max-width: 900px;
-            margin-left: 340px;
-            margin-right: 2rem;
-        }
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #934D1A !important;
+                    font-weight: 600;
+                }
 
-        .main-content h1 {
-            font-size: 2.25rem;
-            color: var(--text-color);
-            margin-bottom: 2.5rem;
-            font-weight: 700;
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
 
-        .alert-success,
-        .alert-error {
-            padding: 1.25rem;
-            margin-bottom: 1.25rem;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 150px;
+                    z-index: 1001;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                    opacity: 0;
+                    visibility: hidden;
+                }
 
-        .alert-success {
-            background-color: var(--success-color);
-            color: #ffffff;
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block;
+                    opacity: 1;
+                    visibility: visible;
+                }
 
-        .alert-error {
-            background-color: var(--error-color);
-            color: #ffffff;
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
 
-        /* Settings Sections */
-        .settings-section {
-            background-color: #ffffff;
-            padding: 2rem;
-            border-radius: 8px;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s ease forwards;
-            animation-delay: calc(var(--index) * 0.2s);
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                }
 
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #f57c00;
+                }
 
-        .settings-section h3 {
-            font-size: 1.5rem;
-            color: var(--text-color);
-            margin-bottom: 1.25rem;
-            font-weight: 600;
-        }
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                    padding: 10px;
+                }
 
-        .settings-section:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
+                /* Main content wrapper */
+                .settings-wrapper {
+                    flex: 1;
+                    padding: 70px 20px 40px;
+                    box-sizing: border-box;
+                    position: relative;
+                    z-index: 2;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
 
-        .settings-section.highlight {
-            animation: highlightSection 1s ease-out;
-        }
+                /* Settings container */
+                .settings-container {
+                    width: 100%;
+                    margin: 40px auto;
+                    padding: 40px;
+                    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.4)); /* Plus sombre pour contraste */
+                    border-radius: 20px;
+                    transition: transform 0.3s ease;
+                    position: relative;
+                    z-index: 2;
+                    box-shadow: 0 5px 15px rgba(217, 130, 43, 0.3); /* Ombre dorée */
+                }
 
-        @keyframes highlightSection {
-            0% {
-                background-color: #934D1A;
-            }
-            100% {
-                background-color: #ffffff;
-            }
-        }
+                .settings-container:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 20px rgba(217, 130, 43, 0.5);
+                }
 
-        /* Profile Picture */
-        .profile-picture {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
+                /* Headings */
+                .settings-container h1 {
+                    font-family: 'Cormorant Garamond', serif;
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    color: #ffffff;
+                    text-align: center;
+                    margin-bottom: 40px;
+                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+                }
 
-        .profile-picture img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 1.25rem;
-            border: 3px solid var(--border-color);
-            transition: transform 0.3s ease;
-        }
+                .settings-container h1 span {
+                    font-family: 'Sacramento', cursive;
+                    color: #d9822b;
+                    font-size: 18px;
+                    display: block;
+                    margin-bottom: 10px;
+                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                }
 
-        .profile-picture img:hover {
-            transform: scale(1.1);
-        }
+                .settings-container h3 {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 1.8rem;
+                    font-weight: 600;
+                    color: #ffffff;
+                    margin-bottom: 30px;
+                    text-transform: uppercase;
+                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+                }
 
-        .file-upload-wrapper {
-            position: relative;
-            display: inline-block;
-        }
+                /* Alerts */
+                .alert住了success,
+                .alert-error {
+                    padding: 1rem;
+                    margin-bottom: 1.5rem;
+                    border-radius: 10px;
+                    font-size: 1rem;
+                    text-align: center;
+                    font-family: 'Work Sans', sans-serif;
+                    color: #ffffff;
+                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                }
 
-        .custom-file-upload {
-            display: inline-block;
-            padding: 0.75rem 1.25rem;
-            background-color: #934D1A;
-            color: #ffffff;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            text-align: center;
-            border: 1px solid #BE6C2A;
-        }
+                .alert-success {
+                    background-color: rgba(22, 163, 74, 0.8);
+                }
 
-        .custom-file-upload:hover {
-            background-color: #BE6C2A;
-            border-color: #BE6C2A;
-            transform: translateY(-2px);
-        }
+                .alert-error {
+                    background-color: rgba(255, 77, 77, 0.8);
+                }
 
-        .file-upload-wrapper input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
+                /* Settings sections */
+                .settings-section {
+                    margin-bottom: 2.5rem;
+                    padding: 30px;
+                    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
+                    border-radius: 20px;
+                    opacity: 0;
+                    animation: fadeIn 0.5s ease forwards;
+                    box-shadow: 0 3px 10px rgba(217, 130, 43, 0.2);
+                }
 
-        /* Form Styling */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
+                .settings-section.highlight {
+                    animation: highlightSection 1s ease-out;
+                }
 
-        .form-group label {
-            font-size: 1rem;
-            color: var(--text-color);
-            margin-bottom: 0.75rem;
-            font-weight: 500;
-        }
+                @keyframes highlightSection {
+                    0% {
+                        background: linear-gradient(to bottom, rgba(147, 77, 26, 0.8), rgba(217, 130, 43, 0.8));
+                        color: #ffffff;
+                    }
+                    100% {
+                        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
+                        color: #ffffff;
+                    }
+                }
 
-        .form-group input,
-        .form-group select {
-            padding: 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
+                /* Profile picture */
+                .profile-picture {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-bottom: 2rem;
+                }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #934D1A;
-            box-shadow: 0 0 0 3px #BE6C2A;
-        }
+                .profile-picture img {
+                    width: 120px;
+                    height: 120px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    margin-bottom: 1.5rem;
+                    border: 3px solid #d9822b;
+                    transition: transform 0.3s ease;
+                    box-shadow: 0 0 10px rgba(217, 130, 43, 0.5);
+                }
 
-        .form-error {
-            color: var(--error-color);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
+                .profile-picture img:hover {
+                    transform: scale(1.1);
+                }
 
-        .form-group button[type="submit"] {
-            padding: 1rem 2rem;
-            background-color: #934D1A;
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
+                .file-upload-wrapper {
+                    position: relative;
+                    display: inline-block;
+                }
 
-        .form-group button[type="submit"]:hover {
-            background-color: #BE6C2A;
-            transform: translateY(-2px);
-        }
+                .custom-file-upload {
+                    display: inline-block;
+                    padding: 10px 25px;
+                    background: linear-gradient(135deg, #934D1A, #D9822B);
+                    color: #ffffff;
+                    border-radius: 30px;
+                    cursor: pointer;
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    transition: background 0.3s ease, transform 0.3s ease;
+                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                    box-shadow: 0 2px 8px rgba(217, 130, 43, 0.4);
+                }
 
-        /* Password Toggle Icon */
-        .password-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+                .custom-file-upload:hover {
+                    background: linear-gradient(135deg, #b66b1d, #d9822b);
+                    transform: scale(1.05);
+                    box-shadow: 0 4px 12px rgba(217, 130, 43, 0.6);
+                }
 
-        .password-container input {
-            width: 100%;
-            padding-right: 3rem; /* Space for the icon */
-        }
+                .file-upload-wrapper input[type="file"] {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0;
+                    cursor: pointer;
+                }
 
-        .password-toggle-icon {
-            position: absolute;
-            right: 1rem;
-            cursor: pointer;
-            color: var(--text-color);
-            font-size: 1.2rem;
-            transition: color 0.3s ease;
-        }
+                /* Form styling */
+                .form-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 1.5rem;
+                }
 
-        .password-toggle-icon:hover {
-            color: #934D1A;
-        }
+                .form-group {
+                    margin-bottom: 20px;
+                }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .settings-wrapper {
-                flex-direction: column;
-            }
+                .form-group label {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 1rem;
+                    color: #ffffff; /* Texte blanc pour contraste */
+                    margin-bottom: 5px;
+                    font-weight: 500;
+                    display: block;
+                    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+                }
 
-            .sidebar {
-                width: 100%;
-                position: static;
-                height: auto;
-                box-shadow: none;
-                border-bottom: 1px solid var(--border-color);
-            }
+                .form-group input,
+                .form-group select {
+                    padding: 10px;
+                    border: 1px solid rgba(217, 130, 43, 0.3); /* Bordure dorée subtile */
+                    border-radius: 5px;
+                    font-family: 'Roboto', sans-serif;
+                    font-size: 1rem;
+                    background: rgba(255, 255, 255, 0.9); /* Fond blanc semi-transparent */
+                    color: #333;
+                    transition: background 0.3s ease, border-color 0.3s ease;
+                    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+                }
 
-            .main-content {
-                margin-left: 0;
-                padding: 1.5rem;
-            }
+                .form-group input:focus,
+                .form-group select:focus {
+                    background: rgba(255, 255, 255, 1);
+                    border-color: #d9822b;
+                    outline: none;
+                    box-shadow: 0 0 8px rgba(217, 130, 43, 0.4);
+                }
 
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-    <!-- Include Font Awesome for eye icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-{% endblock %}
+                .form-group input::placeholder {
+                    color: rgba(0, 0, 0, 0.5);
+                }
 
-{% block body %}
-    <div class="settings-wrapper">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h2>{{ 'settings'|trans }}</h2>
-            <ul>
-                {% set menu_items = [
-                    'Back To Home',
-                    'Account Information',
-                    'Change Password',
-                    'Langages',
-                    'Help'
-                ] %}
-                {% for item in menu_items %}
-                    <li style="--index: {{ loop.index }}"
-                        {% if item == 'Change Password' %}class="active"{% endif %}
-                        {% if item == 'Langages' %}class="language-menu"{% endif %}
-                        {% if item == 'Help' %}class="help-item"{% endif %}>
-                        {% if item == 'Home' %}
-                            <a href="{{ path('app_home') }}">{{ item|trans }}</a>
-                        {% elseif item == 'Langages' %}
-                            <a href="#" class="language-toggle">{{ 'languages'|trans }}</a>
-                            <div class="language-submenu">
-                                <a href="{{ path('app_change_language', {locale: 'fr'}) }}">{{ 'french'|trans }}</a>
-                                <a href="{{ path('app_change_language', {locale: 'en'}) }}">{{ 'english'|trans }}</a>
-                            </div>
-                        {% elseif item == 'Change Password' %}
-                            <a href="#change-password" class="scroll-link">{{ item|trans }}</a>
-                        {% elseif item == 'Account Information' %}
-                            <a href="#account-information" class="scroll-link">{{ item|trans }}</a>
-                        {% else %}
-                            <a href="#">{{ item|trans }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+                .form-error {
+                    color: #ff4d4d;
+                    font-size: 0.9rem;
+                    margin-top: 5px;
+                    font-family: 'Work Sans', sans-serif;
+                    display: block;
+                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                }
 
-        <!-- Main Content -->
-        <div class="main-content">
-            {# Translated Title #}
-            <h1>{{ 'Account Information'|trans }}:</h1>
+                .form-group button[type="submit"] {
+                    padding: 10px 25px;
+                    background: linear-gradient(135deg, #934D1A, #D9822B);
+                    border: none;
+                    border-radius: 30px;
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    color: #ffffff;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    cursor: pointer;
+                    transition: background 0.3s ease, transform 0.3s ease;
+                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                    box-shadow: 0 2px 8px rgba(217, 130, 43, 0.4);
+                }
 
-            {% for flash_message in app.flashes('success') %}
-                <div class="alert-success">
-                    {{ flash_message|trans }}
+                .form-group button[type="submit"]:hover {
+                    background: linear-gradient(135deg, #b66b1d, #d9822b);
+                    transform: scale(1.05);
+                    box-shadow: 0 4px 12px rgba(217, 130, 43, 0.6);
+                }
+
+                /* Password toggle icon */
+                .password-container {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .password-container input {
+                    width: 100%;
+                    padding-right: 2.5rem;
+                }
+
+                .password-toggle-icon {
+                    position: absolute;
+                    right: 0.75rem;
+                    cursor: pointer;
+                    color: #ffffff;
+                    font-size: 1.2rem;
+                    transition: color 0.3s ease;
+                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                }
+
+                .password-toggle-icon:hover {
+                    color: #d9822b;
+                }
+
+                /* Navigation links */
+                .settings-nav {
+                    display: flex;
+                    justify-content: center;
+                    gap: 1rem;
+                    margin-bottom: 2rem;
+                    flex-wrap: wrap;
+                }
+
+                .settings-nav a {
+                    padding: 10px 25px;
+                    background: linear-gradient(135deg, #934D1A, #D9822B);
+                    color: #ffffff;
+                    text-decoration: none;
+                    border-radius: 30px;
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    transition: background 0.3s ease, transform 0.3s ease;
+                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                    box-shadow: 0 2px 8px rgba(217, 130, 43, 0.4);
+                }
+
+                .settings-nav a:hover {
+                    background: linear-gradient(135deg, #b66b1d, #d9822b);
+                    transform: scale(1.05);
+                    box-shadow: 0 4px 12px rgba(217, 130, 43, 0.6);
+                    animation: pulse 0.5s ease;
+                }
+
+                @keyframes pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.08); }
+                    100% { transform: scale(1.05); }
+                }
+
+                .settings-nav a.active {
+                    background: linear-gradient(135deg, #b66b1d, #d9822b);
+                    font-weight: 600;
+                    box-shadow: 0 4px 12px rgba(217, 130, 43, 0.6);
+                }
+
+                /* Language submenu */
+                .language-submenu {
+                    display: none;
+                    margin-top: 0.5rem;
+                    padding-left: 2rem;
+                }
+
+                .language-submenu.active {
+                    display: block;
+                }
+
+                .language-submenu a {
+                    font-size: 0.9rem;
+                    padding: 0.5rem 1rem;
+                    background: transparent;
+                    display: block;
+                    color: #ffffff;
+                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                }
+
+                /* Footer */
+                #fh5co-footer {
+                    margin-top: auto;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 2;
+                }
+
+                /* Responsive adjustments */
+                @media (max-width: 1024px) {
+                    .form-grid {
+                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .menu-toggle {
+                        display: block;
+                    }
+
+                    .fh5co-nav .menu-1 ul {
+                        display: none;
+                        flex-direction: column;
+                        position: absolute;
+                        top: 60px;
+                        left: 0;
+                        width: 100%;
+                        background-color: #fff;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        padding: 20px 0;
+                    }
+
+                    .fh5co-nav .menu-1 ul.active {
+                        display: flex;
+                    }
+
+                    .fh5co-nav .menu-1 ul li {
+                        margin: 10px 0;
+                        text-align: center;
+                    }
+
+                    .user-circle {
+                        margin-right: 0;
+                        margin-bottom: 5px;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                        position: static;
+                        display: none;
+                        box-shadow: none;
+                        background-color: #f8f9fa;
+                        padding: 10px 0;
+                        opacity: 1;
+                        visibility: visible;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                        display: none;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                        display: block;
+                    }
+
+                    .settings-wrapper {
+                        padding: 60px 15px 20px;
+                    }
+
+                    .settings-container {
+                        padding: 20px;
+                        margin: 20px auto;
+                    }
+
+                    .settings-container h1 {
+                        font-size: 2rem;
+                    }
+
+                    .settings-container h3 {
+                        font-size: 1.5rem;
+                    }
+
+                    .form-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .settings-nav {
+                        flex-direction: column;
+                        align-items: center;
+                    }
+
+                    .settings-nav a {
+                        width: 100%;
+                        text-align: center;
+                        padding: 10px;
+                    }
+
+                    #background-video {
+                        object-fit: cover;
+                        height: 100vh;
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .settings-container h1 {
+                        font-size: 1.8rem;
+                    }
+
+                    .settings-container h3 {
+                        font-size: 1.3rem;
+                    }
+
+                    .profile-picture img {
+                        width: 100px;
+                        height: 100px;
+                    }
+
+                    .settings-nav a {
+                        padding: 8px;
+                        font-size: 0.9rem;
+                    }
+                }
+            </style>
+            <!-- Include Font Awesome for eye icons -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        {% endblock %}
+
+        <!-- Modernizr JS -->
+        <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
+        <!--[if lt IE 9]>
+        <script src="{{ asset('js/respond.min.js') }}"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="fh5co-loader"></div>
+
+        <!-- Message d'erreur pour la vidéo -->
+        <div id="video-error"></div>
+
+        <!-- Vidéo de fond -->
+        <video id="background-video" autoplay loop muted playsinline>
+            <source src="{{ asset('images/settings.mp4') }}" type="video/mp4">
+            Votre navigateur ne prend pas en charge la balise vidéo.
+        </video>
+
+        <div id="page">
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
+                    </div>
+                    <div class="menu-toggle">
+                        <i class="icon-menu"></i>
+                    </div>
+                    <div class="menu-1">
+                        <ul>
+                            <li><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Réservation</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('user_packs') }}">Packs</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_services') }}">Service</a></li>
+                                    <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        {% else %}
+                                            <i class="icon-user"></i>
+                                        {% endif %}
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_settings') }}" class="active">Paramètres</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
+                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            {% endfor %}
-            {% for flash_message in app.flashes('error') %}
-                <div class="alert-error">
-                    {{ flash_message|trans }}
-                </div>
-            {% endfor %}
+            </nav>
 
-            <!-- Section 1: Basic Information -->
-            <div class="settings-section" id="account-information" style="--index: 1">
-                <h3>{{ 'your_account'|trans }}</h3>
-                <div class="profile-picture">
-                    {% if app.user.image %}
-                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="{{ 'profile_picture'|trans }}">
-                    {% else %}
-                        <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="{{ 'default_profile_picture'|trans }}">
-                    {% endif %}
-                    {{ form_start(imageForm, {'attr': {'id': 'imageForm', 'enctype': 'multipart/form-data'}}) }}
-                    <div class="file-upload-wrapper">
-                        <label for="imageForm_image" class="custom-file-upload">
-                            {{ 'edit_profile_picture'|trans }}
-                        </label>
-                        {{ form_widget(imageForm.image, {'attr': {'id': 'imageForm_image', 'accept': 'image/*'}}) }}
-                    </div>
-                    {{ form_widget(imageForm.submit, {'attr': {'style': 'display: none;'}}) }}
-                    {{ form_end(imageForm) }}
-                </div>
+            <div class="settings-wrapper">
+                <div class="settings-container animate-box" data-animate-effect="fadeIn">
+                    <h1><span>{{ 'your_profile'|trans }}</span>{{ 'settings'|trans }}</h1>
 
-                {{ form_start(form, {'attr': {'is_edit': true}}) }}
-                <div class="form-grid">
-                    <div class="form-group">
-                        {{ form_label(form.nom, null, {'label': 'first_name'|trans}) }}
-                        {{ form_widget(form.nom) }}
-                        {% if form.nom.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.nom.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.prenom, null, {'label': 'last_name'|trans}) }}
-                        {{ form_widget(form.prenom) }}
-                        {% if form.prenom.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.prenom.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.dateOfBirth, null, {'label': 'date_of_birth'|trans}) }}
-                        {{ form_widget(form.dateOfBirth) }}
-                        {% if form.dateOfBirth.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.dateOfBirth.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.gender, null, {'label': 'gender'|trans}) }}
-                        {{ form_widget(form.gender) }}
-                        {% if form.gender.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.gender.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.email, null, {'label': 'email'|trans}) }}
-                        {{ form_widget(form.email) }}
-                        {% if form.email.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.email.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.cin, null, {'label': 'cin'|trans}) }}
-                        {{ form_widget(form.cin) }}
-                        {% if form.cin.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.cin.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.numTel, null, {'label': 'phone_number'|trans}) }}
-                        {{ form_widget(form.numTel) }}
-                        {% if form.numTel.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.numTel.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.adresse, null, {'label': 'address'|trans}) }}
-                        {{ form_widget(form.adresse) }}
-                        {% if form.adresse.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.adresse.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label>{{ 'account_confirmed'|trans }}</label>
-                        <p>{{ app.user.isConfirmed ? 'Oui' : 'Non' }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 2: Security and Access -->
-            <div class="settings-section" id="change-password" style="--index: 2">
-                <h3>{{ 'Change password'|trans }}</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        {{ form_label(form.username, null, {'label': 'username'|trans}) }}
-                        {{ form_widget(form.username) }}
-                        {% if form.username.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.username.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.motDePasse, null, {'label': 'password'|trans}) }}
-                        <div class="password-container">
-                            {{ form_widget(form.motDePasse, {'attr': {'class': 'password-input'}}) }}
-                            <i class="fas fa-eye password-toggle-icon" id="password-toggle"></i>
+                    <!-- Navigation links -->
+                    <div class="settings-nav">
+                        <a href="{{ path('app_home') }}">{{ 'back_to_home'|trans }}</a>
+                        <a href="#account-information" class="scroll-link active">{{ 'account_information'|trans }}</a>
+                        <a href="#change-password" class="scroll-link">{{ 'change_password'|trans }}</a>
+                        <a href="#" class="language-toggle">{{ 'languages'|trans }}</a>
+                        <div class="language-submenu">
+                            <a href="{{ path('app_change_language', {locale: 'fr'}) }}">{{ 'french'|trans }}</a>
+                            <a href="{{ path('app_change_language', {locale: 'en'}) }}">{{ 'english'|trans }}</a>
                         </div>
-                        {% if form.motDePasse.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.motDePasse.vars.errors[0].message|trans }}</div>
-                        {% endif %}
                     </div>
+
+                    <!-- Flash messages -->
+                    {% for flash_message in app.flashes('success') %}
+                        <div class="alert-success">
+                            {{ flash_message|trans }}
+                        </div>
+                    {% endfor %}
+                    {% for flash_message in app.flashes('error') %}
+                        <div class="alert-error">
+                            {{ flash_message|trans }}
+                        </div>
+                    {% endfor %}
+
+                    <!-- Section 1: Basic Information -->
+                    <div class="settings-section animate-box" id="account-information" data-animate-effect="fadeIn">
+                        <h3>{{ 'your_account'|trans }}</h3>
+                        <div class="profile-picture">
+                            {% if app.user.image %}
+                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="{{ 'profile_picture'|trans }}">
+                            {% else %}
+                                <img src="{{ asset('Uploads/images/default-user.png') }}" alt="{{ 'default_profile_picture'|trans }}">
+                            {% endif %}
+                            {{ form_start(imageForm, {'attr': {'id': 'imageForm', 'enctype': 'multipart/form-data'}}) }}
+                            <div class="file-upload-wrapper">
+                                <label for="imageForm_image" class="custom-file-upload">
+                                    {{ 'edit_profile_picture'|trans }}
+                                </label>
+                                {{ form_widget(imageForm.image, {'attr': {'id': 'imageForm_image', 'accept': 'image/*'}}) }}
+                            </div>
+                            {{ form_widget(imageForm.submit, {'attr': {'style': 'display: none;'}}) }}
+                            {{ form_end(imageForm) }}
+                        </div>
+
+                        {{ form_start(form, {'attr': {'is_edit': true}}) }}
+                        <div class="form-grid">
+                            <div class="form-group">
+                                {{ form_label(form.nom, null, {'label': 'first_name'|trans}) }}
+                                {{ form_widget(form.nom) }}
+                                {% if form.nom.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.nom.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.prenom, null, {'label': 'last_name'|trans}) }}
+                                {{ form_widget(form.prenom) }}
+                                {% if form.prenom.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.prenom.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.dateOfBirth, null, {'label': 'date_of_birth'|trans}) }}
+                                {{ form_widget(form.dateOfBirth) }}
+                                {% if form.dateOfBirth.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.dateOfBirth.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.gender, null, {'label': 'gender'|trans}) }}
+                                {{ form_widget(form.gender) }}
+                                {% if form.gender.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.gender.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.email, null, {'label': 'email'|trans}) }}
+                                {{ form_widget(form.email) }}
+                                {% if form.email.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.email.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.cin, null, {'label': 'cin'|trans}) }}
+                                {{ form_widget(form.cin) }}
+                                {% if form.cin.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.cin.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.numTel, null, {'label': 'phone_number'|trans}) }}
+                                {{ form_widget(form.numTel) }}
+                                {% if form.numTel.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.numTel.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.adresse, null, {'label': 'address'|trans}) }}
+                                {{ form_widget(form.adresse) }}
+                                {% if form.adresse.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.adresse.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label>{{ 'account_confirmed'|trans }}</label>
+                                <p style="color: #ffffff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">{{ app.user.isConfirmed ? 'Oui' : 'Non' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Security and Access -->
+                    <div class="settings-section animate-box" id="change-password" data-animate-effect="fadeIn">
+                        <h3>{{ 'change_password'|trans }}</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                {{ form_label(form.username, null, {'label': 'username'|trans}) }}
+                                {{ form_widget(form.username) }}
+                                {% if form.username.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.username.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.motDePasse, null, {'label': 'password'|trans}) }}
+                                <div class="password-container">
+                                    {{ form_widget(form.motDePasse, {'attr': {'class': 'password-input'}}) }}
+                                    <i class="fas fa-eye password-toggle-icon" id="password-toggle"></i>
+                                </div>
+                                {% if form.motDePasse.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.motDePasse.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_widget(form.save, {'label': 'save_changes'|trans}) }}
+                    </div>
+
+                    {{ form_end(form) }}
                 </div>
             </div>
 
-            <div class="form-group">
-                {{ form_widget(form.save, {'label': 'save_changes'|trans}) }}
-            </div>
-
-            {{ form_end(form) }}
+            <footer id="fh5co-footer" role="contentinfo">
+                <div class="container">
+                    <div class="row copyright">
+                        <div class="col-md-12 text-center">
+                            <p>
+                                <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                                <small class="block" target="_blank">Designed by Nadhem Hmida</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
-    </div>
-{% endblock %}
 
-{% block javascripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Adjust sidebar height dynamically (not needed with fixed position, but kept for consistency)
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
-            if (sidebar && mainContent) {
-                const adjustSidebarHeight = () => {
-                    const mainHeight = mainContent.offsetHeight;
-                    sidebar.style.minHeight = `${mainHeight}px`;
-                };
-                adjustSidebarHeight();
-                window.addEventListener('resize', adjustSidebarHeight);
-            }
+        <div class="gototop js-top">
+            <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
+        </div>
 
-            // Auto-submit profile picture form on file selection
-            const imageInput = document.getElementById('imageForm_image');
-            if (imageInput) {
-                imageInput.addEventListener('change', function() {
-                    if (this.files && this.files.length > 0) {
-                        const imageForm = document.getElementById('imageForm');
-                        if (imageForm) {
-                            imageForm.submit();
-                        }
+        {% block javascripts %}
+            <script src="{{ asset('js/jquery.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.waypoints.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
+            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.countTo.js') }}"></script>
+            <script src="{{ asset('js/main.js') }}"></script>
+            <script>
+                $(document).ready(function() {
+                    // Auto-submit profile picture form on file selection
+                    const imageInput = $('#imageForm_image');
+                    if (imageInput.length) {
+                        imageInput.on('change', function() {
+                            if (this.files && this.files.length > 0) {
+                                $('#imageForm').submit();
+                            }
+                        });
                     }
-                });
-            }
 
-            // Ensure file input click is not prevented
-            const fileLabel = document.querySelector('.custom-file-upload');
-            if (fileLabel) {
-                fileLabel.addEventListener('click', function(e) {
-                    const fileInput = document.getElementById('imageForm_image');
-                    if (fileInput) {
-                        fileInput.click();
+                    // Toggle language submenu
+                    const languageToggle = $('.language-toggle');
+                    const languageSubmenu = $('.language-submenu');
+                    if (languageToggle.length && languageSubmenu.length) {
+                        languageToggle.on('click', function(e) {
+                            e.preventDefault();
+                            languageSubmenu.toggleClass('active');
+                        });
+
+                        $(document).on('click', function(e) {
+                            if (!languageToggle.is(e.target) && !languageSubmenu.is(e.target) && languageSubmenu.has(e.target).length === 0) {
+                                languageSubmenu.removeClass('active');
+                            }
+                        });
                     }
-                });
-            }
 
-            // Toggle language submenu and manage "Help" visibility
-            const languageToggle = document.querySelector('.language-toggle');
-            const languageSubmenu = document.querySelector('.language-submenu');
-            const helpItem = document.querySelector('.help-item');
+                    // Smooth scroll for section links and manage active state
+                    const scrollLinks = $('.scroll-link');
+                    scrollLinks.each(function() {
+                        $(this).on('click', function(e) {
+                            e.preventDefault();
 
-            if (languageToggle && languageSubmenu && helpItem) {
-                languageToggle.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const isActive = languageSubmenu.classList.toggle('active');
-                    if (isActive) {
-                        helpItem.classList.add('hidden');
-                    } else {
-                        helpItem.classList.remove('hidden');
-                    }
-                });
+                            // Remove active class from all nav links
+                            scrollLinks.removeClass('active');
+                            $(this).addClass('active');
 
-                document.addEventListener('click', function(e) {
-                    if (!languageToggle.contains(e.target) && !languageSubmenu.contains(e.target)) {
-                        languageSubmenu.classList.remove('active');
-                        helpItem.classList.remove('hidden');
-                    }
-                });
-            }
+                            // Smooth scroll to target section
+                            const targetId = $(this).attr('href').substring(1);
+                            const targetSection = $('#' + targetId);
+                            if (targetSection.length) {
+                                const offset = 70; /* Matches navbar height */
+                                const sectionPosition = targetSection.offset().top - offset;
+                                $('html, body').animate({
+                                    scrollTop: sectionPosition
+                                }, 800);
 
-            // Log language link clicks
-            const englishLink = document.querySelector('a[href*="/change-language/en"]');
-            if (englishLink) {
-                englishLink.addEventListener('click', function(e) {
-                    console.log('English link clicked, redirecting to: ' + this.href);
-                });
-            }
-
-            const frenchLink = document.querySelector('a[href*="/change-language/fr"]');
-            if (frenchLink) {
-                frenchLink.addEventListener('click', function(e) {
-                    console.log('French link clicked, redirecting to: ' + this.href);
-                });
-            }
-
-            // Section hover animations
-            const sections = document.querySelectorAll('.settings-section');
-            sections.forEach(section => {
-                section.addEventListener('mouseenter', function() {
-                    this.style.transition = 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out';
-                });
-                section.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) scale(1)';
-                });
-            });
-
-            // Password toggle functionality
-            const passwordInput = document.querySelector('.password-input');
-            const passwordToggle = document.querySelector('#password-toggle');
-            if (passwordInput && passwordToggle) {
-                passwordToggle.addEventListener('click', function() {
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-                    this.classList.toggle('fa-eye');
-                    this.classList.toggle('fa-eye-slash');
-                });
-            }
-
-            // Smooth scroll for section links and manage active state
-            const scrollLinks = document.querySelectorAll('.scroll-link');
-            scrollLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    // Remove active class from all sidebar items
-                    document.querySelectorAll('.sidebar li').forEach(item => {
-                        item.classList.remove('active');
+                                // Add highlight animation
+                                targetSection.addClass('highlight');
+                                setTimeout(() => {
+                                    targetSection.removeClass('highlight');
+                                }, 1000);
+                            }
+                        });
                     });
 
-                    // Add active class to the clicked item's parent li
-                    const parentLi = this.parentElement;
-                    if (parentLi) {
-                        parentLi.classList.add('active');
+                    // Password toggle functionality
+                    const passwordInput = $('.password-input');
+                    const passwordToggle = $('#password-toggle');
+                    if (passwordInput.length && passwordToggle.length) {
+                        passwordToggle.on('click', function() {
+                            const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
+                            passwordInput.attr('type', type);
+                            $(this).toggleClass('fa-eye fa-eye-slash');
+                        });
                     }
 
-                    // Smooth scroll to the target section
-                    const targetId = this.getAttribute('href').substring(1); // Remove '#'
-                    const targetSection = document.getElementById(targetId);
-                    if (targetSection) {
-                        const offset = 100; // Adjust based on any fixed header height
-                        const sectionPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - offset;
-                        window.scrollTo({
-                            top: sectionPosition,
-                            behavior: 'smooth'
+                    // Ensure navbar mobile toggle works
+                    $('.menu-toggle').on('click', function() {
+                        $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                    });
+
+                    // Set active state for Settings in navbar dropdown
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a').each(function() {
+                        if ($(this).attr('href') === '{{ path('app_settings') }}') {
+                            $(this).addClass('active');
+                            $(this).closest('.has-dropdown').addClass('active');
+                        }
+                    });
+
+                    // Vérification du chargement de la vidéo
+                    const video = $('#background-video')[0];
+                    const videoErrorDiv = $('#video-error');
+                    if (video && videoErrorDiv.length) {
+                        video.addEventListener('error', function(e) {
+                            const errorMessages = {
+                                1: 'Lecture de la vidéo interrompue.',
+                                2: 'Erreur réseau lors du chargement de la vidéo.',
+                                3: 'Erreur de décodage de la vidéo (format corrompu ou non supporté).',
+                                4: 'La source vidéo n\'est pas supportée ou le fichier est introuvable.'
+                            };
+                            const errorCode = e.target.error.code;
+                            const errorMessage = errorMessages[errorCode] || 'Erreur inconnue lors du chargement de la vidéo.';
+                            console.error('Erreur de chargement de la vidéo:', {
+                                code: errorCode,
+                                message: e.target.error.message,
+                                src: video.src
+                            });
+                            videoErrorDiv.text('Erreur vidéo: ' + errorMessage + ' (Vérifiez la console pour plus de détails)');
+                            videoErrorDiv.show();
+                            $('#background-video').css('display', 'none');
                         });
-                        // Add highlight animation
-                        targetSection.classList.add('highlight');
-                        setTimeout(() => {
-                            targetSection.classList.remove('highlight');
-                        }, 1000);
+                        video.addEventListener('loadeddata', function() {
+                            console.log('Vidéo chargée avec succès:', video.src);
+                            videoErrorDiv.hide();
+                            $('body').css('background', 'none');
+                        });
+                        video.addEventListener('canplay', function() {
+                            console.log('La vidéo est prête à être lue.');
+                        });
                     }
                 });
-            });
-        });
-    </script>
-{% endblock %}
+            </script>
+        {% endblock %}
+    </body>
+</html>

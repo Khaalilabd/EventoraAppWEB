@@ -30,7 +30,7 @@
             <!-- Fonts for card hover effect -->
             <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700|Playfair+Display:700" rel="stylesheet">
             <!-- Font Awesome for icons -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax Superman/libs/font-awesome/5.15.4/css/all.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
             <style>
                 /* Existing styles remain unchanged */
                 .services-intro {
@@ -165,7 +165,7 @@
                     position: relative;
                     overflow: hidden;
                     border-radius: 12px;
-                    margin-bottom: 20-syncedpx;
+                    margin-bottom: 20px;
                     height: 200px;
                 }
 
@@ -355,7 +355,7 @@
                     }
 
                     .card {
-                        height: +)400px;
+                        height: 400px;
                     }
 
                     .title {
@@ -438,6 +438,7 @@
                         padding: 6px 12px;
                     }
                 }
+
                 #page {
                     min-height: 100vh;
                     display: flex;
@@ -505,6 +506,7 @@
                     margin: 0;
                     padding: 0;
                     list-style: none;
+                    transition: all 0.3s ease;
                 }
 
                 .fh5co-nav .menu-1 ul li {
@@ -545,10 +547,15 @@
                     padding: 10px 0;
                     min-width: 150px;
                     z-index: 1001;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                    opacity: 0;
+                    visibility: hidden;
                 }
 
                 .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block !important;
+                    display: block;
+                    opacity: 1;
+                    visibility: visible;
                 }
 
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
@@ -574,6 +581,7 @@
                     color: #333;
                     padding: 10px;
                 }
+
                 /* Styles pour le bouton Réserver */
                 .reserve-btn {
                     background-color: #934D1A; /* Couleur cohérente avec le thème */
@@ -599,6 +607,63 @@
                     outline: 2px solid #934D1A;
                     outline-offset: 2px;
                 }
+
+                /* Responsive adjustments for navbar */
+                @media (max-width: 768px) {
+                    .menu-toggle {
+                        display: block;
+                    }
+
+                    .fh5co-nav .menu-1 ul {
+                        display: none;
+                        flex-direction: column;
+                        position: absolute;
+                        top: 60px;
+                        left: 0;
+                        width: 100%;
+                        background-color: #fff;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        padding: 20px 0;
+                        opacity: 0;
+                        transform: translateY(-10px);
+                        transition: opacity 0.3s ease, transform 0.3s ease;
+                    }
+
+                    .fh5co-nav .menu-1 ul.active {
+                        display: flex;
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+
+                    .fh5co-nav .menu-1 ul li {
+                        margin: 10px 0;
+                        text-align: center;
+                    }
+
+                    .user-circle {
+                        margin-right: 0;
+                        margin-bottom: 5px;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                        position: static;
+                        display: none;
+                        box-shadow: none;
+                        background-color: #f8f9fa;
+                        padding: 10px 0;
+                        opacity: 1;
+                        visibility: visible;
+                        transition: none;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                        display: none;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                        display: block;
+                    }
+                }
             </style>
         {% endblock %}
 
@@ -613,24 +678,25 @@
         {% block body %}
         <nav class="fh5co-nav" role="navigation">
             <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
                 <div class="menu-toggle">
                     <i class="icon-menu"></i>
                 </div>
                 <div class="menu-1">
                     <ul>
-                        <li ><a href="{{ path('app_home') }}">Home</a></li>
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
                         <li class="has-dropdown">
-                            <a href="#">Réservation</a>
-                             <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
-                                </ul>
+                            <a href="{{ path('app_home') }}" class="dropdown-toggle">Réservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                            </ul>
                         </li>
+                        <li><a href="{{ path('user_packs') }}">Packs</a></li>
                         <li class="has-dropdown">
-                            <a href="{{ path('user_packs') }}">Packs</a>
-                        </li>
-                        <li class="has-dropdown">
-                            <a href="#services-section">Services</a>
+                            <a href="{{ path('user_services') }}" class="dropdown-toggle">Services</a>
                             <ul class="dropdown">
                                 <li class="active"><a href="{{ path('user_services') }}">Service</a></li>
                                 <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
@@ -640,7 +706,7 @@
                         <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
                         <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
                         <li class="has-dropdown">
-                            <a href="#">
+                            <a href="{{ path('app_home') }}" class="dropdown-toggle">
                                 <span class="user-circle">
                                     {% if app.user and app.user.image %}
                                         <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
@@ -653,8 +719,8 @@
                             <ul class="dropdown">
                                 {% if app.user %}
                                     <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                    <li><a href="{{ path('app_home') }}">Historique</a></li>
+                                    <li><a href="">Notifications</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">Historique</a></li>
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                                     {% endif %}
@@ -777,6 +843,61 @@
                     enableUtc: false
                 });
             
+                $(document).ready(function() {
+                    // Navbar mobile toggle
+                    const menuToggle = $('.menu-toggle');
+                    const navMenu = $('.fh5co-nav .menu-1 ul');
+                    if (menuToggle.length && navMenu.length) {
+                        menuToggle.on('click', function() {
+                            navMenu.toggleClass('active');
+                            $(this).find('i').toggleClass('icon-menu icon-close');
+                        });
+
+                        // Close mobile menu when clicking outside
+                        $(document).on('click', function(e) {
+                            if (!menuToggle.is(e.target) && !navMenu.is(e.target) && navMenu.has(e.target).length === 0 && navMenu.hasClass('active')) {
+                                navMenu.removeClass('active');
+                                menuToggle.find('i').removeClass('icon-close').addClass('icon-menu');
+                            }
+                        });
+
+                        // Close mobile menu with Escape key
+                        $(document).on('keydown', function(e) {
+                            if (e.key === 'Escape' && navMenu.hasClass('active')) {
+                                navMenu.removeClass('active');
+                                menuToggle.find('i').removeClass('icon-close').addClass('icon-menu');
+                            }
+                        });
+                    }
+
+                    // Handle dropdowns on mobile
+                    const dropdownToggles = $('.dropdown-toggle');
+                    if (dropdownToggles.length) {
+                        dropdownToggles.on('click', function(e) {
+                            if ($(window).width() <= 768) {
+                                e.preventDefault();
+                                const parentLi = $(this).parent();
+                                const isActive = parentLi.hasClass('active');
+
+                                // Close all other dropdowns
+                                $('.has-dropdown').removeClass('active');
+
+                                // Toggle current dropdown
+                                if (!isActive) {
+                                    parentLi.addClass('active');
+                                }
+                            }
+                        });
+                    }
+
+                    // Set active state for Services in navbar dropdown
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a').each(function() {
+                        if ($(this).attr('href') === '{{ path('user_services') }}') {
+                            $(this).closest('.has-dropdown').addClass('active');
+                        }
+                    });
+                });
+
                 document.addEventListener('DOMContentLoaded', () => {
                     try {
                         // Initialisation des éléments de l'interface

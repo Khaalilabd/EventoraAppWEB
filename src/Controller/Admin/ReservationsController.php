@@ -627,21 +627,45 @@ class ReservationsController extends AbstractController
 
         return $this->redirectToRoute('admin_reservations', [], Response::HTTP_SEE_OTHER);
     }
-
     #[Route('/pack/{id}/pdf', name: 'admin_reservations_pack_pdf', methods: ['GET'])]
-    public function generatePdf(Reservationpack $reservation, Pdf $knpSnappyPdf): Response
+    public function generatePdf(Reservationpack $reservation, Pdf $knpSnappyPdf, LoggerInterface $logger): Response
     {
-        $html = $this->renderView('admin/reservation/pdf_pack_details.html.twig', [
-            'reservation' => $reservation,
+        $logger->info('Début de generatePdf', ['id' => $reservation->getIDReservationPack()]);
+    
+        // Vérifiez les données de la réservation
+        $logger->debug('Données de la réservation', [
+            'id' => $reservation->getIDReservationPack(),
+            'nom' => $reservation->getNom(),
+            'prenom' => $reservation->getPrenom(),
+            'date' => $reservation->getDate() ? $reservation->getDate()->format('Y-m-d H:i:s') : null,
+            'status' => $reservation->getStatus(),
+            'pack' => $reservation->getPack() ? $reservation->getPack()->getNomPack() : null,
         ]);
-
+    
+        try {
+            $html = $this->renderView('admin/reservation/pdf_pack_details.html.twig', [
+                'reservation' => $reservation,
+            ]);
+            $logger->info('Template rendu', ['html_length' => strlen($html)]);
+    
+            $pdf = $knpSnappyPdf->getOutputFromHtml($html);
+            $logger->info('PDF généré avec succès');
+        } catch (\Exception $e) {
+            $logger->error('Erreur lors de la génération du PDF', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'id' => $reservation->getIDReservationPack(),
+            ]);
+            throw new \RuntimeException('Impossible de générer le PDF : ' . $e->getMessage());
+        }
+    
         return new Response(
-            $knpSnappyPdf->getOutputFromHtml($html),
+            $pdf,
             200,
             [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="reservation_pack_' . $reservation->getIDReservationPack() . '.pdf"',
+                'Content-Disposition' => 'attachment; filename="reservationpack_' . $reservation->getIDReservationPack() . '.pdf"',
             ]
         );
-    }
+    }   
 }

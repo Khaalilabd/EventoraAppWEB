@@ -16,22 +16,46 @@ use Knp\Component\Pager\PaginatorInterface;
 class ServicesController extends AbstractController
 {
     #[Route('/', name: 'admin_services', methods: ['GET'])]
-    public function index(GServiceRepository $GServiceRepository, Request $request, PaginatorInterface $paginator): Response
+    public function index(GServiceRepository $GServiceRepository, Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        // Créer une requête pour récupérer tous les services
-        $query = $GServiceRepository->createQueryBuilder('s')->getQuery();
-
-        // Paginer les résultats avec 3 éléments par page
-        $GServices = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            3 // 3 éléments par page
-        );
-
+    
+        // Récupérer les paramètres de la requête pour la pagination, le tri et le filtrage
+        $page = $request->query->getInt('page', 1);
+        $limit = 4; 
+        $searchTerm = $request->query->get('search', '');
+        $sortBy = $request->query->get('sort_by', 'id'); // Par défaut, trier par ID
+        $sortOrder = $request->query->get('sort_order', 'asc'); // Par défaut, ordre croissant
+    
+        // Créer une requête avec QueryBuilder
+        $queryBuilder = $GServiceRepository->createQueryBuilder('s')
+            ->leftJoin('s.sponsor', 'sp') // Joindre la relation avec le sponsor (partenaire)
+            ->orderBy("s.$sortBy", $sortOrder);
+    
+        // Ajouter un filtre de recherche sur certains champs
+        if ($searchTerm) {
+            $queryBuilder->andWhere('s.titre LIKE :search OR s.description LIKE :search OR s.location LIKE :search OR s.type_service LIKE :search OR sp.nom_partenaire LIKE :search')
+                ->setParameter('search', '%' . $searchTerm . '%');
+        }
+    
+        // Calculer le nombre total de services pour la pagination
+        $totalServices = count($queryBuilder->getQuery()->getResult());
+        $totalPages = ceil($totalServices / $limit);
+    
+        // Récupérer les services pour la page actuelle
+        $services = $queryBuilder
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    
         return $this->render('admin/service/index.html.twig', [
-            'GServices' => $GServices,
+            'GServices' => $services, // Liste des services pour la page actuelle
+            'current_page' => $page,
+            'total_pages' => $totalPages,
+            'searchTerm' => $searchTerm,
+            'sort_by' => $sortBy,
+            'sort_order' => $sortOrder,
         ]);
     }
 

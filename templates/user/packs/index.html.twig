@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
 
         <style>
-            /* Existing styles unchanged */
+            /* --- Fond de secours pour la page --- */
             body {
                 background: #f2f2f2;
                 font-family: 'Work Sans', sans-serif;
@@ -41,12 +41,49 @@
                 flex-direction: column;
             }
 
+            /* --- Styles pour la vidéo de fond --- */
+            .video-background {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1; /* Derrière tout le contenu */
+                overflow: hidden;
+            }
+
+            .video-background video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Couvre la zone sans déformation */
+                opacity: 0.6; /* Transparence pour lisibilité */
+            }
+
+            /* --- Conteneur principal sans fond --- */
             .packs-content {
                 flex: 1;
                 padding: 70px 20px 40px;
                 box-sizing: border-box;
+                border-radius: 10px;
+                position: relative;
+                z-index: 1; /* Au-dessus de la vidéo */
+                max-width: 1400px; /* Limite la largeur pour lisibilité */
+                margin: 0 auto;
             }
 
+            /* --- Ajustement de la navbar pour lisibilité --- */
+            .fh5co-nav {
+                position: fixed;
+                top: 0;
+                width: 100%;
+                z-index: 1000;
+                background: rgba(255, 255, 255, 0.95); /* Plus opaque */
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+
+            /* --- Styles existants inchangés --- */
             .packs-grid {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
@@ -64,9 +101,10 @@
                 font-family: 'Cormorant Garamond', serif;
                 font-size: 2.5rem;
                 font-weight: 700;
-                color: #2a1f30;
+                color: #ffffff; /* Texte blanc pour lisibilité sur fond vidéo */
                 text-align: center;
                 margin-bottom: 30px;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Ombre pour contraste */
             }
 
             #home-slider {
@@ -150,7 +188,7 @@
                 text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
                 position: relative;
                 z-index: 2;
-                opacity: 1;
+                opacity:  #fff;
             }
 
             .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-right .pack-details {
@@ -202,9 +240,9 @@
             }
 
             .pack-card {
-                background: #fffdf9;
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)); /* Fond dégradé transparent */
                 border-radius: 20px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
                 padding: 20px;
                 text-align: center;
@@ -215,24 +253,26 @@
 
             .pack-card:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
             }
 
             .pack-card h3 {
                 font-family: 'Cormorant Garamond', serif;
                 font-size: 2rem;
                 font-weight: 700;
-                color: #2a1f30;
+                color: #ffffff; /* Texte blanc pour lisibilité */
                 margin-bottom: 10px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Ombre pour contraste */
             }
 
             .pack-card .pack-type {
                 font-family: 'Work Sans', sans-serif;
                 font-size: 1.2rem;
                 font-weight: 500;
-                color: #777;
+                color: #dddddd; /* Gris clair pour lisibilité */
                 text-transform: uppercase;
                 margin-bottom: 15px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             .pack-card .pack-image-wrapper {
@@ -269,21 +309,24 @@
             .pack-card .pack-details-list p {
                 font-family: 'Roboto', sans-serif;
                 font-size: 1.2rem;
-                color: #555;
+                color: #dddddd; /* Gris clair pour lisibilité */
                 margin: 10px 0;
                 line-height: 1.5;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             .pack-card .pack-details-list p strong {
                 font-weight: 700;
                 font-size: 1.3rem;
-                color: #2a1f30;
+                color: #ffffff; /* Blanc pour contraste */
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             .price-highlight {
                 color: #d9822b;
                 font-weight: 700;
                 font-size: 1.3rem;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             .pack-card .details-button {
@@ -345,12 +388,15 @@
             .no-packs p, .no-recommended p {
                 font-family: 'Roboto', sans-serif;
                 font-size: 1.5rem;
-                color: #555;
+                color: #ffffff; /* Blanc pour lisibilité */
                 margin-bottom: 20px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             #fh5co-footer {
                 margin-top: auto;
+                background: rgba(0, 0, 0, 0.5); /* Fond semi-transparent pour le footer */
+                z-index: 1; /* Au-dessus de la vidéo */
             }
 
             #page {
@@ -358,17 +404,6 @@
                 display: flex;
                 flex-direction: column;
                 padding-top: 70px;
-            }
-
-            .fh5co-nav {
-                position: fixed;
-                top: 0;
-                width: 100%;
-                z-index: 1000;
-                background: rgba(255, 255, 255, 0.9);
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
             }
 
             .fh5co-nav .container {
@@ -441,7 +476,7 @@
             }
 
             .fh5co-nav .menu-1 ul li.active a {
-                color: #934passportD1A !important;
+                color: #934D1A !important;
                 font-weight: 600;
             }
 
@@ -499,18 +534,19 @@
             .filter-section {
                 max-width: 1200px;
                 margin: 30px auto;
-                background: #fff;
+                background: rgba(0, 0, 0, 0.5); /* Fond semi-transparent pour la section filtre */
                 padding: 20px;
                 border-radius: 10px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             }
 
             .filter-section h3 {
                 font-family: 'Cormorant Garamond', serif;
                 font-size: 1.8rem;
-                color: #2a1f30;
+                color: #ffffff; /* Blanc pour lisibilité */
                 margin-bottom: 20px;
                 text-align: center;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             .filter-form {
@@ -528,9 +564,10 @@
             .filter-group label {
                 font-family: 'Work Sans', sans-serif;
                 font-size: 1rem;
-                color: #555;
+                color: #dddddd; /* Gris clair pour lisibilité */
                 display: block;
                 margin-bottom: 5px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             .filter-group select,
@@ -542,6 +579,7 @@
                 font-family: 'Roboto', sans-serif;
                 font-size: 1rem;
                 color: #333;
+                background: rgba(255, 255, 255, 0.9); /* Fond légèrement opaque pour les inputs */
             }
 
             .filter-group select:focus,
@@ -563,7 +601,8 @@
             .price-range span {
                 font-family: 'Roboto', sans-serif;
                 font-size: 1rem;
-                color: #555;
+                color: #dddddd; /* Gris clair pour lisibilité */
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             .filter-buttons {
@@ -703,6 +742,12 @@
                 .filter-group {
                     min-width: 100%;
                 }
+
+                /* Ajustement pour la vidéo sur mobile */
+                .video-background video {
+                    object-fit: cover;
+                    height: 100vh;
+                }
             }
 
             @media (max-width: 640px) {
@@ -747,6 +792,15 @@
     </head>
     <body>
         <div class="fh5co-loader"></div>
+
+        <!-- Vidéo de fond -->
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source src="{{ asset('images/pack.mp4') }}" type="video/mp4">
+                Votre navigateur ne prend pas en charge la balise vidéo.
+            </video>
+        </div>
+
         <div id="page">
             <!-- Navbar -->
             <nav class="fh5co-nav" role="navigation">
@@ -785,7 +839,7 @@
                             </li>
                             <li><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
                             <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="#">Talk with Evi</a></li>
+                            <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
                             <li class="has-dropdown">
                                 <a href="#">
                                     <span class="user-circle">
@@ -1082,6 +1136,18 @@
                         $(this).val('');
                     }
                 });
+
+                // Vérification du chargement de la vidéo
+                const video = $('.video-background video')[0];
+                if (video) {
+                    video.addEventListener('error', function() {
+                        console.error('Erreur de chargement de la vidéo:', video.error);
+                        $('.video-background').css('display', 'none'); // Masquer si erreur
+                    });
+                    video.addEventListener('loadeddata', function() {
+                        console.log('Vidéo chargée avec succès');
+                    });
+                }
             });
         </script>
     </body>

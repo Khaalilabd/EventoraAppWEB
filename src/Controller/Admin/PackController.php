@@ -162,18 +162,9 @@ public function index(Request $request, PackRepository $packRepository, Typepack
     public function edit(Request $request, Pack $pack, EntityManagerInterface $entityManager, PackRepository $packRepository, PackDescriptionGenerator $descriptionGenerator): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        // Store original values to detect changes
-        $originalNomPack = $pack->getNomPack();
-        $originalPrix = $pack->getPrix();
-        $originalLocation = $pack->getLocation();
-        $originalNbrGuests = $pack->getNbrGuests();
-        $originalType = $pack->getType();
-
+    
         // Preload services for the form
         $currentServices = $entityManager->getRepository(PackService::class)->findBy(['pack_id' => $pack->getId()]);
-        $originalServiceTitres = array_map(fn($packService) => $packService->getService_titre(), $currentServices);
-        sort($originalServiceTitres); // Sort for consistent comparison
         $serviceEntities = [];
         foreach ($currentServices as $packService) {
             $service = $entityManager->getRepository(GService::class)->findOneBy(['titre' => $packService->getService_titre()]);
@@ -182,10 +173,10 @@ public function index(Request $request, PackRepository $packRepository, Typepack
             }
         }
         $pack->setServices($serviceEntities);
-
+    
         $form = $this->createForm(PackType::class, $pack);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             // Check for duplicate nomPack, excluding the current pack
             $existingPack = $packRepository->findOneBy(['nomPack' => $pack->getNomPack()]);
@@ -196,32 +187,16 @@ public function index(Request $request, PackRepository $packRepository, Typepack
                     'pack' => $pack,
                 ]);
             }
-
-            // Check for changes in relevant fields (exclude description and image_path)
-            $services = $form->get('services')->getData();
-            $newServiceTitres = array_map(fn($service) => $service->getTitre(), $services);
-            sort($newServiceTitres); // Sort for consistent comparison
-            $newType = $pack->getType();
-            $hasChanges = (
-                $pack->getNomPack() !== $originalNomPack ||
-                $pack->getPrix() != $originalPrix ||
-                $pack->getLocation() !== $originalLocation ||
-                $pack->getNbrGuests() !== $originalNbrGuests ||
-                $newType !== $originalType ||
-                $newServiceTitres !== $originalServiceTitres
-            );
-
-            // Regenerate description if relevant fields changed
-            if ($hasChanges) {
-                $newDescription = $descriptionGenerator->generateDescription($pack);
-                $pack->setDescription($newDescription ?: sprintf(
-                    'Description générique pour %s, un pack pour %d invités à %.2f €.',
-                    $pack->getNomPack() ?? 'ce pack',
-                    $pack->getNbrGuests() ?? 0,
-                    $pack->getPrix() ?? 0.0
-                ));
-            }
-
+    
+            // Always generate a new description on form submission
+            $newDescription = $descriptionGenerator->generateDescription($pack);
+            $pack->setDescription($newDescription ?? sprintf(
+                'Description générique pour %s, un pack pour %d invités à %.2f €.',
+                $pack->getNomPack() ?? 'ce pack',
+                $pack->getNbrGuests() ?? 0,
+                $pack->getPrix() ?? 0.0
+            ));
+    
             // Handle the image upload
             /** @var UploadedFile|null $imageFile */
             $imageFile = $form->get('image_path')->getData();
@@ -229,11 +204,11 @@ public function index(Request $request, PackRepository $packRepository, Typepack
                 $newFilename = $this->uploadImage($imageFile);
                 $pack->setImagePath('/Uploads/images/' . $newFilename);
             }
-
+    
             // Update pack
             $entityManager->persist($pack);
             $entityManager->flush();
-
+    
             // Update pack_service entries
             // Remove existing pack_service entries
             $existingPackServices = $entityManager->getRepository(PackService::class)->findBy(['pack_id' => $pack->getId()]);
@@ -243,21 +218,22 @@ public function index(Request $request, PackRepository $packRepository, Typepack
             }
             $entityManager->flush();
             $entityManager->clear(PackService::class);
-
+    
             // Add new pack_service entries
+            $services = $form->get('services')->getData();
             foreach ($services as $service) {
                 $packService = new PackService();
                 $packService->setPack_id($pack->getId());
                 $packService->setService_titre($service->getTitre());
                 $entityManager->persist($packService);
             }
-
+    
             $entityManager->flush();
-
+    
             $this->addFlash('success', 'Le pack a été modifié avec succès.');
             return $this->redirectToRoute('admin_packs');
         }
-
+    
         return $this->render('admin/Pack/edit.html.twig', [
             'form' => $form->createView(),
             'pack' => $pack,

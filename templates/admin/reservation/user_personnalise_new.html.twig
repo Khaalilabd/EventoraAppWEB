@@ -5,36 +5,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{% block title %}Créer une Réservation Personnalisée - Eventora{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
     {% block stylesheets %}
-        <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <style>
+            /* Reset */
+            * { box-sizing: border-box; }
             body {
-                background-image: url({{ asset('images/img_bg_3.jpg') }});
-                background-size: cover;
-                background-position: center;
-                background-attachment: fixed;
                 min-height: 100vh;
                 margin: 0;
                 padding: 0;
-                position: relative;
+                font-family: 'Inter', sans-serif;
+                overflow-x: hidden;
+            }
+            body.modal-open { overflow: hidden; }
+            #background-video {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                z-index: -2;
             }
             body::before {
                 content: '';
-                position: absolute;
+                position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -66,7 +68,7 @@
                 margin: 0 auto;
             }
             .fh5co-logo a {
-                font-family: 'Work Sans', sans-serif;
+                font-family: 'Inter', sans-serif;
                 font-weight: 700;
                 font-size: 24px;
                 color: #934D1A;
@@ -82,7 +84,6 @@
                 background-color: #f0f0f0;
                 color: #333;
                 font-size: 20px;
-                vertical-align: middle;
                 margin-right: 8px;
             }
             .user-circle img {
@@ -101,36 +102,37 @@
             }
             .fh5co-nav .menu-1 ul li {
                 margin: 0 15px;
+                position: relative;
             }
             .fh5co-nav .menu-1 ul li a {
-                font-family: 'Work Sans', sans-serif;
+                font-family: 'Inter', sans-serif;
                 font-size: 16px;
                 color: #333;
                 text-transform: uppercase;
                 text-decoration: none;
                 transition: color 0.3s ease;
             }
-            .fh5co-nav .menu-1 ul li a:hover {
-                color: #934D1A;
-            }
-            .fh5co-nav .menu-1 ul li.active a {
-                color: #934D1A;
-                font-weight: 600;
-            }
+            .fh5co-nav .menu-1 ul li a:hover { color: #934D1A; }
+            .fh5co-nav .menu-1 ul li.active a { color: #934D1A; font-weight: 600; }
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
                 display: none;
                 position: absolute;
                 top: 100%;
                 right: 0;
                 background-color: #fff;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                 list-style: none;
                 padding: 10px 0;
-                min-width: 180px;
+                min-width: 150px;
                 z-index: 1001;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
                 display: block;
+                opacity: 1;
+                visibility: visible;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
                 padding: 10px 20px;
@@ -138,10 +140,7 @@
                 text-transform: none;
                 color: #333;
             }
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                color: #007bff;
-                background-color: #f8f9fa;
-            }
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover { color: #007bff; }
             .menu-toggle {
                 display: none;
                 font-size: 24px;
@@ -150,150 +149,326 @@
                 padding: 10px;
             }
             .event-wrap {
-                background: rgba(255, 255, 255, 0.9);
+                background: #FFFFFF;
                 padding: 40px;
                 border-radius: 12px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-                max-width: 700px;
-                margin: 0 auto;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+                max-width: 1000px;
+                margin: 40px auto;
+                position: relative;
+                overflow: hidden;
+                animation: fadeIn 0.5s ease-in-out;
+                z-index: 2;
             }
             .event-wrap h3 {
-                color: #333;
+                color: #1E3A8A;
                 margin-bottom: 30px;
                 font-size: 24px;
-                text-transform: uppercase;
+                font-weight: 600;
                 text-align: center;
+                text-transform: uppercase;
             }
-            .event-wrap .form-group {
+            .form-container {
+                display: flex;
+                gap: 30px;
+            }
+            .form-column {
+                flex: 1;
+                min-width: 0;
+            }
+            .form-group {
                 margin-bottom: 20px;
+                position: relative;
             }
-            .event-wrap .form-group label {
-                color: #333;
+            .form-group label {
+                color: #1E3A8A;
                 font-weight: 500;
+                font-size: 14px;
                 margin-bottom: 8px;
                 display: block;
             }
-            .event-wrap .form-control {
-                background: #fff;
-                border: 1px solid #ced4da;
-                color: #333;
+            .form-group textarea.form-control {
+                min-height: 120px;
+                resize: vertical;
+            }
+            .form-control {
+                background: #F9FAFB;
+                border: 1px solid #D1D5DB;
+                color: #1E3A8A;
                 border-radius: 6px;
                 padding: 12px;
                 font-size: 16px;
                 transition: border-color 0.3s ease, box-shadow 0.3s ease;
+                width: 100%;
+                height: 44px;
             }
-            .event-wrap .form-control::placeholder {
-                color: #6c757d;
-            }
-            .event-wrap .form-control:focus {
-                border-color: #007bff;
-                box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            .form-control::placeholder { color: #9CA3AF; }
+            .form-control:focus {
+                border-color: #3B82F6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
                 outline: none;
             }
-            .event-wrap .form-control.is-invalid {
-                border-color: #dc3545;
+            .form-control.is-invalid {
+                border-color: #DC2626;
+                background: #FEF2F2;
             }
-            .event-wrap .btn {
-                margin-top: 10px;
+            .btn {
                 padding: 12px;
                 border-radius: 6px;
                 font-size: 16px;
                 font-weight: 500;
-                transition: background-color 0.3s ease, transform 0.2s ease;
+                transition: all 0.3s ease;
+                width: 100%;
+                margin-top: 10px;
             }
-            .event-wrap .btn-primary {
-                background-color: #007bff;
-                border-color: #007bff;
+            .btn-primary {
+                background: linear-gradient(90deg, #1E3A8A, #3B82F6);
+                border: none;
+                color: #FFFFFF;
             }
-            .event-wrap .btn-primary:hover {
-                background-color: #0056b3;
-                border-color: #0056b3;
+            .btn-primary:hover {
+                background: linear-gradient(90deg, #1E40AF, #2563EB);
                 transform: translateY(-2px);
             }
-            .event-wrap .btn-secondary {
-                background-color: #6c757d;
-                border-color: #6c757d;
+            .btn-secondary {
+                background: transparent;
+                border: 1px solid #6B7280;
+                color: #6B7280;
             }
-            .event-wrap .btn-secondary:hover {
-                background-color: #545b62;
-                border-color: #545b62;
+            .btn-secondary:hover {
+                background: #6B7280;
+                color: #FFFFFF;
                 transform: translateY(-2px);
             }
-            .event-wrap .btn-info {
-                background-color: #17a2b8;
-                border-color: #17a2b8;
+            .btn-info {
+                background: linear-gradient(90deg, #047857, #10B981);
+                border: none;
+                color: #FFFFFF;
+                padding: 8px 12px;
+                font-size: 12px;
             }
-            .event-wrap .btn-info:hover {
-                background-color: #138496;
-                border-color: #138496;
+            .btn-info:hover {
+                background: linear-gradient(90deg, #065F46, #059669);
                 transform: translateY(-2px);
             }
-            .event-wrap .btn:disabled {
+            .btn:disabled {
                 cursor: not-allowed;
                 opacity: 0.65;
             }
-            .event-wrap .checkbox-container {
-                max-height: 200px;
-                overflow-y: auto;
-                padding: 10px;
-                background: #f8f9fa;
-                border-radius: 6px;
-            }
-            .event-wrap .form-check-label {
-                color: #333;
-                margin-left: 10px;
-            }
-            .event-wrap .form-check-input {
-                transform: scale(1.5);
-            }
-            #fh5co-footer {
-                background: rgba(255, 255, 255, 0.95);
-                padding: 20px 0;
-                margin-top: auto;
-            }
-            #fh5co-event {
-                margin-top: 60px;
-                flex: 1 0 auto;
-                padding-top: 50px;
-            }
-            .fh5co-heading {
-                margin-bottom: 40px;
-            }
-            .fh5co-heading span {
-                color: #fff;
-                font-size: 18px;
-                display: block;
-                margin-bottom: 10px;
-            }
-            .fh5co-heading h2 {
-                color: #fff;
-                font-size: 36px;
-                margin: 0;
-            }
-            .text-danger {
+            .form-error, .text-danger {
+                color: #DC2626;
                 font-size: 14px;
-                margin-top: 5px;
-                color: #dc3545;
+                margin-top: 6px;
                 display: block;
             }
             .loading-spinner {
                 display: none;
-                border: 4px solid #f3f3f3;
-                border-top: 4px solid #007bff;
+                border: 4px solid #E5E7EB;
+                border-top: 4px solid #3B82F6;
                 border-radius: 50%;
                 width: 24px;
                 height: 24px;
                 animation: spin 1s linear infinite;
-                margin: 10px auto;
+                margin: 20px auto;
+            }
+            #fh5co-event {
+                flex: 1 0 auto;
+                padding: 40px 0;
+            }
+            .fh5co-heading {
+                margin-bottom: 40px;
+                text-align: center;
+            }
+            .fh5co-heading span {
+                color: #3B82F6;
+                font-family: 'Sacramento', cursive;
+                font-size: 24px;
+                display: block;
+                margin-bottom: 10px;
+            }
+            .fh5co-heading h2 {
+                color: #FFFFFF;
+                font-size: 36px;
+                font-weight: 600;
+                margin: 0;
+            }
+            #fh5co-footer {
+                background: #1E3A8A;
+                padding: 20px 0;
+                margin-top: auto;
+                position: relative;
+                z-index: 2;
+            }
+            #fh5co-footer p {
+                color: #FFFFFF;
+                font-size: 14px;
+                text-align: center;
+                margin: 0;
+            }
+            #fh5co-footer a {
+                color: #3B82F6;
+                text-decoration: none;
+            }
+            #fh5co-footer a:hover { text-decoration: underline; }
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                z-index: 1000;
+                justify-content: center;
+                align-items: center;
+                overflow: auto;
+                padding: 20px;
+            }
+            .modal-content {
+                background: #FFFFFF;
+                border-radius: 12px;
+                width: 90%;
+                max-width: 600px;
+                max-height: 80vh;
+                padding: 20px;
+                position: relative;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+                animation: slideIn 0.3s ease-out;
+                overflow-y: auto;
+            }
+            .modal-content h4 {
+                color: #1E3A8A;
+                font-size: 20px;
+                font-weight: 600;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .modal-content .close-modal {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                font-size: 24px;
+                color: #6B7280;
+                cursor: pointer;
+                transition: color 0.3s ease;
+            }
+            .modal-content .close-modal:hover { color: #DC2626; }
+            .services-columns {
+                display: flex;
+                gap: 20px;
+                max-height: 300px;
+                overflow-y: auto;
+                padding: 10px;
+                background: #F9FAFB;
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+            }
+            .services-column {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .services-column .form-check {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .services-column .form-check-input {
+                transform: scale(1.5);
+                margin-right: 10px;
+            }
+            .services-column .form-check-label {
+                color: #1E3A8A;
+                font-size: 14px;
+            }
+            .modal-content .modal-actions {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                margin-top: 20px;
+            }
+            .btn-modal {
+                padding: 10px 20px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            .btn-modal-confirm {
+                background: linear-gradient(90deg, #1E3A8A, #3B82F6);
+                border: none;
+                color: #FFFFFF;
+            }
+            .btn-modal-confirm:hover {
+                background: linear-gradient(90deg, #1E40AF, #2563EB);
+                transform: translateY(-2px);
+            }
+            .btn-modal-cancel {
+                background: transparent;
+                border: 1px solid #6B7280;
+                color: #6B7280;
+            }
+            .btn-modal-cancel:hover {
+                background: #6B7280;
+                color: #FFFFFF;
+                transform: translateY(-2px);
+            }
+            .selected-services {
+                margin-top: 10px;
+                padding: 10px;
+                background: #EFF6FF;
+                border-radius: 6px;
+                color: #1E3A8A;
+                font-size: 14px;
+                min-height: 40px;
+            }
+            .selected-services ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .selected-services li {
+                background: #3B82F6;
+                color: #FFFFFF;
+                padding: 5px 10px;
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+            .selected-services li .remove-service {
+                cursor: pointer;
+                font-size: 12px;
+            }
+            .selected-services li .remove-service:hover { color: #DC2626; }
+            #service-details-modal .modal-content { max-width: 500px; }
+            #service-details-modal .service-details-content { color: #1E3A8A; font-size: 14px; }
+            #service-details-modal .service-details-content p { margin: 10px 0; }
+            #service-details-modal .service-details-content img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 6px;
+                margin-top: 10px;
             }
             @keyframes spin {
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
             }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
             @media (max-width: 768px) {
-                .menu-toggle {
-                    display: block;
-                }
+                .menu-toggle { display: block; }
                 .fh5co-nav .menu-1 ul {
                     display: none;
                     flex-direction: column;
@@ -302,342 +477,424 @@
                     left: 0;
                     width: 100%;
                     background-color: #fff;
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                     padding: 20px 0;
                 }
-                .fh5co-nav .menu-1 ul.active {
-                    display: flex;
+                .fh5co-nav .menu-1 ul.active { display: flex; }
+                .fh5co-nav .menu-1 ul li { margin: 10px 0; text-align: center; }
+                .user-circle { margin-right: 0; margin-bottom: 5px; }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    position: static;
+                    display: none;
+                    box-shadow: none;
+                    background-color: #f8f9fa;
+                    padding: 10px 0;
+                    opacity: 1;
+                    visibility: visible;
                 }
-                .fh5co-nav .menu-1 ul li {
-                    margin: 10px 0;
-                    text-align: center;
-                }
-                .user-circle {
-                    margin: 0 auto 5px;
-                }
-                .event-wrap {
-                    max-width: 90%;
-                    padding: 25px;
-                }
-                .fh5co-heading h2 {
-                    font-size: 28px;
-                }
-                #fh5co-event {
-                    padding-top: 30px;
-                }
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown { display: none; }
+                .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown { display: block; }
+                .event-wrap { max-width: 90%; padding: 24px; }
+                .form-container { flex-direction: column; gap: 20px; }
+                .fh5co-heading h2 { font-size: 28px; }
+                .fh5co-heading span { font-size: 20px; }
+                .btn { font-size: 14px; padding: 10px; }
+                .event-wrap h3 { font-size: 20px; }
+                .services-columns { flex-direction: column; gap: 10px; }
+            }
+            @media (max-width: 480px) {
+                .fh5co-heading h2 { font-size: 24px; }
+                .fh5co-heading span { font-size: 18px; }
+                .event-wrap { padding: 20px; }
+                .form-control { font-size: 14px; padding: 10px; }
+                .modal-content { width: 95%; padding: 15px; }
+                .modal-content h4 { font-size: 18px; }
             }
         </style>
     {% endblock %}
+    <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
 </head>
 <body>
-<div id="page">
-    <nav class="fh5co-nav" role="navigation">
-        <div class="container">
-            <div class="fh5co-logo">
-                <a href="{{ path('app_home') }}">Eventora</a>
-            </div>
-            <div class="menu-toggle">
-                <i class="fas fa-bars"></i>
-            </div>
-            <div class="menu-1">
-                <ul>
-                    <li><a href="{{ path('app_home') }}">Home</a></li>
-                    <li class="has-dropdown">
-                        <a href="#">Réservation</a>
-                        <ul class="dropdown">
-                            <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Réservation personnalisée</a></li>
-                            <li><a href="{{ path('user_reservation_pack_new') }}">Réservation Pack</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="{{ path('user_packs') }}">Packs</a></li>
-                    <li class="has-dropdown">
-                        <a href="#">Services</a>
-                        <ul class="dropdown">
-                            <li><a href="{{ path('user_services') }}">Service</a></li>
-                            <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
-                    <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                    <li><a href="#">Talk with Evi</a></li>
-                    <li class="has-dropdown">
-                        <a href="#">
-                            <span class="user-circle">
-                                {% if app.user and app.user.image %}
-                                    <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                {% else %}
-                                    <i class="fas fa-user"></i>
-                                {% endif %}
-                            </span>
-                            Contact
-                        </a>
-                        <ul class="dropdown">
-                            {% if app.user %}
-                                <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                <li><a href="{{ path('app_user_history') }}">Historique</a></li>
-                                {% if is_granted('ROLE_ADMIN') %}
-                                    <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                {% endif %}
-                                <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                            {% else %}
-                                <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <video id="background-video" autoplay loop muted playsinline>
+        <source src="{{ asset('images/reservation2.mp4') }}" type="video/mp4">
+        Votre navigateur ne supporte pas la vidéo.
+    </video>
 
-    <div id="fh5co-event">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                    <span>Votre Événement Unique</span>
-                    <h2>Créer une Réservation Personnalisée</h2>
+    <div id="page">
+        <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown active">
+                            <a href="#">Réservation</a>
+                            <ul class="dropdown">
+                                <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Réservation personnalisée</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Réservation Pack</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('user_packs') }}">Packs</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="fas fa-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="row">
-                <div class="display-t">
-                    <div class="display-tc">
-                        <div class="col-md-10 col-md-offset-1">
-                            <div class="col-md-8 col-md-offset-2 text-center">
-                                <div class="event-wrap animate-box">
-                                    <h3>Remplissez le Formulaire</h3>
-                                    {{ form_start(form, {'attr': {'class': 'form', 'id': 'personnalise-reservation-form'}}) }}
-                                        {% if form_errors(form) %}
-                                            <div class="alert alert-danger">
-                                                {{ form_errors(form) }}
-                                            </div>
-                                        {% endif %}
+        </nav>
 
-                                        <div class="form-group">
-                                            {{ form_label(form.nom, 'Nom', {'label_attr': {'for': form.nom.vars.id}}) }}
-                                            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'id': form.nom.vars.id}}) }}
-                                            <div class="text-danger">{{ form_errors(form.nom) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.prenom, 'Prénom', {'label_attr': {'for': form.prenom.vars.id}}) }}
-                                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'id': form.prenom.vars.id}}) }}
-                                            <div class="text-danger">{{ form_errors(form.prenom) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.email, 'Email', {'label_attr': {'for': form.email.vars.id}}) }}
-                                            {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email', 'maxlength': '255', 'id': form.email.vars.id}}) }}
-                                            <div class="text-danger">{{ form_errors(form.email) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.numtel, 'Numéro de téléphone', {'label_attr': {'for': form.numtel.vars.id}}) }}
-                                            {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '8', 'pattern': '[0-9]{8}', 'placeholder': '12345678', 'id': form.numtel.vars.id}}) }}
-                                            {{ form_help(form.numtel) }}
-                                            <div class="text-danger">{{ form_errors(form.numtel) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.description, 'Description de l\'événement', {'label_attr': {'for': form.description.vars.id}}) }}
-                                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5', 'id': form.description.vars.id}}) }}
-                                            <div class="text-danger">{{ form_errors(form.description) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.date, 'Date de l\'événement', {'label_attr': {'for': form.date.vars.id}}) }}
-                                            {{ form_widget(form.date, {'attr': {'class': 'form-control', 'required': 'required', 'id': form.date.vars.id}}) }}
-                                            <div class="text-danger">{{ form_errors(form.date) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.services, 'Sélectionnez les Services', {'label_attr': {'for': form.services.vars.id}}) }}
-                                            <div class="checkbox-container">
-                                                {{ form_widget(form.services, {'attr': {'class': 'form-check-input'}}) }}
+        <div id="fh5co-event">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
+                        <span>Votre Événement Unique</span>
+                        <h2>Créer une Réservation Personnalisée</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="event-wrap animate-box">
+                            <h3>Informations de Réservation</h3>
+                            {% if form is defined %}
+                                {{ form_start(form, {'attr': {'class': 'form', 'id': 'personnalise-reservation-form', 'novalidate': 'novalidate'}}) }}
+                                    {% if form_errors(form) %}
+                                        <div class="form-error">{{ form_errors(form) }}</div>
+                                    {% endif %}
+                                    <div class="form-container">
+                                        <div class="form-column">
+                                            <div class="form-group">
+                                                {{ form_label(form.nom, 'Nom') }}
+                                                {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'placeholder': 'Votre nom'}}) }}
+                                                <div class="form-error">{{ form_errors(form.nom) }}</div>
                                             </div>
-                                            <div class="text-danger">{{ form_errors(form.services) }}</div>
+                                            <div class="form-group">
+                                                {{ form_label(form.prenom, 'Prénom') }}
+                                                {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'placeholder': 'Votre prénom'}}) }}
+                                                <div class="form-error">{{ form_errors(form.prenom) }}</div>
+                                            </div>
+                                            <div class="form-group">
+                                                {{ form_label(form.email, 'Email') }}
+                                                {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email', 'maxlength': '255', 'placeholder': 'votre@email.com'}}) }}
+                                                <div class="form-error">{{ form_errors(form.email) }}</div>
+                                            </div>
+                                            <div class="form-group">
+                                                {{ form_label(form.numtel, 'Numéro de téléphone') }}
+                                                {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '8', 'pattern': '[0-9]{8}', 'placeholder': '12345678'}}) }}
+                                                <div class="form-error">{{ form_errors(form.numtel) }}</div>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-primary btn-block">Créer la Réservation</button>
-                                            <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
-                                            <a href="{{ path('google_auth') }}" class="btn btn-info btn-block">Ajouter au Google Calendar</a>
-                                            <div class="loading-spinner"></div>
+                                        <div class="form-column">
+                                            <div class="form-group">
+                                                {{ form_label(form.description, 'Description de l\'événement') }}
+                                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Détails de votre événement'}}) }}
+                                                <div class="form-error">{{ form_errors(form.description) }}</div>
+                                            </div>
+                                            <div class="form-group">
+                                                {{ form_label(form.date, 'Date de l\'événement') }}
+                                                {{ form_widget(form.date, {'attr': {'class': 'form-control flatpickr', 'required': 'required', 'placeholder': 'Sélectionnez une date'}}) }}
+                                                <div class="form-error">{{ form_errors(form.date) }}</div>
+                                            </div>
+                                            <div class="form-group">
+                                                {{ form_label(form.services, 'Sélectionnez les Services') }}
+                                                <button type="button" class="btn btn-secondary" id="open-services-modal">Choisir les Services</button>
+                                                <div class="selected-services">
+                                                    <ul id="selected-services-list"></ul>
+                                                </div>
+                                                <div class="form-error" id="services-error">{{ form_errors(form.services) }}</div>
+                                                <div class="services-hidden" style="display: none;">
+                                                    {{ form_widget(form.services, {'attr': {'class': 'form-check-input'}}) }}
+                                                </div>
+                                            </div>
                                         </div>
-                                    {{ form_end(form) }}
+                                    </div>
+                                    <div class="form-group d-flex gap-3 flex-wrap justify-content-center">
+                                        <button type="submit" class="btn btn-primary">Créer la Réservation</button>
+                                        <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour</a>
+                                        <div class="loading-spinner" style="display: none;"></div>
+                                    </div>
+                                {{ form_end(form) }}
+                            {% else %}
+                                <div class="form-error text-danger">
+                                    Erreur : Le formulaire n'est pas défini. Veuillez vérifier le contrôleur.
                                 </div>
-                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="modal-overlay" id="services-modal">
+            <div class="modal-content">
+                <span class="close-modal" id="close-services-modal">×</span>
+                <h4>Choisissez vos Services</h4>
+                <div class="services-columns">
+                    <div class="services-column" id="services-column-left"></div>
+                    <div class="services-column" id="services-column-right"></div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-modal btn-modal-confirm" id="confirm-services">Confirmer</button>
+                    <button class="btn-modal btn-modal-cancel" id="cancel-services">Annuler</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="service-details-modal">
+            <div class="modal-content">
+                <span class="close-modal" id="close-service-details-modal">×</span>
+                <h4>Détails du Service</h4>
+                <div class="service-details-content" id="service-details-content"></div>
+                <div class="modal-actions">
+                    <button class="btn-modal btn-modal-cancel" id="close-service-details">Fermer</button>
+                </div>
+            </div>
+        </div>
+
+        <footer id="fh5co-footer" role="contentinfo">
+            <div class="container">
+                <div class="row copyright">
+                    <div class="col-md-12 text-center">
+                        <p>
+                            <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                            <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
+    {% block javascripts %}
+        <script src="{{ asset('js/jquery.min.js') }}"></script>
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            $(document).ready(function() {
+                // Explicitly hide modals on page load
+                $('#services-modal').hide();
+                $('#service-details-modal').hide();
 
-</div>
+                // Menu toggle
+                $('.menu-toggle').click(function() {
+                    $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                });
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    if (typeof jQuery === 'undefined') {
-        console.error("jQuery n'est pas chargé.");
-        Swal.fire({
-            title: 'Erreur',
-            text: 'Impossible de charger jQuery. Vérifiez votre connexion.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-    } else {
-        jQuery(document).ready(function($) {
-            // Menu toggle
-            $('.menu-toggle').click(function() {
-                $('.fh5co-nav .menu-1 ul').toggleClass('active');
-            });
+                // Mobile dropdowns
+                $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                    if ($(window).width() <= 768) {
+                        e.preventDefault();
+                        $(this).parent().toggleClass('active').siblings().removeClass('active');
+                    }
+                });
 
-            // Mobile dropdowns
-            $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                if ($(window).width() <= 768) {
+                // Flatpickr initialization
+                flatpickr(".flatpickr", {
+                    dateFormat: "Y-m-d",
+                    minDate: "today",
+                    locale: "fr",
+                    allowInput: true
+                });
+
+                // Numtel input restriction
+                $('#{{ form.numtel.vars.id }}').on('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
+                });
+
+                // Services Modal
+                const $servicesModal = $('#services-modal');
+                const $servicesColumnLeft = $('#services-column-left');
+                const $servicesColumnRight = $('#services-column-right');
+                const $selectedServicesList = $('#selected-services-list');
+                const $servicesInputs = $('input[name="{{ form.services.vars.full_name }}[]"]');
+
+                $servicesInputs.each(function(index) {
+                    const $input = $(this);
+                    const labelText = $input.next('label').text();
+                    const serviceId = $input.val();
+                    const $column = index % 2 === 0 ? $servicesColumnLeft : $servicesColumnRight;
+
+                    $column.append(`
+                        <div class="form-check">
+                            <div style="display: flex; align-items: center;">
+                                <input type="checkbox" class="form-check-input modal-service-checkbox" data-id="${serviceId}" ${$input.is(':checked') ? 'checked' : ''}>
+                                <label class="form-check-label">${labelText}</label>
+                            </div>
+                            <button type="button" class="btn btn-info view-service-details" data-id="${serviceId}">Détails</button>
+                        </div>
+                    `);
+                });
+
+                $('#open-services-modal').click(function() {
+                    $servicesModal.css('display', 'flex').fadeIn();
+                    $('body').addClass('modal-open');
+                });
+
+                $('#close-services-modal, #cancel-services').click(function() {
+                    $servicesModal.fadeOut(function() {
+                        $(this).css('display', 'none');
+                    });
+                    $('body').removeClass('modal-open');
+                });
+
+                $('#confirm-services').click(function() {
+                    $selectedServicesList.empty();
+                    $('.modal-service-checkbox').each(function() {
+                        const $checkbox = $(this);
+                        const serviceId = $checkbox.data('id');
+                        const labelText = $checkbox.next('label').text();
+                        const $formCheckbox = $servicesInputs.filter(`[value="${serviceId}"]`);
+
+                        if ($checkbox.is(':checked')) {
+                            $formCheckbox.prop('checked', true);
+                            $selectedServicesList.append(`
+                                <li data-id="${serviceId}">
+                                    ${labelText}
+                                    <span class="remove-service">×</span>
+                                </li>
+                            `);
+                        } else {
+                            $formCheckbox.prop('checked', false);
+                        }
+                    });
+                    $('#services-error').text($servicesInputs.filter(':checked').length ? '' : 'Vous devez sélectionner au moins un service.');
+                    $servicesModal.fadeOut(function() {
+                        $(this).css('display', 'none');
+                    });
+                    $('body').removeClass('modal-open');
+                });
+
+                $selectedServicesList.on('click', '.remove-service', function() {
+                    const $li = $(this).parent();
+                    const serviceId = $li.data('id');
+                    $li.remove();
+                    $servicesInputs.filter(`[value="${serviceId}"]`).prop('checked', false);
+                    $('.modal-service-checkbox[data-id="' + serviceId + '"]').prop('checked', false);
+                });
+
+                // Service Details Modal
+                const $serviceDetailsModal = $('#service-details-modal');
+                const $serviceDetailsContent = $('#service-details-content');
+
+                $(document).on('click', '.view-service-details', function() {
+                    const serviceId = $(this).data('id');
+                    $.ajax({
+                        url: `{{ path('user_service_details', {'id': 'SERVICE_ID'}) }}`.replace('SERVICE_ID', serviceId),
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.success) {
+                                const service = response.service;
+                                $serviceDetailsContent.html(`
+                                    <p><strong>Titre :</strong> ${$('<div/>').text(service.titre).html()}</p>
+                                    <p><strong>Description :</strong> ${$('<div/>').text(service.description).html()}</p>
+                                    <p><strong>Prix :</strong> ${$('<div/>').text(service.prix).html()}</p>
+                                    <p><strong>Localisation :</strong> ${$('<div/>').text(service.location).html()}</p>
+                                    <p><strong>Type de service :</strong> ${$('<div/>').text(service.type_service).html()}</p>
+                                    ${service.image ? `<img src="${$('<div/>').text(service.image).html()}" alt="${$('<div/>').text(service.titre).html()}">` : ''}
+                                `);
+                                $serviceDetailsModal.css('display', 'flex').fadeIn();
+                                $('body').addClass('modal-open');
+                            } else {
+                                Swal.fire({
+                                    title: 'Erreur',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Erreur',
+                                text: 'Impossible de récupérer les détails du service.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                });
+
+                $('#close-service-details-modal, #close-service-details').click(function() {
+                    $serviceDetailsModal.fadeOut(function() {
+                        $(this).css('display', 'none');
+                    });
+                    $('body').removeClass('modal-open');
+                });
+
+                // Form submission with AJAX
+                $('#personnalise-reservation-form').on('submit', function(e) {
                     e.preventDefault();
-                    $(this).parent().toggleClass('active').siblings().removeClass('active');
-                }
-            });
-
-            // Flatpickr
-            flatpickr("#{{ form.date.vars.id }}", {
-                dateFormat: "Y-m-d",
-                minDate: "today",
-                locale: "fr",
-                allowInput: true,
-                onChange: function(selectedDates, dateStr, instance) {
-                    const $input = $(instance.element);
-                    if (selectedDates.length === 0) {
-                        $input.addClass('is-invalid').next('.text-danger').text('La date est requise.');
-                    } else {
-                        $input.removeClass('is-invalid').next('.text-danger').text('');
-                    }
-                }
-            });
-
-            // Numtel input validation
-            $('#{{ form.numtel.vars.id }}').on('input', function() {
-                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
-            });
-
-            // Form validation and submission
-            $('#personnalise-reservation-form').on('submit', function(e) {
-                e.preventDefault();
-                let isValid = true;
-
-                // Clear existing errors
-                $('.form-control').removeClass('is-invalid');
-                $('.text-danger').text('');
-
-                // Nom
-                const $nomInput = $('#{{ form.nom.vars.id }}');
-                const nomValue = $nomInput.val().trim();
-                if (!nomValue) {
-                    $nomInput.addClass('is-invalid').next('.text-danger').text('Le nom est requis.');
-                    isValid = false;
-                } else if (nomValue.length > 255) {
-                    $nomInput.addClass('is-invalid').next('.text-danger').text('Le nom ne peut pas dépasser 255 caractères.');
-                    isValid = false;
-                }
-
-                // Prénom
-                const $prenomInput = $('#{{ form.prenom.vars.id }}');
-                const prenomValue = $prenomInput.val().trim();
-                if (!prenomValue) {
-                    $prenomInput.addClass('is-invalid').next('.text-danger').text('Le prénom est requis.');
-                    isValid = false;
-                } else if (prenomValue.length > 255) {
-                    $prenomInput.addClass('is-invalid').next('.text-danger').text('Le prénom ne peut pas dépasser 255 caractères.');
-                    isValid = false;
-                }
-
-                // Email
-                const $emailInput = $('#{{ form.email.vars.id }}');
-                const emailValue = $emailInput.val().trim();
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailValue) {
-                    $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email est requis.');
-                    isValid = false;
-                } else if (!emailRegex.test(emailValue)) {
-                    $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email n\'est pas valide.');
-                    isValid = false;
-                } else if (emailValue.length > 255) {
-                    $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email ne peut pas dépasser 255 caractères.');
-                    isValid = false;
-                }
-
-                // Numtel
-                const $numtelInput = $('#{{ form.numtel.vars.id }}');
-                const numtelValue = $numtelInput.val().trim();
-                if (!numtelValue) {
-                    $numtelInput.addClass('is-invalid').next('.text-danger').text('Le numéro de téléphone est requis.');
-                    isValid = false;
-                } else if (!/^[0-9]{8}$/.test(numtelValue)) {
-                    $numtelInput.addClass('is-invalid').next('.text-danger').text('Le numéro doit contenir exactement 8 chiffres (ex. 12345678).');
-                    isValid = false;
-                }
-
-                // Date
-                const $dateInput = $('#{{ form.date.vars.id }}');
-                const dateValue = $dateInput.val();
-                if (!dateValue) {
-                    $dateInput.addClass('is-invalid').next('.text-danger').text('La date est requise.');
-                    isValid = false;
-                } else if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
-                    $dateInput.addClass('is-invalid').next('.text-danger').text('La date doit être au format YYYY-MM-DD.');
-                    isValid = false;
-                } else {
-                    const selectedDate = new Date(dateValue);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    if (selectedDate < today) {
-                        $dateInput.addClass('is-invalid').next('.text-danger').text('La date doit être aujourd\'hui ou dans le futur.');
-                        isValid = false;
-                    }
-                }
-
-                // Services
-                const $servicesInputs = $('input[name="{{ form.services.vars.full_name }}[]"]:checked');
-                if ($servicesInputs.length === 0) {
-                    $('.checkbox-container').next('.text-danger').text('Vous devez sélectionner au moins un service.');
-                    isValid = false;
-                }
-
-                if (isValid) {
                     const $form = $(this);
                     const $submitButton = $form.find('button[type="submit"]');
-                    const $spinner = $form.find('.loading-spinner');
+                    const $spinner = $('.loading-spinner');
                     $submitButton.prop('disabled', true);
                     $spinner.show();
 
                     $.ajax({
-                        url: '{{ path('user_reservation_personnalise_new') }}',
-                        method: 'POST',
+                        url: $form.attr('action'),
+                        method: $form.attr('method'),
                         data: $form.serialize(),
                         dataType: 'json',
                         success: function(response) {
                             if (response.success) {
                                 Swal.fire({
-                                    title: 'Succès !',
+                                    title: 'Succès',
                                     text: response.message,
                                     icon: 'success',
                                     confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        window.location.href = '{{ path('app_home', {'_fragment': 'fh5co-started'}) }}';
-                                    }
+                                }).then(() => {
+                                    window.location.href = response.redirectUrl;
                                 });
                             } else {
                                 Swal.fire({
                                     title: 'Erreur',
-                                    text: response.message || 'Une erreur s\'est produite.',
+                                    text: response.message,
                                     icon: 'error',
                                     confirmButtonText: 'OK'
                                 });
                                 if (response.errors) {
-                                    $.each(response.errors, function(field, errors) {
-                                        const $field = $('#{{ form.vars.id }}_' + field);
-                                        $field.addClass('is-invalid').next('.text-danger').text(errors.join(', '));
+                                    Object.keys(response.errors).forEach(field => {
+                                        const $field = $(`#${field}`);
+                                        $field.addClass('is-invalid').next('.form-error').text(response.errors[field].join(', '));
                                     });
                                 }
                             }
@@ -645,7 +902,7 @@
                         error: function() {
                             Swal.fire({
                                 title: 'Erreur',
-                                text: 'Une erreur s\'est produite. Veuillez réessayer.',
+                                text: 'Une erreur est survenue lors de la soumission du formulaire.',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
@@ -655,30 +912,21 @@
                             $spinner.hide();
                         }
                     });
-                }
-            });
+                });
 
-            // Apply is-invalid on page load
-            $('.form-control').each(function() {
-                const $errorDiv = $(this).next('.text-danger');
-                if ($errorDiv.length && $errorDiv.text().trim()) {
-                    $(this).addClass('is-invalid');
-                }
-            });
-
-            // Handle flash messages
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    Swal.fire({
-                        title: '{{ label == 'success' ? 'Succès' : 'Erreur' }}',
-                        text: '{{ message|raw }}',
-                        icon: '{{ label == 'success' ? 'success' : 'error' }}',
-                        confirmButtonText: 'OK'
-                    });
+                // Handle flash messages
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        Swal.fire({
+                            title: '{{ label == 'success' ? 'Succès' : 'Erreur' }}',
+                            text: '{{ message|raw }}',
+                            icon: '{{ label == 'success' ? 'success' : 'error' }}',
+                            confirmButtonText: 'OK'
+                        });
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        });
-    }
-</script>
+            });
+        </script>
+    {% endblock %}
 </body>
 </html>

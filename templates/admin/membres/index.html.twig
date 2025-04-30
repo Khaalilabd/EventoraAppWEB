@@ -7,42 +7,70 @@
     <style>
         /* Card Styling */
         .membre-card {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: none;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            min-height: 250px;
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid rgb(15, 100, 192);
             width: 100%;
         }
         .membre-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
-        .card-body {
-            position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            font-size: 1rem;
+        .membre-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            background-color: #e0e0e0; /* Placeholder pour l'avatar */
         }
-        .card-header {
-            background: linear-gradient(90deg, #007bff, #0056b3);
+        .membre-info {
+            flex-grow: 1;
+        }
+        .membre-info h6 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .membre-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 10px;
             color: #fff;
-            padding: 15px;
-            border-radius: 12px 12px 0 0;
-            font-size: 1.1rem;
+            background-color: #007bff; /* Bleu pour les membres */
+            margin-left: 10px;
+            animation: pulse 2s infinite;
         }
-        .card-footer {
-            position: relative;
-            z-index: 1;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 0 0 12px 12px;
+        .membre-label:hover {
+            animation: bounce 0.5s;
         }
-        .badge {
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .membre-info .location {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .membre-info p {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .membre-info .badge {
             font-size: 0.8rem;
             padding: 5px 10px;
             border-radius: 12px;
@@ -57,75 +85,31 @@
         .badge-not-confirmed {
             background-color: #dc3545;
         }
-        .btn-sm {
-            margin-right: 5px;
-            padding: 8px 12px;
-            font-size: 0.9rem;
+        .membre-actions {
+            display: flex;
+            gap: 10px;
         }
-        .toggle-confirmed {
-            cursor: pointer;
-            font-size: 1.2rem;
+        .membre-actions a {
             color: #007bff;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
         }
-        .toggle-confirmed:hover {
+        .membre-actions a:hover {
             color: #0056b3;
         }
 
-        /* Filter Sidebar */
-        .filter-sidebar {
-            position: fixed;
-            top: 80px;
-            right: 0;
-            width: 300px;
-            height: calc(100vh - 80px);
+        /* Filter Section */
+        .filter-section {
             background-color: #f8f9fa;
-            border-radius: 12px 0 0 12px;
-            box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            overflow-y: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: fit-content;
         }
-        .filter-sidebar.collapsed {
-            transform: translateX(100%);
-        }
-        .filter-toggle-btn {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%;
-            text-align: center;
+        .filter-section h6 {
             margin-bottom: 15px;
+            font-weight: bold;
         }
-        .filter-toggle-btn:hover { background-color: #0056b3; }
-        .filter-content { margin-top: 15px; }
-
-        /* Filter Toggle Icon */
-        .filter-toggle-icon {
-            position: fixed;
-            top: 100px;
-            right: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
-            z-index: 1001;
-            display: none;
-        }
-        .filter-toggle-icon:hover { background-color: #0056b3; }
-        .filter-toggle-icon.visible { display: flex; }
 
         /* Sort Buttons */
         .btn-group .btn {
@@ -142,7 +126,6 @@
 
         /* Main Content */
         .membre-content {
-            margin-right: 320px;
             padding: 0 15px;
         }
 
@@ -176,28 +159,22 @@
         /* Responsive Design */
         @media (max-width: 992px) {
             .membre-container { margin-left: 0; }
-            .membre-content { margin-right: 0; }
-            .filter-sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                top: 0;
-                border-radius: 12px;
+            .filter-section {
                 margin-top: 20px;
             }
-            .filter-sidebar.collapsed {
-                transform: translateX(0);
-                height: 50px;
-                overflow: hidden;
-            }
-            .filter-sidebar.collapsed .filter-content { display: none; }
-            .filter-toggle-icon { display: none; }
         }
         @media (max-width: 768px) {
-            .membre-card { min-height: 200px; }
-            .card-body { padding: 15px; font-size: 0.9rem; }
-            .card-header { font-size: 1rem; }
-            .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
+            .membre-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .membre-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            .membre-actions {
+                margin-top: 10px;
+            }
         }
     </style>
 {% endblock %}
@@ -427,126 +404,128 @@
             {% endfor %}
 
             <div class="membre-content">
-                <div class="row" id="membreList">
-                    {% if membres|length > 0 %}
-                        {% for membre in membres %}
-                            <div class="col-lg-6 col-md-6 col-sm-12 mb-4 membre-card-container">
-                                <div class="card membre-card h-100">
-                                    <div class="card-header">
-                                        <h6 class="mb-0">Membre #{{ membre.id }}</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="text-sm mb-2"><strong>Nom :</strong> {{ membre.nom }} {{ membre.prenom }}</p>
-                                        <p class="text-sm mb-2"><strong>Email :</strong> {{ membre.email }}</p>
-                                        <p class="text-sm mb-2"><strong>CIN :</strong> {{ membre.cin }}</p>
-                                        <p class="text-sm mb-2"><strong>Téléphone :</strong> {{ membre.numTel }}</p>
-                                        <p class="text-sm mb-2">
-                                            <strong>Statut :</strong>
-                                            <span class="badge badge-{{ membre.isConfirmed ? 'confirmed' : 'not-confirmed' }}">
-                                                {{ membre.isConfirmed ? 'Confirmé' : 'Non Confirmé' }}
-                                            </span>
-                                            <i class="fas fa-{{ membre.isConfirmed ? 'unlock' : 'lock' }} toggle-confirmed ms-2" data-membre-id="{{ membre.id }}" data-csrf-token="{{ csrf_token('toggle' ~ membre.id) }}"></i>
-                                        </p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a href="{{ path('admin_membres_details', {'id': membre.id}) }}" class="btn btn-sm btn-info">Détails</a>
-                                        <a href="{{ path('admin_membres_edit', {'id': membre.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
-                                        <a href="#" class="btn btn-sm btn-danger" onclick="if(confirm('Voulez-vous vraiment supprimer ce membre ?')) { document.getElementById('delete-form-{{ membre.id }}').submit(); } return false;">Supprimer</a>
-                                        <form id="delete-form-{{ membre.id }}" method="post" action="{{ path('admin_membres_delete', {'id': membre.id}) }}" style="display: none;">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ membre.id) }}">
-                                        </form>
+                <div class="row">
+                    <!-- Liste des membres -->
+                    <div class="col-lg-9 col-md-12" id="membreList">
+                        {% if membres|length > 0 %}
+                            {% for membre in membres %}
+                                <div class="mb-4 membre-card-container">
+                                    <div class="membre-card">
+                                        <!-- Avatar -->
+                                        <div class="membre-avatar">
+                                            <!-- Placeholder pour l'avatar, remplacez par une image si disponible -->
+                                            <!-- <img src="{{ asset('path/to/avatar.jpg') }}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%;"> -->
+                                        </div>
+                                        <!-- Informations -->
+                                        <div class="membre-info">
+                                            <h6>{{ membre.nom }} {{ membre.prenom }} <span class="membre-label">Membre</span></h6>
+                                            <div class="location">{{ membre.cin }} - {{ membre.numTel }}</div>
+                                            <p><strong>Email :</strong> {{ membre.email }}</p>
+                                            <p>
+                                                <strong>Statut :</strong>
+                                                <span class="badge badge-{{ membre.isConfirmed ? 'confirmed' : 'not-confirmed' }}">
+                                                    {{ membre.isConfirmed ? 'Confirmé' : 'Non Confirmé' }}
+                                                </span>
+                                                <i class="fas fa-{{ membre.isConfirmed ? 'unlock' : 'lock' }} toggle-confirmed ms-2" data-membre-id="{{ membre.id }}" data-csrf-token="{{ csrf_token('toggle' ~ membre.id) }}"></i>
+                                            </p>
+                                        </div>
+                                        <!-- Actions -->
+                                        <div class="membre-actions">
+                                            <a href="{{ path('admin_membres_details', {'id': membre.id}) }}" title="Détails"><i class="fas fa-eye"></i></a>
+                                            <a href="{{ path('admin_membres_edit', {'id': membre.id}) }}" title="Modifier"><i class="fas fa-edit"></i></a>
+                                            <a href="#" onclick="if(confirm('Voulez-vous vraiment supprimer ce membre ?')) { document.getElementById('delete-form-{{ membre.id }}').submit(); } return false;" title="Supprimer"><i class="fas fa-trash-alt"></i></a>
+                                            <form id="delete-form-{{ membre.id }}" method="post" action="{{ path('admin_membres_delete', {'id': membre.id}) }}" style="display: none;">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ membre.id) }}">
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="col-12">
-                            <div class="alert alert-info text-center" role="alert">
-                                Aucun membre trouvé.
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-
-                {% if total_pages > 1 %}
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ path('admin_membres', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Previous">
-                                    <span aria-hidden="true">«</span>
-                                </a>
-                            </li>
-                            {% for i in 1..total_pages %}
-                                <li class="page-item {{ current_page == i ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ path('admin_membres', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}">{{ i }}</a>
-                                </li>
                             {% endfor %}
-                            <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ path('admin_membres', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Next">
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                {% endif %}
-            </div>
+                        {% else %}
+                            <div class="col-12">
+                                <div class="alert alert-info text-center" role="alert">
+                                    Aucun membre trouvé.
+                                </div>
+                            </div>
+                        {% endif %}
 
-            <div class="filter-sidebar" id="filterSidebar">
-                <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">Masquer</button>
-                <div class="filter-content">
-                    <h6 class="mb-3 text-dark font-weight-bold"><i class="fas fa-filter me-2"></i>Options de Tri</h6>
-                    <form method="get" action="{{ path('admin_membres') }}" class="row g-3 align-items-center">
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Date de Naissance</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('admin_membres', {'sort_by': 'dateOfBirth', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'dateOfBirth' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('admin_membres', {'sort_by': 'dateOfBirth', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'dateOfBirth' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
-                                </a>
-                            </div>
+                        {% if total_pages > 1 %}
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ path('admin_membres', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Previous">
+                                            <span aria-hidden="true">«</span>
+                                        </a>
+                                    </li>
+                                    {% for i in 1..total_pages %}
+                                        <li class="page-item {{ current_page == i ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ path('admin_membres', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}">{{ i }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ path('admin_membres', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Next">
+                                            <span aria-hidden="true">»</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    </div>
+
+                    <!-- Menu de tri -->
+                    <div class="col-lg-3 col-md-12">
+                        <div class="filter-section">
+                            <h6 class="text-dark font-weight-bold"><i class="fas fa-filter me-2"></i>Options de Tri</h6>
+                            <form method="get" action="{{ path('admin_membres') }}" class="row g-3 align-items-center">
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Date de Naissance</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('admin_membres', {'sort_by': 'dateOfBirth', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                        class="btn btn-outline-primary {{ sort_by == 'dateOfBirth' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('admin_membres', {'sort_by': 'dateOfBirth', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                        class="btn btn-outline-primary {{ sort_by == 'dateOfBirth' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Nom</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('admin_membres', {'sort_by': 'nom', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                        class="btn btn-outline-primary {{ sort_by == 'nom' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('admin_membres', {'sort_by': 'nom', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                        class="btn btn-outline-primary {{ sort_by == 'nom' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Email</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('admin_membres', {'sort_by': 'email', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                        class="btn btn-outline-primary {{ sort_by == 'email' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('admin_membres', {'sort_by': 'email', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                        class="btn btn-outline-primary {{ sort_by == 'email' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex align-items-end">
+                                    <a href="{{ path('admin_membres') }}" class="btn btn-outline-secondary w-100">
+                                        <i class="fas fa-undo me-1"></i> Réinitialiser
+                                    </a>
+                                </div>
+                            </form>
                         </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Nom</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('admin_membres', {'sort_by': 'nom', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'nom' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('admin_membres', {'sort_by': 'nom', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'nom' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Email</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('admin_membres', {'sort_by': 'email', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'email' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('admin_membres', {'sort_by': 'email', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'email' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-12 d-flex align-items-end">
-                            <a href="{{ path('admin_membres') }}" class="btn btn-outline-secondary w-100">
-                                <i class="fas fa-undo me-1"></i> Réinitialiser
-                            </a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-
-            <button class="filter-toggle-icon" id="filterToggleIcon" onclick="toggleFilterSidebar()">
-                <i class="fas fa-filter"></i>
-            </button>
         </div>
     </main>
 {% endblock %}
@@ -559,21 +538,11 @@
             const searchText = e.target.value.toLowerCase();
             const cards = document.querySelectorAll('.membre-card-container');
             cards.forEach(card => {
-                const nom = card.querySelector('.card-body p:nth-child(1)').textContent.toLowerCase();
-                const email = card.querySelector('.card-body p:nth-child(2)').textContent.toLowerCase();
+                const nom = card.querySelector('.membre-info h6').textContent.toLowerCase();
+                const email = card.querySelector('.membre-info p:nth-child(2)').textContent.toLowerCase();
                 card.style.display = nom.includes(searchText) || email.includes(searchText) ? '' : 'none';
             });
         });
-
-        // Toggle filter sidebar
-        function toggleFilterSidebar() {
-            const sidebar = document.getElementById('filterSidebar');
-            const btn = sidebar.querySelector('.filter-toggle-btn');
-            const icon = document.getElementById('filterToggleIcon');
-            sidebar.classList.toggle('collapsed');
-            btn.textContent = sidebar.classList.contains('collapsed') ? 'Afficher' : 'Masquer';
-            icon.classList.toggle('visible', sidebar.classList.contains('collapsed'));
-        }
 
         // Toggle isConfirmed status
         document.querySelectorAll('.toggle-confirmed').forEach(icon => {
@@ -581,7 +550,7 @@
                 const membreId = this.getAttribute('data-membre-id');
                 const csrfToken = this.getAttribute('data-csrf-token');
                 const badge = this.parentElement.querySelector('.badge');
-                const isConfirmed = this.classList.contains('fa-unlock');
+                const isConfirmed = this.classList.contains('fa-unlock'); // État actuel
 
                 fetch(`{{ path('admin_membres_toggle_confirm', {'id': '__ID__'}) }}`.replace('__ID__', membreId), {
                     method: 'POST',
@@ -589,13 +558,13 @@
                         'Content-Type': 'application/json',
                         'X-CSRF-Token': csrfToken
                     },
-                    body: JSON.stringify({})
+                    body: JSON.stringify({ isConfirmed: !isConfirmed }) // Envoyer la valeur inversée
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        this.classList.toggle('fa-lock', !isConfirmed);
-                        this.classList.toggle('fa-unlock', isConfirmed);
+                        this.classList.toggle('fa-lock', data.isConfirmed);
+                        this.classList.toggle('fa-unlock', !data.isConfirmed);
                         badge.textContent = data.isConfirmed ? 'Confirmé' : 'Non Confirmé';
                         badge.className = `badge badge-${data.isConfirmed ? 'confirmed' : 'not-confirmed'}`;
                     } else {

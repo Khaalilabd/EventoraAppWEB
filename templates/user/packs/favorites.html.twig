@@ -204,7 +204,7 @@
                 margin-top: auto;
             }
 
-            /* Navbar styles (same as pack_details.html.twig) */
+            /* Navbar styles */
             #page {
                 min-height: 100vh;
                 display: flex;
@@ -312,10 +312,21 @@
                 padding: 10px 0;
                 min-width: 150px;
                 z-index: 1001;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown.show {
+                display: block;
+                opacity: 1;
+                visibility: visible;
             }
 
             .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                display: block !important;
+                display: block;
+                opacity: 1;
+                visibility: visible;
             }
 
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
@@ -385,14 +396,16 @@
                     display: none;
                     box-shadow: none;
                     background-color: #f8f9fa;
+                    opacity: 1;
+                    visibility: visible;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown.show {
+                    display: block;
                 }
 
                 .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: none !important;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                    display: block !important;
+                    display: none;
                 }
 
                 .favorites-grid {
@@ -442,12 +455,12 @@
                                 </ul>
                             </li>
                             <li class="has-dropdown active">
-    <a href="#">Packs</a>
-    <ul class="dropdown">
-        <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
-        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
-    </ul>
-</li>
+                                <a href="#">Packs</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
+                                    <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
+                                </ul>
+                            </li>
                             <li class="has-dropdown">
                                 <a href="#">Services</a>
                                 <ul class="dropdown">
@@ -547,17 +560,60 @@
         <!-- Navbar JavaScript -->
         <script>
             $(document).ready(function() {
+                // Debug logs
+                console.log('jQuery loaded:', typeof $ !== 'undefined');
+                console.log('Dropdown items found:', $('.has-dropdown').length);
+
                 // Navbar toggle for mobile
                 $('.menu-toggle').click(function() {
                     console.log('Menu toggle clicked');
                     $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                    // Close all dropdowns when toggling the menu
+                    $('.has-dropdown .dropdown').removeClass('show');
                 });
 
+                // Dropdown handling for both desktop and mobile
                 $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                    if ($(window).width() <= 768) {
-                        console.log('Dropdown clicked on mobile');
+                    console.log('Dropdown link clicked');
+                    const $parent = $(this).parent();
+                    const $dropdown = $parent.find('.dropdown');
+                    const isMobile = $(window).width() <= 768;
+
+                    if (isMobile) {
+                        // Prevent default link behavior on mobile
                         e.preventDefault();
-                        $(this).parent().toggleClass('active');
+                        // Toggle dropdown visibility
+                        $dropdown.toggleClass('show');
+                        // Close other dropdowns
+                        $('.has-dropdown .dropdown').not($dropdown).removeClass('show');
+                    }
+                });
+
+                // Handle hover for desktop
+                $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
+                    function() {
+                        if ($(window).width() > 768) {
+                            console.log('Hover in on desktop');
+                            $(this).find('.dropdown').addClass('show');
+                        }
+                    },
+                    function() {
+                        if ($(window).width() > 768) {
+                            console.log('Hover out on desktop');
+                            $(this).find('.dropdown').removeClass('show');
+                        }
+                    }
+                );
+
+                // Close menu and dropdowns when clicking outside on mobile
+                $(document).click(function(event) {
+                    if ($(window).width() <= 768) {
+                        const $menu = $('.fh5co-nav .menu-1 ul');
+                        const $toggle = $('.menu-toggle');
+                        if (!$menu.is(event.target) && $menu.has(event.target).length === 0 && !$toggle.is(event.target) && $toggle.has(event.target).length === 0) {
+                            $menu.removeClass('active');
+                            $('.has-dropdown .dropdown').removeClass('show');
+                        }
                     }
                 });
             });

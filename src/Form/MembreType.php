@@ -139,6 +139,8 @@ class MembreType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Membre::class,
             'is_edit' => false,
+            'attr' => ['novalidate' => 'novalidate'], // Désactive la validation HTML5
+
         ]);
     }
 }

@@ -23,7 +23,7 @@ class ReclamationRep
     #[Assert\NotBlank(message: "La réponse ne peut pas être vide.")]
     #[Assert\Length(
         min: 10,
-        max: 5000,
+        max: 50000,
         minMessage: "La réponse doit contenir au moins {{ limit }} caractères.",
         maxMessage: "La réponse ne peut pas dépasser {{ limit }} caractères."
     )]
