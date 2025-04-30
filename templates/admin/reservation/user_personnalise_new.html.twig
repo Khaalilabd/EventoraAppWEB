@@ -8,7 +8,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
     {% block stylesheets %}
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Work+Sans:wght@400;600&family=Sacramento&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -41,7 +41,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.4);
+                background: rgba(0, 0, 0, 0.5);
                 z-index: -1;
             }
             #page {
@@ -68,7 +68,7 @@
                 margin: 0 auto;
             }
             .fh5co-logo a {
-                font-family: 'Inter', sans-serif;
+                font-family: 'Work Sans', sans-serif;
                 font-weight: 700;
                 font-size: 24px;
                 color: #934D1A;
@@ -105,7 +105,7 @@
                 position: relative;
             }
             .fh5co-nav .menu-1 ul li a {
-                font-family: 'Inter', sans-serif;
+                font-family: 'Work Sans', sans-serif;
                 font-size: 16px;
                 color: #333;
                 text-transform: uppercase;
@@ -200,6 +200,8 @@
                 font-size: 16px;
                 transition: border-color 0.3s ease, box-shadow 0.3s ease;
                 width: 100%;
+                pointer-events: auto;
+                user-select: text;
                 height: 44px;
             }
             .form-control::placeholder { color: #9CA3AF; }
@@ -244,8 +246,8 @@
                 background: linear-gradient(90deg, #047857, #10B981);
                 border: none;
                 color: #FFFFFF;
-                padding: 8px 12px;
-                font-size: 12px;
+                padding: 12px;
+                font-size: 16px;
             }
             .btn-info:hover {
                 background: linear-gradient(90deg, #065F46, #059669);
@@ -371,8 +373,24 @@
             }
             .services-column .form-check {
                 display: flex;
-                align-items: center;
                 justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                min-height: 40px;
+                padding: 8px;
+                background: #FFFFFF;
+                border: 1px solid #E5E7EB;
+                border-radius: 4px;
+                transition: background 0.2s ease;
+            }
+            .services-column .form-check:hover {
+                background: #F1F5F9;
+            }
+            .services-column .form-check .checkbox-label-container {
+                display: flex;
+                align-items: center;
+                flex: 1;
+                max-width: 70%;
             }
             .services-column .form-check-input {
                 transform: scale(1.5);
@@ -381,6 +399,9 @@
             .services-column .form-check-label {
                 color: #1E3A8A;
                 font-size: 14px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             .modal-content .modal-actions {
                 display: flex;
@@ -423,6 +444,7 @@
                 color: #1E3A8A;
                 font-size: 14px;
                 min-height: 40px;
+                border-left: 4px solid #3B82F6;
             }
             .selected-services ul {
                 list-style: none;
@@ -501,6 +523,8 @@
                 .btn { font-size: 14px; padding: 10px; }
                 .event-wrap h3 { font-size: 20px; }
                 .services-columns { flex-direction: column; gap: 10px; }
+                .services-column .form-check { flex-direction: column; align-items: flex-start; gap: 8px; }
+                .services-column .form-check .checkbox-label-container { max-width: 100%; }
             }
             @media (max-width: 480px) {
                 .fh5co-heading h2 { font-size: 24px; }
@@ -648,6 +672,7 @@
                                     <div class="form-group d-flex gap-3 flex-wrap justify-content-center">
                                         <button type="submit" class="btn btn-primary">Créer la Réservation</button>
                                         <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour</a>
+                                        <a href="{{ path('google_auth') }}" class="btn btn-info">Ajouter au Google Calendar</a>
                                         <div class="loading-spinner" style="display: none;"></div>
                                     </div>
                                 {{ form_end(form) }}
@@ -727,12 +752,25 @@
                     }
                 });
 
+                // Prevent autofocus on description
+                if ($('#{{ form.description.vars.id }}').length) {
+                    $('#{{ form.description.vars.id }}').removeAttr('autofocus');
+                }
+                $('.form-control').on('focus', function() {
+                    $(this).select();
+                });
+
                 // Flatpickr initialization
                 flatpickr(".flatpickr", {
                     dateFormat: "Y-m-d",
                     minDate: "today",
                     locale: "fr",
-                    allowInput: true
+                    allowInput: true,
+                    onChange: function(selectedDates, dateStr, instance) {
+                        const $input = $(instance.element);
+                        $input.toggleClass('is-invalid', selectedDates.length === 0)
+                              .next('.form-error').text(selectedDates.length === 0 ? 'La date est requise.' : '');
+                    }
                 });
 
                 // Numtel input restriction
@@ -755,11 +793,11 @@
 
                     $column.append(`
                         <div class="form-check">
-                            <div style="display: flex; align-items: center;">
+                            <div class="checkbox-label-container">
                                 <input type="checkbox" class="form-check-input modal-service-checkbox" data-id="${serviceId}" ${$input.is(':checked') ? 'checked' : ''}>
                                 <label class="form-check-label">${labelText}</label>
                             </div>
-                            <button type="button" class="btn btn-info view-service-details" data-id="${serviceId}">Détails</button>
+                            <button type="button" class="btn btn-info view-service-details" style="padding: 8px 12px; font-size: 12px;" data-id="${serviceId}">Détails</button>
                         </div>
                     `);
                 });
@@ -860,8 +898,112 @@
                     $('body').removeClass('modal-open');
                 });
 
-                // Form submission with AJAX
+                // Form validation
                 $('#personnalise-reservation-form').on('submit', function(e) {
+                    let isValid = true;
+                    $('.form-control').removeClass('is-invalid');
+                    $('.form-error').text('');
+
+                    const validateField = ($input, value, maxLength, errorMsg, regex = null) => {
+                        if (!value) {
+                            $input.addClass('is-invalid').next('.form-error').text(errorMsg.required);
+                            return false;
+                        }
+                        if (value.length > maxLength) {
+                            $input.addClass('is-invalid').next('.form-error').text(errorMsg.maxLength);
+                            return false;
+                        }
+                        if (regex && !regex.test(value)) {
+                            $input.addClass('is-invalid').next('.form-error').text(errorMsg.invalid);
+                            return false;
+                        }
+                        return true;
+                    };
+
+                    // Nom
+                    if ($('#{{ form.nom.vars.id }}').length) {
+                        isValid &= validateField(
+                            $('#{{ form.nom.vars.id }}'),
+                            $('#{{ form.nom.vars.id }}').val().trim(),
+                            255,
+                            { required: 'Le nom est requis.', maxLength: 'Le nom ne peut pas dépasser 255 caractères.' }
+                        );
+                    }
+
+                    // Prénom
+                    if ($('#{{ form.prenom.vars.id }}').length) {
+                        isValid &= validateField(
+                            $('#{{ form.prenom.vars.id }}'),
+                            $('#{{ form.prenom.vars.id }}').val().trim(),
+                            255,
+                            { required: 'Le prénom est requis.', maxLength: 'Le prénom ne peut pas dépasser 255 caractères.' }
+                        );
+                    }
+
+                    // Email
+                    if ($('#{{ form.email.vars.id }}').length) {
+                        isValid &= validateField(
+                            $('#{{ form.email.vars.id }}'),
+                            $('#{{ form.email.vars.id }}').val().trim(),
+                            255,
+                            {
+                                required: 'L\'email est requis.',
+                                maxLength: 'L\'email ne peut pas dépasser 255 caractères.',
+                                invalid: 'L\'email n\'est pas valide.'
+                            },
+                            /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                        );
+                    }
+
+                    // Numtel
+                    if ($('#{{ form.numtel.vars.id }}').length) {
+                        isValid &= validateField(
+                            $('#{{ form.numtel.vars.id }}'),
+                            $('#{{ form.numtel.vars.id }}').val().trim(),
+                            8,
+                            {
+                                required: 'Le numéro de téléphone est requis.',
+                                invalid: 'Le numéro doit contenir exactement 8 chiffres.'
+                            },
+                            /^[0-9]{8}$/
+                        );
+                    }
+
+                    // Date
+                    if ($('#{{ form.date.vars.id }}').length) {
+                        const $dateInput = $('#{{ form.date.vars.id }}');
+                        const dateValue = $dateInput.val();
+                        if (!dateValue) {
+                            $dateInput.addClass('is-invalid').next('.form-error').text('La date est requise.');
+                            isValid = false;
+                        } else if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+                            $dateInput.addClass('is-invalid').next('.form-error').text('La date doit être au format YYYY-MM-DD.');
+                            isValid = false;
+                        } else {
+                            const selectedDate = new Date(dateValue);
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            if (selectedDate < today) {
+                                $dateInput.addClass('is-invalid').next('.form-error').text('La date doit être aujourd\'hui ou dans le futur.');
+                                isValid = false;
+                            }
+                        }
+                    }
+
+                    // Services
+                    if ($servicesInputs.length) {
+                        if (!$servicesInputs.filter(':checked').length) {
+                            $('#services-error').text('Vous devez sélectionner au moins un service.');
+                            isValid = false;
+                        }
+                    }
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    // AJAX submission
                     e.preventDefault();
                     const $form = $(this);
                     const $submitButton = $form.find('button[type="submit"]');
@@ -876,13 +1018,35 @@
                         dataType: 'json',
                         success: function(response) {
                             if (response.success) {
+                                // Préparer les données pour Google Calendar
+                                const eventName = $('#{{ form.nom.vars.id }}').val() + ' ' + $('#{{ form.prenom.vars.id }}').val() + ' - Événement';
+                                const eventDescription = $('#{{ form.description.vars.id }}').val() || 'Réservation personnalisée via Eventora';
+                                const eventDate = $('#{{ form.date.vars.id }}').val();
+                                const eventStart = new Date(eventDate);
+                                const eventEnd = new Date(eventStart.getTime() + 2 * 60 * 60 * 1000); // +2 heures
+                                const formattedStart = eventStart.toISOString().replace(/-|:|\.\d{3}/g, '');
+                                const formattedEnd = eventEnd.toISOString().replace(/-|:|\.\d{3}/g, '');
+
+                                // Générer le lien Google Calendar
+                                const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+                                    `&text=${encodeURIComponent(eventName)}` +
+                                    `&details=${encodeURIComponent(eventDescription)}` +
+                                    `&dates=${formattedStart}/${formattedEnd}`;
+
                                 Swal.fire({
                                     title: 'Succès',
                                     text: response.message,
                                     icon: 'success',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    window.location.href = response.redirectUrl;
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Ajouter à Google Calendar',
+                                    cancelButtonText: 'OK'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.open(googleCalendarUrl, '_blank');
+                                        window.location.href = response.redirectUrl;
+                                    } else {
+                                        window.location.href = response.redirectUrl;
+                                    }
                                 });
                             } else {
                                 Swal.fire({
@@ -912,6 +1076,14 @@
                             $spinner.hide();
                         }
                     });
+                });
+
+                // Apply is-invalid on load
+                $('.form-control').each(function() {
+                    const $errorDiv = $(this).next('.form-error');
+                    if ($errorDiv.length && $errorDiv.text().trim()) {
+                        $(this).addClass('is-invalid');
+                    }
                 });
 
                 // Handle flash messages
