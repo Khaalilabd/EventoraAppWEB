@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
-// use Symfony\Component\Validator\Constraints\DateTime; // Cette contrainte est rarement nécessaire sur un DateType avec widget single_text
+// use Symfony\Component\Validator\Constraints\DateTime; // This constraint is rarely needed on a DateType with single_text widget
 
 class RegistrationFormType extends AbstractType
 {
@@ -24,105 +24,105 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'Nom',
+                'label' => 'last_name',
                 'constraints' => [
-                    new NotBlank(['message' => 'Le nom est requis.']),
-                    new Length(['min' => 2, 'minMessage' => 'Le nom doit contenir au moins {{ limit }} caractères.']),
+                    new NotBlank(['message' => 'Last name is required.']),
+                    new Length(['min' => 2, 'minMessage' => 'Last name must contain at least {{ limit }} characters.']),
                 ],
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'Prénom',
+                'label' => 'first_name',
                 'constraints' => [
-                    new NotBlank(['message' => 'Le prénom est requis.']),
-                    new Length(['min' => 2, 'minMessage' => 'Le prénom doit contenir au moins {{ limit }} caractères.']),
+                    new NotBlank(['message' => 'First name is required.']),
+                    new Length(['min' => 2, 'minMessage' => 'First name must contain at least {{ limit }} characters.']),
                 ],
             ])
             ->add('dateOfBirth', DateType::class, [
-                'label' => 'Date de naissance',
-                'required' => false, // La validation NotBlank se ferait sur l'entité si nécessaire, mais le FormType a LessThanOrEqual
+                'label' => 'date_of_birth',
+                'required' => false, // NotBlank validation would be done on the entity if needed, but FormType has LessThanOrEqual
                 'widget' => 'single_text',
                 'html5' => true,
                 'attr' => [
-                    'placeholder' => 'Sélectionnez une date (format AAAA-MM-JJ)',
+                    'placeholder' => 'Select a date (YYYY-MM-DD format)',
                 ],
                 'constraints' => [
                     new LessThanOrEqual([
-                        'value' => '2007-04-25', // S'assurer que c'est la date correcte pour 18 ans
-                        'message' => 'Vous devez avoir au moins 18 ans pour vous inscrire.',
+                        'value' => '2007-04-25', // Make sure this is the correct date for 18 years
+                        'message' => 'You must be at least 18 years old to register.',
                     ]),
-                    // Si la date de naissance est obligatoire, ajouter NotBlank ici ou sur l'entité
+                    // If date of birth is mandatory, add NotBlank here or on the entity
                 ],
             ])
             ->add('gender', ChoiceType::class, [
-                'label' => 'Genre',
+                'label' => 'gender',
                 'required' => false,
                 'choices' => [
-                    'Homme' => 'Homme',
-                    'Femme' => 'Femme',
+                    'Male' => 'Homme',
+                    'Female' => 'Femme',
                 ],
-                'placeholder' => 'Sélectionnez votre genre (facultatif)',
+                'placeholder' => 'Select your gender (optional)',
                 'attr' => [
                     'class' => 'form-select',
                 ],
-                // Si le genre est obligatoire, ajouter NotBlank ici ou sur l'entité
+                // If gender is required, add NotBlank here or on the entity
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Email',
+                'label' => 'email',
                 'constraints' => [
-                    new NotBlank(['message' => 'L\'email est requis.']),
-                    new \Symfony\Component\Validator\Constraints\Email(['message' => 'L\'adresse email "{{ value }}" n\'est pas valide.']), // Utilisez le FQCN ou un use
+                    new NotBlank(['message' => 'Email is required.']),
+                    new \Symfony\Component\Validator\Constraints\Email(['message' => 'The email address "{{ value }}" is not valid.']), // Use FQCN or a use statement
                 ],
             ])
             ->add('cin', TextType::class, [
-                'label' => 'CIN',
+                'label' => 'cin',
                 'constraints' => [
-                    new NotBlank(['message' => 'Le CIN est requis.']),
+                    new NotBlank(['message' => 'National ID is required.']),
                      new Regex([
                         'pattern' => '/^[0-9]{8}$/',
-                        'message' => "Le numéro de CIN doit être composé de 8 chiffres exactement."
+                        'message' => "National ID number must be exactly 8 digits."
                     ]),
                 ],
             ])
             ->add('numTel', TextType::class, [
-                'label' => 'Numéro de Téléphone',
+                'label' => 'phone_number',
                 'constraints' => [
-                    new NotBlank(['message' => 'Le numéro de téléphone est requis.']),
+                    new NotBlank(['message' => 'Phone number is required.']),
                      new Regex([
                         'pattern' => '/^[24579][0-9]{7}$/',
-                        'message' => "Veuillez entrer un numéro de téléphone tunisien valide (8 chiffres, commençant par 2, 4, 5, 7 ou 9)."
+                        'message' => "Please enter a valid Tunisian phone number (8 digits, starting with 2, 4, 5, 7 or 9)."
                     ]),
                 ],
             ])
             ->add('adresse', TextType::class, [
-                'label' => 'Adresse',
+                'label' => 'address',
                 'constraints' => [
-                    new NotBlank(['message' => 'L\'adresse est requise.']),
-                     new Length(['min' => 5, 'minMessage' => 'L\'adresse complète doit contenir au moins {{ limit }} caractères.']),
+                    new NotBlank(['message' => 'Address is required.']),
+                     new Length(['min' => 5, 'minMessage' => 'The full address must contain at least {{ limit }} characters.']),
                 ],
             ])
             ->add('username', TextType::class, [
-                'label' => 'Nom d\'utilisateur',
-                'required' => false, // S'assurer que ce champ est bien optionnel si required: false est utilisé
-                // Si le nom d'utilisateur a des contraintes (min length, caractères autorisés), les ajouter ici ou sur l'entité
+                'label' => 'username',
+                'required' => false, // Make sure this field is optional if required: false is used
+                // If the username has constraints (min length, allowed characters), add them here or on the entity
             ])
             ->add('motDePasse', PasswordType::class, [
-                'label' => $options['is_edit'] ? 'Mot de Passe (laisser vide pour ne pas modifier)' : 'Mot de Passe',
+                'label' => $options['is_edit'] ? 'password.edit' : 'password',
                 'required' => !$options['is_edit'],
-                // Supprimer 'mapped' => false pour mapper directement à l'entité
+                // Remove 'mapped' => false to map directly to the entity
                 'constraints' => $options['is_edit'] ? [] : [
-                    new NotBlank(['message' => 'Le mot de passe est requis.']),
+                    new NotBlank(['message' => 'Password is required.']),
                     new Length([
                         'min' => 8,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
+                        'minMessage' => 'Your password must contain at least {{ limit }} characters.',
                     ]),
                 ],
             ])
 
             ->add('image', FileType::class, [
-                'label' => 'Image (facultatif)',
+                'label' => 'profile_picture',
                 'required' => false,
-                'mapped' => false, // Ne pas mapper directement sur l'entité (gérer l'upload séparément)
-                // Si vous voulez valider le type ou la taille du fichier, ajoutez Assert\File ou Assert\Image ici
+                'mapped' => false, // Don't map directly to the entity (handle upload separately)
+                // If you want to validate the file type or size, add Assert\File or Assert\Image here
             ]);
     }
 
@@ -130,16 +130,15 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Membre::class,
-            'is_edit' => false, // Option pour gérer le mode édition
-            
-            
+            'is_edit' => false, // Option to manage edit mode
+            'translation_domain' => 'messages'
         ]);
 
         $resolver->setAllowedTypes('is_edit', 'bool');
     }
 
-    // Assurez-vous que la validation des contraintes de l'entité Membre est aussi activée si vous ne mettez pas *toutes*
-    // les contraintes dans le FormType. Souvent, on définit les contraintes de base sur l'entité et des contraintes
-    // spécifiques au formulaire dans le FormType.
-    // Vous pouvez vérifier dans votre configuration (config/packages/validator.yaml) que validation.enable_annotations est true.
+    // Make sure that the validation of Membre entity constraints is also activated if you don't put *all*
+    // constraints in the FormType. Often, basic constraints are defined on the entity and form-specific
+    // constraints in the FormType.
+    // You can check in your configuration (config/packages/validator.yaml) that validation.enable_annotations is true.
 }

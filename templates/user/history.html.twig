@@ -570,77 +570,80 @@
 </head>
 <body>
     <div id="page">
-        <nav class="fh5co-nav" role="navigation">
-            <div class="container">
-                <div class="fh5co-logo">
-                    <a href="{{ path('app_home') }}">Eventora</a>
-                </div>
-                <div class="menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </div>
-                <div class="menu-1">
-                    <ul>
-                        <li class="{{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}"><a href="{{ path('app_home') }}">Home</a></li>
-                        <li class="has-dropdown">
-                            <a href="#">Réservation</a>
-                            <ul class="dropdown">
-                                <li class="{{ app.request.attributes.get('_route') == 'user_reservation_personnalise_new' ? 'active' : '' }}"><a href="{{ path('user_reservation_personnalise_new') }}">Réservation personnalisée</a></li>
-                                <li class="{{ app.request.attributes.get('_route') == 'user_reservation_pack_new' ? 'active' : '' }}"><a href="{{ path('user_reservation_pack_new') }}">Réservation Pack</a></li>
+         <nav class="fh5co-nav" role="navigation">
+                    <div class="container">
+                        <div class="fh5co-logo">
+                            <a href="{{ path('app_home') }}">Eventora</a>
+                        </div>
+                        <div class="menu-toggle">
+                            <i class="icon-menu"></i>
+                        </div>
+                        <div class="menu-1">
+                            <ul>
+                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">Reservation</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
+                                    </ul>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="{{ path('user_packs') }}">Packs</a>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="#">Services</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_services') }}">Service</a></li>
+                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">
+                                        <span class="user-circle">
+                                            {% if app.user and app.user.image %}
+                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <i class="icon-user"></i>
+                                            {% endif %}
+                                        </span>
+                                        Contact
+                                    </a>
+                                    <ul class="dropdown">
+                                        {% if app.user %}
+                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
+                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
+                                        {% else %}
+                                            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
                             </ul>
-                        </li>
-                        <li class="{{ app.request.attributes.get('_route') == 'user_packs' ? 'active' : '' }}"><a href="{{ path('user_packs') }}">Packs</a></li>
-                        <li class="has-dropdown">
-                            <a href="#">Services</a>
-                            <ul class="dropdown">
-                                <li class="{{ app.request.attributes.get('_route') == 'user_services' ? 'active' : '' }}"><a href="{{ path('user_services') }}">Service</a></li>
-                                <li class="{{ app.request.attributes.get('_route') == 'user_sponsor' ? 'active' : '' }}"><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                            </ul>
-                        </li>
-                        <li class="{{ app.request.attributes.get('_route') == 'app_reclamation_new' ? 'active' : '' }}"><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
-                        <li class="{{ app.request.attributes.get('_route') == 'app_feedback_new' ? 'active' : '' }}"><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                        <li class="{{ app.request.attributes.get('_route') == 'user_chat_ai' ? 'active' : '' }}"><a href="{{ path('user_chat_ai') }}">Parler avec Evi</a></li>
-                        <li class="has-dropdown">
-                            <a href="#">
-                                <span class="user-circle">
-                                    {% if app.user and app.user.image %}
-                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profil" aria-hidden="true">
-                                    {% else %}
-                                        <i class="icon-user"></i>
-                                    {% endif %}
-                                </span>
-                                {{ app.user ? app.user.prenom|default('Compte') : 'Compte' }}
-                            </a>
-                            <ul class="dropdown">
-                                {% if app.user %}
-                                    <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                    <li class="{{ app.request.attributes.get('_route') starts with 'app_user_history' ? 'active' : '' }}"><a href="{{ path('app_user_history') }}">Historique</a></li>
-                                    {% if is_granted('ROLE_ADMIN') %}
-                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                    {% endif %}
-                                    <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                {% else %}
-                                    <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                    <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                        </div>
+                    </div>
+                </nav>
 
         <section class="content-section" role="main">
             <div class="container">
                 <div class="content-card">
-                    <h2>Votre Historique</h2>
-                    <div class="subtitle">Consultez vos réclamations, feedbacks et réservations</div>
+                    <h2>Your History</h2>
+                    <div class="subtitle">Check your complaints, feedback and reservations</div>
 
                     <!-- Onglets pour les sections -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="{{ section == 'reclamations' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history') }}" role="tab" aria-selected="{{ section == 'reclamations' ? 'true' : 'false' }}">Réclamations</a></li>
+                        <li class="{{ section == 'reclamations' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history') }}" role="tab" aria-selected="{{ section == 'reclamations' ? 'true' : 'false' }}">Reclamations</a></li>
                         <li class="{{ section == 'feedbacks' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history_feedbacks') }}" role="tab" aria-selected="{{ section == 'feedbacks' ? 'true' : 'false' }}">Feedbacks</a></li>
-                        <li class="{{ section == 'reservations' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history_reservations') }}" role="tab" aria-selected="{{ section == 'reservations' ? 'true' : 'false' }}">Réservations</a></li>
+                        <li class="{{ section == 'reservations' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history_reservations') }}" role="tab" aria-selected="{{ section == 'reservations' ? 'true' : 'false' }}">Reservations</a></li>
                     </ul>
 
                     {% if section == 'reclamations' %}
@@ -666,7 +669,7 @@
                             {% if reclamations|length == 0 %}
                                 <p class="text-center">Aucune réclamation trouvée.</p>
                                 <div class="text-center">
-                                    <a href="{{ path('app_reclamation_new') }}" class="btn btn-primary">Soumettre une réclamation</a>
+                                    <a href="{{ path('app_reclamation_new') }}" class="btn btn-primary">Submit reclamation</a>
                                 </div>
                             {% else %}
                                 <div class="table-responsive">
@@ -752,7 +755,7 @@
                             {% if feedbacks|length == 0 %}
                                 <p class="text-center">Aucun feedback trouvé.</p>
                                 <div class="text-center">
-                                    <a href="{{ path('app_feedback_new') }}" class="btn btn-primary">Soumettre un feedback</a>
+                                    <a href="{{ path('app_feedback_new') }}" class="btn btn-primary">Submit feedback</a>
                                 </div>
                             {% else %}
                                 <div class="table-responsive">
@@ -841,10 +844,10 @@
                             </div>
                             <!-- Liste des réservations -->
                             {% if reservations|length == 0 %}
-                                <p class="text-center">Aucune réservation trouvée.</p>
+                                <p class="text-center">Check your complaints, feedback and reservations</p>
                                 <div class="text-center">
-                                    <a href="{{ path('user_reservation_pack_new') }}" class="btn btn-primary">Réserver un pack</a>
-                                    <a href="{{ path('user_reservation_personnalise_new') }}" class="btn btn-primary">Réserver personnalisée</a>
+                                    <a href="{{ path('user_reservation_pack_new') }}" class="btn btn-primary">Book a Pack</a>
+                                    <a href="{{ path('user_reservation_personnalise_new') }}" class="btn btn-primary">Personalized Booking</a>
                                 </div>
                             {% else %}
                                 <div class="table-responsive">

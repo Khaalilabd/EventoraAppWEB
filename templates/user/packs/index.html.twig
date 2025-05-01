@@ -803,73 +803,68 @@
 
         <div id="page">
             <!-- Navbar -->
-            <nav class="fh5co-nav" role="navigation">
-                <div class="container">
-                    <div class="fh5co-logo">
-                        <a href="{{ path('app_home') }}">Eventora</a>
-                    </div>
-                    <div class="menu-toggle">
-                        <i class="icon-menu"></i>
-                    </div>
-                    <div class="menu-1">
-                        <ul>
-                            <li><a href="{{ path('app_home') }}">Home</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">Réservation</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Réservation personnalisée</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Réservation Pack</a></li>
-                                </ul>
-                            </li>
-                            <li class="has-dropdown active">
-                                <a href="#">Packs</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
-                                    {% if not is_granted('ROLE_ADMIN') %}
-                                        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
-                            <li class="has-dropdown">
-                                <a href="#">Services</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_services') }}">Service</a></li>
-                                    <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
-                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">
-                                    <span class="user-circle">
-                                        {% if app.user and app.user.image %}
-                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+             <nav class="fh5co-nav" role="navigation">
+                    <div class="container">
+                        <div class="fh5co-logo">
+                            <a href="{{ path('app_home') }}">Eventora</a>
+                        </div>
+                        <div class="menu-toggle">
+                            <i class="icon-menu"></i>
+                        </div>
+                        <div class="menu-1">
+                            <ul>
+                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">Reservation</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
+                                    </ul>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="{{ path('user_packs') }}">Packs</a>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="#">Services</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_services') }}">Service</a></li>
+                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">
+                                        <span class="user-circle">
+                                            {% if app.user and app.user.image %}
+                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <i class="icon-user"></i>
+                                            {% endif %}
+                                        </span>
+                                        Contact
+                                    </a>
+                                    <ul class="dropdown">
+                                        {% if app.user %}
+                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
+                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
                                         {% else %}
-                                            <i class="icon-user"></i>
+                                            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
                                         {% endif %}
-                                    </span>
-                                    Contact
-                                </a>
-                                <ul class="dropdown">
-                                    {% if app.user %}
-                                        <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                        <li><a href="{{ path('app_user_history') }}">Historique</a></li>
-                                        {% if is_granted('ROLE_ADMIN') %}
-                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                        {% endif %}
-                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                    {% else %}
-                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
-                        </ul>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </nav>
+                </nav>
 
             <!-- Packs content -->
             <div class="packs-content">

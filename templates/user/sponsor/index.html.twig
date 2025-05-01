@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html class="no-js">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title %}eventora{% endblock %}</title>
+        <title>{% block title %}Eventora{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
@@ -11,7 +12,8 @@
             <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
             <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+            <!-- Utilisation de Font Awesome 5 pour correspondre au premier code -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
             <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
             <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
@@ -133,10 +135,15 @@
                     padding: 10px 0;
                     min-width: 150px;
                     z-index: 1001;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                    opacity: 0;
+                    visibility: hidden;
                 }
 
                 .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
                     display: block !important;
+                    opacity: 1;
+                    visibility: visible;
                 }
 
                 .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
@@ -200,10 +207,9 @@
                         display: none;
                         box-shadow: none;
                         background-color: #f8f9fa;
-                    }
-
-                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none !important;
+                        padding: 10px 0;
+                        opacity: 1;
+                        visibility: visible;
                     }
 
                     .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
@@ -412,68 +418,69 @@
     <body>
         <div class="fh5co-loader"></div>
         <div id="page">
+            <!-- Navbar corrigée pour correspondre au premier code -->
             <nav class="fh5co-nav" role="navigation">
-                <div class="container">
-                    <div class="fh5co-logo">
-                        <a href="{{ path('app_home') }}">Eventora</a>
-                    </div>
-                    <div class="menu-toggle">
-                        <i class="icon-menu"></i>
-                    </div>
-                    <div class="menu-1">
-                        <ul>
-                            <li><a href="{{ path('app_home') }}">Home</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">Réservation</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
-                                </ul>
-                            </li>
-                            <li class="has-dropdown">
-                                <a href="{{ path('user_packs') }}">Packs</a>
-                            </li>
-                            <li class="has-dropdown">
-                                <a href="#">Services</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_services') }}">Service</a></li>
-                                    <li class="active"><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">
-                                    <span class="user-circle">
-                                        {% if app.user and app.user.image %}
-                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                    <div class="container">
+                        <div class="fh5co-logo">
+                            <a href="{{ path('app_home') }}">Eventora</a>
+                        </div>
+                        <div class="menu-toggle">
+                            <i class="icon-menu"></i>
+                        </div>
+                        <div class="menu-1">
+                            <ul>
+                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">Reservation</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
+                                    </ul>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="{{ path('user_packs') }}">Packs</a>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="#">Services</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_services') }}">Service</a></li>
+                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">
+                                        <span class="user-circle">
+                                            {% if app.user and app.user.image %}
+                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <i class="icon-user"></i>
+                                            {% endif %}
+                                        </span>
+                                        Contact
+                                    </a>
+                                    <ul class="dropdown">
+                                        {% if app.user %}
+                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
+                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
                                         {% else %}
-                                            <i class="icon-user"></i>
+                                            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
                                         {% endif %}
-                                    </span>
-                                    Contact
-                                </a>
-                                <ul class="dropdown">
-                                    {% if app.user %}
-                                        <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                        <li><a href="{{ path('app_home') }}">Historique</a></li>
-                                        {% if is_granted('ROLE_ADMIN') %}
-                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                        {% endif %}
-                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                    {% else %}
-                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
-                        </ul>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </nav>
-
+                </nav>
             <header id="fh5co-header" class="fh5co-cover" role="banner">
                 <div id="stars"></div>
                 <div id="stars2"></div>
@@ -522,7 +529,9 @@
                 <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
                 <script src="{{ asset('js/simplyCountdown.js') }}"></script>
                 <script src="{{ asset('js/main.js') }}"></script>
+                <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
                 <script>
+                    // Initialisation du compte à rebours
                     var eventDate = new Date('2025-12-31');
                     simplyCountdown('.simply-countdown-one', {
                         year: eventDate.getFullYear(),
@@ -531,8 +540,9 @@
                         enableUtc: false
                     });
 
-                    // Menu hamburger pour mobile
+                    // Gestion de la navbar
                     $(document).ready(function() {
+                        // Gestion du menu hamburger
                         $('.menu-toggle').click(function() {
                             $('.fh5co-nav .menu-1 ul').toggleClass('active');
                         });
@@ -541,9 +551,31 @@
                         $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
                             if ($(window).width() <= 768) {
                                 e.preventDefault();
-                                $(this).parent().toggleClass('active');
+                                var $parent = $(this).parent();
+                                $parent.toggleClass('active');
+                                $('.fh5co-nav .menu-1 ul li.has-dropdown').not($parent).removeClass('active');
                             }
                         });
+
+                        // Ferme le menu mobile lorsque l'utilisateur clique en dehors
+                        $(document).click(function(e) {
+                            if ($(window).width() <= 768) {
+                                var $menu = $('.fh5co-nav .menu-1 ul');
+                                var $toggle = $('.menu-toggle');
+                                if (!$menu.is(e.target) && $menu.has(e.target).length === 0 && !$toggle.is(e.target) && $toggle.has(e.target).length === 0) {
+                                    $menu.removeClass('active');
+                                    $('.fh5co-nav .menu-1 ul li.has-dropdown').removeClass('active');
+                                }
+                            }
+                        });
+                    });
+
+                    // Initialisation AOS
+                    AOS.init({
+                        duration: 600,
+                        easing: 'ease-out-cubic',
+                        once: true,
+                        disable: false
                     });
 
                     // Debug header visibility
@@ -578,16 +610,6 @@
                             });
                             mutationObserver.observe(sponsorContainer, { childList: true });
                         }
-                    });
-                </script>
-                <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-                <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-                <script>
-                    AOS.init({
-                        duration: 600,
-                        easing: 'ease-out-cubic',
-                        once: true,
-                        disable: false // Temporarily enable to test header visibility
                     });
                 </script>
             {% endblock %}

@@ -825,10 +825,10 @@
                             <ul>
                                 <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
                                 <li class="has-dropdown">
-                                    <a href="#">Réservation</a>
+                                    <a href="#">Reservation</a>
                                     <ul class="dropdown">
-                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
                                     </ul>
                                 </li>
                                 <li class="has-dropdown">
@@ -838,7 +838,7 @@
                                     <a href="#">Services</a>
                                     <ul class="dropdown">
                                         <li><a href="{{ path('user_services') }}">Service</a></li>
-                                        <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
@@ -857,17 +857,17 @@
                                     </a>
                                     <ul class="dropdown">
                                         {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
                                             <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
                                             {% if is_granted('ROLE_ADMIN') %}
                                                 <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                                             {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
                                         {% else %}
                                             <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
                                         {% endif %}
                                     </ul>
                                 </li>
@@ -904,14 +904,14 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                                <h2>Rejoignez notre communauté !</h2>
-                                <h3>Planifiez vos événements avec Eventora</h3>
-                                <p>Connectez-vous avec d'autres passionnés d'événements sur notre serveur Discord. Partagez vos idées et recevez des mises à jour en temps réel !</p>
+                                <h2>Join our community !h2>
+                                <h3>Plan your events with Eventora</h3>
+                                <p>Connect with other event enthusiasts on our Discord server. Share your ideas and receive real-time updates !</p>
                                 <a href="{{ path('discord_login') }}" class="btn btn-discord">
-                                    <i class="fab fa-discord"></i> Connexion avec Discord
+                                    <i class="fab fa-discord"></i> Connect with Discord
                                 </a>
                                 <a href="https://discord.gg/VOTRE_INVITATION" target="_blank" class="btn btn-discord">
-                                    <i class="fab fa-discord"></i> Rejoindre le Discord
+                                    <i class="fab fa-discord"></i> Join our Discord !
                                 </a>
                             </div>
                         </div>

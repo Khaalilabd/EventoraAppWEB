@@ -31,7 +31,7 @@ class ReservationPackType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // Récupérer les données de l'utilisateur depuis les options, ou valeurs par défaut vides
+        // Get user data from options, or default empty values
         $userData = $options['user_data'] ?? [
             'nom' => '',
             'prenom' => '',
@@ -49,75 +49,88 @@ class ReservationPackType extends AbstractType
 
         $builder
             ->add('nom', TextType::class, [
+                'label' => 'last_name',
                 'constraints' => [
-                    new NotBlank(['message' => 'Le nom est requis.']),
+                    new NotBlank(['message' => 'Last name is required.']),
                     new Length([
                         'max' => 255,
-                        'maxMessage' => 'Le nom ne peut pas dépasser {{ limit }} caractères.',
+                        'maxMessage' => 'Last name cannot exceed {{ limit }} characters.',
                     ]),
                 ],
                 'attr' => ['class' => 'form-control'],
-                'data' => $userData['nom'], // Pré-remplir avec le nom de l'utilisateur
+                'data' => $userData['nom'], // Pre-fill with user's last name
+                'translation_domain' => 'messages',
             ])
             ->add('prenom', TextType::class, [
+                'label' => 'first_name',
                 'constraints' => [
-                    new NotBlank(['message' => 'Le prénom est requis.']),
+                    new NotBlank(['message' => 'First name is required.']),
                     new Length([
                         'max' => 255,
-                        'maxMessage' => 'Le prénom ne peut pas dépasser {{ limit }} caractères.',
+                        'maxMessage' => 'First name cannot exceed {{ limit }} characters.',
                     ]),
                 ],
                 'attr' => ['class' => 'form-control'],
-                'data' => $userData['prenom'], // Pré-remplir avec le prénom de l'utilisateur
+                'data' => $userData['prenom'], // Pre-fill with user's first name
+                'translation_domain' => 'messages',
             ])
             ->add('email', EmailType::class, [
+                'label' => 'email',
                 'constraints' => [
-                    new NotBlank(['message' => 'L\'email est requis.']),
+                    new NotBlank(['message' => 'Email is required.']),
                     new Length([
                         'max' => 255,
-                        'maxMessage' => 'L\'email ne peut pas dépasser {{ limit }} caractères.',
+                        'maxMessage' => 'Email cannot exceed {{ limit }} characters.',
                     ]),
                 ],
                 'attr' => ['class' => 'form-control'],
-                'data' => $userData['email'], // Pré-remplir avec l'email de l'utilisateur
+                'data' => $userData['email'], // Pre-fill with user's email
+                'translation_domain' => 'messages',
             ])
             ->add('numtel', TelType::class, [
+                'label' => 'phone_number',
                 'constraints' => [
-                    new NotBlank(['message' => 'Le numéro de téléphone est requis.']),
+                    new NotBlank(['message' => 'Phone number is required.']),
                     new Length([
                         'min' => 8,
                         'max' => 8,
-                        'minMessage' => 'Le numéro de téléphone doit contenir exactement 8 chiffres.',
-                        'maxMessage' => 'Le numéro de téléphone doit contenir exactement 8 chiffres.',
+                        'minMessage' => 'Phone number must be exactly 8 digits.',
+                        'maxMessage' => 'Phone number must be exactly 8 digits.',
                     ]),
                     new Regex([
                         'pattern' => '/^[0-9]{8}$/',
-                        'message' => 'Le numéro de téléphone doit contenir exactement 8 chiffres (ex. 12345678).',
+                        'message' => 'Phone number must be exactly 8 digits (e.g. 12345678).',
                     ]),
                 ],
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => '12345678',
                 ],
-                'help' => 'Entrez un numéro tunisien de 8 chiffres (ex. 12345678).',
-                'data' => $userData['numtel'], // Pré-remplir avec le numéro de téléphone (sans +216)
+                'help' => 'Enter an 8-digit Tunisian phone number (e.g. 12345678).',
+                'data' => $userData['numtel'], // Pre-fill with user's phone number (without +216)
+                'translation_domain' => 'messages',
             ])
             ->add('description', TextareaType::class, [
+                'label' => 'event_description',
                 'required' => false,
                 'attr' => ['class' => 'form-control', 'rows' => 5],
+                'translation_domain' => 'messages',
             ])
             ->add('date', DateType::class, [
+                'label' => 'event_date',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'html5' => true,
                 'attr' => ['class' => 'form-control'],
+                'translation_domain' => 'messages',
             ])
             ->add('pack', EntityType::class, [
+                'label' => 'select_pack',
                 'class' => Pack::class,
                 'choice_label' => 'nomPack',
                 'choices' => $initialPacks,
                 'constraints' => [
-                    new NotBlank(['message' => 'Vous devez sélectionner un pack.']),
+                    new NotBlank(['message' => 'You must select a pack.']),
                 ],
                 'attr' => [
                     'class' => 'form-control select2',
@@ -125,19 +138,22 @@ class ReservationPackType extends AbstractType
                     'data-ajax--delay' => 250,
                     'data-minimum-input-length' => 0,
                 ],
+                'translation_domain' => 'messages',
             ]);
 
         if ($options['is_admin']) {
             $builder->add('status', ChoiceType::class, [
+                'label' => 'status',
                 'choices' => [
-                    'En attente' => 'En attente',
-                    'Validé' => 'Validé',
-                    'Refusé' => 'Refusé',
+                    'Pending' => 'En attente',
+                    'Approved' => 'Validé',
+                    'Rejected' => 'Refusé',
                 ],
                 'constraints' => [
-                    new NotBlank(['message' => 'Le statut est requis.']),
+                    new NotBlank(['message' => 'Status is required.']),
                 ],
                 'attr' => ['class' => 'form-control'],
+                'translation_domain' => 'messages',
             ]);
         }
     }
@@ -148,7 +164,8 @@ class ReservationPackType extends AbstractType
             'data_class' => Reservationpack::class,
             'is_admin' => false,
             'step' => 1,
-            'user_data' => null, // Nouvelle option pour les données de l'utilisateur
+            'user_data' => null, // Option to pass user data
+            'translation_domain' => 'messages',
         ]);
 
         $resolver->setAllowedTypes('user_data', ['array', 'null']);

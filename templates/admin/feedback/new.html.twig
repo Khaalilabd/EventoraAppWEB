@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title %}Soumettre un Feedback - Eventora{% endblock %}</title>
+        <title>{% block title %}Submit Feedback - Eventora{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
@@ -468,10 +468,10 @@
                             <ul>
                                 <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
                                 <li class="has-dropdown">
-                                    <a href="#">Réservation</a>
+                                    <a href="#">Reservation</a>
                                     <ul class="dropdown">
-                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
                                     </ul>
                                 </li>
                                 <li class="has-dropdown">
@@ -481,7 +481,7 @@
                                     <a href="#">Services</a>
                                     <ul class="dropdown">
                                         <li><a href="{{ path('user_services') }}">Service</a></li>
-                                        <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
@@ -500,17 +500,17 @@
                                     </a>
                                     <ul class="dropdown">
                                         {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
                                             <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
                                             {% if is_granted('ROLE_ADMIN') %}
                                                 <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                                             {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
                                         {% else %}
                                             <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
                                         {% endif %}
                                     </ul>
                                 </li>
@@ -524,7 +524,7 @@
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
                             <span>Votre Avis Compte</span>
-                            <h2>Soumettre un Feedback</h2>
+                            <h2>Submit Feedback</h2>
                         </div>
                     </div>
                     <div class="row">

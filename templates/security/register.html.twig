@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}{{ 'registration'|trans }}{% endblock %}
 
 {% block body %}
     <video autoplay loop muted playsinline class="background-video">
         <source src="{{ asset('images/fireworks loop.mp4') }}" type="video/mp4">
-        Your browser does not support the video tag.
+        {{ 'browser_no_video'|trans({'default': 'Your browser does not support the video tag.'}) }}
     </video>
     <div class="flash-messages">
         {% for message in app.flashes('success') %}
@@ -21,7 +21,7 @@
     </div>
 
     <div class="container">
-        <h1>Create Account</h1>
+        <h1>{{ 'create_account'|trans }}</h1>
         {{ form_start(registration_form, {'attr': {'enctype': 'multipart/form-data'}}) }}
             <div class="form-columns">
                 <div class="form-column">
@@ -54,12 +54,12 @@
                         </svg>
                     </span>
                 </div>
-                <button type="button" id="generate-password" class="btn-generate-password">Générer un mot de passe</button>
+                <button type="button" id="generate-password" class="btn-generate-password">{{ 'generate_password'|trans }}</button>
             </div>
             {{ form_row(registration_form.image, {'attr': {'accept': 'image/*'}}) }}
-            <button type="submit">Sign Up</button>
+            <button type="submit">{{ 'sign_up'|trans }}</button>
         {{ form_end(registration_form) }}
-        <a href="{{ path('app_auth') }}">Retour à la connexion</a>
+        <a href="{{ path('app_auth') }}">{{ 'back_to_login'|trans }}</a>
     </div>
 
     <style>
@@ -68,7 +68,7 @@
             padding: 0;
             height: 100vh;
             overflow-x: hidden;
-            background: none; /* Supprime tout fond par défaut */
+            background: none; /* Remove any default background */
         }
         .background-video {
             position: fixed;
@@ -76,24 +76,24 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* La vidéo couvre tout l'écran */
-            z-index: -1; /* Place la vidéo derrière tout le contenu */
+            object-fit: cover; /* Video covers the entire screen */
+            z-index: -1; /* Place video behind all content */
         }
         .flash-messages {
             margin: 20px auto;
             max-width: 600px;
             position: relative;
-            z-index: 1; /* Au-dessus de la vidéo */
+            z-index: 1; /* Above the video */
         }
         .container {
             width: 800px;
             min-height: 600px;
             margin: 50px auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9); /* Fond semi-transparent pour lisibilité */
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background for readability */
             border-radius: 10px;
             position: relative;
-            z-index: 1; /* Au-dessus de la vidéo */
+            z-index: 1; /* Above the video */
             box-sizing: border-box;
         }
         .alert {
@@ -110,7 +110,6 @@
         .alert-danger {
             background-color: #f8d7da;
             color: #721c24;
-            border: 1px solid #f
             border: 1px solid #f5c6cb;
         }
         .password-container {
@@ -223,17 +222,17 @@
             const togglePassword = document.getElementById('toggle-password');
 
             if (!generateButton) {
-                console.error('Bouton "generate-password" non trouvé.');
+                console.error('{{ "button_not_found"|trans }}');
                 return;
             }
 
             if (!passwordField) {
-                console.error('Champ de mot de passe avec id="registration_form_motDePasse" non trouvé.');
+                console.error('{{ "password_field_not_found"|trans }}');
                 return;
             }
 
             if (!togglePassword) {
-                console.error('Icône "toggle-password" non trouvée.');
+                console.error('{{ "toggle_password_not_found"|trans }}');
                 return;
             }
 
@@ -241,13 +240,13 @@
                 try {
                     const response = await fetch('{{ path('api_generate_password') }}');
                     if (!response.ok) {
-                        throw new Error('Erreur réseau ou serveur indisponible : ' + response.status);
+                        throw new Error('{{ "network_error"|trans }}' + response.status);
                     }
                     const data = await response.json();
                     passwordField.value = data.password;
                 } catch (error) {
-                    console.error('Erreur lors de la génération du mot de passe:', error);
-                    alert('Erreur lors de la génération du mot de passe. Veuillez réessayer.');
+                    console.error('{{ "password_generation_error"|trans }}', error);
+                    alert('{{ "password_generation_error_try_again"|trans }}');
                 }
             });
 

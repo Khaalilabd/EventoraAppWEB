@@ -12,8 +12,8 @@ security_and_account_access: Sécurité et accès au compte
 profile_picture: Photo de profil
 default_profile_picture: Photo de profil par défaut
 edit_profile_picture: Modifier la photo de profil
-first_name: Nom
-last_name: Prénom
+first_name: Prénom
+last_name: Nom
 date_of_birth: Date de naissance
 gender: Genre
 email: Email
@@ -24,6 +24,7 @@ role: Rôle
 account_confirmed: Compte confirmé
 username: Nom d'utilisateur
 password: Mot de passe
+password.edit: Mot de passe (laisser vide pour ne pas modifier)
 save_changes: Enregistrer les modifications
 event_title_pack: 'Eventora : Réservation Pack %pack%'
 event_title_personnalise: 'Eventora : Réservation Personnalisée'
@@ -32,4 +33,41 @@ google_auth_success: 'Connexion à Google Calendar réussie !'
 google_auth_failed: 'Échec de la connexion à Google Calendar. Veuillez réessayer.'
 add_to_calendar: 'Ajouter au Google Calendar'
 success: 'Succès'
-error: 'Erreur' 
+error: 'Erreur'
+
+# Page d'inscription
+registration: Inscription
+create_account: Créer un compte
+sign_up: S'inscrire
+back_to_login: Retour à la connexion
+generate_password: Générer un mot de passe
+browser_no_video: Votre navigateur ne prend pas en charge la balise vidéo.
+
+# Erreurs et messages de formulaire
+button_not_found: Bouton "generate-password" non trouvé.
+password_field_not_found: Champ de mot de passe avec id="registration_form_motDePasse" non trouvé.
+toggle_password_not_found: Icône "toggle-password" non trouvée.
+network_error: Erreur réseau ou serveur indisponible : 
+password_generation_error: Erreur lors de la génération du mot de passe :
+password_generation_error_try_again: Erreur lors de la génération du mot de passe. Veuillez réessayer.
+
+# Formulaires de réservation
+event_description: Description de l'événement
+event_date: Date de l'événement
+services: Services
+select_services: Sélectionner les services
+select_pack: Sélectionner un pack
+status: Statut
+create_reservation: Créer la réservation
+back: Retour
+add_to_google_calendar: Ajouter au Google Calendar
+reservation_success: Votre réservation a été créée avec succès
+reservation_error: Une erreur est survenue lors de la création de votre réservation
+service_details: Détails du service
+close: Fermer
+confirm: Confirmer
+cancel: Annuler
+select_date: Sélectionnez une date
+select_gender: Sélectionnez votre genre (facultatif)
+male: Homme
+female: Femme

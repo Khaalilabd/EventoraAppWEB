@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}Créer une Réservation Personnalisée - Eventora{% endblock %}</title>
+    <title>Create a Personalized Reservation - Eventora</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
@@ -541,7 +541,7 @@
 <body>
     <video id="background-video" autoplay loop muted playsinline>
         <source src="{{ asset('images/reservation2.mp4') }}" type="video/mp4">
-        Votre navigateur ne supporte pas la vidéo.
+        Your browser does not support the video.
     </video>
 
     <div id="page">
@@ -551,27 +551,29 @@
                     <a href="{{ path('app_home') }}">Eventora</a>
                 </div>
                 <div class="menu-toggle">
-                    <i class="fas fa-bars"></i>
+                    <i class="icon-menu"></i>
                 </div>
                 <div class="menu-1">
                     <ul>
-                        <li><a href="{{ path('app_home') }}">Home</a></li>
-                        <li class="has-dropdown active">
-                            <a href="#">Réservation</a>
+                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Reservation</a>
                             <ul class="dropdown">
-                                <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Réservation personnalisée</a></li>
-                                <li><a href="{{ path('user_reservation_pack_new') }}">Réservation Pack</a></li>
+                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
                             </ul>
                         </li>
-                        <li><a href="{{ path('user_packs') }}">Packs</a></li>
+                        <li class="has-dropdown">
+                            <a href="{{ path('user_packs') }}">Packs</a>
+                        </li>
                         <li class="has-dropdown">
                             <a href="#">Services</a>
                             <ul class="dropdown">
                                 <li><a href="{{ path('user_services') }}">Service</a></li>
-                                <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
                             </ul>
                         </li>
-                        <li><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
                         <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
                         <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
                         <li class="has-dropdown">
@@ -580,23 +582,24 @@
                                     {% if app.user and app.user.image %}
                                         <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
                                     {% else %}
-                                        <i class="fas fa-user"></i>
+                                        <i class="icon-user"></i>
                                     {% endif %}
                                 </span>
                                 Contact
                             </a>
                             <ul class="dropdown">
                                 {% if app.user %}
-                                    <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
+                                    <li><a href="{{ path('app_settings') }}">Settings</a></li>
                                     <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                    <li><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                                     {% endif %}
-                                    <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    <li><a href="{{ path('app_logout') }}">Log out</a></li>
                                 {% else %}
-                                    <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                    <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Sign up</a></li>
                                 {% endif %}
                             </ul>
                         </li>
@@ -609,56 +612,56 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                        <span>Votre Événement Unique</span>
-                        <h2>Créer une Réservation Personnalisée</h2>
+                        <span>Your Unique Event</span>
+                        <h2>Create a Personalized Reservation</h2>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="event-wrap animate-box">
-                            <h3>Informations de Réservation</h3>
+                            <h3>Reservation Information</h3>
                             {% if form is defined %}
-                                {{ form_start(form, {'attr': {'class': 'form', 'id': 'personnalise-reservation-form', 'novalidate': 'novalidate'}}) }}
+                                {{ form_start(form, {'attr': {'class': 'form', 'id': 'personalized-reservation-form', 'novalidate': 'novalidate'}}) }}
                                     {% if form_errors(form) %}
                                         <div class="form-error">{{ form_errors(form) }}</div>
                                     {% endif %}
                                     <div class="form-container">
                                         <div class="form-column">
                                             <div class="form-group">
-                                                {{ form_label(form.nom, 'Nom') }}
-                                                {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'placeholder': 'Votre nom'}}) }}
+                                                {{ form_label(form.nom, 'Last Name') }}
+                                                {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'placeholder': 'Your last name'}}) }}
                                                 <div class="form-error">{{ form_errors(form.nom) }}</div>
                                             </div>
                                             <div class="form-group">
-                                                {{ form_label(form.prenom, 'Prénom') }}
-                                                {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'placeholder': 'Votre prénom'}}) }}
+                                                {{ form_label(form.prenom, 'First Name') }}
+                                                {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'placeholder': 'Your first name'}}) }}
                                                 <div class="form-error">{{ form_errors(form.prenom) }}</div>
                                             </div>
                                             <div class="form-group">
                                                 {{ form_label(form.email, 'Email') }}
-                                                {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email', 'maxlength': '255', 'placeholder': 'votre@email.com'}}) }}
+                                                {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email', 'maxlength': '255', 'placeholder': 'your@email.com'}}) }}
                                                 <div class="form-error">{{ form_errors(form.email) }}</div>
                                             </div>
                                             <div class="form-group">
-                                                {{ form_label(form.numtel, 'Numéro de téléphone') }}
+                                                {{ form_label(form.numtel, 'Phone Number') }}
                                                 {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '8', 'pattern': '[0-9]{8}', 'placeholder': '12345678'}}) }}
                                                 <div class="form-error">{{ form_errors(form.numtel) }}</div>
                                             </div>
                                         </div>
                                         <div class="form-column">
                                             <div class="form-group">
-                                                {{ form_label(form.description, 'Description de l\'événement') }}
-                                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Détails de votre événement'}}) }}
+                                                {{ form_label(form.description, 'Event Description') }}
+                                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Details of your event'}}) }}
                                                 <div class="form-error">{{ form_errors(form.description) }}</div>
                                             </div>
                                             <div class="form-group">
-                                                {{ form_label(form.date, 'Date de l\'événement') }}
-                                                {{ form_widget(form.date, {'attr': {'class': 'form-control flatpickr', 'required': 'required', 'placeholder': 'Sélectionnez une date'}}) }}
+                                                {{ form_label(form.date, 'Event Date') }}
+                                                {{ form_widget(form.date, {'attr': {'class': 'form-control flatpickr', 'required': 'required', 'placeholder': 'Select a date'}}) }}
                                                 <div class="form-error">{{ form_errors(form.date) }}</div>
                                             </div>
                                             <div class="form-group">
-                                                {{ form_label(form.services, 'Sélectionnez les Services') }}
-                                                <button type="button" class="btn btn-secondary" id="open-services-modal">Choisir les Services</button>
+                                                {{ form_label(form.services, 'Select Services') }}
+                                                <button type="button" class="btn btn-secondary" id="open-services-modal">Choose Services</button>
                                                 <div class="selected-services">
                                                     <ul id="selected-services-list"></ul>
                                                 </div>
@@ -670,15 +673,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group d-flex gap-3 flex-wrap justify-content-center">
-                                        <button type="submit" class="btn btn-primary">Créer la Réservation</button>
-                                        <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour</a>
-                                        <a href="{{ path('google_auth') }}" class="btn btn-info">Ajouter au Google Calendar</a>
+                                        <button type="submit" class="btn btn-primary">Create Reservation</button>
+                                        <a href="{{ path('app_home') }}" class="btn btn-secondary">Back</a>
+                                        <a href="{{ path('google_auth') }}" class="btn btn-info">Add to Google Calendar</a>
                                         <div class="loading-spinner" style="display: none;"></div>
                                     </div>
                                 {{ form_end(form) }}
                             {% else %}
                                 <div class="form-error text-danger">
-                                    Erreur : Le formulaire n'est pas défini. Veuillez vérifier le contrôleur.
+                                    Error: The form is not defined. Please check the controller.
                                 </div>
                             {% endif %}
                         </div>
@@ -690,14 +693,14 @@
         <div class="modal-overlay" id="services-modal">
             <div class="modal-content">
                 <span class="close-modal" id="close-services-modal">×</span>
-                <h4>Choisissez vos Services</h4>
+                <h4>Choose Your Services</h4>
                 <div class="services-columns">
                     <div class="services-column" id="services-column-left"></div>
                     <div class="services-column" id="services-column-right"></div>
                 </div>
                 <div class="modal-actions">
-                    <button class="btn-modal btn-modal-confirm" id="confirm-services">Confirmer</button>
-                    <button class="btn-modal btn-modal-cancel" id="cancel-services">Annuler</button>
+                    <button class="btn-modal btn-modal-confirm" id="confirm-services">Confirm</button>
+                    <button class="btn-modal btn-modal-cancel" id="cancel-services">Cancel</button>
                 </div>
             </div>
         </div>
@@ -705,10 +708,10 @@
         <div class="modal-overlay" id="service-details-modal">
             <div class="modal-content">
                 <span class="close-modal" id="close-service-details-modal">×</span>
-                <h4>Détails du Service</h4>
+                <h4>Service Details</h4>
                 <div class="service-details-content" id="service-details-content"></div>
                 <div class="modal-actions">
-                    <button class="btn-modal btn-modal-cancel" id="close-service-details">Fermer</button>
+                    <button class="btn-modal btn-modal-cancel" id="close-service-details">Close</button>
                 </div>
             </div>
         </div>
@@ -769,7 +772,7 @@
                     onChange: function(selectedDates, dateStr, instance) {
                         const $input = $(instance.element);
                         $input.toggleClass('is-invalid', selectedDates.length === 0)
-                              .next('.form-error').text(selectedDates.length === 0 ? 'La date est requise.' : '');
+                              .next('.form-error').text(selectedDates.length === 0 ? 'The date is required.' : '');
                     }
                 });
 
@@ -797,7 +800,7 @@
                                 <input type="checkbox" class="form-check-input modal-service-checkbox" data-id="${serviceId}" ${$input.is(':checked') ? 'checked' : ''}>
                                 <label class="form-check-label">${labelText}</label>
                             </div>
-                            <button type="button" class="btn btn-info view-service-details" style="padding: 8px 12px; font-size: 12px;" data-id="${serviceId}">Détails</button>
+                            <button type="button" class="btn btn-info view-service-details" style="padding: 8px 12px; font-size: 12px;" data-id="${serviceId}">Details</button>
                         </div>
                     `);
                 });
@@ -834,7 +837,7 @@
                             $formCheckbox.prop('checked', false);
                         }
                     });
-                    $('#services-error').text($servicesInputs.filter(':checked').length ? '' : 'Vous devez sélectionner au moins un service.');
+                    $('#services-error').text($servicesInputs.filter(':checked').length ? '' : 'Please select at least one service.');
                     $servicesModal.fadeOut(function() {
                         $(this).css('display', 'none');
                     });
@@ -862,18 +865,18 @@
                             if (response.success) {
                                 const service = response.service;
                                 $serviceDetailsContent.html(`
-                                    <p><strong>Titre :</strong> ${$('<div/>').text(service.titre).html()}</p>
-                                    <p><strong>Description :</strong> ${$('<div/>').text(service.description).html()}</p>
-                                    <p><strong>Prix :</strong> ${$('<div/>').text(service.prix).html()}</p>
-                                    <p><strong>Localisation :</strong> ${$('<div/>').text(service.location).html()}</p>
-                                    <p><strong>Type de service :</strong> ${$('<div/>').text(service.type_service).html()}</p>
+                                    <p><strong>Title:</strong> ${$('<div/>').text(service.titre).html()}</p>
+                                    <p><strong>Description:</strong> ${$('<div/>').text(service.description).html()}</p>
+                                    <p><strong>Price:</strong> ${$('<div/>').text(service.prix).html()}</p>
+                                    <p><strong>Location:</strong> ${$('<div/>').text(service.location).html()}</p>
+                                    <p><strong>Service Type:</strong> ${$('<div/>').text(service.type_service).html()}</p>
                                     ${service.image ? `<img src="${$('<div/>').text(service.image).html()}" alt="${$('<div/>').text(service.titre).html()}">` : ''}
                                 `);
                                 $serviceDetailsModal.css('display', 'flex').fadeIn();
                                 $('body').addClass('modal-open');
                             } else {
                                 Swal.fire({
-                                    title: 'Erreur',
+                                    title: 'Error',
                                     text: response.message,
                                     icon: 'error',
                                     confirmButtonText: 'OK'
@@ -882,8 +885,8 @@
                         },
                         error: function() {
                             Swal.fire({
-                                title: 'Erreur',
-                                text: 'Impossible de récupérer les détails du service.',
+                                title: 'Error',
+                                text: 'Unable to retrieve service details.',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
@@ -899,7 +902,7 @@
                 });
 
                 // Form validation
-                $('#personnalise-reservation-form').on('submit', function(e) {
+                $('#personalized-reservation-form').on('submit', function(e) {
                     let isValid = true;
                     $('.form-control').removeClass('is-invalid');
                     $('.form-error').text('');
@@ -920,23 +923,29 @@
                         return true;
                     };
 
-                    // Nom
+                    // Last Name
                     if ($('#{{ form.nom.vars.id }}').length) {
                         isValid &= validateField(
                             $('#{{ form.nom.vars.id }}'),
                             $('#{{ form.nom.vars.id }}').val().trim(),
                             255,
-                            { required: 'Le nom est requis.', maxLength: 'Le nom ne peut pas dépasser 255 caractères.' }
+                            { 
+                                required: 'Last name is required.', 
+                                maxLength: 'Last name cannot exceed 255 characters.' 
+                            }
                         );
                     }
 
-                    // Prénom
+                    // First Name
                     if ($('#{{ form.prenom.vars.id }}').length) {
                         isValid &= validateField(
                             $('#{{ form.prenom.vars.id }}'),
                             $('#{{ form.prenom.vars.id }}').val().trim(),
                             255,
-                            { required: 'Le prénom est requis.', maxLength: 'Le prénom ne peut pas dépasser 255 caractères.' }
+                            { 
+                                required: 'First name is required.', 
+                                maxLength: 'First name cannot exceed 255 characters.' 
+                            }
                         );
                     }
 
@@ -947,23 +956,23 @@
                             $('#{{ form.email.vars.id }}').val().trim(),
                             255,
                             {
-                                required: 'L\'email est requis.',
-                                maxLength: 'L\'email ne peut pas dépasser 255 caractères.',
-                                invalid: 'L\'email n\'est pas valide.'
+                                required: 'Email is required.',
+                                maxLength: 'Email cannot exceed 255 characters.',
+                                invalid: 'Email is not valid.'
                             },
                             /^[^\s@]+@[^\s@]+\.[^\s@]+$/
                         );
                     }
 
-                    // Numtel
+                    // Phone Number
                     if ($('#{{ form.numtel.vars.id }}').length) {
                         isValid &= validateField(
                             $('#{{ form.numtel.vars.id }}'),
                             $('#{{ form.numtel.vars.id }}').val().trim(),
                             8,
                             {
-                                required: 'Le numéro de téléphone est requis.',
-                                invalid: 'Le numéro doit contenir exactement 8 chiffres.'
+                                required: 'Phone number is required.',
+                                invalid: 'Phone number must contain exactly 8 digits.'
                             },
                             /^[0-9]{8}$/
                         );
@@ -974,17 +983,17 @@
                         const $dateInput = $('#{{ form.date.vars.id }}');
                         const dateValue = $dateInput.val();
                         if (!dateValue) {
-                            $dateInput.addClass('is-invalid').next('.form-error').text('La date est requise.');
+                            $dateInput.addClass('is-invalid').next('.form-error').text('The date is required.');
                             isValid = false;
                         } else if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
-                            $dateInput.addClass('is-invalid').next('.form-error').text('La date doit être au format YYYY-MM-DD.');
+                            $dateInput.addClass('is-invalid').next('.form-error').text('The date must be in YYYY-MM-DD format.');
                             isValid = false;
                         } else {
                             const selectedDate = new Date(dateValue);
                             const today = new Date();
                             today.setHours(0, 0, 0, 0);
                             if (selectedDate < today) {
-                                $dateInput.addClass('is-invalid').next('.form-error').text('La date doit être aujourd\'hui ou dans le futur.');
+                                $dateInput.addClass('is-invalid').next('.form-error').text('The date must be today or in the future.');
                                 isValid = false;
                             }
                         }
@@ -993,7 +1002,7 @@
                     // Services
                     if ($servicesInputs.length) {
                         if (!$servicesInputs.filter(':checked').length) {
-                            $('#services-error').text('Vous devez sélectionner au moins un service.');
+                            $('#services-error').text('Please select at least one service.');
                             isValid = false;
                         }
                     }
@@ -1018,27 +1027,27 @@
                         dataType: 'json',
                         success: function(response) {
                             if (response.success) {
-                                // Préparer les données pour Google Calendar
-                                const eventName = $('#{{ form.nom.vars.id }}').val() + ' ' + $('#{{ form.prenom.vars.id }}').val() + ' - Événement';
-                                const eventDescription = $('#{{ form.description.vars.id }}').val() || 'Réservation personnalisée via Eventora';
+                                // Prepare data for Google Calendar
+                                const eventName = $('#{{ form.nom.vars.id }}').val() + ' ' + $('#{{ form.prenom.vars.id }}').val() + ' - Event';
+                                const eventDescription = $('#{{ form.description.vars.id }}').val() || 'Custom reservation via Eventora';
                                 const eventDate = $('#{{ form.date.vars.id }}').val();
                                 const eventStart = new Date(eventDate);
-                                const eventEnd = new Date(eventStart.getTime() + 2 * 60 * 60 * 1000); // +2 heures
+                                const eventEnd = new Date(eventStart.getTime() + 2 * 60 * 60 * 1000); // +2 hours
                                 const formattedStart = eventStart.toISOString().replace(/-|:|\.\d{3}/g, '');
                                 const formattedEnd = eventEnd.toISOString().replace(/-|:|\.\d{3}/g, '');
 
-                                // Générer le lien Google Calendar
+                                // Generate Google Calendar link
                                 const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
                                     `&text=${encodeURIComponent(eventName)}` +
                                     `&details=${encodeURIComponent(eventDescription)}` +
                                     `&dates=${formattedStart}/${formattedEnd}`;
 
                                 Swal.fire({
-                                    title: 'Succès',
+                                    title: 'Success',
                                     text: response.message,
                                     icon: 'success',
                                     showCancelButton: true,
-                                    confirmButtonText: 'Ajouter à Google Calendar',
+                                    confirmButtonText: 'Add to Google Calendar',
                                     cancelButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
@@ -1050,7 +1059,7 @@
                                 });
                             } else {
                                 Swal.fire({
-                                    title: 'Erreur',
+                                    title: 'Error',
                                     text: response.message,
                                     icon: 'error',
                                     confirmButtonText: 'OK'
@@ -1065,8 +1074,8 @@
                         },
                         error: function() {
                             Swal.fire({
-                                title: 'Erreur',
-                                text: 'Une erreur est survenue lors de la soumission du formulaire.',
+                                title: 'Error',
+                                text: 'An error occurred while submitting the form.',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
@@ -1090,7 +1099,7 @@
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
                         Swal.fire({
-                            title: '{{ label == 'success' ? 'Succès' : 'Erreur' }}',
+                            title: '{{ label == 'success' ? 'Success' : 'Error' }}',
                             text: '{{ message|raw }}',
                             icon: '{{ label == 'success' ? 'success' : 'error' }}',
                             confirmButtonText: 'OK'

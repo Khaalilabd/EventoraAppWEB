@@ -23,7 +23,7 @@ class ReservationPersonnaliseType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // Récupérer les données de l'utilisateur depuis les options, ou valeurs par défaut vides
+        // Get user data from options, or default empty values
         $userData = $options['user_data'] ?? [
             'nom' => '',
             'prenom' => '',
@@ -33,57 +33,64 @@ class ReservationPersonnaliseType extends AbstractType
 
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'Nom',
+                'label' => 'last_name',
                 'required' => true,
-                'data' => $userData['nom'], // Pré-remplir avec le nom de l'utilisateur
+                'data' => $userData['nom'], // Pre-fill with user's last name
                 'constraints' => [
-                    new NotBlank(['message' => 'Le nom est requis.']),
+                    new NotBlank(['message' => 'Last name is required.']),
                 ],
+                'translation_domain' => 'messages',
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'Prénom',
+                'label' => 'first_name',
                 'required' => true,
-                'data' => $userData['prenom'], // Pré-remplir avec le prénom de l'utilisateur
+                'data' => $userData['prenom'], // Pre-fill with user's first name
                 'constraints' => [
-                    new NotBlank(['message' => 'Le prénom est requis.']),
+                    new NotBlank(['message' => 'First name is required.']),
                 ],
+                'translation_domain' => 'messages',
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Email',
+                'label' => 'email',
                 'required' => true,
-                'data' => $userData['email'], // Pré-remplir avec l'email de l'utilisateur
+                'data' => $userData['email'], // Pre-fill with user's email
                 'constraints' => [
-                    new NotBlank(['message' => 'L\'email est requis.']),
-                    new Email(['message' => 'L\'email n\'est pas valide.']),
+                    new NotBlank(['message' => 'Email is required.']),
+                    new Email(['message' => 'Email is not valid.']),
                 ],
+                'translation_domain' => 'messages',
             ])
             ->add('numtel', TelType::class, [
-                'label' => 'Numéro de téléphone',
+                'label' => 'phone_number',
                 'required' => true,
-                'data' => $userData['numtel'], // Pré-remplir avec le numéro de téléphone (sans +216)
+                'data' => $userData['numtel'], // Pre-fill with user's phone number (without +216)
                 'constraints' => [
-                    new NotBlank(['message' => 'Le numéro de téléphone est requis.']),
+                    new NotBlank(['message' => 'Phone number is required.']),
                     new Regex([
                         'pattern' => '/^[0-9]{8}$/',
-                        'message' => 'Le numéro de téléphone doit être composé de 8 chiffres.'
+                        'message' => 'Phone number must be exactly 8 digits.'
                     ]),
                 ],
+                'translation_domain' => 'messages',
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Description de l\'événement',
+                'label' => 'event_description',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'La description est requise.']),
+                    new NotBlank(['message' => 'Description is required.']),
                 ],
+                'translation_domain' => 'messages',
             ])
             ->add('date', DateType::class, [
-                'label' => 'Date de l\'événement',
+                'label' => 'event_date',
                 'required' => true,
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => ['class' => 'flatpickr'],
+                'translation_domain' => 'messages',
             ])
             ->add('services', EntityType::class, [
+                'label' => 'services',
                 'class' => GService::class,
                 'choice_label' => 'titre',
                 'multiple' => true,
@@ -96,9 +103,10 @@ class ReservationPersonnaliseType extends AbstractType
                 'constraints' => [
                     new Count([
                         'min' => 1,
-                        'minMessage' => 'Vous devez sélectionner au moins un service.'
+                        'minMessage' => 'You must select at least one service.'
                     ]),
                 ],
+                'translation_domain' => 'messages',
             ])
         ;
     }
@@ -107,7 +115,8 @@ class ReservationPersonnaliseType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Reservationpersonnalise::class,
-            'user_data' => null, // Option pour passer les données de l'utilisateur
+            'user_data' => null, // Option to pass user data
+            'translation_domain' => 'messages',
         ]);
 
         $resolver->setAllowedTypes('user_data', ['array', 'null']);
