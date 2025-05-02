@@ -22,7 +22,7 @@ class ServicesController extends AbstractController
     
         // Récupérer les paramètres de la requête pour la pagination, le tri et le filtrage
         $page = $request->query->getInt('page', 1);
-        $limit = 4; 
+        $limit = 6; 
         $searchTerm = $request->query->get('search', '');
         $sortBy = $request->query->get('sort_by', 'id'); // Par défaut, trier par ID
         $sortOrder = $request->query->get('sort_order', 'asc'); // Par défaut, ordre croissant

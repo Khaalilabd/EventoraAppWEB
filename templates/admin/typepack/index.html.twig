@@ -2,6 +2,391 @@
 
 {% block title %}Gestion des Types de Packs{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- Inclusion de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Importation de polices */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        /* Variables de couleurs */
+        :root {
+            --primary-color: #3a7bd5;
+            --primary-gradient: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            --secondary-color: #f8f9fa;
+            --text-dark: #1f2937;
+            --text-light: #6c757d;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --border-radius: 16px;
+            --card-border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Général */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fafb;
+            color: var(--text-dark);
+        }
+
+        /* Main Content */
+        .main-content {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+            padding-bottom: 30px;
+            width: calc(100% - 250px);
+        }
+
+        /* Custom Container */
+        .fullwidth-container {
+            padding: 20px 30px;
+            width: 100%;
+        }
+
+        /* Header */
+        .typepack-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        /* Search bar */
+        .search-bar {
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        .search-bar .input-group {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 30px;
+            overflow: hidden;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .search-bar .input-group:focus-within {
+            box-shadow: 0 4px 12px rgba(58, 123, 213, 0.15);
+        }
+        .search-bar .form-control {
+            border: none;
+            font-size: 0.95rem;
+            padding: 10px 15px;
+            background: transparent;
+        }
+        .search-bar .form-control:focus {
+            box-shadow: none;
+        }
+        .search-bar .input-group-text {
+            background: transparent;
+            border: none;
+            color: var(--primary-color);
+            padding-left: 15px;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-decoration: none;
+        }
+        .btn-add {
+            background: var(--primary-gradient);
+            color: white;
+        }
+        .btn-view {
+            background: #ffffff;
+            color: var(--primary-color);
+            border: 1px solid rgba(58, 123, 213, 0.2);
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+        }
+        .view-toggle {
+            display: flex;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 3px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .view-toggle button {
+            border: none;
+            background: transparent;
+            padding: 6px 12px;
+            border-radius: 17px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .view-toggle button.active {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        /* Layout Containers */
+        .typepack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .typepack-list {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Grid View Cards */
+        .typepack-card {
+            background: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            border: var(--card-border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .typepack-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+        .typepack-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-gradient);
+            color: white;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 10px rgba(58, 123, 213, 0.3);
+            margin-bottom: 15px;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        .card-text {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        .card-footer {
+            padding: 15px 20px;
+            background: rgba(248, 249, 250, 0.7);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-footer .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .card-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+            background: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            border: none;
+            cursor: pointer;
+        }
+        .btn-edit { color: #3a7bd5; }
+        .btn-delete { color: #ef4444; }
+        .card-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-edit:hover { background: rgba(58, 123, 213, 0.1); }
+        .btn-delete:hover { background: rgba(239, 68, 68, 0.1); }
+
+        /* List View Items */
+        .typepack-item {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border: var(--card-border);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+        }
+        .typepack-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
+        }
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .item-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-gradient);
+            color: white;
+            font-size: 1.2rem;
+        }
+        .item-details h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0 0 3px;
+        }
+        .item-details p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin: 0;
+        }
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            background: #ffffff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            border: var(--card-border);
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .empty-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
+        }
+        .empty-text {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        /* Alerts & Notifications */
+        .alert {
+            background: #fff;
+            border-radius: 12px;
+            border: none;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: flex-start;
+            border-left: 5px solid;
+        }
+        .alert-icon {
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        .alert-success {
+            border-left-color: #10b981;
+        }
+        .alert-success .alert-icon {
+            color: #10b981;
+        }
+        .alert-danger {
+            border-left-color: #ef4444;
+        }
+        .alert-danger .alert-icon {
+            color: #ef4444;
+        }
+        .alert-info {
+            border-left-color: #3b82f6;
+        }
+        .alert-info .alert-icon {
+            color: #3b82f6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .typepack-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-bar {
+                max-width: 100%;
+            }
+            .action-buttons {
+                justify-content: space-between;
+            }
+            .typepack-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            .card-footer {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            .card-footer .badge {
+                align-self: flex-start;
+            }
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
         <div class="sidenav-header">
@@ -200,10 +585,7 @@
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                    <div class="input-group">
-                        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                        <input type="text" class="form-control" placeholder="Rechercher par type..." id="searchTypepack" value="{{ search_query|default('')|e('html_attr') }}">
-                    </div>
+                    <!-- Removed duplicate search bar -->
                 </div>
                 <ul class="navbar-nav justify-content-end">
                     <li class="nav-item d-flex align-items-center">
@@ -217,398 +599,211 @@
         </div>
     </nav>
 
-    <div class="custom-container">
-        <div class="custom-card-container">
-            <div class="custom-card-header">
-                <h6 class="custom-header-title">Liste des Types de Packs</h6>
-                <a href="{{ path('admin_typepacks_create') }}" class="custom-btn-ajouter">
-                    <i class="fas fa-plus me-2"></i> Ajouter un type de pack
+    <div class="fullwidth-container">
+        <!-- En-tête avec barre de recherche et actions -->
+        <div class="typepack-header">
+            <div class="search-bar">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" placeholder="Rechercher un type de pack..." id="searchTypepack">
+                </div>
+            </div>
+            <div class="action-buttons">
+                <div class="view-toggle">
+                    <button id="gridViewBtn" class="active"><i class="fas fa-th"></i></button>
+                    <button id="listViewBtn"><i class="fas fa-list"></i></button>
+                </div>
+                <a href="{{ path('admin_typepacks_create') }}" class="action-btn btn-add">
+                    <i class="fas fa-plus"></i> Ajouter
                 </a>
             </div>
-            <div class="custom-card-body">
-                {% for message in app.flashes('success') %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-                {% for message in app.flashes('error') %}
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-                {% for message in app.flashes('info') %}
-                    <div class="alert alert-info alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-
-                {% if typepacks is defined and typepacks is not empty %}
-                    <div class="custom-card-grid" id="typepackContainer">
-                        {% for typepack in typepacks %}
-                            <div class="typepack-custom-card-wrapper">
-                                <div class="typepack-custom-card"
-                                     data-type="{{ typepack.type|default('Non défini')|lower }}">
-                                    <div class="custom-text">
-                                        <span>{{ typepack.type|default('Non défini') }}</span>
-                                        <p class="custom-subtitle">Type de pack</p>
-                                    </div>
-                                    <div class="custom-icons">
-                                        <a class="custom-action-btn" href="{{ path('admin_typepacks_edit', {'id': typepack.id}) }}">
-                                            <svg class="custom-svg-icon" viewBox="0 0 20 20">
-                                                <path d="M13.586,2.586c-0.781-0.781-2.047-0.781-2.828,0L2.414,10.93c-0.375,0.375-0.586,0.884-0.586,1.414v4.656c0,1.104,0.896,2,2,2h4.656c0.53,0,1.039-0.211,1.414-0.586l8.344-8.344c0.781-0.781,0.781-2.047,0-2.828L13.586,2.586z M9.07,16H4.828v-4.242l7.414-7.414l4.242,4.242L9.07,16z M17,8.414l-1.414,1.414l-4.242-4.242L12.758,4.172L17,8.414z"></path>
-                                            </svg>
-                                        </a>
-                                        <form method="post" action="{{ path('admin_typepacks_delete', {'id': typepack.id}) }}" class="action-form" onsubmit="return confirm('Voulez-vous vraiment supprimer ce type de pack ? Cela supprimera également tous les packs associés.');">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ typepack.id) }}">
-                                            <button type="submit" class="custom-action-btn">
-                                                <svg class="custom-svg-icon" viewBox="0 0 20 20">
-                                                    <path d="M17.114,3.923h-4.589V2.427c0-0.252-0.207-0.459-0.459-0.459H7.935c-0.252,0-0.459,0.207-0.459,0.459v1.496h-4.59c-0.252,0-0.459,0.207-0.459,0.459v1.832c0,0.252,0.207,0.459,0.459,0.459h1.832v11.496c0,0.252,0.207,0.459,0.459,0.459h9.174c0.252,0,0.459-0.207,0.459-0.459V6.673h1.832c0.252,0,0.459-0.207,0.459-0.459V4.382C17.573,4.13,17.366,3.923,17.114,3.923z M11.505,2.886v0.918H8.495V2.886H11.505z M15.282,17.611H4.718V6.673h10.564V17.611z M6.55,9.174c0-0.252,0.207-0.459,0.459-0.459h0.918c0.252,0,0.459,0.207,0.459,0.459v5.954c0,0.252-0.207,0.459-0.459,0.459H7.009c-0.252,0-0.459-0.207-0.459-0.459V9.174z M10,9.174c0-0.252,0.207-0.459,0.459-0.459h0.918c0.252,0,0.459,0.207,0.459,0.459v5.954c0,0.252-0.207,0.459-0.459,0.459h-0.918c-0.252,0-0.459-0.207-0.459-0.459V9.174z M13.45,9.174c0-0.252,0.207-0.459,0.459-0.459h0.918c0.252,0,0.459,0.207,0.459,0.459v5.954c0,0.252-0.207,0.459-0.459,0.459h-0.918c-0.252,0-0.459-0.207-0.459-0.459V9.174z"></path>
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="custom-text-center" id="noResults">
-                        <i class="fas fa-tags text-muted" style="font-size: 3rem;"></i>
-                        <p class="text-muted mt-3 fs-5">Aucun type de pack trouvé.</p>
-                    </div>
-                {% endif %}
-            </div>
         </div>
+
+        <!-- Affichage des notifications -->
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success" role="alert">
+                <div class="alert-icon"><i class="fas fa-check-circle"></i></div>
+                <div>{{ message }}</div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger" role="alert">
+                <div class="alert-icon"><i class="fas fa-exclamation-circle"></i></div>
+                <div>{{ message }}</div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('info') %}
+            <div class="alert alert-info" role="alert">
+                <div class="alert-icon"><i class="fas fa-info-circle"></i></div>
+                <div>{{ message }}</div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+        {% if typepacks is defined and typepacks is not empty %}
+            <!-- Vue en grille (par défaut) -->
+            <div class="typepack-grid" id="typepackGrid">
+                {% for typepack in typepacks %}
+                    <div class="typepack-card" data-type="{{ typepack.type|default('Non défini')|lower }}">
+                        <div class="card-body">
+                            <div class="card-icon">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <h3 class="card-title">{{ typepack.type|default('Non défini') }}</h3>
+                            <p class="card-text">Ce type de pack est utilisé pour catégoriser les différentes offres d'événements disponibles sur la plateforme.</p>
+                        </div>
+                        <div class="card-footer">
+                            <span class="badge bg-light text-dark">Type de pack</span>
+                            <div class="action-btns">
+                                <a href="{{ path('admin_typepacks_edit', {'id': typepack.id}) }}" class="card-btn btn-edit" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="{{ path('admin_typepacks_delete', {'id': typepack.id}) }}" style="display: inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer ce type de pack ? Cela supprimera également tous les packs associés.');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ typepack.id) }}">
+                                    <button type="submit" class="card-btn btn-delete" title="Supprimer">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Vue en liste (cachée par défaut) -->
+            <div class="typepack-list" id="typepackList">
+                {% for typepack in typepacks %}
+                    <div class="typepack-item" data-type="{{ typepack.type|default('Non défini')|lower }}">
+                        <div class="item-info">
+                            <div class="item-icon">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <div class="item-details">
+                                <h4>{{ typepack.type|default('Non défini') }}</h4>
+                                <p>Type de pack</p>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <a href="{{ path('admin_typepacks_edit', {'id': typepack.id}) }}" class="card-btn btn-edit" title="Modifier">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="post" action="{{ path('admin_typepacks_delete', {'id': typepack.id}) }}" style="display: inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer ce type de pack ? Cela supprimera également tous les packs associés.');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ typepack.id) }}">
+                                <button type="submit" class="card-btn btn-delete" title="Supprimer">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state" id="noResults">
+                <div class="empty-icon">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <h3 class="empty-text">Aucun type de pack trouvé</h3>
+                <a href="{{ path('admin_typepacks_create') }}" class="action-btn btn-add">
+                    <i class="fas fa-plus"></i> Ajouter un type de pack
+                </a>
+            </div>
+        {% endif %}
     </div>
-
-    <style>
-        /* Sidebar styles */
-        .sidenav {
-            background-color: #f8f9fa;
-            width: 250px;
-            height: 100vh;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            position: fixed;
-            z-index: 998;
-        }
-        .sidenav-header { padding: 15px; }
-        .navbar-brand { display: flex; align-items: center; color: #333; }
-        .navbar-brand:hover { color: #00897B; }
-        .navbar-nav .nav-link { padding: 12px 15px; color: #555; transition: all 0.3s ease; }
-        .navbar-nav .nav-link:hover { background-color: #00897B; color: #fff; }
-        .navbar-nav .nav-link.active { background-color: #00897B; color: #fff; }
-        .navbar-nav .nav-link .icon { width: 30px; height: 30px; background-color: #fff; transition: background-color 0.3s ease; }
-        .navbar-nav .nav-link:hover .icon, .navbar-nav .nav-link.active .icon { background-color: #00897B; }
-        .navbar-nav .nav-link .icon i { font-size: 16px; }
-        .navbar-nav .dropdown-toggle::after { margin-left: 10px; transition: transform 0.3s ease; }
-        .navbar-nav .dropdown-toggle[aria-expanded="true"]::after { transform: rotate(180deg); }
-        .collapse { transition: all 0.3s ease; }
-        .navbar-nav .collapse .nav-link { padding-left: 40px; font-size: 0.9em; }
-        .navbar-nav .collapse .nav-link:hover { background-color: #26A69A; }
-        hr.horizontal { border: 0; height: 1px; background-color: #ddd; }
-
-        /* Navbar styles */
-        .navbar-main {
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-top: 20px;
-            padding: 10px 20px;
-        }
-        .breadcrumb { font-size: 0.9rem; }
-        .breadcrumb-item a { color: #6c757d; transition: color 0.3s ease; }
-        .breadcrumb-item a:hover { color: #00897B; }
-        .breadcrumb-item.active { color: #2d3436; font-weight: 500; }
-        .navbar-main h6 { font-size: 1.25rem; font-weight: 600; color: #2d3436; }
-        .nav-link.text-body {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            color: #2d3436 !important;
-            transition: color 0.3s ease;
-        }
-        .nav-link.text-body:hover { color: #00897B !important; }
-        .nav-link.text-body i { font-size: 1.1rem; }
-
-        /* Main Content */
-        .main-content {
-            background: #f5f7fa;
-            min-height: 100vh;
-        }
-
-        /* Custom Container */
-        .custom-container {
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* Custom Card Container */
-        .custom-card-container {
-            width: 100%;
-            max-width: 1200px;
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .custom-card-header {
-            background: #1abc9c;
-            border-radius: 20px 20px 0 0;
-            padding: 20px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .custom-card-header h6 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin: 0;
-            color: #fff;
-        }
-        .custom-card-body {
-            padding: 20px;
-        }
-
-        /* Custom Card Grid */
-        .custom-card-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        /* Enhanced Card Styles */
-        .typepack-custom-card-wrapper {
-            animation: fadeIn 0.6s ease-in-out forwards;
-            opacity: 0;
-            animation-delay: calc(var(--delay) * 0.1s);
-            flex: 0 0 250px;
-        }
-        .typepack-custom-card-wrapper:nth-child(1) { --delay: 1; }
-        .typepack-custom-card-wrapper:nth-child(2) { --delay: 2; }
-        .typepack-custom-card-wrapper:nth-child(3) { --delay: 3; }
-        .typepack-custom-card-wrapper:nth-child(4) { --delay: 4; }
-        .typepack-custom-card-wrapper:nth-child(5) { --delay: 5; }
-        .typepack-custom-card-wrapper:nth-child(6) { --delay: 6; }
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        .typepack-custom-card {
-            width: 250px;
-            height: 200px;
-            border-radius: 15px;
-            background: rgba(100, 90, 150, 0.9); /* darker purple, more saturated */
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: visible;
-        }
-        .custom-text {
-            flex-grow: 1;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            color: #f0f8ff; /* Keeping the light color */
-            font-weight: 700;
-            font-size: 1.1em;
-        }
-        .custom-text span {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .custom-subtitle {
-            font-size: 0.7em;
-            font-weight: 400;
-            color: rgba(240, 248, 255, 0.7); /* Keeping the light color */
-        }
-        .custom-icons {
-            position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px; /* even space between icons */
-        }
-        .custom-action-btn {
-           background: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-        }
-        .custom-svg-icon {
-            width: 25px;
-            height: 25px;
-            stroke: rgb(38, 59, 126);
-            fill: none;
-        }
-        .custom-action-btn:hover {
-background: none; /* No background on hover */
-    transform: scale(1.1); /* Just a small zoom effect on hover */        }
-        .action-form {
-            background: transparent;
-            margin: 0;
-            padding: 0;
-            display: inline-flex;
-            border: none;
-        }
-
-        /* Custom Button Styles */
-        .custom-btn-ajouter {
-            font-size: 0.9rem;
-            padding: 8px 16px;
-            border-radius: 25px;
-            border: 1px solid #ccc;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: 500;
-            line-height: 1;
-            height: 36px;
-            justify-content: center;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background 0.3s ease, border-color 0.3s ease;
-            background: #fff;
-            color: #00897B;
-        }
-        .custom-btn-ajouter:hover {
-            background: #f8f9fa;
-            border-color: #00897B;
-        }
-        .custom-btn-ajouter:focus,
-        .custom-btn-ajouter:active {
-            background: #f8f9fa;
-            outline: none;
-        }
-
-        /* Alerts */
-        .alert {
-            border-radius: 15px;
-            margin-bottom: 20px;
-            padding: 15px 20px;
-            font-size: 0.95rem;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        .alert-success {
-            background: linear-gradient(135deg, #d4edda, #c3e6cb);
-            color: #155724;
-        }
-        .alert-danger {
-            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-            color: #721c24;
-        }
-        .alert-info {
-            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
-            color: #0c5460;
-        }
-        .alert:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 5px;
-            height: 100%;
-            background: #28a745;
-        }
-        .alert-danger:before {
-            background: #dc3545;
-        }
-        .alert-info:before {
-            background: #17a2b8;
-        }
-        .alert .btn-close {
-            padding: 15px;
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-        }
-        .alert .btn-close:hover {
-            opacity: 1;
-        }
-
-        /* Custom Text Center */
-        .custom-text-center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 10px;
-            padding: 40px 0;
-        }
-        .custom-text-center i {
-            transition: transform 0.3s ease;
-        }
-        .custom-text-center:hover i {
-            transform: scale(1.1);
-        }
-        .custom-text-center p {
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-    </style>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Gestion de la recherche
             const searchInput = document.getElementById('searchTypepack');
-            const typepackContainer = document.getElementById('typepackContainer');
+            const gridItems = document.querySelectorAll('#typepackGrid .typepack-card');
+            const listItems = document.querySelectorAll('#typepackList .typepack-item');
+            const gridContainer = document.getElementById('typepackGrid');
+            const listContainer = document.getElementById('typepackList');
             let noResultsDiv = document.getElementById('noResults');
 
-            if (searchInput && typepackContainer) {
-                // Real-time search for typepacks
-                searchInput.addEventListener('input', (e) => {
-                    const searchText = e.target.value.toLowerCase().trim();
-                    const cards = typepackContainer.querySelectorAll('.typepack-custom-card-wrapper');
-                    let visibleCards = 0;
+            // Toggle entre vue grille et liste
+            const gridViewBtn = document.getElementById('gridViewBtn');
+            const listViewBtn = document.getElementById('listViewBtn');
 
-                    // Filter cards based on search text
-                    cards.forEach(card => {
-                        const type = card.querySelector('.typepack-custom-card').getAttribute('data-type').toLowerCase();
-                        const isVisible = type.includes(searchText);
-                        card.style.display = isVisible ? '' : 'none';
-                        if (isVisible) visibleCards++;
-                    });
+            gridViewBtn.addEventListener('click', () => {
+                gridViewBtn.classList.add('active');
+                listViewBtn.classList.remove('active');
+                gridContainer.style.display = 'grid';
+                listContainer.style.display = 'none';
+            });
 
-                    // Handle no-results message
-                    if (visibleCards === 0 && searchText) {
-                        if (!noResultsDiv) {
-                            noResultsDiv = document.createElement('div');
-                            noResultsDiv.id = 'noResults';
-                            noResultsDiv.className = 'custom-text-center';
-                            typepackContainer.parentElement.appendChild(noResultsDiv);
-                        }
-                        noResultsDiv.innerHTML = `
-                            <i class="fas fa-tags text-muted" style="font-size: 3rem;"></i>
-                            <p class="text-muted mt-3 fs-5">Aucun type de pack trouvé pour la recherche "${searchText}".</p>
-                        `;
-                    } else if (noResultsDiv) {
-                        noResultsDiv.remove();
-                        noResultsDiv = null;
-                    }
+            listViewBtn.addEventListener('click', () => {
+                listViewBtn.classList.add('active');
+                gridViewBtn.classList.remove('active');
+                listContainer.style.display = 'flex';
+                gridContainer.style.display = 'none';
+            });
+
+            // Fonction de recherche
+            searchInput.addEventListener('input', (e) => {
+                const searchText = e.target.value.toLowerCase().trim();
+                let visibleItems = 0;
+
+                // Filtre pour la vue grille
+                gridItems.forEach(item => {
+                    const type = item.getAttribute('data-type').toLowerCase();
+                    const isVisible = type.includes(searchText);
+                    item.style.display = isVisible ? '' : 'none';
+                    if (isVisible) visibleItems++;
                 });
 
-                // Trigger search on page load if there's a search query
-                const initialSearch = searchInput.value.toLowerCase().trim();
-                if (initialSearch) {
-                    searchInput.dispatchEvent(new Event('input'));
+                // Filtre pour la vue liste
+                listItems.forEach(item => {
+                    const type = item.getAttribute('data-type').toLowerCase();
+                    const isVisible = type.includes(searchText);
+                    item.style.display = isVisible ? '' : 'none';
+                });
+
+                // Gestion de l'état vide
+                if (visibleItems === 0 && gridItems.length > 0) {
+                    if (!noResultsDiv) {
+                        noResultsDiv = document.createElement('div');
+                        noResultsDiv.id = 'noResults';
+                        noResultsDiv.className = 'empty-state';
+                        gridContainer.parentElement.appendChild(noResultsDiv);
+                    }
+                    noResultsDiv.innerHTML = `
+                        <div class="empty-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="empty-text">Aucun résultat trouvé pour "${searchText}"</h3>
+                    `;
+                    noResultsDiv.style.display = 'flex';
+                } else if (noResultsDiv) {
+                    noResultsDiv.style.display = 'none';
                 }
-            } else {
-                console.error('Search input or typepack container not found');
-            }
+            });
+
+            // Animation d'entrée
+            const animateItems = (items) => {
+                items.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                    }, 50 * index);
+                });
+            };
+
+            gridItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'all 0.3s ease';
+            });
+
+            listItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'all 0.3s ease';
+            });
+
+            animateItems(gridItems);
+            animateItems(listItems);
         });
     </script>
 </main>

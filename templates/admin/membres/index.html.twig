@@ -27,7 +27,20 @@
             height: 80px;
             border-radius: 50%;
             margin-right: 20px;
-            background-color: #e0e0e0; /* Placeholder pour l'avatar */
+            overflow: hidden;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .membre-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .membre-avatar i {
+            font-size: 2rem;
+            color: #999;
         }
         .membre-info {
             flex-grow: 1;
@@ -413,8 +426,11 @@
                                     <div class="membre-card">
                                         <!-- Avatar -->
                                         <div class="membre-avatar">
-                                            <!-- Placeholder pour l'avatar, remplacez par une image si disponible -->
-                                            <!-- <img src="{{ asset('path/to/avatar.jpg') }}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%;"> -->
+                                            {% if membre.image %}
+                                                <img src="{{ asset('uploads/images/' ~ membre.image) }}" alt="Avatar de {{ membre.nom }}" />
+                                            {% else %}
+                                                <i class="fas fa-user"></i>
+                                            {% endif %}
                                         </div>
                                         <!-- Informations -->
                                         <div class="membre-info">
