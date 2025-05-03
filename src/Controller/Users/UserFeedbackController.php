@@ -5,6 +5,7 @@ namespace App\Controller\Users;
 use App\Entity\Feedback;
 use App\Entity\Membre;
 use App\Form\FeedbackType;
+use App\Service\BrevoEmailSender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,15 +13,23 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Twig\Environment;
 
 #[Route('/feedback')]
 class UserFeedbackController extends AbstractController
 {
     private $logger;
+    private $twig;
+    private $emailSender;
 
-    public function __construct(LoggerInterface $logger)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        Environment $twig,
+        BrevoEmailSender $emailSender
+    ) {
         $this->logger = $logger;
+        $this->twig = $twig;
+        $this->emailSender = $emailSender;
     }
 
     #[Route('/new', name: 'app_feedback_new', methods: ['GET', 'POST'])]
@@ -109,12 +118,78 @@ class UserFeedbackController extends AbstractController
                         'feedback_id' => $feedback->getID(),
                     ]);
 
+                    // Envoyer un email à l'utilisateur
+                    $membreHtml = $this->twig->render('admin/feedback/email_feedback_new_membre.html.twig', [
+                        'feedback' => $feedback,
+                        'membre' => $membre,
+                    ]);
+                    $emailSentMembre = $this->emailSender->sendEmail(
+                        $membre->getEmail(),
+                        $membre->getNom() . ' ' . $membre->getPrenom(),
+                        'Confirmation de votre feedback - Eventora',
+                        $membreHtml
+                    );
+                    $this->logger->info('Envoi email membre après création feedback', [
+                        'email' => $membre->getEmail(),
+                        'success' => $emailSentMembre,
+                        'feedback_id' => $feedback->getID(),
+                    ]);
+
+                    if (!$emailSentMembre) {
+                        $this->logger->warning('Échec de l\'envoi de l\'email au membre après création feedback', [
+                            'email' => $membre->getEmail(),
+                            'feedback_id' => $feedback->getID(),
+                        ]);
+                    }
+
+                    // Envoyer un email à tous les admins
+                    $admins = $entityManager->getRepository(Membre::class)->findByRole('ADMIN');
+                    $this->logger->info('Admins trouvés pour envoi email après création feedback', [
+                        'admin_emails' => array_map(fn($admin) => $admin->getEmail(), $admins),
+                        'feedback_id' => $feedback->getID(),
+                    ]);
+                    $emailSentAdmins = true;
+                    foreach ($admins as $admin) {
+                        try {
+                            $adminHtml = $this->twig->render('admin/feedback/email_feedback_new_admin.html.twig', [
+                                'feedback' => $feedback,
+                                'membre' => $membre,
+                                'admin' => $admin,
+                            ]);
+                            $emailSent = $this->emailSender->sendEmail(
+                                $admin->getEmail(),
+                                $admin->getNom() . ' ' . $admin->getPrenom(),
+                                'Nouveau feedback soumis - Eventora',
+                                $adminHtml
+                            );
+                            $this->logger->info('Envoi email admin après création feedback', [
+                                'email' => $admin->getEmail(),
+                                'success' => $emailSent,
+                                'feedback_id' => $feedback->getID(),
+                            ]);
+                            if (!$emailSent) {
+                                $emailSentAdmins = false;
+                                $this->logger->warning('Échec de l\'envoi de l\'email à l\'admin après création feedback', [
+                                    'email' => $admin->getEmail(),
+                                    'feedback_id' => $feedback->getID(),
+                                ]);
+                            }
+                        } catch (\Exception $e) {
+                            $this->logger->error('Erreur lors de l\'envoi de l\'email à l\'admin après création feedback', [
+                                'email' => $admin->getEmail(),
+                                'feedback_id' => $feedback->getID(),
+                                'exception' => $e->getMessage(),
+                            ]);
+                            $emailSentAdmins = false;
+                        }
+                    }
+
                     // Retourner l'URL de redirection vers la page des feedbacks
                     $redirectUrl = $this->generateUrl('app_user_history_feedbacks');
 
                     return new JsonResponse([
                         'success' => true,
-                        'message' => 'Feedback soumis avec succès !',
+                        'message' => 'Feedback soumis avec succès !' . (!$emailSentMembre || !$emailSentAdmins ? ' Cependant, certains emails n\'ont pas pu être envoyés.' : ''),
                         'redirectUrl' => $redirectUrl
                     ]);
                 } catch (\Exception $e) {
@@ -160,6 +235,77 @@ class UserFeedbackController extends AbstractController
 
                 $entityManager->persist($feedback);
                 $entityManager->flush();
+
+                // Envoyer un email à l'utilisateur
+                $membreHtml = $this->twig->render('admin/feedback/email_feedback_new_membre.html.twig', [
+                    'feedback' => $feedback,
+                    'membre' => $membre,
+                ]);
+                $emailSentMembre = $this->emailSender->sendEmail(
+                    $membre->getEmail(),
+                    $membre->getNom() . ' ' . $membre->getPrenom(),
+                    'Confirmation de votre feedback - Eventora',
+                    $membreHtml
+                );
+                $this->logger->info('Envoi email membre après création feedback (non-AJAX)', [
+                    'email' => $membre->getEmail(),
+                    'success' => $emailSentMembre,
+                    'feedback_id' => $feedback->getID(),
+                ]);
+
+                if (!$emailSentMembre) {
+                    $this->logger->warning('Échec de l\'envoi de l\'email au membre après création feedback (non-AJAX)', [
+                        'email' => $membre->getEmail(),
+                        'feedback_id' => $feedback->getID(),
+                    ]);
+                    $this->addFlash('warning', 'Feedback soumis, mais l\'email de confirmation n\'a pas pu être envoyé.');
+                }
+
+                // Envoyer un email à tous les admins
+                $admins = $entityManager->getRepository(Membre::class)->findByRole('ADMIN');
+                $this->logger->info('Admins trouvés pour envoi email après création feedback (non-AJAX)', [
+                    'admin_emails' => array_map(fn($admin) => $admin->getEmail(), $admins),
+                    'feedback_id' => $feedback->getID(),
+                ]);
+                $emailSentAdmins = true;
+                foreach ($admins as $admin) {
+                    try {
+                        $adminHtml = $this->twig->render('admin/feedback/email_feedback_new_admin.html.twig', [
+                            'feedback' => $feedback,
+                            'membre' => $membre,
+                            'admin' => $admin,
+                        ]);
+                        $emailSent = $this->emailSender->sendEmail(
+                            $admin->getEmail(),
+                            $admin->getNom() . ' ' . $admin->getPrenom(),
+                            'Nouveau feedback soumis - Eventora',
+                            $adminHtml
+                        );
+                        $this->logger->info('Envoi email admin après création feedback (non-AJAX)', [
+                            'email' => $admin->getEmail(),
+                            'success' => $emailSent,
+                            'feedback_id' => $feedback->getID(),
+                        ]);
+                        if (!$emailSent) {
+                            $emailSentAdmins = false;
+                            $this->logger->warning('Échec de l\'envoi de l\'email à l\'admin après création feedback (non-AJAX)', [
+                                'email' => $admin->getEmail(),
+                                'feedback_id' => $feedback->getID(),
+                            ]);
+                        }
+                    } catch (\Exception $e) {
+                        $this->logger->error('Erreur lors de l\'envoi de l\'email à l\'admin après création feedback (non-AJAX)', [
+                            'email' => $admin->getEmail(),
+                            'feedback_id' => $feedback->getID(),
+                            'exception' => $e->getMessage(),
+                        ]);
+                        $emailSentAdmins = false;
+                    }
+                }
+
+                if (!$emailSentAdmins) {
+                    $this->addFlash('warning', 'Feedback soumis, mais certains emails aux administrateurs n\'ont pas pu être envoyés.');
+                }
 
                 $this->addFlash('success', 'Votre feedback a été soumis avec succès !');
                 return $this->redirectToRoute('app_user_history_feedbacks');
