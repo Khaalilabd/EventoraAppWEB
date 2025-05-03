@@ -7,6 +7,21 @@
         <source src="{{ asset('images/fireworks loop.mp4') }}" type="video/mp4">
         {{ 'browser_no_video'|trans({'default': 'Your browser does not support the video tag.'}) }}
     </video>
+
+    <div class="page-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1>{{ 'create_account'|trans }}</h1>
+                
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                
+                <span class="subtitle">{{ 'or_use_email_for_registration'|trans({'default': 'or use your email for registration'}) }}</span>
+            </div>
+            
     <div class="flash-messages">
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">
@@ -20,195 +35,502 @@
         {% endfor %}
     </div>
 
-    <div class="container">
-        <h1>{{ 'create_account'|trans }}</h1>
-        {{ form_start(registration_form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-            <div class="form-columns">
-                <div class="form-column">
-                    {{ form_row(registration_form.nom) }}
-                    {{ form_row(registration_form.prenom) }}
-                    {{ form_row(registration_form.dateOfBirth, {
+            {{ form_start(registration_form, {'attr': {'enctype': 'multipart/form-data', 'class': 'register-form'}}) }}
+                <div class="form-two-columns">
+                    <!-- Colonne gauche -->
+                    <div class="form-column left-column">
+                        <h2 class="section-title">Informations personnelles</h2>
+                        <div class="compact-row">
+                            <div class="form-group half">
+                                {{ form_label(registration_form.nom) }}
+                                {{ form_widget(registration_form.nom) }}
+                            </div>
+                            <div class="form-group half">
+                                {{ form_label(registration_form.prenom) }}
+                                {{ form_widget(registration_form.prenom) }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form_label(registration_form.email) }}
+                            {{ form_widget(registration_form.email) }}
+                        </div>
+                        
+                        <div class="compact-row">
+                            <div class="form-group half">
+                                {{ form_label(registration_form.username) }}
+                                {{ form_widget(registration_form.username) }}
+                            </div>
+                            <div class="form-group half">
+                                {{ form_label(registration_form.adresse) }}
+                                {{ form_widget(registration_form.adresse) }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Colonne droite -->
+                    <div class="form-column right-column">
+                        <h2 class="section-title">Informations supplémentaires</h2>
+                        <div class="compact-row">
+                            <div class="form-group half">
+                                {{ form_label(registration_form.dateOfBirth) }}
+                                {{ form_widget(registration_form.dateOfBirth, {
                         'attr': {
                             'type': 'date',
                             'min': '1900-01-01',
-                            'max': '2030-01-01' 
+                                        'max': '2030-01-01',
+                                        'class': 'date-input'
                         } 
                     }) }}
-                    {{ form_row(registration_form.gender) }}
-                    {{ form_row(registration_form.email) }}
+                            </div>
+                            <div class="form-group half">
+                                {{ form_label(registration_form.gender) }}
+                                {{ form_widget(registration_form.gender) }}
+                            </div>
+                        </div>
+                        
+                        <div class="compact-row">
+                            <div class="form-group half">
+                                {{ form_label(registration_form.cin) }}
+                                {{ form_widget(registration_form.cin) }}
+                            </div>
+                            <div class="form-group half">
+                                {{ form_label(registration_form.numTel) }}
+                                {{ form_widget(registration_form.numTel) }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form_label(registration_form.motDePasse) }}
+                            <div class="password-wrapper">
+                                {{ form_widget(registration_form.motDePasse, {'attr': {'autocomplete': 'new-password', 'class': 'password-input'}}) }}
+                                <span id="toggle-password" class="toggle-password">
+                                    <i class="fas fa-eye" id="toggleIcon"></i>
+                                </span>
+                            </div>
+                            <button type="button" id="generate-password" class="btn-generate-password">{{ 'generate_password'|trans({'default': 'Générer'}) }}</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-column">
-                    {{ form_row(registration_form.cin) }}
-                    {{ form_row(registration_form.numTel) }}
-                    {{ form_row(registration_form.adresse) }}
-                    {{ form_row(registration_form.username) }}
+                
+                <div class="form-footer">
+                    <div class="compact-row">
+                        <div class="form-group image-group two-thirds">
+                            {{ form_label(registration_form.image) }}
+                            {{ form_widget(registration_form.image, {'attr': {'accept': 'image/*', 'class': 'image-input'}}) }}
+                        </div>
+                        
+                        <div class="actions-group one-third">
+                            <div class="buttons-container">
+                                <a href="{{ path('app_auth') }}" class="back-to-login" id="back-to-login">
+                                    <i class="fas fa-arrow-left"></i> {{ 'back_to_login'|trans({'default': 'Retour'}) }}
+                                </a>
+                                <button type="submit" class="submit-btn">{{ 'sign_up'|trans({'default': 'Inscription'}) }}</button>
+                            </div>
                 </div>
             </div>
-            <div class="password-container">
-                <div class="password-wrapper">
-                    {{ form_row(registration_form.motDePasse, {'attr': {'autocomplete': 'new-password', 'class': 'password-input'}}) }}
-                    <span id="toggle-password" class="eye-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                    </span>
                 </div>
-                <button type="button" id="generate-password" class="btn-generate-password">{{ 'generate_password'|trans }}</button>
+            {{ form_end(registration_form) }}
             </div>
-            {{ form_row(registration_form.image, {'attr': {'accept': 'image/*'}}) }}
-            <button type="submit">{{ 'sign_up'|trans }}</button>
-        {{ form_end(registration_form) }}
-        <a href="{{ path('app_auth') }}">{{ 'back_to_login'|trans }}</a>
     </div>
 
     <style>
         body {
+            background-color: #f6f5f7;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            min-height: 100vh;
             overflow-x: hidden;
-            background: none; /* Remove any default background */
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+        
         .background-video {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Video covers the entire screen */
-            z-index: -1; /* Place video behind all content */
+            object-fit: cover;
+            z-index: -1;
         }
-        .flash-messages {
-            margin: 20px auto;
-            max-width: 600px;
-            position: relative;
-            z-index: 1; /* Above the video */
+        
+        .page-container {
+            width: 80%;
+            max-width: 680px;
+            margin: 3px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .container {
-            width: 800px;
-            min-height: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background for readability */
-            border-radius: 10px;
-            position: relative;
-            z-index: 1; /* Above the video */
-            box-sizing: border-box;
+        
+        .form-card {
+            width: 100%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            padding: 10px;
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-in-out;
         }
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+        }
+        
+        .form-header {
             text-align: center;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 5px;
         }
+        
+        h1 {
+            font-weight: bold;
+            margin: 0 0 4px;
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 13px;
+            color: #d0a877;
+            margin: 0 0 4px;
+            padding-bottom: 3px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .subtitle {
+            display: none;
+        }
+        
+        .social-container {
+            margin: 5px 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .social-container a {
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 3px;
+            height: 22px;
+            width: 22px;
+            transition: all 0.3s;
+        }
+        
+        .social-container a:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-1px);
+        }
+        
+        .flash-messages {
+            width: 100%;
+            margin: 4px 0 6px;
+        }
+        
+        .alert {
+            padding: 4px;
+            margin-bottom: 3px;
+            border-radius: 3px;
+            text-align: center;
+            font-size: 10px;
+        }
+        
         .alert-success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
+        
         .alert-danger {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-        .password-container {
+        
+        .register-form {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            width: 100%;
         }
+        
+        .form-two-columns {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .form-column {
+            width: 50%;
+            background-color: #fafafa;
+            border-radius: 5px;
+            padding: 6px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-footer {
+            background-color: #fafafa;
+            border-radius: 5px;
+            padding: 6px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+            margin-top: 6px;
+        }
+        
+        .compact-row {
+            display: flex;
+            gap: 6px;
+            width: 100%;
+            margin-bottom: 4px;
+        }
+        
+        .half {
+            width: 50%;
+        }
+        
+        .two-thirds {
+            width: 66%;
+        }
+        
+        .one-third {
+            width: 34%;
+        }
+        
+        .form-group {
+            width: 100%;
+            margin-bottom: 4px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 1px;
+            font-weight: 600;
+            font-size: 10px;
+            color: #333;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 3px;
+            padding: 3px 6px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 10px;
+            height: 24px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: #d0a877;
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 1px rgba(208, 168, 119, 0.2);
+        }
+        
+        .date-input {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
         .password-wrapper {
             position: relative;
             width: 100%;
+            margin-bottom: 2px;
         }
+        
         .password-input {
-            padding-right: 40px;
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #b0c4de;
-            border-radius: 4px;
-            padding: 8px;
-            background-color: #f0f8ff;
+            padding-right: 24px !important;
         }
-        .password-input:focus {
-            outline: none;
-            border-color:rgb(208, 168, 119);
-        }
-        .eye-icon {
+        
+        .toggle-password {
             position: absolute;
-            right: 10px;
+            right: 6px;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            background-color: #f0f8ff;
-            padding: 2px;
+            color: #666;
+            z-index: 5;
+            font-size: 10px;
         }
-        .eye-icon svg {
-            transition: stroke 0.3s;
+        
+        .toggle-password:hover {
+            color: #333;
         }
-        .eye-icon:hover svg {
-            stroke: #333;
-        }
+        
         .btn-generate-password {
-            padding: 8px 12px;
-            background-color: #rgb(208, 168, 119);
-            color: white;
+            background-color: #f0f0f0;
+            color: #666;
+            font-size: 9px;
+            padding: 2px 5px;
+            margin-top: 1px;
+            text-transform: none;
+            letter-spacing: 0;
             border: none;
-            border-radius: 4px;
+            border-radius: 2px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
+        
         .btn-generate-password:hover {
-            background-color:rgb(208, 168, 119);
+            background-color: #e0e0e0;
+            color: #333;
         }
-        input[type="date"] {
+        
+        .image-group {
+            margin-bottom: 0;
+        }
+        
+        .image-input {
+            height: auto !important;
+            padding: 2px !important;
+            font-size: 9px !important;
+            background-color: #f7f7f7 !important;
+            border: 1px solid #e0e0e0 !important;
+        }
+        
+        .image-input:hover {
+            border-color: #d0a877 !important;
+        }
+        
+        .actions-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
             width: 100%;
-            padding: 8px;
-            border: 1px solid #b0c4de;
-            border-radius: 4px;
-            background-color: #f0f8ff;
-            box-sizing: border-box;
         }
-        .form-control {
+        
+        .submit-btn {
+            border-radius: 15px;
+            border: none;
+            background-color: #d0a877;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: transform 0.3s ease, background-color 0.3s;
+            cursor: pointer;
             width: 100%;
-            padding: 8px;
-            border: 1px solid #b0c4de;
-            border-radius: 4px;
-            background-color: #f0f8ff;
-            box-sizing: border-box;
+            box-shadow: 0 1px 3px rgba(208, 168, 119, 0.3);
         }
-        .form-control:focus {
-            outline: none;
-            border-color: rgb(208, 168, 119);
+        
+        .submit-btn:hover {
+            background-color: #bb8f5e;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(208, 168, 119, 0.4);
         }
-        input[type="date"]:focus {
-            outline: none;
-            border-color: rgb(208, 168, 119)
+        
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(208, 168, 119, 0.4);
         }
-        input[type="date"]::-webkit-date-and-time-value {
-            text-align: left;
+        
+        .back-to-login {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 15px;
+            background-color: #f0f0f0;
+            width: 100%;
         }
-        a {
-            display: block;
-            margin-top: 20px;
-            text-align: center;
-            color:rgb(208, 168, 119);
+        
+        .back-to-login:hover {
+            color: #333;
+            background-color: #e0e0e0;
             text-decoration: none;
         }
-        a:hover {
-            color: rgb(208, 168, 119);
+        
+        .back-to-login i {
+            margin-right: 3px;
         }
-        button[type="submit"] {
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .page-container {
+                width: 95%;
+                margin: 5px auto;
+            }
+            
+            .form-card {
+                padding: 8px;
+            }
+            
+            .form-two-columns {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .form-column {
+                width: 100%;
+                padding: 6px;
+            }
+            
+            .form-footer {
+                padding: 6px;
+        }
+            
+            .compact-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+            
+            .half, .two-thirds, .one-third {
             width: 100%;
-            padding: 10px;
-            background-color:rgb(208, 168, 119);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 20px;
+            }
+            
+            h1 {
+                font-size: 15px;
+                margin-bottom: 4px;
         }
-        button[type="submit"]:hover {
-            background-color:rgb(208, 168, 119)
+            
+            .section-title {
+                font-size: 12px;
+            }
         }
     </style>
 {% endblock %}
@@ -218,52 +540,53 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const generateButton = document.getElementById('generate-password');
-            const passwordField = document.getElementById('registration_form_motDePasse');
+            const passwordField = document.querySelector('.password-input');
             const togglePassword = document.getElementById('toggle-password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const backToLoginBtn = document.getElementById('back-to-login');
 
-            if (!generateButton) {
-                console.error('{{ "button_not_found"|trans }}');
-                return;
-            }
-
-            if (!passwordField) {
-                console.error('{{ "password_field_not_found"|trans }}');
-                return;
-            }
-
-            if (!togglePassword) {
-                console.error('{{ "toggle_password_not_found"|trans }}');
-                return;
-            }
-
-            generateButton.addEventListener('click', async function() {
-                try {
-                    const response = await fetch('{{ path('api_generate_password') }}');
-                    if (!response.ok) {
-                        throw new Error('{{ "network_error"|trans }}' + response.status);
+            if (generateButton && passwordField) {
+                generateButton.addEventListener('click', function() {
+                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+                    let password = '';
+                    for (let i = 0; i < 12; i++) {
+                        password += chars.charAt(Math.floor(Math.random() * chars.length));
                     }
-                    const data = await response.json();
-                    passwordField.value = data.password;
-                } catch (error) {
-                    console.error('{{ "password_generation_error"|trans }}', error);
-                    alert('{{ "password_generation_error_try_again"|trans }}');
-                }
-            });
+                    passwordField.value = password;
+                    passwordField.type = 'text';
+                    setTimeout(() => {
+                        passwordField.type = 'password';
+                    }, 3000);
+                });
+            }
 
+            if (togglePassword && passwordField && toggleIcon) {
             togglePassword.addEventListener('click', function() {
-                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordField.setAttribute('type', type);
-                this.innerHTML = type === 'password' ?
-                    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>` :
-                    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <line x1="1" y1="1" x2="23" y2="23"></line>
-                    </svg>`;
+                    if (passwordField.type === 'password') {
+                        passwordField.type = 'text';
+                        toggleIcon.classList.remove('fa-eye');
+                        toggleIcon.classList.add('fa-eye-slash');
+                    } else {
+                        passwordField.type = 'password';
+                        toggleIcon.classList.remove('fa-eye-slash');
+                        toggleIcon.classList.add('fa-eye');
+                    }
+                });
+            }
+            
+            // Animation pour retourner à la page de connexion
+            if (backToLoginBtn) {
+                backToLoginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const formCard = document.querySelector('.form-card');
+                    formCard.style.animation = 'fadeOut 0.5s forwards';
+                    
+                    setTimeout(() => {
+                        window.location.href = backToLoginBtn.getAttribute('href');
+                    }, 500);
             });
+            }
         });
     </script>
 {% endblock %}
