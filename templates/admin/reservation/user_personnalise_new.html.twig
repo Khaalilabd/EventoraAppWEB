@@ -23,6 +23,7 @@
                 padding: 0;
                 font-family: 'Inter', sans-serif;
                 overflow-x: hidden;
+                color: #374151;
             }
             body.modal-open { overflow: hidden; }
             #background-video {
@@ -33,6 +34,7 @@
                 height: 100%;
                 object-fit: cover;
                 z-index: -2;
+                filter: brightness(0.75); /* Darken video for better contrast */
             }
             body::before {
                 content: '';
@@ -41,7 +43,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.5);
+                background: linear-gradient(135deg, rgba(90, 24, 154, 0.7), rgba(0, 0, 0, 0.8)); /* Purple gradient overlay */
                 z-index: -1;
             }
             #page {
@@ -49,30 +51,45 @@
                 display: flex;
                 flex-direction: column;
                 padding-top: 70px;
+                animation: fadeIn 0.7s ease-out;
             }
             .fh5co-nav {
                 position: fixed;
                 top: 0;
                 width: 100%;
                 z-index: 1000;
-                background: rgba(255, 255, 255, 0.9);
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                background: rgba(15, 23, 42, 0.85);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
                 backdrop-filter: blur(10px);
             }
             .fh5co-nav .container {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 10px 15px;
+                padding: 12px 20px;
                 max-width: 1200px;
                 margin: 0 auto;
             }
             .fh5co-logo a {
                 font-family: 'Work Sans', sans-serif;
                 font-weight: 700;
-                font-size: 24px;
-                color: #934D1A;
+                font-size: 26px;
+                color: #f3f4f6;
                 text-decoration: none;
+                position: relative;
+                overflow: hidden;
+                display: inline-block;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            .fh5co-logo a:hover::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #9333ea;
+                animation: slideInFromLeft 0.3s forwards;
             }
             .user-circle {
                 display: inline-block;
@@ -81,10 +98,15 @@
                 line-height: 40px;
                 text-align: center;
                 border-radius: 50%;
-                background-color: #f0f0f0;
-                color: #333;
+                background-color: #4c1d95;
+                color: #fff;
                 font-size: 20px;
                 margin-right: 8px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                transition: transform 0.3s ease;
+            }
+            .user-circle:hover {
+                transform: scale(1.05);
             }
             .user-circle img {
                 width: 100%;
@@ -106,67 +128,137 @@
             }
             .fh5co-nav .menu-1 ul li a {
                 font-family: 'Work Sans', sans-serif;
-                font-size: 16px;
-                color: #333;
+                font-size: 15px;
+                color: #e5e7eb;
                 text-transform: uppercase;
                 text-decoration: none;
-                transition: color 0.3s ease;
+                transition: all 0.3s ease;
+                position: relative;
+                display: inline-block;
+                padding: 5px 0;
+                letter-spacing: 0.5px;
+                font-weight: 500;
             }
-            .fh5co-nav .menu-1 ul li a:hover { color: #934D1A; }
-            .fh5co-nav .menu-1 ul li.active a { color: #934D1A; font-weight: 600; }
+            .fh5co-nav .menu-1 ul li a:hover { 
+                color: #a855f7;
+                transform: translateY(-2px);
+            }
+            .fh5co-nav .menu-1 ul li a::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: #a855f7;
+                transition: width 0.3s ease;
+            }
+            .fh5co-nav .menu-1 ul li a:hover::after {
+                width: 100%;
+            }
+            .fh5co-nav .menu-1 ul li.active a { 
+                color: #a855f7; 
+                font-weight: 600; 
+            }
+            .fh5co-nav .menu-1 ul li.active a::after {
+                width: 100%;
+                background-color: #a855f7;
+            }
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
                 display: none;
                 position: absolute;
                 top: 100%;
                 right: 0;
-                background-color: #fff;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                background-color: rgba(15, 23, 42, 0.95);
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
                 list-style: none;
                 padding: 10px 0;
-                min-width: 150px;
+                min-width: 180px;
                 z-index: 1001;
                 opacity: 0;
                 visibility: hidden;
-                transition: opacity 0.3s ease, visibility 0.3s ease;
+                transition: all 0.3s ease;
+                transform: translateY(10px);
+                border-radius: 8px;
+                border-top: 2px solid #9333ea;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
                 display: block;
                 opacity: 1;
                 visibility: visible;
+                transform: translateY(0);
             }
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
                 padding: 10px 20px;
                 font-size: 14px;
                 text-transform: none;
-                color: #333;
+                color: #e5e7eb;
+                display: block;
+                font-weight: 400;
             }
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover { color: #007bff; }
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover { 
+                color: #a855f7;
+                background-color: rgba(147, 51, 234, 0.1);
+            }
             .menu-toggle {
                 display: none;
                 font-size: 24px;
                 cursor: pointer;
-                color: #333;
+                color: #934D1A;
                 padding: 10px;
             }
             .event-wrap {
-                background: #FFFFFF;
+                background: #fff;
                 padding: 40px;
-                border-radius: 12px;
-                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+                border-radius: 16px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
                 max-width: 1000px;
                 margin: 40px auto;
                 position: relative;
                 overflow: hidden;
                 animation: fadeIn 0.5s ease-in-out;
                 z-index: 2;
+                border-top: 4px solid #9333ea;
+            }
+            .event-wrap::before {
+                content: '';
+                position: absolute;
+                top: -50px;
+                right: -50px;
+                width: 150px;
+                height: 150px;
+                background: rgba(168, 85, 247, 0.05);
+                border-radius: 50%;
+            }
+            .event-wrap::after {
+                content: '';
+                position: absolute;
+                bottom: -50px;
+                left: -50px;
+                width: 150px;
+                height: 150px;
+                background: rgba(168, 85, 247, 0.05);
+                border-radius: 50%;
             }
             .event-wrap h3 {
-                color: #1E3A8A;
+                color: #6d28d9;
                 margin-bottom: 30px;
-                font-size: 24px;
-                font-weight: 600;
+                font-size: 26px;
+                font-weight: 700;
                 text-align: center;
-                text-transform: uppercase;
+                position: relative;
+                padding-bottom: 15px;
+                letter-spacing: 0.5px;
+            }
+            .event-wrap h3::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background: linear-gradient(90deg, #7c3aed, #a855f7);
             }
             .form-container {
                 display: flex;
@@ -181,77 +273,114 @@
                 position: relative;
             }
             .form-group label {
-                color: #1E3A8A;
-                font-weight: 500;
+                color: #4f46e5;
+                font-weight: 600;
                 font-size: 14px;
                 margin-bottom: 8px;
                 display: block;
+                transition: transform 0.3s ease, color 0.3s ease;
+                letter-spacing: 0.5px;
+            }
+            .form-group:focus-within label {
+                color: #6d28d9;
+                transform: translateY(-2px);
             }
             .form-group textarea.form-control {
-                min-height: 120px;
+                min-height: 130px;
                 resize: vertical;
             }
             .form-control {
-                background: #F9FAFB;
-                border: 1px solid #D1D5DB;
-                color: #1E3A8A;
-                border-radius: 6px;
-                padding: 12px;
-                font-size: 16px;
-                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+                background: #f9fafb;
+                border: 1px solid #ddd6fe;
+                color: #4b5563;
+                border-radius: 10px;
+                padding: 14px 16px;
+                font-size: 15px;
+                transition: all 0.3s ease;
                 width: 100%;
                 pointer-events: auto;
                 user-select: text;
-                height: 44px;
+                height: 50px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             }
-            .form-control::placeholder { color: #9CA3AF; }
+            .form-control::placeholder { 
+                color: #9ca3af; 
+                opacity: 0.6;
+            }
             .form-control:focus {
-                border-color: #3B82F6;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                border-color: #8b5cf6;
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
                 outline: none;
+                background: #fff;
+                transform: translateY(-2px);
             }
             .form-control.is-invalid {
-                border-color: #DC2626;
-                background: #FEF2F2;
+                border-color: #ef4444;
+                background: #fef2f2;
+                box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
             }
             .btn {
-                padding: 12px;
-                border-radius: 6px;
+                padding: 14px 24px;
+                border-radius: 10px;
                 font-size: 16px;
-                font-weight: 500;
+                font-weight: 600;
                 transition: all 0.3s ease;
                 width: 100%;
                 margin-top: 10px;
+                position: relative;
+                overflow: hidden;
+                letter-spacing: 0.5px;
+            }
+            .btn::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 5px;
+                height: 5px;
+                background: rgba(255, 255, 255, 0.3);
+                opacity: 0;
+                border-radius: 100%;
+                transform: scale(1, 1) translate(-50%);
+                transform-origin: 50% 50%;
+            }
+            .btn:focus:not(:active)::after {
+                animation: ripple 1s ease-out;
             }
             .btn-primary {
-                background: linear-gradient(90deg, #1E3A8A, #3B82F6);
+                background: linear-gradient(135deg, #6d28d9, #9333ea);
                 border: none;
-                color: #FFFFFF;
+                color: #ffffff;
+                box-shadow: 0 5px 15px rgba(147, 51, 234, 0.3);
             }
             .btn-primary:hover {
-                background: linear-gradient(90deg, #1E40AF, #2563EB);
-                transform: translateY(-2px);
+                background: linear-gradient(135deg, #5b21b6, #7e22ce);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
             }
             .btn-secondary {
-                background: transparent;
-                border: 1px solid #6B7280;
-                color: #6B7280;
+                background: #f9fafb;
+                border: 1px solid #8b5cf6;
+                color: #6d28d9;
             }
             .btn-secondary:hover {
-                background: #6B7280;
-                color: #FFFFFF;
-                transform: translateY(-2px);
+                background: rgba(124, 58, 237, 0.05);
+                color: #6d28d9;
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(124, 58, 237, 0.15);
             }
             .btn-info {
-                background: linear-gradient(90deg, #047857, #10B981);
+                background: linear-gradient(135deg, #1e40af, #4f46e5);
                 border: none;
-                color: #FFFFFF;
-                padding: 12px;
+                color: #ffffff;
+                padding: 14px;
                 font-size: 16px;
+                box-shadow: 0 5px 15px rgba(79, 70, 229, 0.25);
             }
             .btn-info:hover {
-                background: linear-gradient(90deg, #065F46, #059669);
-                transform: translateY(-2px);
+                background: linear-gradient(135deg, #1e3a8a, #3730a3);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
             }
             .btn:disabled {
                 cursor: not-allowed;
@@ -262,11 +391,16 @@
                 font-size: 14px;
                 margin-top: 6px;
                 display: block;
+                padding-left: 5px;
+                border-left: 2px solid #DC2626;
+                background: rgba(254, 202, 202, 0.1);
+                padding: 5px 8px;
+                border-radius: 4px;
             }
             .loading-spinner {
                 display: none;
                 border: 4px solid #E5E7EB;
-                border-top: 4px solid #3B82F6;
+                border-top: 4px solid #934D1A;
                 border-radius: 50%;
                 width: 24px;
                 height: 24px;
@@ -280,38 +414,221 @@
             .fh5co-heading {
                 margin-bottom: 40px;
                 text-align: center;
+                animation: fadeIn 0.7s ease-out;
             }
             .fh5co-heading span {
-                color: #3B82F6;
+                color: #C78741;
                 font-family: 'Sacramento', cursive;
-                font-size: 24px;
+                font-size: 28px;
                 display: block;
                 margin-bottom: 10px;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             }
             .fh5co-heading h2 {
                 color: #FFFFFF;
-                font-size: 36px;
-                font-weight: 600;
+                font-size: 38px;
+                font-weight: 700;
                 margin: 0;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
             #fh5co-footer {
-                background: #1E3A8A;
-                padding: 20px 0;
+                background: #0f172a;
+                padding: 25px 0;
                 margin-top: auto;
                 position: relative;
                 z-index: 2;
+                border-top: 1px solid rgba(147, 51, 234, 0.3);
             }
             #fh5co-footer p {
-                color: #FFFFFF;
+                color: #e5e7eb;
                 font-size: 14px;
                 text-align: center;
                 margin: 0;
             }
             #fh5co-footer a {
-                color: #3B82F6;
+                color: #c4b5fd;
                 text-decoration: none;
+                transition: color 0.3s ease;
             }
-            #fh5co-footer a:hover { text-decoration: underline; }
+            #fh5co-footer a:hover { 
+                text-decoration: underline;
+                color: #a5b4fc;
+            }
+            
+            /* Service selection and display */
+            .service-button {
+                background: linear-gradient(135deg, #6d28d9, #9333ea) !important;
+                color: white !important;
+                font-weight: 600;
+                padding: 14px 24px;
+                border: none;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+                margin-bottom: 15px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                box-shadow: 0 5px 15px rgba(147, 51, 234, 0.25);
+                width: 100%;
+                max-width: 250px;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .service-button:hover {
+                background: linear-gradient(135deg, #5b21b6, #7e22ce) !important;
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+            }
+            
+            .service-button::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+                z-index: 1;
+            }
+            
+            .service-button i {
+                font-size: 18px;
+                z-index: 2;
+            }
+            
+            .service-button span {
+                z-index: 2;
+            }
+            
+            .selected-services-container {
+                margin-top: 20px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(147, 51, 234, 0.15);
+                transition: all 0.3s ease;
+                backdrop-filter: blur(5px);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .selected-services-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(168, 85, 247, 0.02));
+                z-index: -1;
+            }
+            
+            .selected-services-container:hover {
+                box-shadow: 0 6px 20px rgba(147, 51, 234, 0.2);
+                transform: translateY(-2px);
+            }
+            
+            .selected-services {
+                max-height: 250px;
+                overflow-y: auto;
+                scrollbar-width: thin;
+                scrollbar-color: #8b5cf6 #f3f4f6;
+            }
+            
+            .selected-services::-webkit-scrollbar {
+                width: 5px;
+            }
+            
+            .selected-services::-webkit-scrollbar-track {
+                background: #f3f4f6;
+                border-radius: 10px;
+            }
+            
+            .selected-services::-webkit-scrollbar-thumb {
+                background: #8b5cf6;
+                border-radius: 10px;
+            }
+            
+            #selected-services-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            #selected-services-list li {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 14px 18px;
+                background: white;
+                margin-bottom: 10px;
+                border-radius: 10px;
+                font-weight: 500;
+                border-left: 4px solid #7c3aed;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+                transition: all 0.3s ease;
+                color: #4b5563;
+            }
+            
+            #selected-services-list li:hover {
+                transform: translateX(5px);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+                background: #f9fafb;
+            }
+            
+            #selected-services-list li .service-name {
+                font-weight: 500;
+                color: #4b5563;
+                font-size: 15px;
+                flex: 1;
+            }
+            
+            .remove-service {
+                color: #ef4444;
+                font-size: 22px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                background: rgba(239, 68, 68, 0.1);
+                margin-left: 10px;
+            }
+            
+            .remove-service:hover {
+                transform: scale(1.1) rotate(90deg);
+                background: rgba(239, 68, 68, 0.15);
+                color: #dc2626;
+            }
+            
+            .services-empty-state {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 120px;
+                text-align: center;
+                color: #9ca3af;
+                font-style: italic;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 10px;
+                padding: 25px;
+            }
+            
+            .services-empty-state i {
+                font-size: 28px;
+                color: #8b5cf6;
+                margin-bottom: 12px;
+                opacity: 0.7;
+            }
+            
+            /* Service details modal styling */
             .modal-overlay {
                 display: none;
                 position: fixed;
@@ -319,163 +636,277 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.6);
+                background: rgba(15, 23, 42, 0.8);
                 z-index: 1000;
                 justify-content: center;
                 align-items: center;
                 overflow: auto;
                 padding: 20px;
+                backdrop-filter: blur(6px);
             }
+            
             .modal-content {
-                background: #FFFFFF;
-                border-radius: 12px;
+                background: #ffffff;
+                border-radius: 16px;
                 width: 90%;
                 max-width: 600px;
-                max-height: 80vh;
-                padding: 20px;
+                max-height: 85vh;
+                padding: 25px;
                 position: relative;
-                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-                animation: slideIn 0.3s ease-out;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+                animation: slideInUp 0.4s ease-out;
                 overflow-y: auto;
+                border: none;
             }
-            .modal-content h4 {
-                color: #1E3A8A;
+            
+            .modal-content h4, .modal-content h3 {
+                color: white;
                 font-size: 20px;
                 font-weight: 600;
                 text-align: center;
-                margin-bottom: 20px;
+                margin-bottom: 25px;
+                letter-spacing: 0.5px;
             }
+            
             .modal-content .close-modal {
                 position: absolute;
-                top: 10px;
+                top: 15px;
                 right: 15px;
-                font-size: 24px;
-                color: #6B7280;
+                font-size: 22px;
+                color: white;
                 cursor: pointer;
-                transition: color 0.3s ease;
+                transition: all 0.3s ease;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                z-index: 10;
+                background-color: rgba(255, 255, 255, 0.1);
             }
-            .modal-content .close-modal:hover { color: #DC2626; }
+            
+            .modal-content .close-modal:hover { 
+                color: #fff; 
+                background: rgba(239, 68, 68, 0.15);
+                transform: rotate(90deg);
+            }
+            
             .services-columns {
                 display: flex;
-                gap: 20px;
-                max-height: 300px;
-                overflow-y: auto;
-                padding: 10px;
-                background: #F9FAFB;
-                border: 1px solid #D1D5DB;
-                border-radius: 6px;
-            }
-            .services-column {
-                flex: 1;
-                display: flex;
                 flex-direction: column;
-                gap: 10px;
+                max-height: 450px;
+                overflow-y: auto;
+                padding: 15px;
+                background: #f9fafb;
+                border-radius: 12px;
+                scrollbar-width: thin;
+                scrollbar-color: #8b5cf6 #f3f4f6;
+                margin-bottom: 20px;
+                box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.06);
             }
+            
+            .services-columns::-webkit-scrollbar {
+                width: 6px;
+            }
+            
+            .services-columns::-webkit-scrollbar-track {
+                background: #f3f4f6;
+                border-radius: 10px;
+            }
+            
+            .services-columns::-webkit-scrollbar-thumb {
+                background: #8b5cf6;
+                border-radius: 10px;
+            }
+            
+            .services-column {
+                width: 100%;
+            }
+            
             .services-column .form-check {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 width: 100%;
-                min-height: 40px;
-                padding: 8px;
-                background: #FFFFFF;
-                border: 1px solid #E5E7EB;
-                border-radius: 4px;
-                transition: background 0.2s ease;
+                padding: 16px;
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                margin-bottom: 12px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
             }
+            
             .services-column .form-check:hover {
-                background: #F1F5F9;
+                background: #f9fafb;
+                transform: translateX(4px);
+                border-color: #8b5cf6;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
             }
+            
             .services-column .form-check .checkbox-label-container {
                 display: flex;
                 align-items: center;
                 flex: 1;
-                max-width: 70%;
+                margin-right: 15px;
             }
+            
             .services-column .form-check-input {
-                transform: scale(1.5);
-                margin-right: 10px;
+                margin-right: 15px;
+                cursor: pointer;
+                accent-color: #7c3aed;
+                width: 20px;
+                height: 20px;
+                transition: all 0.2s ease;
             }
+            
+            .services-column .form-check-input:checked {
+                background-color: #7c3aed;
+                border-color: #7c3aed;
+                box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+            }
+            
             .services-column .form-check-label {
-                color: #1E3A8A;
-                font-size: 14px;
-                white-space: nowrap;
+                color: #4b5563;
+                font-size: 16px;
+                font-weight: 500;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                line-height: 1.4;
             }
-            .modal-content .modal-actions {
-                display: flex;
-                gap: 10px;
-                justify-content: center;
-                margin-top: 20px;
-            }
-            .btn-modal {
-                padding: 10px 20px;
-                border-radius: 6px;
-                font-size: 14px;
-                font-weight: 500;
-                transition: all 0.3s ease;
-                cursor: pointer;
-            }
-            .btn-modal-confirm {
-                background: linear-gradient(90deg, #1E3A8A, #3B82F6);
+            
+            .view-service-details {
+                min-width: 110px;
+                padding: 10px 15px !important;
+                border-radius: 8px;
                 border: none;
-                color: #FFFFFF;
-            }
-            .btn-modal-confirm:hover {
-                background: linear-gradient(90deg, #1E40AF, #2563EB);
-                transform: translateY(-2px);
-            }
-            .btn-modal-cancel {
-                background: transparent;
-                border: 1px solid #6B7280;
-                color: #6B7280;
-            }
-            .btn-modal-cancel:hover {
-                background: #6B7280;
-                color: #FFFFFF;
-                transform: translateY(-2px);
-            }
-            .selected-services {
-                margin-top: 10px;
-                padding: 10px;
-                background: #EFF6FF;
-                border-radius: 6px;
-                color: #1E3A8A;
-                font-size: 14px;
-                min-height: 40px;
-                border-left: 4px solid #3B82F6;
-            }
-            .selected-services ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            .selected-services li {
-                background: #3B82F6;
-                color: #FFFFFF;
-                padding: 5px 10px;
-                border-radius: 4px;
+                background-color: #7c3aed !important;
+                color: white !important;
+                font-size: 14px !important;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                text-align: center;
+                box-shadow: 0 3px 8px rgba(124, 58, 237, 0.2);
+                flex-shrink: 0;
                 display: flex;
                 align-items: center;
-                gap: 5px;
+                justify-content: center;
+                gap: 6px;
             }
-            .selected-services li .remove-service {
+            
+            .view-service-details:hover {
+                background-color: #6d28d9 !important;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
+            }
+            
+            .modal-content .modal-actions {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                margin-top: 25px;
+            }
+            
+            .btn-modal {
+                padding: 14px 25px;
+                border-radius: 10px;
+                font-size: 15px;
+                font-weight: 600;
                 cursor: pointer;
-                font-size: 12px;
+                border: none;
+                min-width: 130px;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
             }
-            .selected-services li .remove-service:hover { color: #DC2626; }
-            #service-details-modal .modal-content { max-width: 500px; }
-            #service-details-modal .service-details-content { color: #1E3A8A; font-size: 14px; }
-            #service-details-modal .service-details-content p { margin: 10px 0; }
+            
+            .btn-modal-confirm {
+                background: linear-gradient(135deg, #6d28d9, #9333ea);
+                color: #ffffff;
+            }
+            
+            .btn-modal-confirm:hover {
+                background: linear-gradient(135deg, #5b21b6, #7e22ce);
+                transform: translateY(-3px);
+                box-shadow: 0 6px 18px rgba(124, 58, 237, 0.3);
+            }
+            
+            .btn-modal-cancel {
+                background: #f3f4f6;
+                color: #4b5563;
+            }
+            
+            .btn-modal-cancel:hover {
+                background: #e5e7eb;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            }
+            
+            #service-details-modal .modal-content { 
+                max-width: 550px; 
+            }
+            
+            #service-details-modal h4 {
+                background-color: #6d28d9; 
+                color: white; 
+                padding: 16px 0; 
+                margin: -25px -25px 25px -25px; 
+                border-radius: 16px 16px 0 0; 
+                font-size: 18px;
+            }
+            
+            #service-details-modal .service-details-content { 
+                color: #4b5563; 
+                font-size: 16px;
+                background: #f9fafb;
+                padding: 25px;
+                border-radius: 12px;
+                line-height: 1.6;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+                margin-bottom: 20px;
+                border-left: 4px solid #7c3aed;
+            }
+            
+            #service-details-modal .service-details-content p { 
+                margin: 16px 0; 
+            }
+            
+            #service-details-modal .service-details-content strong {
+                color: #6d28d9;
+                font-weight: 600;
+                font-size: 16px;
+            }
+            
             #service-details-modal .service-details-content img {
                 max-width: 100%;
                 height: auto;
-                border-radius: 6px;
-                margin-top: 10px;
+                border-radius: 10px;
+                margin: 20px auto;
+                display: block;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                transition: transform 0.3s ease;
+                border: 3px solid white;
+            }
+            
+            #service-details-modal .service-details-content img:hover {
+                transform: scale(1.03);
+                box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+            }
+            
+            /* Animation for modals */
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
             @keyframes spin {
                 0% { transform: rotate(0deg); }
@@ -488,6 +919,24 @@
             @keyframes slideIn {
                 from { opacity: 0; transform: translateY(-20px); }
                 to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideInFromLeft {
+                from { width: 0; }
+                to { width: 100%; }
+            }
+            @keyframes ripple {
+                0% {
+                    transform: scale(0, 0);
+                    opacity: 1;
+                }
+                20% {
+                    transform: scale(25, 25);
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(40, 40);
+                }
             }
             @media (max-width: 768px) {
                 .menu-toggle { display: block; }
@@ -661,9 +1110,17 @@
                                             </div>
                                             <div class="form-group">
                                                 {{ form_label(form.services, 'Select Services') }}
-                                                <button type="button" class="btn btn-secondary" id="open-services-modal">Choose Services</button>
-                                                <div class="selected-services">
-                                                    <ul id="selected-services-list"></ul>
+                                                <button type="button" class="btn btn-secondary service-button" id="open-services-modal">
+                                                    <i class="fas fa-list-check"></i> Choose Services
+                                                </button>
+                                                <div class="selected-services-container">
+                                                    <div class="selected-services">
+                                                        <ul id="selected-services-list"></ul>
+                                                    </div>
+                                                    <div class="services-empty-state" id="services-empty-state">
+                                                        <i class="fas fa-clipboard-list"></i>
+                                                        <p>No services selected yet. Click the button above to choose services.</p>
+                                                    </div>
                                                 </div>
                                                 <div class="form-error" id="services-error">{{ form_errors(form.services) }}</div>
                                                 <div class="services-hidden" style="display: none;">
@@ -693,14 +1150,17 @@
         <div class="modal-overlay" id="services-modal">
             <div class="modal-content">
                 <span class="close-modal" id="close-services-modal">×</span>
-                <h4>Choose Your Services</h4>
+                <h4 style="background-color: #6d28d9; color: white; padding: 16px 0; margin: -25px -25px 25px -25px; border-radius: 16px 16px 0 0; font-size: 18px;">Choose Your Services</h4>
                 <div class="services-columns">
-                    <div class="services-column" id="services-column-left"></div>
-                    <div class="services-column" id="services-column-right"></div>
+                    <div class="services-column" id="services-column-container"></div>
                 </div>
                 <div class="modal-actions">
-                    <button class="btn-modal btn-modal-confirm" id="confirm-services">Confirm</button>
-                    <button class="btn-modal btn-modal-cancel" id="cancel-services">Cancel</button>
+                    <button class="btn-modal btn-modal-confirm" id="confirm-services">
+                        <i class="fas fa-check"></i> Confirm Selection
+                    </button>
+                    <button class="btn-modal btn-modal-cancel" id="cancel-services">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
                 </div>
             </div>
         </div>
@@ -708,10 +1168,12 @@
         <div class="modal-overlay" id="service-details-modal">
             <div class="modal-content">
                 <span class="close-modal" id="close-service-details-modal">×</span>
-                <h4>Service Details</h4>
+                <h4 style="background-color: #6d28d9; color: white; padding: 16px 0; margin: -25px -25px 25px -25px; border-radius: 16px 16px 0 0; font-size: 18px;">Service Details</h4>
                 <div class="service-details-content" id="service-details-content"></div>
                 <div class="modal-actions">
-                    <button class="btn-modal btn-modal-cancel" id="close-service-details">Close</button>
+                    <button class="btn-modal btn-modal-confirm" id="close-service-details">
+                        <i class="fas fa-check"></i> Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -783,42 +1245,80 @@
 
                 // Services Modal
                 const $servicesModal = $('#services-modal');
-                const $servicesColumnLeft = $('#services-column-left');
-                const $servicesColumnRight = $('#services-column-right');
+                const $servicesColumnContainer = $('#services-column-container');
                 const $selectedServicesList = $('#selected-services-list');
+                const $servicesEmptyState = $('#services-empty-state');
                 const $servicesInputs = $('input[name="{{ form.services.vars.full_name }}[]"]');
 
-                $servicesInputs.each(function(index) {
+                // Initialize services in modal and selected list
+                let hasSelectedServices = false;
+                
+                // Clear previous content
+                $servicesColumnContainer.empty();
+                
+                // Add services to modal in better format
+                $servicesInputs.each(function() {
                     const $input = $(this);
                     const labelText = $input.next('label').text();
                     const serviceId = $input.val();
-                    const $column = index % 2 === 0 ? $servicesColumnLeft : $servicesColumnRight;
 
-                    $column.append(`
+                    // Add to modal with improved layout
+                    $servicesColumnContainer.append(`
                         <div class="form-check">
                             <div class="checkbox-label-container">
                                 <input type="checkbox" class="form-check-input modal-service-checkbox" data-id="${serviceId}" ${$input.is(':checked') ? 'checked' : ''}>
                                 <label class="form-check-label">${labelText}</label>
                             </div>
-                            <button type="button" class="btn btn-info view-service-details" style="padding: 8px 12px; font-size: 12px;" data-id="${serviceId}">Details</button>
+                            <button type="button" class="view-service-details" data-id="${serviceId}">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
                         </div>
                     `);
+                    
+                    // Add to selected list if checked
+                    if ($input.is(':checked')) {
+                        hasSelectedServices = true;
+                        $selectedServicesList.append(`
+                            <li data-id="${serviceId}" style="animation: fadeIn 0.3s ease-out;">
+                                <span class="service-name">${labelText}</span>
+                                <span class="remove-service" title="Remove service">×</span>
+                            </li>
+                        `);
+                    }
                 });
+                
+                // Show/hide empty state based on initial selection
+                $servicesEmptyState.toggle(!hasSelectedServices);
+                $selectedServicesList.toggle(hasSelectedServices);
 
                 $('#open-services-modal').click(function() {
-                    $servicesModal.css('display', 'flex').fadeIn();
+                    $servicesModal.css('display', 'flex').hide().fadeIn(400);
                     $('body').addClass('modal-open');
+                    
+                    // Add subtle animation to checkboxes
+                    $('.form-check').each(function(index) {
+                        $(this).css({
+                            'opacity': 0,
+                            'transform': 'translateY(10px)'
+                        }).delay(index * 50).animate({
+                            'opacity': 1,
+                            'transform': 'translateY(0)'
+                        }, 300);
+                    });
                 });
 
-                $('#close-services-modal, #cancel-services').click(function() {
-                    $servicesModal.fadeOut(function() {
+                $('.close-modal, #cancel-services').click(function() {
+                    $servicesModal.fadeOut(300, function() {
                         $(this).css('display', 'none');
                     });
                     $('body').removeClass('modal-open');
                 });
 
                 $('#confirm-services').click(function() {
+                    const selectedServices = [];
                     $selectedServicesList.empty();
+                    let hasSelectedServices = false;
+                    
                     $('.modal-service-checkbox').each(function() {
                         const $checkbox = $(this);
                         const serviceId = $checkbox.data('id');
@@ -826,76 +1326,158 @@
                         const $formCheckbox = $servicesInputs.filter(`[value="${serviceId}"]`);
 
                         if ($checkbox.is(':checked')) {
+                            hasSelectedServices = true;
+                            selectedServices.push({
+                                id: serviceId,
+                                name: labelText
+                            });
                             $formCheckbox.prop('checked', true);
-                            $selectedServicesList.append(`
-                                <li data-id="${serviceId}">
-                                    ${labelText}
-                                    <span class="remove-service">×</span>
-                                </li>
-                            `);
                         } else {
                             $formCheckbox.prop('checked', false);
                         }
                     });
-                    $('#services-error').text($servicesInputs.filter(':checked').length ? '' : 'Please select at least one service.');
-                    $servicesModal.fadeOut(function() {
+                    
+                    // Add selected services with staggered animation
+                    selectedServices.forEach((service, index) => {
+                        const $listItem = $(`
+                            <li data-id="${service.id}" style="opacity: 0; transform: translateX(-10px);">
+                                <span class="service-name">${service.name}</span>
+                                <span class="remove-service" title="Remove service">×</span>
+                            </li>
+                        `);
+                        
+                        $selectedServicesList.append($listItem);
+                        
+                        setTimeout(() => {
+                            $listItem.css({
+                                'opacity': 1,
+                                'transform': 'translateX(0)',
+                                'transition': 'all 0.3s ease'
+                            });
+                        }, index * 100);
+                    });
+                    
+                    // Toggle empty state message
+                    $servicesEmptyState.toggle(!hasSelectedServices);
+                    $selectedServicesList.toggle(hasSelectedServices);
+                    
+                    // Show error if no services selected
+                    $('#services-error').text(hasSelectedServices ? '' : 'Please select at least one service.');
+                    
+                    // Close modal with animation
+                    $servicesModal.fadeOut(300, function() {
                         $(this).css('display', 'none');
                     });
                     $('body').removeClass('modal-open');
+                    
+                    // Show confirmation if services were selected
+                    if (hasSelectedServices) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Services updated',
+                            text: `${selectedServices.length} service${selectedServices.length > 1 ? 's' : ''} selected`,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            toast: true,
+                            background: '#6d28d9',
+                            iconColor: '#ffffff',
+                            customClass: {
+                                title: 'text-white',
+                                content: 'text-white'
+                            }
+                        });
+                    }
                 });
 
+                // Delegated event for removing services
                 $selectedServicesList.on('click', '.remove-service', function() {
                     const $li = $(this).parent();
                     const serviceId = $li.data('id');
-                    $li.remove();
-                    $servicesInputs.filter(`[value="${serviceId}"]`).prop('checked', false);
-                    $('.modal-service-checkbox[data-id="' + serviceId + '"]').prop('checked', false);
+                    
+                    // Animate removal
+                    $li.css({
+                        'transform': 'translateX(10px)',
+                        'opacity': 0
+                    });
+                    
+                    setTimeout(() => {
+                        $li.remove();
+                        
+                        // Toggle empty state if no services remain
+                        if ($selectedServicesList.children('li').length === 0) {
+                            $servicesEmptyState.fadeIn(200);
+                            $selectedServicesList.hide();
+                        }
+                        
+                        // Update form and modal checkboxes
+                        $servicesInputs.filter(`[value="${serviceId}"]`).prop('checked', false);
+                        $('.modal-service-checkbox[data-id="' + serviceId + '"]').prop('checked', false);
+                    }, 300);
                 });
 
                 // Service Details Modal
                 const $serviceDetailsModal = $('#service-details-modal');
                 const $serviceDetailsContent = $('#service-details-content');
 
-                $(document).on('click', '.view-service-details', function() {
+                $(document).on('click', '.view-service-details', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     const serviceId = $(this).data('id');
+                    
+                    // Show loading state with animation
+                    $serviceDetailsContent.html(`
+                        <div class="text-center" style="padding: 30px 0;">
+                            <div class="loading-spinner" style="display:inline-block; margin:0 auto 20px; width:40px; height:40px; border-width:3px; border-top-color:#7c3aed;"></div>
+                            <p style="color:#6b7280; font-size:16px;"><i class="fas fa-info-circle"></i> Loading service details...</p>
+                        </div>
+                    `);
+                    
+                    $serviceDetailsModal.css('display', 'flex').hide().fadeIn(300);
+                    $('body').addClass('modal-open');
+                    
                     $.ajax({
                         url: `{{ path('user_service_details', {'id': 'SERVICE_ID'}) }}`.replace('SERVICE_ID', serviceId),
                         method: 'GET',
                         success: function(response) {
                             if (response.success) {
                                 const service = response.service;
-                                $serviceDetailsContent.html(`
-                                    <p><strong>Title:</strong> ${$('<div/>').text(service.titre).html()}</p>
-                                    <p><strong>Description:</strong> ${$('<div/>').text(service.description).html()}</p>
-                                    <p><strong>Price:</strong> ${$('<div/>').text(service.prix).html()}</p>
-                                    <p><strong>Location:</strong> ${$('<div/>').text(service.location).html()}</p>
-                                    <p><strong>Service Type:</strong> ${$('<div/>').text(service.type_service).html()}</p>
-                                    ${service.image ? `<img src="${$('<div/>').text(service.image).html()}" alt="${$('<div/>').text(service.titre).html()}">` : ''}
-                                `);
-                                $serviceDetailsModal.css('display', 'flex').fadeIn();
-                                $('body').addClass('modal-open');
+                                setTimeout(() => {
+                                    $serviceDetailsContent.html(`
+                                        <p><strong>Title:</strong> ${$('<div/>').text(service.titre).html()}</p>
+                                        <p><strong>Description:</strong> ${$('<div/>').text(service.description).html()}</p>
+                                        <p><strong>Price:</strong> ${$('<div/>').text(service.prix).html()} TND</p>
+                                        <p><strong>Location:</strong> ${$('<div/>').text(service.location).html()}</p>
+                                        <p><strong>Service Type:</strong> ${$('<div/>').text(service.type_service).html()}</p>
+                                        ${service.image ? `<img src="${$('<div/>').text(service.image).html()}" alt="${$('<div/>').text(service.titre).html()}">` : ''}
+                                    `).hide().fadeIn(300);
+                                }, 600); // Add slight delay for better UX
                             } else {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: response.message,
-                                    icon: 'error',
-                                    confirmButtonText: 'OK'
-                                });
+                                setTimeout(() => {
+                                    $serviceDetailsContent.html(`
+                                        <div class="alert alert-danger" style="background-color:#fef2f2; color:#b91c1c; padding:15px; border-radius:8px; border-left:4px solid #ef4444;">
+                                            <i class="fas fa-exclamation-circle"></i> 
+                                            ${response.message || 'Unable to load service details.'}
+                                        </div>
+                                    `).hide().fadeIn(300);
+                                }, 600);
                             }
                         },
                         error: function() {
-                            Swal.fire({
-                                title: 'Error',
-                                text: 'Unable to retrieve service details.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
+                            setTimeout(() => {
+                                $serviceDetailsContent.html(`
+                                    <div class="alert alert-danger" style="background-color:#fef2f2; color:#b91c1c; padding:15px; border-radius:8px; border-left:4px solid #ef4444;">
+                                        <i class="fas fa-exclamation-circle"></i> 
+                                        Unable to retrieve service details. Please try again.
+                                    </div>
+                                `).hide().fadeIn(300);
+                            }, 600);
                         }
                     });
                 });
 
                 $('#close-service-details-modal, #close-service-details').click(function() {
-                    $serviceDetailsModal.fadeOut(function() {
+                    $serviceDetailsModal.fadeOut(300, function() {
                         $(this).css('display', 'none');
                     });
                     $('body').removeClass('modal-open');

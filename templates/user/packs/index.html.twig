@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
         <!-- Icomoon Icon Fonts -->
         <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+         <link rel="stylesheet" href="{{ asset('css/modern-navbar.css') }}">    
         <!-- Bootstrap -->
         <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
         <!-- Magnific Popup -->
@@ -71,17 +72,15 @@
                 margin: 0 auto;
             }
 
-            /* --- Ajustement de la navbar pour lisibilité --- */
-            .fh5co-nav {
-                position: fixed;
-                top: 0;
-                width: 100%;
-                z-index: 1000;
-                background: rgba(255, 255, 255, 0.95); /* Plus opaque */
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
+            /* --- Ajustement pour le page layout --- */
+            #page {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                padding-top: 70px;
             }
+
+            /* --- Les styles de la navbar ont été supprimés car ils sont déjà dans modern-navbar.css --- */
 
             /* --- Styles existants inchangés --- */
             .packs-grid {
@@ -399,137 +398,6 @@
                 z-index: 1; /* Au-dessus de la vidéo */
             }
 
-            #page {
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-                padding-top: 70px;
-            }
-
-            .fh5co-nav .container {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 10px 15px;
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-
-            .fh5co-logo a {
-                font-family: 'Work Sans', sans-serif;
-                font-weight: 700;
-                font-size: 24px;
-                color: #934D1A;
-                text-decoration: none;
-            }
-
-            .user-circle {
-                display: inline-block;
-                width: 40px;
-                height: 40px;
-                line-height: 40px;
-                text-align: center;
-                border-radius: 50%;
-                background-color: #f0f0f0;
-                color: #333;
-                font-size: 20px;
-                vertical-align: middle;
-                margin-right: 8px;
-            }
-
-            .user-circle img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                border-radius: 50%;
-            }
-
-            .fh5co-nav .menu-1 {
-                display: block;
-            }
-
-            .fh5co-nav .menu-1 ul {
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-
-            .fh5co-nav .menu-1 ul li {
-                margin: 0 15px;
-                position: relative;
-            }
-
-            .fh5co-nav .menu-1 ul li a {
-                font-family: 'Work Sans', sans-serif;
-                font-size: 16px;
-                color: #333;
-                text-transform: uppercase;
-                text-decoration: none;
-                transition: color 0.3s ease;
-            }
-
-            .fh5co-nav .menu-1 ul li a:hover {
-                color: #934D1A;
-            }
-
-            .fh5co-nav .menu-1 ul li.active a {
-                color: #934D1A !important;
-                font-weight: 600;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown {
-                position: relative;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                display: none;
-                position: absolute;
-                top: 100%;
-                right: 0;
-                background-color: #fff;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                list-style: none;
-                padding: 10px 0;
-                min-width: 150px;
-                z-index: 1001;
-                transition: opacity 0.3s ease, visibility 0.3s ease;
-                opacity: 0;
-                visibility: hidden;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                display: block;
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                margin: 0;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                padding: 10px 20px;
-                display: block;
-                font-size: 14px;
-                text-transform: none;
-                color: #333;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                color: #f57c00;
-            }
-
-            .menu-toggle {
-                display: none;
-                font-size: 24px;
-                cursor: pointer;
-                color: #333;
-                padding: 10px;
-            }
-
             /* Filter form styles */
             .filter-section {
                 max-width: 1200px;
@@ -670,54 +538,8 @@
             }
 
             @media (max-width: 768px) {
-                .menu-toggle {
-                    display: block;
-                }
-
-                .fh5co-nav .menu-1 ul {
-                    display: none;
-                    flex-direction: column;
-                    position: absolute;
-                    top: 60px;
-                    left: 0;
-                    width: 100%;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    padding: 20px 0;
-                }
-
-                .fh5co-nav .menu-1 ul.active {
-                    display: flex;
-                }
-
-                .fh5co-nav .menu-1 ul li {
-                    margin: 10px 0;
-                    text-align: center;
-                }
-
-                .user-circle {
-                    margin-right: 0;
-                    margin-bottom: 5px;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                    position: static;
-                    display: none;
-                    box-shadow: none;
-                    background-color: #f8f9fa;
-                    padding: 10px 0;
-                    opacity: 1;
-                    visibility: visible;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: none;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                    display: block;
-                }
-
+                /* Les styles responsives pour la navbar sont déjà dans modern-navbar.css */
+                
                 .packs-grid {
                     grid-template-columns: 1fr;
                 }
@@ -803,68 +625,69 @@
 
         <div id="page">
             <!-- Navbar -->
-             <nav class="fh5co-nav" role="navigation">
-                    <div class="container">
-                        <div class="fh5co-logo">
-                            <a href="{{ path('app_home') }}">Eventora</a>
-                        </div>
-                        <div class="menu-toggle">
-                            <i class="icon-menu"></i>
-                        </div>
-                        <div class="menu-1">
-                            <ul>
-                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">Reservation</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
-                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="{{ path('user_packs') }}">Packs</a>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{{ path('user_services') }}">Service</a></li>
-                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                    <ul class="dropdown">
-                                        {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
-                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
-                                            {% if is_granted('ROLE_ADMIN') %}
-                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                            {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
-                                        {% else %}
-                                            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
+            <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Reservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
                             </ul>
-                        </div>
-                    </div>
-                </nav>
+                        </li>
+                        <li class="active" class="has-dropdown">
+                            <a href="{{ path('user_packs') }}">Packs</a>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Log out</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Sign up</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
 
             <!-- Packs content -->
             <div class="packs-content">
@@ -1060,20 +883,7 @@
                     });
                 }
 
-                // Gestion du menu toggle
-                $('.menu-toggle').click(function() {
-                    console.log('Menu toggle cliqué');
-                    $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                });
-
-                // Gestion des dropdowns sur mobile
-                $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                    if ($(window).width() <= 768) {
-                        console.log('Dropdown cliqué sur mobile');
-                        e.preventDefault();
-                        $(this).parent().toggleClass('active');
-                    }
-                });
+                // Les gestionnaires de navbar ont été supprimés car ils sont déjà dans main.js
 
                 // Gestion des boutons favoris
                 $('.favorite-button').click(function(e) {

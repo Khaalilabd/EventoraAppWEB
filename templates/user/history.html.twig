@@ -8,28 +8,53 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
     {% block stylesheets %}
-        <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
-        <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <style>
-            /* Général */
+            /* Base styles */
+            :root {
+                --primary-color: #934D1A;
+                --primary-light: #CAB69A;
+                --primary-dark: #6B3712;
+                --secondary-color: #AF9D81;
+                --secondary-light: #DFD3C3;
+                --accent-color: #D1A054;
+                --accent-light: #E5D5B7;
+                --text-primary: #1f2937;
+                --text-secondary: #4b5563;
+                --text-light: #9ca3af;
+                --background-main: #f8fafc;
+                --background-card: #ffffff;
+                --background-accent: #f5f3ff;
+                --border-color: #e5e7eb;
+                --shadow-sm: 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1);
+                --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.06);
+                --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.05);
+                --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.05);
+                --radius-sm: 0.375rem;
+                --radius-md: 0.5rem;
+                --radius-lg: 0.75rem;
+                --radius-xl: 1rem;
+                --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
             body {
-                background: linear-gradient(135deg, #F5F5DC 0%, #8B4513 100%); /* Beige to brown gradient */
+                font-family: 'Poppins', sans-serif;
+                color: var(--text-primary);
+                background: linear-gradient(135deg, #f9f5f0 0%, #f0e9df 100%);
                 background-size: cover;
                 background-attachment: fixed;
                 min-height: 100vh;
-                margin: 0;
-                padding: 0;
-                position: relative;
-                font-family: 'Work Sans', sans-serif;
-                color: #5C4033; /* Darker brown */
+                line-height: 1.6;
             }
+
             #page {
                 min-height: 100vh;
                 display: flex;
@@ -43,527 +68,1064 @@
                 top: 0;
                 width: 100%;
                 z-index: 1000;
-                background: rgba(255, 255, 255, 0.9);
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                backdrop-filter: blur(10px);
+                background: rgba(255, 255, 255, 0.85);
+                box-shadow: var(--shadow-lg);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border-bottom: 1px solid rgba(202, 182, 154, 0.3);
             }
+
             .fh5co-nav .container {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 10px 15px;
+                padding: 12px 20px;
                 max-width: 1200px;
                 margin: 0 auto;
             }
+
             .fh5co-logo a {
+                font-family: 'Work Sans', sans-serif;
                 font-weight: 700;
-                font-size: 24px;
-                color: #934D1A;
+                font-size: 26px;
+                background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
                 text-decoration: none;
-            }
-            .user-circle {
+                position: relative;
+                overflow: hidden;
                 display: inline-block;
+                transition: var(--transition);
+                letter-spacing: -0.5px;
+            }
+
+            .fh5co-logo a:hover {
+                transform: scale(1.03);
+            }
+
+            .fh5co-logo a::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+                transition: var(--transition);
+            }
+
+            .fh5co-logo a:hover::after {
+                width: 100%;
+            }
+
+            .user-circle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
                 width: 40px;
                 height: 40px;
-                line-height: 40px;
-                text-align: center;
                 border-radius: 50%;
-                background-color: #f0f0f0;
-                color: #333;
-                font-size: 20px;
-                vertical-align: middle;
-                margin-right: 8px;
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                color: white;
+                font-size: 18px;
+                margin-right: 10px;
+                box-shadow: var(--shadow-md);
+                transition: var(--transition);
+                overflow: hidden;
+                border: 2px solid rgba(255, 255, 255, 0.8);
             }
+
+            .user-circle:hover {
+                transform: scale(1.1) rotate(5deg);
+                box-shadow: var(--shadow-lg);
+            }
+
             .user-circle img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                border-radius: 50%;
+                transition: var(--transition);
             }
+
+            .user-circle:hover img {
+                transform: scale(1.1);
+            }
+
             .fh5co-nav .menu-1 ul {
                 display: flex;
                 align-items: center;
-                justify-content: flex-end;
+                list-style: none;
                 margin: 0;
                 padding: 0;
-                list-style: none;
             }
+
             .fh5co-nav .menu-1 ul li {
-                margin: 0 15px;
+                margin: 0 12px;
                 position: relative;
             }
+
             .fh5co-nav .menu-1 ul li a {
-                font-size: 16px;
-                color: #333;
+                font-family: 'Poppins', sans-serif;
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--text-secondary);
                 text-transform: uppercase;
                 text-decoration: none;
-                transition: color 0.3s ease;
+                transition: var(--transition);
+                padding: 8px 12px;
+                position: relative;
+                letter-spacing: 0.5px;
+                border-radius: var(--radius-md);
             }
+
             .fh5co-nav .menu-1 ul li a:hover {
-                color: #934D1A;
+                color: var(--primary-color);
+                background-color: var(--background-accent);
+                transform: translateY(-2px);
             }
+
             .fh5co-nav .menu-1 ul li.active a {
-                color: #934D1A;
+                color: var(--primary-color);
                 font-weight: 600;
+                background-color: var(--background-accent);
+                box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.2);
             }
+
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                display: none;
                 position: absolute;
                 top: 100%;
                 right: 0;
-                background-color: #fff;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                background-color: var(--background-card);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-xl);
                 list-style: none;
                 padding: 10px 0;
-                min-width: 150px;
-                z-index: 1001;
-                visibility: hidden;
+                min-width: 200px;
                 opacity: 0;
-                transition: opacity 0.2s ease, visibility 0.2s ease;
+                visibility: hidden;
+                transform: translateY(10px);
+                transition: var(--transition);
+                z-index: 1001;
+                border: 1px solid rgba(147, 77, 26, 0.1);
+                overflow: hidden;
             }
+
             .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                display: block;
-                visibility: visible;
                 opacity: 1;
+                visibility: visible;
+                transform: translateY(5px);
             }
+
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                margin: 0;
+                width: 100%;
+            }
+
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                padding: 10px 20px;
+                padding: 12px 20px;
                 font-size: 14px;
                 text-transform: none;
-                color: #333;
+                color: var(--text-secondary);
+                display: block;
+                transition: var(--transition);
+                border-radius: 0;
+                border-left: 3px solid transparent;
             }
+
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                color: #8B4513;
+                color: var(--primary-color);
+                background-color: var(--background-accent);
+                transform: translateX(5px);
+                border-left: 3px solid var(--primary-color);
             }
+
             .menu-toggle {
                 display: none;
-                font-size: 24px;
+                font-size: 22px;
                 cursor: pointer;
-                color: #333;
-                padding: 10px;
+                color: var(--primary-color);
+                background: transparent;
+                border: none;
+                width: 40px;
+                height: 40px;
+                border-radius: var(--radius-md);
+                transition: var(--transition);
             }
 
-            /* Section contenu */
+            .menu-toggle:hover {
+                background-color: var(--background-accent);
+                transform: rotate(90deg);
+            }
+
+            /* Content Section */
             .content-section {
-                padding: 100px 0 50px;
+                padding: 60px 0;
                 flex: 1 0 auto;
             }
+            
             .content-card {
-                background: rgba(255, 255, 255, 0.95);
-                border-radius: 20px;
-                padding: 30px;
+                background: var(--background-card);
+                border-radius: var(--radius-lg);
+                padding: 40px;
                 max-width: 1000px;
                 margin: 0 auto;
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-                border: 1px solid #D2B48C; /* Light beige border */
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-            }
-            .content-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-            }
-            .content-card h2 {
-                font-size: 26px;
-                color: #8B4513; /* Brown */
-                margin-bottom: 15px;
-                text-align: center;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-            }
-            .content-card h2::after {
-                content: '📜';
-                font-size: 20px;
-                color: #DAA520; /* Golden accent */
-            }
-            .content-card .subtitle {
-                font-size: 16px;
-                color: #5C4033; /* Darker brown */
-                text-align: center;
-                margin-bottom: 25px;
-            }
-
-            /* Onglets */
-            .nav-tabs {
-                border-bottom: 2px solid #D2B48C; /* Light beige */
-                margin-bottom: 30px;
-                display: flex;
-                justify-content: center;
-            }
-            .nav-tabs li {
-                margin: 0 10px;
-            }
-            .nav-tabs li a {
-                color: #5C4033; /* Darker brown */
-                font-size: 16px;
-                padding: 10px 20px;
-                border: none;
-                border-bottom: 3px solid transparent;
-                transition: all 0.3s ease;
-                text-decoration: none;
-            }
-            .nav-tabs li.active a {
-                color: #8B4513; /* Brown */
-                border-bottom: 3px solid #8B4513;
-                font-weight: 600;
-            }
-            .nav-tabs li a:hover {
-                color: #8B4513;
-                border-bottom: 3px solid #8B4513;
-            }
-
-            /* Tableau */
-            .history-table {
-                width: 100%;
-                border-collapse: separate;
-                border-spacing: 0;
-                background: #FAF0E6; /* Very light beige */
-                border-radius: 10px;
-                overflow: hidden;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-                margin-bottom: 20px;
-            }
-            .history-table thead {
-                background: linear-gradient(135deg, #D2B48C 0%, #8B4513 100%); /* Beige to brown gradient */
-            }
-            .history-table th {
-                color: #fff;
-                font-weight: 600;
-                padding: 15px;
-                text-align: left;
-                font-size: 14px;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-            }
-            .history-table tbody tr {
-                transition: background 0.3s ease;
-            }
-            .history-table tbody tr:nth-child(even) {
-                background: #F5F5DC; /* Light beige */
-            }
-            .history-table tbody tr:hover {
-                background: #EDE4D3; /* Slightly darker beige */
-            }
-            .history-table td {
-                padding: 15px;
-                border-bottom: 1px solid #D2B48C; /* Light beige */
-                color: #5C4033; /* Darker brown */
-                font-size: 14px;
-                vertical-align: middle;
-            }
-            .history-table td .label {
-                font-weight: 500;
-            }
-            .history-table td .btn {
-                padding: 6px 12px;
-                font-size: 13px;
-            }
-            .history-table td .stars {
-                white-space: nowrap;
-            }
-
-            /* Étiquettes */
-            .label {
-                padding: 6px 12px;
-                border-radius: 12px;
-                font-size: 13px;
-                display: inline-block;
-                min-width: 80px;
-                text-align: center;
-            }
-            .label-success {
-                background: #28a745;
-                color: #ffffff;
-            }
-            .label-warning {
-                background: #A0522D; /* Medium brown */
-                color: #ffffff;
-            }
-            .label-danger {
-                background: #dc3545;
-                color: #ffffff;
-            }
-
-            /* Étoiles */
-            .stars {
-                color: #A0522D; /* Medium brown */
-                font-size: 14px;
-            }
-            .stars .filled {
-                color: #DAA520; /* Golden */
-            }
-
-            /* Boutons */
-            .btn {
-                padding: 12px;
-                border-radius: 50px;
-                font-size: 16px;
-                font-weight: 500;
-                transition: all 0.3s ease;
+                box-shadow: var(--shadow-xl);
+                border-top: 4px solid var(--primary-color);
+                transition: var(--transition);
                 position: relative;
                 overflow: hidden;
-                border: none;
             }
-            .btn-primary {
-                background: linear-gradient(90deg, #D2B48C, #8B4513); /* Beige to brown gradient */
-                color: #fff;
+            
+            .content-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(90deg, #934D1A, #AF9D81, #D1A054);
+                background-size: 200% 100%;
+                animation: gradientMove 6s linear infinite;
             }
-            .btn-primary:hover {
-                background: linear-gradient(90deg, #C19A6B, #5C4033); /* Slightly darker gradient */
-                transform: scale(1.05);
+            
+            @keyframes gradientMove {
+                0% { background-position: 0% 0%; }
+                100% { background-position: 200% 0%; }
             }
-            .btn-secondary {
-                background: #EDE4D3; /* Light beige */
-                color: #5C4033; /* Darker brown text */
+            
+            .content-card:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-xl);
             }
-            .btn-secondary:hover {
-                background: #D2B48C; /* Medium beige */
-                transform: scale(1.05);
-            }
-            .btn:focus {
-                outline: 2px solid #8B4513;
-                outline-offset: 2px;
-            }
-
-            /* Détails */
-            .reclamation-details, .feedback-details, .reservation-details {
-                font-size: 15px;
-                background: #FAF0E6; /* Very light beige */
-                padding: 20px;
-                border-radius: 10px;
-                border: 1px solid #D2B48C;
-                margin-bottom: 20px;
-            }
-            .reclamation-details h3, .feedback-details h3, .reservation-details h3 {
-                color: #8B4513; /* Brown */
-                font-size: 22px;
-                margin-bottom: 20px;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            .reclamation-details h3::after, .feedback-details h3::after, .reservation-details h3::after {
-                content: '✨';
-                font-size: 18px;
-                color: #DAA520; /* Golden accent */
-            }
-            .reclamation-details p, .feedback-details p, .reservation-details p {
-                margin: 12px 0;
-                padding: 12px;
-                background: #F5F5DC; /* Light beige */
-                border-radius: 6px;
-                border-left: 4px solid #8B4513; /* Brown */
-            }
-            .reclamation-details strong, .feedback-details strong, .reservation-details strong {
-                color: #5C4033; /* Darker brown */
-                margin-right: 8px;
-                font-weight: 600;
-            }
-            .feedback-details img {
-                max-width: 300px;
-                border-radius: 8px;
-                margin-top: 10px;
-                display: block;
-                border: 1px solid #D2B48C;
-            }
-
-            /* Pagination */
-            .pagination {
-                justify-content: center;
-                margin-top: 25px;
-            }
-            .pagination li {
-                margin: 0 5px;
-            }
-            .pagination li a {
-                color: #5C4033; /* Darker brown */
-                border: 1px solid #D2B48C; /* Light beige */
-                padding: 8px 12px;
-                border-radius: 6px;
-                text-decoration: none;
-                transition: all 0.3s ease;
-                font-size: 14px;
-            }
-            .pagination li.active a {
-                background: #8B4513; /* Brown */
-                color: #ffffff;
-                border-color: #8B4513;
-            }
-            .pagination li a:hover {
-                background: #8B4513;
-                color: #ffffff;
-                border-color: #8B4513;
-            }
-            .pagination li.disabled a {
-                color: #A0522D; /* Medium brown */
-                cursor: not-allowed;
-                border-color: #D2B48C;
-                background: #F5F5DC; /* Light beige */
-            }
-
-            /* Filtre */
-            .filter-form {
-                margin-bottom: 20px;
+            
+            .content-card h2 {
+                font-size: 28px;
+                font-weight: 700;
+                background: linear-gradient(90deg, #934D1A, #D1A054);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 15px;
                 text-align: center;
+                letter-spacing: -0.01em;
             }
-            .filter-form select {
-                padding: 12px;
-                border: none;
-                border-bottom: 2px solid #D2B48C; /* Light beige */
-                background: #FAF0E6; /* Very light beige */
-                border-radius: 0;
-                font-size: 14px;
-                color: #5C4033; /* Darker brown */
-                transition: border-bottom 0.3s ease;
-            }
-            .filter-form select:focus {
-                border-bottom: 2px solid #8B4513; /* Brown */
-                outline: none;
-            }
-
-            /* Message vide */
-            .text-center p {
-                color: #5C4033;
+            
+            .content-card .subtitle {
                 font-size: 16px;
-                margin-bottom: 20px;
+                color: var(--text-secondary);
+                text-align: center;
+                margin-bottom: 30px;
+                font-weight: 400;
             }
 
-            /* Pied de page */
+            /* Tabs styling */
+            .nav-tabs {
+                border-bottom: none;
+                margin-bottom: 40px;
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                position: relative;
+                padding-bottom: 5px;
+            }
+            
+            .nav-tabs::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60%;
+                height: 1px;
+                background: linear-gradient(90deg, 
+                    transparent, 
+                    var(--primary-light),
+                    var(--secondary-light),
+                    var(--primary-light),
+                    transparent);
+            }
+            
+            .nav-tabs li {
+                margin: 0;
+                position: relative;
+                z-index: 2;
+            }
+            
+            .nav-tabs li a {
+                color: var(--text-secondary);
+                font-size: 15px;
+                font-weight: 500;
+                padding: 12px 24px;
+                border: none;
+                transition: var(--transition);
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                z-index: 1;
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-sm);
+                background-color: white;
+                min-width: 140px;
+            }
+            
+            .nav-tabs li.active a {
+                color: white;
+                font-weight: 600;
+                background: linear-gradient(135deg, #934D1A, #AF9D81);
+                box-shadow: var(--shadow-md);
+                transform: translateY(-3px);
+            }
+            
+            .nav-tabs li.active a::before {
+                content: '';
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 0;
+                border-left: 8px solid transparent;
+                border-right: 8px solid transparent;
+                border-top: 8px solid #AF9D81;
+            }
+            
+            .nav-tabs li a:hover:not(.active) {
+                color: var(--primary-color);
+                background-color: var(--background-accent);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+            
+            .nav-tabs li a i {
+                margin-right: 8px;
+                font-size: 16px;
+            }
+
+            /* Footer */
             #fh5co-footer {
                 background: rgba(255, 255, 255, 0.9);
                 padding: 20px 0;
                 margin-top: auto;
-            }
-            #fh5co-footer p {
-                color: #5C4033;
-                font-size: 14px;
+                border-top: 1px solid var(--border-color);
                 text-align: center;
             }
-            #fh5co-footer a {
-                color: #8B4513;
-                text-decoration: none;
+            
+            #fh5co-footer p {
+                color: var(--text-secondary);
+                font-size: 14px;
+                margin: 0;
             }
+            
+            #fh5co-footer a {
+                color: var(--primary-color);
+                text-decoration: none;
+                transition: var(--transition);
+            }
+            
             #fh5co-footer a:hover {
+                color: var(--accent-color);
                 text-decoration: underline;
             }
 
-            /* Popup pour QR Code */
+            /* Animations */
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            @keyframes slideInFromLeft {
+                from { transform: translateX(-20px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            /* Responsive Styles */
+            @media (max-width: 992px) {
+                .content-card {
+                    max-width: 95%;
+                    padding: 30px;
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .menu-toggle {
+                    display: block;
+                }
+                
+                .fh5co-nav .menu-1 ul {
+                    display: none;
+                    flex-direction: column;
+                    position: absolute;
+                    top: 70px;
+                    left: 0;
+                    width: 100%;
+                    background-color: var(--background-card);
+                    box-shadow: var(--shadow-md);
+                    padding: 20px 0;
+                    z-index: 1000;
+                }
+                
+                .fh5co-nav .menu-1 ul.active {
+                    display: flex;
+                }
+                
+                .fh5co-nav .menu-1 ul li {
+                    margin: 10px 20px;
+                    text-align: center;
+                    width: 100%;
+                }
+                
+                .fh5co-nav .menu-1 ul li a {
+                    display: block;
+                    padding: 10px;
+                }
+                
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    position: static;
+                    display: none;
+                    opacity: 1;
+                    visibility: visible;
+                    transform: none;
+                    box-shadow: none;
+                    width: 100%;
+                    margin-top: 10px;
+                    border-top: none;
+                    border-radius: 0;
+                    background-color: var(--background-accent);
+                    margin-bottom: 10px;
+                }
+                
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: none;
+                }
+                
+                .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                    display: block;
+                }
+                
+                .content-card {
+                    padding: 25px 15px;
+                }
+                
+                .nav-tabs li a {
+                    font-size: 14px;
+                    padding: 10px 15px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .fh5co-logo a {
+                    font-size: 22px;
+                }
+                
+                .content-card h2 {
+                    font-size: 24px;
+                }
+                
+                .content-card .subtitle {
+                    font-size: 14px;
+                    margin-bottom: 20px;
+                }
+                
+                .nav-tabs {
+                    flex-wrap: wrap;
+                }
+                
+                .nav-tabs li a {
+                    font-size: 13px;
+                    padding: 8px 12px;
+                }
+            }
+
+            /* Table styles */
+            .history-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 30px;
+                font-size: 14px;
+            }
+            
+            .history-table thead {
+                background: transparent;
+            }
+            
+            .history-table th {
+                color: var(--text-secondary);
+                font-weight: 600;
+                padding: 12px 8px;
+                text-align: left;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                border-bottom: 1px solid var(--border-color);
+                background: #f9f5f0;
+            }
+            
+            .history-table th, .history-table td {
+                padding: 12px 8px;
+                vertical-align: middle;
+            }
+            
+            .history-table th:nth-child(1) { width: 10%; } /* Date */
+            .history-table th:nth-child(2) { width: 15%; } /* Titre */
+            .history-table th:nth-child(3) { width: 10%; } /* Type */
+            .history-table th:nth-child(4) { width: 35%; } /* Description */
+            .history-table th:nth-child(5) { width: 15%; } /* Statut */
+            .history-table th:nth-child(6) { width: 15%; } /* Actions */
+            
+            .history-table tbody tr {
+                background: var(--background-card);
+                border-radius: var(--radius-md);
+                margin-bottom: 8px;
+                transition: var(--transition);
+            }
+            
+            .history-table tbody tr:hover {
+                background: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .history-table tbody tr td {
+                border: none;
+                color: var(--text-secondary);
+                font-size: 14px;
+                word-wrap: break-word;
+                max-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .history-table tbody tr td:first-child {
+                border-radius: var(--radius-md) 0 0 var(--radius-md);
+            }
+            
+            .history-table tbody tr td:last-child {
+                border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            }
+            
+            .history-table td:nth-child(4) {
+                max-width: 200px; /* Adjust based on content */
+            }
+            
+            /* Details cards */
+            .reclamation-details, .feedback-details, .reservation-details {
+                background: var(--background-card);
+                padding: 35px;
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-lg);
+                margin-bottom: 40px;
+                position: relative;
+                overflow: hidden;
+                animation: fadeIn 0.5s ease-out;
+            }
+            
+            .reclamation-details::before, .feedback-details::before, .reservation-details::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 6px;
+                background: linear-gradient(90deg, #934D1A, #D1A054);
+            }
+            
+            .reclamation-details::after, .feedback-details::after, .reservation-details::after {
+                content: '';
+                position: absolute;
+                top: 6px;
+                right: 30px;
+                width: 50px;
+                height: 50px;
+                background: linear-gradient(135deg, #CAB69A, #DFD3C3);
+                opacity: 0.15;
+                border-radius: 50%;
+                z-index: 0;
+            }
+            
+            .reclamation-details h3, .feedback-details h3, .reservation-details h3 {
+                background: linear-gradient(90deg, #934D1A, #D1A054);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-size: 24px;
+                font-weight: 700;
+                margin-bottom: 30px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid var(--border-color);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                position: relative;
+            }
+            
+            .reclamation-details h3 i, .feedback-details h3 i, .reservation-details h3 i {
+                color: var(--primary-color);
+                background: var(--background-accent);
+                padding: 10px;
+                border-radius: 50%;
+                font-size: 20px;
+            }
+            
+            .detail-item {
+                display: flex;
+                margin-bottom: 18px;
+                align-items: flex-start;
+                background: var(--background-main);
+                padding: 16px 20px;
+                border-radius: var(--radius-md);
+                transition: var(--transition);
+                border-left: 3px solid transparent;
+            }
+            
+            .detail-item:hover {
+                transform: translateX(5px);
+                box-shadow: var(--shadow-md);
+                background: white;
+                border-left: 3px solid var(--primary-color);
+            }
+            
+            .detail-label {
+                font-weight: 600;
+                color: var(--primary-dark);
+                min-width: 140px;
+                padding-right: 20px;
+                position: relative;
+            }
+            
+            .detail-label::after {
+                content: ':';
+                position: absolute;
+                right: 10px;
+                color: var(--text-light);
+            }
+            
+            .detail-value {
+                color: var(--text-secondary);
+                flex-grow: 1;
+            }
+            
+            /* Status labels */
+            .status-badge, .label {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 500;
+                text-align: center;
+                min-width: 80px;
+            }
+            
+            .status-badge::before, .label::before {
+                content: '';
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                margin-right: 8px;
+            }
+            
+            .status-success, .label-success {
+                background-color: rgba(16, 185, 129, 0.1);
+                color: #059669;
+                border: 1px solid rgba(16, 185, 129, 0.2);
+            }
+            
+            .status-success::before, .label-success::before {
+                background-color: #059669;
+                box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+            }
+            
+            .status-warning, .label-warning {
+                background-color: rgba(245, 158, 11, 0.1);
+                color: #d97706;
+                border: 1px solid rgba(245, 158, 11, 0.2);
+            }
+            
+            .status-warning::before, .label-warning::before {
+                background-color: #d97706;
+                box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+            }
+            
+            .status-danger, .label-danger {
+                background-color: rgba(239, 68, 68, 0.1);
+                color: #dc2626;
+                border: 1px solid rgba(239, 68, 68, 0.2);
+            }
+            
+            .status-danger::before, .label-danger::before {
+                background-color: #dc2626;
+                box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+            }
+            
+            /* Star ratings */
+            .stars {
+                display: inline-flex;
+                align-items: center;
+                color: var(--text-light);
+                font-size: 18px;
+                letter-spacing: 3px;
+                background: var(--background-main);
+                padding: 6px 12px;
+                border-radius: var(--radius-lg);
+            }
+            
+            .stars .filled {
+                color: #f59e0b;
+                text-shadow: 0 0 3px rgba(245, 158, 11, 0.3);
+            }
+            
+            /* Buttons styling */
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                padding: 12px 24px;
+                border-radius: 50px;
+                font-size: 15px;
+                font-weight: 600;
+                transition: var(--transition);
+                border: none;
+                cursor: pointer;
+                text-decoration: none;
+                box-shadow: var(--shadow-md);
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+            }
+            
+            .btn::after {
+                content: '';
+                position: absolute;
+                bottom: -10px;
+                left: -10px;
+                width: 0;
+                height: 0;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 50%;
+                transform: scale(0);
+                transition: transform 0.5s;
+                z-index: -1;
+            }
+            
+            .btn:hover::after {
+                transform: scale(3);
+            }
+            
+            .btn:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-lg);
+            }
+            
+            .btn:active {
+                transform: translateY(-1px);
+                box-shadow: var(--shadow-md);
+            }
+            
+            .btn-primary {
+                background: linear-gradient(135deg, #934D1A, #D1A054);
+                color: white;
+            }
+            
+            .btn-primary:hover {
+                background: linear-gradient(135deg, #6B3712, #934D1A);
+                color: white;
+                background-size: 200% 100%;
+                animation: gradientMove 2s linear infinite;
+            }
+            
+            .btn-secondary {
+                background: white;
+                color: var(--text-secondary);
+                border: 1px solid var(--border-color);
+            }
+            
+            .btn-secondary:hover {
+                background: var(--background-accent);
+                color: var(--primary-color);
+                border-color: var(--primary-light);
+            }
+            
+            .btn-danger {
+                background: linear-gradient(135deg, #f43f5e, #e11d48);
+                color: white;
+                border: none;
+            }
+            
+            .btn-danger:hover {
+                background: linear-gradient(135deg, #e11d48, #be123c);
+                color: white;
+                box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+            }
+            
+            /* Alert styles */
+            .alert {
+                position: relative;
+                padding: 16px 20px;
+                margin-bottom: 20px;
+                border-radius: var(--radius-md);
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                animation: slideInFromTop 0.4s ease-out;
+            }
+            
+            @keyframes slideInFromTop {
+                0% { transform: translateY(-20px); opacity: 0; }
+                100% { transform: translateY(0); opacity: 1; }
+            }
+            
+            .alert i {
+                margin-right: 12px;
+                font-size: 18px;
+            }
+            
+            .alert-success {
+                background-color: rgba(16, 185, 129, 0.1);
+                color: #059669;
+                border-left: 4px solid #059669;
+            }
+            
+            .alert-danger, .alert-error {
+                background-color: rgba(239, 68, 68, 0.1);
+                color: #dc2626;
+                border-left: 4px solid #dc2626;
+            }
+            
+            .alert-warning {
+                background-color: rgba(245, 158, 11, 0.1);
+                color: #d97706;
+                border-left: 4px solid #d97706;
+            }
+            
+            .alert-info {
+                background-color: rgba(59, 130, 246, 0.1);
+                color: #3b82f6;
+                border-left: 4px solid #3b82f6;
+            }
+            
+            .btn-close {
+                position: absolute;
+                right: 16px;
+                background: transparent;
+                border: none;
+                font-size: 20px;
+                line-height: 1;
+                cursor: pointer;
+                opacity: 0.5;
+                transition: var(--transition);
+            }
+            
+            .btn-close:hover {
+                opacity: 1;
+            }
+            
+            .btn-sm {
+                padding: 6px 12px;
+                font-size: 12px;
+                border-radius: 20px;
+            }
+            
+            .btn-icon {
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                font-size: 16px;
+            }
+            
+            .btn-group {
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-top: 30px;
+            }
+            
+            /* Empty states */
+            .empty-state {
+                text-align: center;
+                padding: 60px 30px;
+                border-radius: var(--radius-lg);
+                background: linear-gradient(145deg, white, #f6f2ea);
+                margin-bottom: 40px;
+                box-shadow: var(--shadow-md);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .empty-state::before {
+                content: '';
+                position: absolute;
+                width: 300px;
+                height: 300px;
+                background: linear-gradient(135deg, #CAB69A, #DFD3C3);
+                border-radius: 50%;
+                opacity: 0.05;
+                top: -150px;
+                right: -150px;
+                z-index: 0;
+            }
+            
+            .empty-state::after {
+                content: '';
+                position: absolute;
+                width: 200px;
+                height: 200px;
+                background: linear-gradient(135deg, #CAB69A, #DFD3C3);
+                border-radius: 50%;
+                opacity: 0.05;
+                bottom: -100px;
+                left: -100px;
+                z-index: 0;
+            }
+            
+            .empty-state-icon {
+                font-size: 70px;
+                background: linear-gradient(135deg, #934D1A, #D1A054);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 20px;
+                animation: pulse 2s infinite;
+                position: relative;
+                z-index: 1;
+            }
+            
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+            
+            .empty-state-title {
+                font-size: 24px;
+                font-weight: 700;
+                color: var(--primary-color);
+                margin-bottom: 15px;
+                position: relative;
+                z-index: 1;
+            }
+            
+            .empty-state-description {
+                color: var(--text-secondary);
+                margin-bottom: 30px;
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+                font-size: 16px;
+                line-height: 1.7;
+                position: relative;
+                z-index: 1;
+            }
+            
+            /* Pagination */
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin-top: 30px;
+                flex-wrap: wrap;
+            }
+            
+            .pagination .page-item {
+                margin: 0 3px;
+            }
+            
+            .pagination .page-link {
+                border-radius: var(--radius-sm);
+                border: 1px solid var(--border-color);
+                color: var(--text-secondary);
+                padding: 8px 14px;
+                transition: var(--transition);
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 36px;
+            }
+            
+            .pagination .page-item.active .page-link {
+                background: var(--primary-color);
+                color: white;
+                border-color: var(--primary-color);
+            }
+            
+            .pagination .page-link:hover {
+                background: var(--background-accent);
+                border-color: var(--primary-light);
+                color: var(--primary-color);
+            }
+            
+            .pagination .page-item.disabled .page-link {
+                color: var(--text-light);
+                pointer-events: none;
+                background: var(--background-main);
+            }
+            
+            /* QR code popup */
             .qr-code-popup {
                 display: none;
                 position: fixed;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                background: #fff;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                background: var(--background-card);
+                padding: 25px;
+                border-radius: var(--radius-md);
+                box-shadow: var(--shadow-lg);
                 z-index: 10000;
                 text-align: center;
-                max-width: 300px;
+                max-width: 320px;
                 width: 90%;
+                border-top: 4px solid var(--primary-color);
+                animation: fadeIn 0.3s ease-out;
             }
+            
             .qr-code-popup h5 {
                 font-size: 18px;
-                color: #8B4513;
-                margin-bottom: 15px;
+                color: var(--primary-color);
+                margin-bottom: 20px;
+                font-weight: 600;
             }
+            
             .qr-code-popup img {
                 max-width: 200px;
-                margin: 0 auto;
+                margin: 0 auto 20px;
                 display: block;
+                border-radius: var(--radius-sm);
+                border: 1px solid var(--border-color);
+                padding: 10px;
+                background: white;
             }
+            
             .qr-code-popup p {
-                color: #5C4033;
+                color: var(--text-secondary);
                 font-size: 14px;
-                margin: 15px 0;
+                margin-bottom: 20px;
             }
+            
             .qr-code-popup .error {
-                color: #dc3545;
+                color: #ef4444;
                 display: none;
+                padding: 10px;
+                background: rgba(239, 68, 68, 0.1);
+                border-radius: var(--radius-sm);
+                margin-bottom: 15px;
             }
-            .qr-code-popup .btn-secondary {
-                padding: 8px 16px;
-                font-size: 14px;
-            }
-
-            /* Responsive */
-            @media (max-width: 768px) {
-                .menu-toggle {
-                    display: block;
-                }
-                .fh5co-nav .menu-1 ul {
-                    display: none;
-                    flex-direction: column;
-                    position: absolute;
-                    top: 60px;
-                    left: 0;
-                    width: 100%;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    padding: 20px 0;
-                }
-                .fh5co-nav .menu-1 ul.active {
-                    display: flex;
-                }
-                .fh5co-nav .menu-1 ul li {
-                    margin: 10px 0;
-                    text-align: center;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                    position: static;
-                    display: none;
-                    box-shadow: none;
-                    background-color: #F5F5DC; /* Light beige */
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: none !important;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                    display: block !important;
-                }
-                .content-card {
-                    padding: 20px;
-                    max-width: 95%;
-                }
-                .content-card h2 {
-                    font-size: 22px;
-                }
-                .history-table {
-                    font-size: 13px;
-                }
-                .history-table th, .history-table td {
-                    padding: 10px;
-                    font-size: 13px;
-                }
-                .history-table td:nth-child(3), .history-table td:nth-child(4), .history-table td:nth-child(5) {
-                    max-width: 100px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-                .nav-tabs li a {
-                    font-size: 14px;
-                    padding: 8px 15px;
-                }
-                .reclamation-details p, .feedback-details p, .reservation-details p {
-                    font-size: 14px;
-                    padding: 10px;
-                }
-                .feedback-details img {
-                    max-width: 100%;
-                }
-                .filter-form select {
-                    width: 100%;
-                    font-size: 13px;
-                }
-                .qr-code-popup {
-                    max-width: 90%;
-                }
-                .qr-code-popup img {
-                    max-width: 150px;
-                }
+            
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+                backdrop-filter: blur(3px);
             }
         </style>
     {% endblock %}
@@ -571,79 +1133,100 @@
 <body>
     <div id="page">
          <nav class="fh5co-nav" role="navigation">
-                    <div class="container">
-                        <div class="fh5co-logo">
-                            <a href="{{ path('app_home') }}">Eventora</a>
-                        </div>
-                        <div class="menu-toggle">
-                            <i class="icon-menu"></i>
-                        </div>
-                        <div class="menu-1">
-                            <ul>
-                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">Reservation</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
-                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="{{ path('user_packs') }}">Packs</a>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{{ path('user_services') }}">Service</a></li>
-                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                    <ul class="dropdown">
-                                        {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
-                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
-                                            {% if is_granted('ROLE_ADMIN') %}
-                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                            {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
-                                        {% else %}
-                                            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Reservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
                             </ul>
-                        </div>
-                    </div>
-                </nav>
-
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="{{ path('user_packs') }}">Packs</a>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Log out</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Sign up</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
         <section class="content-section" role="main">
             <div class="container">
                 <div class="content-card">
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                                <i class="fas fa-{% if label == 'success' %}check-circle{% elseif label == 'error' or label == 'danger' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                
                     <h2>Your History</h2>
                     <div class="subtitle">Check your complaints, feedback and reservations</div>
 
                     <!-- Onglets pour les sections -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="{{ section == 'reclamations' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history') }}" role="tab" aria-selected="{{ section == 'reclamations' ? 'true' : 'false' }}">Reclamations</a></li>
-                        <li class="{{ section == 'feedbacks' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history_feedbacks') }}" role="tab" aria-selected="{{ section == 'feedbacks' ? 'true' : 'false' }}">Feedbacks</a></li>
-                        <li class="{{ section == 'reservations' ? 'active' : '' }}" role="presentation"><a href="{{ path('app_user_history_reservations') }}" role="tab" aria-selected="{{ section == 'reservations' ? 'true' : 'false' }}">Reservations</a></li>
+                        <li class="{{ section == 'reclamations' ? 'active' : '' }}" role="presentation">
+                            <a href="{{ path('app_user_history') }}" role="tab" aria-selected="{{ section == 'reclamations' ? 'true' : 'false' }}">
+                                <i class="fas fa-exclamation-circle"></i> Reclamations
+                            </a>
+                        </li>
+                        <li class="{{ section == 'feedbacks' ? 'active' : '' }}" role="presentation">
+                            <a href="{{ path('app_user_history_feedbacks') }}" role="tab" aria-selected="{{ section == 'feedbacks' ? 'true' : 'false' }}">
+                                <i class="fas fa-star"></i> Feedbacks
+                            </a>
+                        </li>
+                        <li class="{{ section == 'reservations' ? 'active' : '' }}" role="presentation">
+                            <a href="{{ path('app_user_history_reservations') }}" role="tab" aria-selected="{{ section == 'reservations' ? 'true' : 'false' }}">
+                                <i class="fas fa-calendar-check"></i> Reservations
+                            </a>
+                        </li>
                     </ul>
 
                     {% if section == 'reclamations' %}
@@ -667,9 +1250,17 @@
                         {% else %}
                             <!-- Liste des réclamations -->
                             {% if reclamations|length == 0 %}
-                                <p class="text-center">Aucune réclamation trouvée.</p>
-                                <div class="text-center">
-                                    <a href="{{ path('app_reclamation_new') }}" class="btn btn-primary">Submit reclamation</a>
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="fas fa-inbox"></i>
+                                    </div>
+                                    <h3 class="empty-state-title">No complaints found</h3>
+                                    <p class="empty-state-description">You haven't submitted any complaints yet. If you encounter any issues with our services, don't hesitate to let us know.</p>
+                                    <div class="text-center">
+                                        <a href="{{ path('app_reclamation_new') }}" class="btn btn-primary">
+                                            <i class="fas fa-plus-circle"></i> Submit a complaint
+                                        </a>
+                                    </div>
                                 </div>
                             {% else %}
                                 <div class="table-responsive">
@@ -697,10 +1288,20 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ path('app_reclamation_show', {'id': reclamation.id}) }}" class="btn btn-primary btn-sm" aria-label="Voir la réclamation {{ reclamation.titre }}">Voir</a>
+                                                        <a href="{{ path('app_reclamation_show', {'id': reclamation.id}) }}" class="btn btn-primary btn-sm" aria-label="Voir la réclamation {{ reclamation.titre }}">
+                                                            <i class="fas fa-eye"></i> Show
+                                                        </a>
                                                         {% if reclamation.qrCodeUrl %}
-                                                            <button type="button" class="btn btn-secondary btn-sm show-qr-code" data-qr-url="{{ reclamation.qrCodeUrl }}" data-reclamation-id="{{ reclamation.id }}" aria-label="Voir le QR code de la réclamation {{ reclamation.titre }}">QR Code</button>
+                                                            <button type="button" class="btn btn-secondary btn-sm show-qr-code" data-qr-url="{{ reclamation.qrCodeUrl }}" data-reclamation-id="{{ reclamation.id }}" aria-label="Voir le QR code de la réclamation {{ reclamation.titre }}">
+                                                                <i class="fas fa-qrcode"></i> QR Code
+                                                            </button>
                                                         {% endif %}
+                                                        <form method="post" action="{{ path('app_reclamation_delete', {'id': reclamation.id}) }}" style="display: inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation?');">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                                                            <button type="submit" class="btn btn-danger btn-sm" aria-label="Supprimer la réclamation {{ reclamation.titre }}">
+                                                                <i class="fas fa-trash-alt"></i> Delete
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -753,9 +1354,17 @@
                         {% else %}
                             <!-- Liste des feedbacks -->
                             {% if feedbacks|length == 0 %}
-                                <p class="text-center">Aucun feedback trouvé.</p>
-                                <div class="text-center">
-                                    <a href="{{ path('app_feedback_new') }}" class="btn btn-primary">Submit feedback</a>
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="fas fa-comment-dots"></i>
+                                    </div>
+                                    <h3 class="empty-state-title">No feedbacks yet</h3>
+                                    <p class="empty-state-description">Share your experience with our services! Your feedback helps us improve and provide better experiences for all our customers.</p>
+                                    <div class="text-center">
+                                        <a href="{{ path('app_feedback_new') }}" class="btn btn-primary">
+                                            <i class="fas fa-star"></i> Share your feedback
+                                        </a>
+                                    </div>
                                 </div>
                             {% else %}
                                 <div class="table-responsive">
@@ -788,7 +1397,15 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ path('app_feedback_show', {'id': feedback.ID}) }}" class="btn btn-primary btn-sm" aria-label="Voir le feedback #{{ feedback.ID }}">Voir</a>
+                                                        <a href="{{ path('app_feedback_show', {'id': feedback.ID}) }}" class="btn btn-primary btn-sm" aria-label="Voir le feedback #{{ feedback.ID }}">
+                                                            <i class="fas fa-eye"></i> Voir
+                                                        </a>
+                                                        <form method="post" action="{{ path('app_feedback_delete', {'id': feedback.ID}) }}" style="display: inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce feedback?');">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ feedback.ID) }}">
+                                                            <button type="submit" class="btn btn-danger btn-sm" aria-label="Supprimer le feedback #{{ feedback.ID }}">
+                                                                <i class="fas fa-trash-alt"></i> Supprimer
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -844,10 +1461,20 @@
                             </div>
                             <!-- Liste des réservations -->
                             {% if reservations|length == 0 %}
-                                <p class="text-center">Check your complaints, feedback and reservations</p>
-                                <div class="text-center">
-                                    <a href="{{ path('user_reservation_pack_new') }}" class="btn btn-primary">Book a Pack</a>
-                                    <a href="{{ path('user_reservation_personnalise_new') }}" class="btn btn-primary">Personalized Booking</a>
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <h3 class="empty-state-title">No reservations found</h3>
+                                    <p class="empty-state-description">You haven't made any reservations yet. Start planning your perfect event with our customized options or choose from our carefully crafted packages.</p>
+                                    <div class="btn-group">
+                                        <a href="{{ path('user_reservation_pack_new') }}" class="btn btn-primary">
+                                            <i class="fas fa-box"></i> Book a Pack
+                                        </a>
+                                        <a href="{{ path('user_reservation_personnalise_new') }}" class="btn btn-secondary">
+                                            <i class="fas fa-magic"></i> Personalized Booking
+                                        </a>
+                                    </div>
                                 </div>
                             {% else %}
                                 <div class="table-responsive">
@@ -877,7 +1504,15 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ path('app_reservation_show', {'id': reservation.IDReservationPack ?: reservation.IDReservationPersonalise, 'type': reservation.type == 'Pack' ? 'pack' : 'personnalise'}) }}" class="btn btn-primary btn-sm" aria-label="Voir la réservation {{ reservation.type }} de {{ reservation.nom }}">Voir</a>
+                                                        <a href="{{ path('app_reservation_show', {'id': reservation.IDReservationPack ?: reservation.IDReservationPersonalise, 'type': reservation.type == 'Pack' ? 'pack' : 'personnalise'}) }}" class="btn btn-primary btn-sm" aria-label="Voir la réservation {{ reservation.type }} de {{ reservation.nom }}">
+                                                            <i class="fas fa-eye"></i> Voir
+                                                        </a>
+                                                        <form method="post" action="{{ path('app_reservation_delete', {'id': reservation.IDReservationPack ?: reservation.IDReservationPersonalise, 'type': reservation.type == 'Pack' ? 'pack' : 'personnalise'}) }}" style="display: inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation?');">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ (reservation.IDReservationPack ?: reservation.IDReservationPersonalise)) }}">
+                                                            <button type="submit" class="btn btn-danger btn-sm" aria-label="Supprimer la réservation {{ reservation.type }} de {{ reservation.nom }}">
+                                                                <i class="fas fa-trash-alt"></i> Supprimer
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             {% endfor %}

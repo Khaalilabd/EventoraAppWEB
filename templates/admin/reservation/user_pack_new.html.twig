@@ -28,6 +28,7 @@
                 min-height: 100vh;
                 position: relative;
                 overflow-x: hidden;
+                color: #374151;
             }
 
             /* Video Background */
@@ -39,6 +40,7 @@
                 height: 100%;
                 object-fit: cover;
                 z-index: -2;
+                filter: brightness(0.75);
             }
 
             body::before {
@@ -48,7 +50,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.5);
+                background: linear-gradient(135deg, rgba(109, 40, 217, 0.8), rgba(79, 70, 229, 0.6));
                 z-index: -1;
             }
 
@@ -58,6 +60,7 @@
                 display: flex;
                 flex-direction: column;
                 padding-top: 70px;
+                animation: fadeIn 0.7s ease-out;
             }
 
             .fh5co-nav {
@@ -65,8 +68,8 @@
                 top: 0;
                 width: 100%;
                 z-index: 1000;
-                background: rgba(255, 255, 255, 0.9);
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                background: rgba(15, 23, 42, 0.85);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
                 backdrop-filter: blur(10px);
             }
 
@@ -74,7 +77,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 10px 15px;
+                padding: 12px 20px;
                 max-width: 1200px;
                 margin: 0 auto;
             }
@@ -82,9 +85,24 @@
             .fh5co-logo a {
                 font-family: 'Work Sans', sans-serif;
                 font-weight: 700;
-                font-size: 24px;
-                color: #934D1A;
+                font-size: 26px;
+                color: #f3f4f6;
                 text-decoration: none;
+                position: relative;
+                overflow: hidden;
+                display: inline-block;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+
+            .fh5co-logo a:hover::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #8b5cf6;
+                animation: slideInFromLeft 0.3s forwards;
             }
 
             .user-circle {
@@ -94,11 +112,18 @@
                 line-height: 40px;
                 text-align: center;
                 border-radius: 50%;
-                background-color: #f0f0f0;
-                color: #333;
+                background-color: #6d28d9;
+                color: #fff;
                 font-size: 20px;
                 vertical-align: middle;
                 margin-right: 8px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .user-circle:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
             }
 
             .user-circle img {
@@ -124,20 +149,46 @@
 
             .fh5co-nav .menu-1 ul li a {
                 font-family: 'Work Sans', sans-serif;
-                font-size: 16px;
-                color: #333;
+                font-size: 15px;
+                color: #e5e7eb;
                 text-transform: uppercase;
                 text-decoration: none;
-                transition: color 0.3s ease;
+                transition: all 0.3s ease;
+                position: relative;
+                display: inline-block;
+                padding: 5px 0;
+                letter-spacing: 0.5px;
+                font-weight: 500;
             }
 
             .fh5co-nav .menu-1 ul li a:hover {
-                color: #934D1A;
+                color: #a855f7;
+                transform: translateY(-2px);
+            }
+
+            .fh5co-nav .menu-1 ul li a::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: #a855f7;
+                transition: width 0.3s ease;
+            }
+
+            .fh5co-nav .menu-1 ul li a:hover::after {
+                width: 100%;
             }
 
             .fh5co-nav .menu-1 ul li.active a {
-                color: #934D1A;
+                color: #a855f7;
                 font-weight: 600;
+            }
+
+            .fh5co-nav .menu-1 ul li.active a::after {
+                width: 100%;
+                background-color: #a855f7;
             }
 
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
@@ -145,63 +196,106 @@
                 position: absolute;
                 top: 100%;
                 right: 0;
-                background-color: #fff;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                background-color: rgba(15, 23, 42, 0.95);
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
                 list-style: none;
                 padding: 10px 0;
-                min-width: 150px;
+                min-width: 180px;
                 z-index: 1001;
                 opacity: 0;
                 visibility: hidden;
-                transition: opacity 0.3s ease, visibility 0.3s ease;
+                transition: all 0.3s ease;
+                transform: translateY(10px);
+                border-radius: 8px;
+                border-top: 2px solid #8b5cf6;
             }
 
             .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
                 display: block;
                 opacity: 1;
                 visibility: visible;
+                transform: translateY(0);
             }
 
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
                 padding: 10px 20px;
                 font-size: 14px;
                 text-transform: none;
-                color: #333;
+                color: #e5e7eb;
+                display: block;
+                font-weight: 400;
             }
 
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                color: #007bff;
+                color: #a855f7;
+                background-color: rgba(139, 92, 246, 0.1);
             }
 
             .menu-toggle {
                 display: none;
                 font-size: 24px;
                 cursor: pointer;
-                color: #333;
+                color: #a855f7;
                 padding: 10px;
             }
 
             /* Form styles */
             .event-wrap {
-                background: #FFFFFF;
+                background: linear-gradient(135deg, #ffffff, #f5f3ff);
                 padding: 40px;
-                border-radius: 12px;
-                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+                border-radius: 16px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
                 max-width: 1000px;
                 margin: 40px auto;
                 position: relative;
                 overflow: hidden;
                 animation: fadeIn 0.5s ease-in-out;
                 z-index: 2;
+                border-top: 4px solid #8b5cf6;
+            }
+
+            .event-wrap::before {
+                content: '';
+                position: absolute;
+                top: -50px;
+                right: -50px;
+                width: 150px;
+                height: 150px;
+                background: rgba(139, 92, 246, 0.08);
+                border-radius: 50%;
+            }
+
+            .event-wrap::after {
+                content: '';
+                position: absolute;
+                bottom: -50px;
+                left: -50px;
+                width: 150px;
+                height: 150px;
+                background: rgba(139, 92, 246, 0.08);
+                border-radius: 50%;
             }
 
             .event-wrap h3 {
-                color: #1E3A8A;
+                color: #6d28d9;
                 margin-bottom: 30px;
-                font-size: 24px;
-                font-weight: 600;
+                font-size: 26px;
+                font-weight: 700;
                 text-align: center;
-                text-transform: uppercase;
+                position: relative;
+                padding-bottom: 15px;
+                letter-spacing: 0.5px;
+            }
+
+            .event-wrap h3::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background: linear-gradient(90deg, #6d28d9, #8b5cf6);
             }
 
             .form-container {
@@ -224,122 +318,165 @@
             }
 
             .form-group label {
-                color: #1E3A8A;
-                font-weight: 500;
+                color: #6d28d9;
+                font-weight: 600;
                 font-size: 14px;
                 margin-bottom: 8px;
                 display: block;
+                transition: transform 0.3s ease, color 0.3s ease;
+                letter-spacing: 0.5px;
+            }
+
+            .form-group:focus-within label {
+                color: #8b5cf6;
+                transform: translateY(-2px);
             }
 
             .form-group textarea.form-control {
-                min-height: 120px;
+                min-height: 130px;
                 resize: vertical;
             }
 
             .form-control {
-                background: #F9FAFB;
-                border: 1px solid #D1D5DB;
-                color: #1E3A8A;
-                border-radius: 6px;
-                padding: 12px;
-                font-size: 16px;
-                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+                background: #f9fafb;
+                border: 1px solid #ddd6fe;
+                color: #4b5563;
+                border-radius: 10px;
+                padding: 14px 16px;
+                font-size: 15px;
+                transition: all 0.3s ease;
                 width: 100%;
                 pointer-events: auto;
                 user-select: text;
-                height: 44px;
+                height: 50px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             }
 
             .form-control::placeholder {
-                color: #9CA3AF;
+                color: #9ca3af;
+                opacity: 0.6;
             }
 
             .form-control:focus {
-                border-color: #3B82F6;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                border-color: #8b5cf6;
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
                 outline: none;
+                background: #fff;
+                transform: translateY(-2px);
             }
 
             .form-control.is-invalid {
-                border-color: #DC2626;
-                background: #FEF2F2;
+                border-color: #ef4444;
+                background: #fef2f2;
+                box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
             }
 
-            .btn {
-                padding: 12px;
-                border-radius: 6px;
-                font-size: 16px;
-                font-weight: 500;
+            .form-control.is-valid {
+                border-color: #10b981;
+                background-color: #f0fdf4;
+                box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            }
+
+            .form-error {
+                color: #ef4444;
+                font-size: 13px;
+                margin-top: 5px;
                 transition: all 0.3s ease;
-                width: 100%;
-                margin-top: 10px;
-            }
-
-            .btn-primary {
-                background: linear-gradient(90deg, #1E3A8A, #3B82F6);
-                border: none;
-                color: #FFFFFF;
-            }
-
-            .btn-primary:hover {
-                background: linear-gradient(90deg, #1E40AF, #2563EB);
-                transform: translateY(-2px);
-            }
-
-            .btn-secondary {
-                background: transparent;
-                border: 1px solid #6B7280;
-                color: #6B7280;
-            }
-
-            .btn-secondary:hover {
-                background: #6B7280;
-                color: #FFFFFF;
-                transform: translateY(-2px);
-            }
-
-            .btn-info {
-                background: linear-gradient(90deg, #047857, #10B981);
-                border: none;
-                color: #FFFFFF;
-            }
-
-            .btn-info:hover {
-                background: linear-gradient(90deg, #065F46, #059669);
-                transform: translateY(-2px);
-            }
-
-            .btn:disabled {
-                cursor: not-allowed;
-                opacity: 0.65;
-            }
-
-            .form-error, .text-danger {
-                color: #DC2626;
-                font-size: 14px;
-                margin-top: 6px;
-                display: block;
+                font-weight: 500;
             }
 
             .selected-pack {
-                margin-top: 10px;
-                padding: 12px;
-                background: #EFF6FF;
-                border-radius: 6px;
-                color: #1E3A8A;
-                font-size: 14px;
+                margin-top: 15px;
+                padding: 15px;
+                background: rgba(124, 58, 237, 0.08);
+                border-radius: 10px;
+                color: #6d28d9;
+                font-size: 15px;
                 display: none;
-                border-left: 4px solid #3B82F6;
+                border-left: 4px solid #7c3aed;
+                transition: all 0.3s ease;
+                animation: fadeIn 0.5s ease-out;
+                font-weight: 500;
             }
 
             .selected-pack.visible {
                 display: block;
             }
 
+            .btn {
+                padding: 14px 24px;
+                border-radius: 10px;
+                font-size: 16px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                width: 100%;
+                margin-top: 10px;
+                position: relative;
+                overflow: hidden;
+                letter-spacing: 0.5px;
+            }
+
+            .btn::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 5px;
+                height: 5px;
+                background: rgba(255, 255, 255, 0.3);
+                opacity: 0;
+                border-radius: 100%;
+                transform: scale(1, 1) translate(-50%);
+                transform-origin: 50% 50%;
+            }
+
+            .btn:focus:not(:active)::after {
+                animation: ripple 1s ease-out;
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+                border: none;
+                color: #ffffff;
+                box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+            }
+
+            .btn-primary:hover {
+                background: linear-gradient(135deg, #5b21b6, #7e22ce);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+            }
+
+            .btn-secondary {
+                background: #f9fafb;
+                border: 1px solid #8b5cf6;
+                color: #6d28d9;
+            }
+
+            .btn-secondary:hover {
+                background: rgba(139, 92, 246, 0.05);
+                color: #6d28d9;
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(139, 92, 246, 0.15);
+            }
+
+            .btn-info {
+                background: linear-gradient(135deg, #6d28d9, #4f46e5);
+                border: none;
+                color: #ffffff;
+                box-shadow: 0 5px 15px rgba(79, 70, 229, 0.25);
+            }
+
+            .btn-info:hover {
+                background: linear-gradient(135deg, #5b21b6, #4338ca);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+            }
+
             .loading-spinner {
                 display: none;
-                border: 4px solid #E5E7EB;
-                border-top: 4px solid #3B82F6;
+                border: 4px solid #e5e7eb;
+                border-top: 4px solid #8b5cf6;
                 border-radius: 50%;
                 width: 24px;
                 height: 24px;
@@ -352,20 +489,22 @@
                 display: none;
                 text-align: center;
                 padding: 40px;
-                background: #EFF6FF;
-                border-radius: 6px;
-                color: #1E3A8A;
+                background: rgba(139, 92, 246, 0.08);
+                border-radius: 10px;
+                color: #6d28d9;
             }
 
             #step-2 h4 {
                 margin-bottom: 20px;
-                font-size: 20px;
+                font-size: 22px;
                 font-weight: 600;
+                color: #6d28d9;
             }
 
             #step-2 p {
                 font-size: 16px;
-                color: #6B7280;
+                color: #6b7280;
+                margin-bottom: 30px;
             }
 
             /* Event section */
@@ -377,46 +516,104 @@
             .fh5co-heading {
                 margin-bottom: 40px;
                 text-align: center;
+                animation: fadeIn 0.7s ease-out;
             }
 
             .fh5co-heading span {
-                color: #3B82F6;
+                color: #ddd6fe;
                 font-family: 'Sacramento', cursive;
-                font-size: 24px;
+                font-size: 28px;
                 display: block;
                 margin-bottom: 10px;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             }
 
             .fh5co-heading h2 {
                 color: #FFFFFF;
-                font-size: 36px;
-                font-weight: 600;
+                font-size: 38px;
+                font-weight: 700;
                 margin: 0;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
 
             /* Footer */
             #fh5co-footer {
-                background: #1E3A8A;
-                padding: 20px 0;
+                background: #0f172a;
+                padding: 25px 0;
                 margin-top: auto;
                 position: relative;
                 z-index: 2;
+                border-top: 1px solid rgba(139, 92, 246, 0.3);
             }
 
             #fh5co-footer p {
-                color: #FFFFFF;
+                color: #e5e7eb;
                 font-size: 14px;
                 text-align: center;
                 margin: 0;
             }
 
             #fh5co-footer a {
-                color: #3B82F6;
+                color: #c4b5fd;
                 text-decoration: none;
+                transition: color 0.3s ease;
             }
 
             #fh5co-footer a:hover {
                 text-decoration: underline;
+                color: #a5b4fc;
+            }
+
+            /* Select2 custom styles */
+            .select2-container--default .select2-selection--single {
+                background: #f9fafb;
+                border: 1px solid #ddd6fe;
+                border-radius: 10px;
+                height: 50px;
+                padding: 10px 15px;
+                transition: all 0.3s ease;
+            }
+
+            .select2-container--default .select2-selection--single:focus {
+                border-color: #8b5cf6;
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                color: #4b5563;
+                line-height: 30px;
+                padding-left: 0;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                height: 48px;
+                right: 10px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow b {
+                border-color: #8b5cf6 transparent transparent transparent;
+            }
+
+            .select2-dropdown {
+                border: 1px solid #ddd6fe;
+                border-radius: 10px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }
+
+            .select2-container--default .select2-search--dropdown .select2-search__field {
+                border: 1px solid #ddd6fe;
+                border-radius: 6px;
+                padding: 8px 12px;
+            }
+
+            .select2-container--default .select2-results__option--highlighted[aria-selected] {
+                background-color: #8b5cf6;
+            }
+
+            .select2-container--default .select2-results__option {
+                padding: 10px 15px;
+                transition: all 0.2s ease;
             }
 
             /* Animations */
@@ -430,35 +627,46 @@
                 to { opacity: 1; transform: translateY(0); }
             }
 
-            /* Select2 custom styles */
-            .select2-container--default .select2-selection--single {
-                background: #F9FAFB;
-                border: 1px solid #D1D5DB;
-                border-radius: 6px;
-                height: 44px;
-                padding: 10px;
+            @keyframes slideInFromLeft {
+                from { width: 0; }
+                to { width: 100%; }
             }
 
-            .select2-container--default .select2-selection--single .select2-selection__rendered {
-                color: #1E3A8A;
-                line-height: 24px;
+            @keyframes ripple {
+                0% {
+                    transform: scale(0, 0);
+                    opacity: 1;
+                }
+                20% {
+                    transform: scale(25, 25);
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(40, 40);
+                }
             }
 
-            .select2-container--default .select2-selection--single .select2-selection__arrow {
-                height: 42px;
+            /* Enhanced animations */
+            @keyframes shake {
+                0%, 100% {transform: translateX(0);}
+                20%, 60% {transform: translateX(-5px);}
+                40%, 80% {transform: translateX(5px);}
             }
-
-            .select2-container--default.select2-container--focus .select2-selection--single {
-                border-color: #3B82F6;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            
+            @keyframes pulse {
+                0% {box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);}
+                70% {box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);}
+                100% {box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);}
+            }
+            
+            .btn:focus {
+                animation: pulse 1.5s infinite;
             }
 
             /* Responsive */
             @media (max-width: 768px) {
-                .menu-toggle {
-                    display: block;
-                }
-
+                .menu-toggle { display: block; }
                 .fh5co-nav .menu-1 ul {
                     display: none;
                     flex-direction: column;
@@ -466,8 +674,8 @@
                     top: 60px;
                     left: 0;
                     width: 100%;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    background-color: rgba(15, 23, 42, 0.95);
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
                     padding: 20px 0;
                 }
 
@@ -489,7 +697,7 @@
                     position: static;
                     display: none;
                     box-shadow: none;
-                    background-color: #f8f9fa;
+                    background-color: rgba(15, 23, 42, 0.7);
                     padding: 10px 0;
                     opacity: 1;
                     visibility: visible;
@@ -523,11 +731,11 @@
 
                 .btn {
                     font-size: 14px;
-                    padding: 10px;
+                    padding: 12px;
                 }
 
                 .event-wrap h3 {
-                    font-size: 20px;
+                    font-size: 22px;
                 }
             }
 
@@ -546,7 +754,11 @@
 
                 .form-control {
                     font-size: 14px;
-                    padding: 10px;
+                    padding: 12px 14px;
+                }
+
+                .select2-container--default .select2-selection--single {
+                    height: 45px;
                 }
             }
         </style>
@@ -685,9 +897,15 @@
                                             </div>
                                         </div>
                                         <div class="form-group d-flex gap-3 flex-wrap justify-content-center">
-                                            <button type="submit" class="btn btn-primary" id="next-step">Create Reservation</button>
-                                            <a href="{{ path('app_home') }}" class="btn btn-secondary">Back</a>
-                                            <a href="{{ path('google_auth') }}" class="btn btn-info">Add to Google Calendar</a>
+                                            <button type="submit" class="btn btn-primary" id="next-step">
+                                                <i class="fas fa-calendar-check"></i> Create Reservation
+                                            </button>
+                                            <a href="{{ path('app_home') }}" class="btn btn-secondary">
+                                                <i class="fas fa-arrow-left"></i> Back
+                                            </a>
+                                            <a href="{{ path('google_auth') }}" class="btn btn-info">
+                                                <i class="fab fa-google"></i> Add to Google Calendar
+                                            </a>
                                             <div class="loading-spinner" style="display: none;"></div>
                                         </div>
                                     {{ form_end(form) }}
@@ -750,11 +968,13 @@
                 if ($('#{{ form.description.vars.id ?? 'reservation_description' }}').length) {
                     $('#{{ form.description.vars.id ?? 'reservation_description' }}').removeAttr('autofocus');
                 }
+                
+                // Automatic selection on focus
                 $('.form-control').on('focus', function() {
                     $(this).select();
                 });
 
-                // Initialize Select2 if pack field exists
+                // Enhanced Select2 for pack selection
                 if ($('#{{ form.pack.vars.id ?? 'reservation_pack' }}').length) {
                     const $packSelect = $('#{{ form.pack.vars.id ?? 'reservation_pack' }}');
                     $packSelect.select2({
@@ -779,7 +999,8 @@
                                     title: 'Error',
                                     text: 'Unable to load packs: ' + (xhr.responseJSON?.error || error),
                                     icon: 'error',
-                                    confirmButtonText: 'OK'
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#6d28d9'
                                 });
                                 return { results: [{ id: '', text: 'Loading error', disabled: true }] };
                             }
@@ -787,8 +1008,22 @@
                         minimumInputLength: 0,
                         placeholder: 'Search or select a pack...',
                         allowClear: true,
-                        width: '100%'
+                        width: '100%',
+                        templateResult: formatPack,
+                        templateSelection: formatPackSelection
                     });
+
+                    // Format pack options with purple highlight
+                    function formatPack(pack) {
+                        if (!pack.id) return pack.text;
+                        return $('<div class="select2-result-pack"><strong style="color: #6d28d9;">' + pack.text + '</strong></div>');
+                    }
+                    
+                    // Format selected pack with icon
+                    function formatPackSelection(pack) {
+                        if (!pack.id) return pack.text;
+                        return $('<span><i class="fas fa-gift" style="color: #6d28d9;"></i> ' + pack.text + '</span>');
+                    }
 
                     // Preload pack list
                     $packSelect.on('select2:open', function() {
@@ -799,42 +1034,69 @@
                         }
                     });
 
-                    // Display selected pack
+                    // Display selected pack with enhanced animation
                     $packSelect.on('select2:select', function(e) {
-                        $('#selected-pack').text(`Selected pack: ${e.params.data.text}`).addClass('visible');
+                        const $selectedPack = $('#selected-pack');
+                        $selectedPack.html('<i class="fas fa-check-circle" style="color: #6d28d9;"></i> Selected pack: <strong>' + e.params.data.text + '</strong>')
+                            .addClass('visible')
+                            .hide()
+                            .fadeIn(400);
                     }).on('select2:unselect', function() {
-                        $('#selected-pack').text('').removeClass('visible');
+                        $('#selected-pack').fadeOut(300, function() {
+                            $(this).removeClass('visible').empty();
+                        });
                     });
                 }
 
-                // Flatpickr if date field exists
+                // Enhanced Flatpickr with animation
                 if ($('.flatpickr').length) {
                     flatpickr(".flatpickr", {
                         dateFormat: "Y-m-d",
                         minDate: "today",
                         locale: "fr",
                         allowInput: true,
+                        animate: true,
+                        disableMobile: true,
                         onChange: function(selectedDates, dateStr, instance) {
                             const $input = $(instance.element);
                             $input.toggleClass('is-invalid', selectedDates.length === 0)
                                   .next('.form-error').text(selectedDates.length === 0 ? 'The date is required.' : '');
+                            
+                            if (selectedDates.length > 0) {
+                                $input.addClass('is-valid').removeClass('is-invalid');
+                            }
                         }
                     });
                 }
 
-                // Numtel validation if numtel field exists
+                // Improved phone number validation with visual feedback
                 if ($('#{{ form.numtel.vars.id ?? 'reservation_numtel' }}').length) {
-                    $('#{{ form.numtel.vars.id ?? 'reservation_numtel' }}').on('input', function() {
+                    const $numtel = $('#{{ form.numtel.vars.id ?? 'reservation_numtel' }}');
+                    $numtel.on('input', function() {
                         this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
+                        
+                        // Visual feedback for phone number format
+                        if (this.value.length === 8) {
+                            $(this).addClass('is-valid').removeClass('is-invalid');
+                        } else if (this.value.length > 0) {
+                            $(this).addClass('is-invalid').removeClass('is-valid');
+                            $(this).next('.form-error').text('Phone number must contain exactly 8 digits.');
+                        } else {
+                            $(this).removeClass('is-valid');
+                        }
                     });
                 }
 
-                // Form submission validation
+                // Enhanced form validation
                 $('#pack-reservation-form').on('submit', function(e) {
                     let isValid = true;
                     $('.form-control').removeClass('is-invalid');
                     $('.form-error').text('');
 
+                    // Show submit button loading state
+                    const $submitBtn = $('#next-step');
+                    const originalText = $submitBtn.html();
+                    
                     const validateField = ($input, value, maxLength, errorMsg, regex = null) => {
                         if (!value) {
                             $input.addClass('is-invalid').next('.form-error').text(errorMsg.required);
@@ -848,6 +1110,7 @@
                             $input.addClass('is-invalid').next('.form-error').text(errorMsg.invalid);
                             return false;
                         }
+                        $input.addClass('is-valid');
                         return true;
                     };
 
@@ -917,6 +1180,8 @@
                             if (selectedDate < today) {
                                 $dateInput.addClass('is-invalid').next('.form-error').text('The date must be today or in the future.');
                                 isValid = false;
+                            } else {
+                                $dateInput.addClass('is-valid');
                             }
                         }
                     }
@@ -927,12 +1192,40 @@
                         if (!$packSelect.val()) {
                             $packSelect.addClass('is-invalid').next('.form-error').text('You must select a pack.');
                             isValid = false;
+                        } else {
+                            $packSelect.addClass('is-valid');
                         }
                     }
 
                     if (!isValid) {
                         e.preventDefault();
+                        // Shake animation on submit button for invalid form
+                        $submitBtn.css('animation', 'shake 0.5s');
+                        setTimeout(() => $submitBtn.css('animation', ''), 500);
+                        
+                        // Scroll to first error
+                        const $firstError = $('.is-invalid').first();
+                        if ($firstError.length) {
+                            $('html, body').animate({
+                                scrollTop: $firstError.offset().top - 120
+                            }, 500);
+                        }
+                        
                         return false;
+                    } else {
+                        // Show loading state
+                        $submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Processing...');
+                        $('.loading-spinner').show();
+                        
+                        // Return to normal state after 2 seconds if the form doesn't submit
+                        setTimeout(() => {
+                            if (!$submitBtn.closest('form').hasClass('submitted')) {
+                                $submitBtn.html(originalText);
+                                $('.loading-spinner').hide();
+                            }
+                        }, 2000);
+                        
+                        $(this).addClass('submitted');
                     }
                 });
 
@@ -950,17 +1243,29 @@
                     }
                 });
 
-                // Handle flash messages
+                // Enhanced SweetAlert for flash messages
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
                         Swal.fire({
                             title: '{{ label == 'success' ? 'Success' : 'Error' }}',
                             text: '{{ message|raw }}',
                             icon: '{{ label == 'success' ? 'success' : 'error' }}',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#6d28d9',
+                            showClass: {
+                                popup: 'animate__animated animate__fadeInDown'
+                            },
+                            hideClass: {
+                                popup: 'animate__animated animate__fadeOutUp'
+                            }
                         });
                     {% endfor %}
                 {% endfor %}
+                
+                // Add shake animation style
+                $('<style>')
+                    .text('@keyframes shake {0%, 100% {transform: translateX(0);} 20%, 60% {transform: translateX(-5px);} 40%, 80% {transform: translateX(5px);}}')
+                    .appendTo('head');
             });
         </script>
     {% endblock %}

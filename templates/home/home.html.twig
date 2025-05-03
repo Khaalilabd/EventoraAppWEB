@@ -18,7 +18,8 @@
             <!-- Bootstrap -->
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
             <!-- Navbar -->
-            <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/modern-navbar.css') }}">        
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
             <!-- Slider -->
             <link rel="stylesheet" href="{{ asset('css/slider.css') }}">
             <!-- Magnific Popup -->
@@ -143,140 +144,7 @@
                     padding-top: 70px; /* Ajusté pour une navbar plus compacte */
                 }
 
-                .fh5co-nav {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    z-index: 1000;
-                    background: rgba(255, 255, 255, 0.9);
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
-                }
-
-                .fh5co-nav .container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px 15px;
-                    max-width: 1200px;
-                    margin: 0 auto;
-                }
-
-                .fh5co-logo a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-weight: 700;
-                    font-size: 24px;
-                    color: #934D1A;
-                    text-decoration: none;
-                }
-
-                .user-circle {
-                    display: inline-block;
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
-                    text-align: center;
-                    border-radius: 50%;
-                    background-color: #f0f0f0;
-                    color: #333;
-                    font-size: 20px;
-                    vertical-align: middle;
-                    margin-right: 8px;
-                }
-
-                .user-circle img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 50%;
-                }
-
-                .fh5co-nav .menu-1 {
-                    display: block;
-                }
-
-                .fh5co-nav .menu-1 ul {
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    margin: 0;
-                    padding: 0;
-                    list-style: none;
-                }
-
-                .fh5co-nav .menu-1 ul li {
-                    margin: 0 15px;
-                    position: relative;
-                }
-
-                .fh5co-nav .menu-1 ul li a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-size: 16px;
-                    color: #333;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    transition: color 0.3s ease;
-                }
-
-                .fh5co-nav .menu-1 ul li a:hover {
-                    color: #934D1A;
-                }
-
-                .fh5co-nav .menu-1 ul li.active a {
-                    color: #934D1A !important;
-                    font-weight: 600;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown {
-                    position: relative;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    right: 0;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    list-style: none;
-                    padding: 10px 0;
-                    min-width: 150px;
-                    z-index: 1001;
-                    transition: opacity 0.3s ease, visibility 0.3s ease;
-                    opacity: 0;
-                    visibility: hidden;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block;
-                    opacity: 1;
-                    visibility: visible;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                    margin: 0;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                    padding: 10px 20px;
-                    display: block;
-                    font-size: 14px;
-                    text-transform: none;
-                    color: #333;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                    color: #007bff;
-                }
-
-                .menu-toggle {
-                    display: none;
-                    font-size: 24px;
-                    cursor: pointer;
-                    color: #333;
-                    padding: 10px;
-                }
+                /* Les styles de la navbar ont été supprimés car ils sont déjà dans modern-navbar.css */
 
                 /* Style des boutons */
                 .btn-default {
@@ -527,15 +395,30 @@
                     text-align: center;
                 }
 
-                /* Styles pour la section Friends Wishes */
+                /* Friends Wishes - Modern Redesign */
                 .friends-wishes-container {
-                    background: linear-gradient(135deg, #FAF0E6 0%, #D2B48C 100%) !important;
+                    background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%) !important;
                     position: relative;
-                    padding: 60px 0;
+                    padding: 60px 0 30px;
+                    overflow: hidden;
+                }
+
+                .friends-wishes-container::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: url('https://i.pinimg.com/originals/8c/98/99/8c98994518b575bfd8c949e91d20548b.jpg');
+                    background-size: cover;
+                    background-position: center;
+                    opacity: 0.15;
+                    z-index: 0;
                 }
 
                 .friends-wishes-container .overlay {
-                    background: rgba(255, 255, 255, 0.7);
+                    background: rgba(0, 0, 0, 0.3);
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -546,91 +429,72 @@
 
                 .friends-wishes-container .container {
                     position: relative;
-                    z-index: 2;
+                    z-index: 3;
                     max-width: 1200px;
                     width: 90%;
                     margin: 0 auto;
-                    padding: 0 15px;
                 }
 
                 .friends-wishes-container .fh5co-heading {
-                    margin-bottom: 40px;
+                    margin-bottom: 50px;
                     text-align: center;
                 }
 
                 .friends-wishes-container .fh5co-heading span {
-                    color: #A0522D;
-                    font-size: 18px;
+                    color: #e5e5e5;
+                    font-size: 24px;
                     display: block;
-                    margin-bottom: 10px;
+                    margin-bottom: 15px;
                     font-family: 'Sacramento', cursive;
+                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    animation: fadeIn 1s ease-out;
                 }
 
                 .friends-wishes-container .fh5co-heading h2 {
-                    color: #5C4033;
-                    font-size: 36px;
+                    color: #ffffff;
+                    font-size: 42px;
                     margin: 0;
-                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
+                    position: relative;
+                    padding-bottom: 15px;
                     font-weight: 600;
                 }
 
-                .friends-wishes-container .wrap-testimony {
-                    position: relative;
+                .friends-wishes-container .owl-carousel-fullwidth {
+                    margin: 0 auto 30px;
+                    max-width: 800px;
+                    overflow: hidden;
                 }
 
                 .friends-wishes-container .testimony-slide {
-                    background: #fff;
-                    border-radius: 15px;
-                    padding: 30px;
-                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-                    margin: 15px;
-                    transition: transform 0.3s ease;
-                    opacity: 0;
-                    animation: fadeIn 0.5s forwards;
-                }
-
-                .friends-wishes-container .testimony-slide:hover {
-                    transform: translateY(-5px);
-                }
-
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+                    background: rgba(255, 255, 255, 0.95);
+                    border-radius: 8px;
+                    padding: 25px;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+                    margin: 0 auto;
+                    max-width: 90%;
+                    box-sizing: border-box;
                 }
 
                 .friends-wishes-container .testimony-slide .user-profile {
                     display: flex;
                     justify-content: center;
-                    margin-bottom: 20px;
+                    margin-bottom: 15px;
                 }
 
                 .friends-wishes-container .testimony-slide .user-profile img {
-                    width: 60px;
-                    height: 60px;
+                    width: 70px;
+                    height: 70px;
                     border-radius: 50%;
                     object-fit: cover;
-                    border: 2px solid #DAA520;
+                    border: 3px solid #DAA520;
                 }
 
                 .friends-wishes-container .testimony-slide .star-rating {
                     margin: 10px 0;
-                    font-size: 20px;
+                    font-size: 18px;
                     color: #DAA520;
                     text-align: center;
-                }
-
-                .friends-wishes-container .testimony-slide .star-rating .fas {
-                    margin-right: 5px;
-                }
-
-                .friends-wishes-container .testimony-slide .star-rating .fas.filled {
-                    color: #DAA520;
                 }
 
                 .friends-wishes-container .testimony-slide blockquote {
@@ -640,27 +504,29 @@
                     border-left: 4px solid #DAA520;
                     padding-left: 15px;
                     margin: 15px 0;
-                    font-family: 'Work Sans', sans-serif;
+                    max-width: 100%;
                 }
 
-                .friends-wishes-container .testimony-slide blockquote p {
-                    margin: 0;
-                }
-
+                /* Fix owl carousel navigation dots */
                 .owl-carousel .owl-dots {
                     text-align: center;
-                    margin-top: 20px;
+                    margin: 10px 0 0;
+                    position: relative;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
                 }
 
                 .owl-carousel .owl-dot {
                     display: inline-block;
-                    margin: 0 5px;
+                    margin: 0 4px;
                 }
 
                 .owl-carousel .owl-dot span {
                     width: 10px;
                     height: 10px;
-                    background: #A0522D;
+                    background: rgba(255, 255, 255, 0.5);
                     border-radius: 50%;
                     display: block;
                     transition: background 0.3s ease;
@@ -668,127 +534,68 @@
 
                 .owl-carousel .owl-dot.active span {
                     background: #DAA520;
+                    transform: scale(1.2);
                 }
 
-                /* Loader styles */
-                .fh5co-loader {
-                    position: fixed;
-                    left: 0;
-                    top: 0;
-                    width: 100%;
-                    height: 100%;
-                    z-index: 9999;
-                    background: url('/images/loader.gif') center no-repeat #fff;
+                /* Fix the counters section */
+                .friends-wishes-container .row:last-child {
+                    margin-top: 20px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 8px;
+                    padding: 20px 0;
                 }
 
-                /* Responsive adjustments */
-                @media (max-width: 900px) {
-                    body {
-                        font-size: 75%;
-                    }
+                .friends-wishes-container .feature-center {
+                    text-align: center;
+                    padding: 10px;
                 }
 
+                .friends-wishes-container .counter {
+                    font-size: 36px;
+                    font-weight: bold;
+                    color: #ffffff;
+                    display: block;
+                    margin-bottom: 5px;
+                }
+
+                .friends-wishes-container .counter-label {
+                    color: #f0f0f0;
+                    font-size: 16px;
+                }
+
+                .friends-wishes-container .icon {
+                    color: #DAA520;
+                    font-size: 36px;
+                    margin-bottom: 10px;
+                    display: inline-block;
+                }
+
+                /* Responsive adjustments for feedback section */
                 @media (max-width: 768px) {
-                    .menu-toggle {
-                        display: block;
-                    }
-
-                    .fh5co-nav .menu-1 ul {
-                        display: none;
-                        flex-direction: column;
-                        position: absolute;
-                        top: 60px;
-                        left: 0;
-                        width: 100%;
-                        background-color: #fff;
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                        padding: 20px 0;
-                    }
-
-                    .fh5co-nav .menu-1 ul.active {
-                        display: flex;
-                    }
-
-                    .fh5co-nav .menu-1 ul li {
-                        margin: 10px 0;
-                        text-align: center;
-                    }
-
-                    .user-circle {
-                        margin-right: 0;
-                        margin-bottom: 5px;
-                    }
-
-                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                        position: static;
-                        display: none;
-                        box-shadow: none;
-                        background-color: #f8f9fa;
-                        padding: 10px 0;
-                        opacity: 1;
-                        visibility: visible;
-                    }
-
-                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none;
-                    }
-
-                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block;
-                    }
-
-                    .event-wrap {
-                        max-width: 90%;
-                        padding: 20px;
-                    }
-
-                    .fh5co-heading h2 {
-                        font-size: 28px;
-                    }
-
-                    #fh5co-event {
-                        padding-top: 30px;
-                    }
-
-                    .one-third {
-                        width: 50%;
-                    }
-
-                    #fh5co-couple {
+                    .friends-wishes-container {
                         padding: 30px 0;
                     }
 
-                    .friends-wishes-container .fh5co-heading h2 {
-                        font-size: 28px;
-                    }
-
                     .friends-wishes-container .testimony-slide {
-                        padding: 20px;
+                        padding: 15px;
+                        margin: 0 auto;
                     }
 
                     .friends-wishes-container .testimony-slide .user-profile img {
                         width: 50px;
                         height: 50px;
                     }
+
+                    .friends-wishes-container .counter {
+                        font-size: 28px;
+                    }
+
+                    .friends-wishes-container .counter-label {
+                        font-size: 14px;
+                    }
                 }
 
                 @media (max-width: 480px) {
-                    .one-third {
-                        width: 100%;
-                    }
-
-                    #fh5co-couple .fh5co-heading h2 {
-                        font-size: 24px;
-                    }
-
-                    #fh5co-couple .fh5co-heading h3 {
-                        font-size: 20px;
-                    }
-
-                    #fh5co-couple .fh5co-heading p {
-                        font-size: 14px;
-                    }
-
                     .friends-wishes-container .fh5co-heading h2 {
                         font-size: 24px;
                     }
@@ -796,6 +603,14 @@
                     .friends-wishes-container .testimony-slide .user-profile img {
                         width: 40px;
                         height: 40px;
+                    }
+
+                    .friends-wishes-container .testimony-slide {
+                        padding: 10px;
+                    }
+
+                    .friends-wishes-container .counter {
+                        font-size: 24px;
                     }
                 }
             </style>
@@ -814,67 +629,68 @@
         <div id="page">
             {% block body %}
                 <nav class="fh5co-nav" role="navigation">
-                    <div class="container">
-                        <div class="fh5co-logo">
-                            <a href="{{ path('app_home') }}">Eventora</a>
-                        </div>
-                        <div class="menu-toggle">
-                            <i class="icon-menu"></i>
-                        </div>
-                        <div class="menu-1">
-                            <ul>
-                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">Reservation</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
-                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="{{ path('user_packs') }}">Packs</a>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{{ path('user_services') }}">Service</a></li>
-                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                    <ul class="dropdown">
-                                        {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
-                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
-                                            {% if is_granted('ROLE_ADMIN') %}
-                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                            {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
-                                        {% else %}
-                                            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Reservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
                             </ul>
-                        </div>
-                    </div>
-                </nav>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="{{ path('user_packs') }}">Packs</a>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Log out</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Sign up</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
 
                 <header id="fh5co-header" class="fh5co-cover" role="banner">
                     <div class="splitview skewed">

@@ -16,6 +16,8 @@
         <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
         <!-- Icomoon Icon Fonts -->
         <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+        <!-- Modern Navbar -->
+        <link rel="stylesheet" href="{{ asset('css/modern-navbar.css') }}">
         <!-- Bootstrap -->
         <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
         <!-- Magnific Popup -->
@@ -204,7 +206,7 @@
                 margin-top: auto;
             }
 
-            /* Navbar styles */
+            /* Layout styles */
             #page {
                 min-height: 100vh;
                 display: flex;
@@ -212,148 +214,7 @@
                 padding-top: 70px;
             }
 
-            .fh5co-nav {
-                position: fixed;
-                top: 0;
-                width: 100%;
-                z-index: 1000;
-                background: rgba(255, 255, 255, 0.9);
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-            }
-
-            .fh5co-nav .container {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 10px 15px;
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-
-            .fh5co-logo a {
-                font-family: 'Work Sans', sans-serif;
-                font-weight: 700;
-                font-size: 24px;
-                color: #934D1A;
-                text-decoration: none;
-            }
-
-            .user-circle {
-                display: inline-block;
-                width: 40px;
-                height: 40px;
-                line-height: 40px;
-                text-align: center;
-                border-radius: 50%;
-                background-color: #f0f0f0;
-                color: #333;
-                font-size: 20px;
-                vertical-align: middle;
-                margin-right: 8px;
-            }
-
-            .user-circle img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                border-radius: 50%;
-            }
-
-            .fh5co-nav .menu-1 {
-                display: block;
-            }
-
-            .fh5co-nav .menu-1 ul {
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-
-            .fh5co-nav .menu-1 ul li {
-                margin: 0 15px;
-                position: relative;
-            }
-
-            .fh5co-nav .menu-1 ul li a {
-                font-family: 'Work Sans', sans-serif;
-                font-size: 16px;
-                color: #333;
-                text-transform: uppercase;
-                text-decoration: none;
-                transition: color 0.3s ease;
-            }
-
-            .fh5co-nav .menu-1 ul li a:hover {
-                color: #934D1A;
-            }
-
-            .fh5co-nav .menu-1 ul li.active a {
-                color: #934D1A !important;
-                font-weight: 600;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown {
-                position: relative;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                display: none;
-                position: absolute;
-                top: 100%;
-                right: 0;
-                background-color: #fff;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                list-style: none;
-                padding: 10px 0;
-                min-width: 150px;
-                z-index: 1001;
-                opacity: 0;
-                visibility: hidden;
-                transition: opacity 0.3s ease, visibility 0.3s ease;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown.show {
-                display: block;
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                display: block;
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                margin: 0;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                padding: 10px 20px;
-                display: block;
-                font-size: 14px;
-                text-transform: none;
-                color: #333;
-            }
-
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                color: #f57c00;
-            }
-
-            .menu-toggle {
-                display: none;
-                font-size: 24px;
-                cursor: pointer;
-                color: #333;
-                padding: 10px;
-            }
-
-            /* Responsive adjustments for navbar and grid */
+            /* Responsive adjustments for content */
             @media (max-width: 1024px) {
                 .favorites-grid {
                     grid-template-columns: repeat(2, 1fr);
@@ -361,53 +222,6 @@
             }
 
             @media (max-width: 768px) {
-                .menu-toggle {
-                    display: block;
-                }
-
-                .fh5co-nav .menu-1 ul {
-                    display: none;
-                    flex-direction: column;
-                    position: absolute;
-                    top: 60px;
-                    left: 0;
-                    width: 100%;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    padding: 20px 0;
-                }
-
-                .fh5co-nav .menu-1 ul.active {
-                    display: flex;
-                }
-
-                .fh5co-nav .menu-1 ul li {
-                    margin: 10px 0;
-                    text-align: center;
-                }
-
-                .user-circle {
-                    margin-right: 0;
-                    margin-bottom: 5px;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                    position: static;
-                    display: none;
-                    box-shadow: none;
-                    background-color: #f8f9fa;
-                    opacity: 1;
-                    visibility: visible;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown.show {
-                    display: block;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: none;
-                }
-
                 .favorites-grid {
                     grid-template-columns: 1fr;
                 }
@@ -451,7 +265,7 @@
                                     <a href="#">Reservation</a>
                                     <ul class="dropdown">
                                         <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
-                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
+                                        <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
                                     </ul>
                                 </li>
                                 <li class="has-dropdown">
@@ -464,9 +278,9 @@
                                         <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                                <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
                                 <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                                <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
                                 <li class="has-dropdown">
                                     <a href="#">
                                         <span class="user-circle">
@@ -480,17 +294,17 @@
                                     </a>
                                     <ul class="dropdown">
                                         {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
+                                            <li><a href="{{ path('app_settings') }}">Settings</a></li>
                                             <li><a href="{{ path('app_home') }}">Notifications</a></li>
                                             <li><a href="{{ path('app_user_history') }}">History</a></li>
                                             {% if is_granted('ROLE_ADMIN') %}
                                                 <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                                             {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
+                                            <li><a href="{{ path('app_logout') }}">Log out</a></li>
                                         {% else %}
-                                            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
+                                            <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
                                             <li><a href="{{ path('app_auth') }}">Log in</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Sign up</a></li>
                                         {% endif %}
                                     </ul>
                                 </li>
@@ -552,67 +366,7 @@
         <!-- Add countTo script -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-countto/1.2.0/jquery.countTo.min.js"></script>
         <script src="{{ asset('js/main.js') }}"></script>
-
-        <!-- Navbar JavaScript -->
-        <script>
-            $(document).ready(function() {
-                // Debug logs
-                console.log('jQuery loaded:', typeof $ !== 'undefined');
-                console.log('Dropdown items found:', $('.has-dropdown').length);
-
-                // Navbar toggle for mobile
-                $('.menu-toggle').click(function() {
-                    console.log('Menu toggle clicked');
-                    $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                    // Close all dropdowns when toggling the menu
-                    $('.has-dropdown .dropdown').removeClass('show');
-                });
-
-                // Dropdown handling for both desktop and mobile
-                $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                    console.log('Dropdown link clicked');
-                    const $parent = $(this).parent();
-                    const $dropdown = $parent.find('.dropdown');
-                    const isMobile = $(window).width() <= 768;
-
-                    if (isMobile) {
-                        // Prevent default link behavior on mobile
-                        e.preventDefault();
-                        // Toggle dropdown visibility
-                        $dropdown.toggleClass('show');
-                        // Close other dropdowns
-                        $('.has-dropdown .dropdown').not($dropdown).removeClass('show');
-                    }
-                });
-
-                // Handle hover for desktop
-                $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
-                    function() {
-                        if ($(window).width() > 768) {
-                            console.log('Hover in on desktop');
-                            $(this).find('.dropdown').addClass('show');
-                        }
-                    },
-                    function() {
-                        if ($(window).width() > 768) {
-                            console.log('Hover out on desktop');
-                            $(this).find('.dropdown').removeClass('show');
-                        }
-                    }
-                );
-
-                // Close menu and dropdowns when clicking outside on mobile
-                $(document).click(function(event) {
-                    if ($(window).width() <= 768) {
-                        const $menu = $('.fh5co-nav .menu-1 ul');
-                        const $toggle = $('.menu-toggle');
-                        if (!$menu.is(event.target) && $menu.has(event.target).length === 0 && !$toggle.is(event.target) && $toggle.has(event.target).length === 0) {
-                            $menu.removeClass('active');
-                            $('.has-dropdown .dropdown').removeClass('show');
-                        }
-                    }
-                });
-            });
-        </script>
+        
+        <!-- La gestion de navbar est déjà dans main.js -->
     </body>
 </html>
