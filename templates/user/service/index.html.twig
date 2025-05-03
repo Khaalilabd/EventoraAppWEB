@@ -925,7 +925,7 @@
     <body>
         <div class="fh5co-loader"></div>
         {% block body %}
-          <nav class="fh5co-nav" role="navigation">
+           <nav class="fh5co-nav" role="navigation">
             <div class="container">
                 <div class="fh5co-logo">
                     <a href="{{ path('app_home') }}">Eventora</a>
@@ -935,7 +935,7 @@
                 </div>
                 <div class="menu-1">
                     <ul>
-                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
                         <li class="has-dropdown">
                             <a href="#">Reservation</a>
                             <ul class="dropdown">
@@ -943,9 +943,15 @@
                                 <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
                             </ul>
                         </li>
-                        <li class="has-dropdown">
-                            <a href="{{ path('user_packs') }}">Packs</a>
-                        </li>
+                                <li class="has-dropdown active">
+                                <a href="#">Packs</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
+                                    {% if not is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
                         <li class="has-dropdown">
                             <a href="#">Services</a>
                             <ul class="dropdown">
@@ -987,6 +993,7 @@
                 </div>
             </div>
         </nav>
+
         <div id="page">
             <header id="fh5co-header" class="fh5co-cover" role="banner">
                 <div id="app" class="container">
