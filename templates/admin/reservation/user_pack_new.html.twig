@@ -903,7 +903,7 @@
                                             <a href="{{ path('app_home') }}" class="btn btn-secondary">
                                                 <i class="fas fa-arrow-left"></i> Back
                                             </a>
-                                            <a href="{{ path('google_auth') }}" class="btn btn-info">
+                                            <a href="{{ path('google_auth', {'return_to': 'user_reservation_pack_new'}) }}" class="btn btn-info">
                                                 <i class="fab fa-google"></i> Add to Google Calendar
                                             </a>
                                             <div class="loading-spinner" style="display: none;"></div>

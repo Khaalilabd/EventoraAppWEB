@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -31,39 +32,40 @@ class ReservationPersonnaliseType extends AbstractType
             'numtel' => ''
         ];
 
-        $builder
-            ->add('nom', TextType::class, [
+        // Check if we're creating a new entity (no ID) or editing an existing one
+        $isNew = !$builder->getData() || !method_exists($builder->getData(), 'getIdReservationPersonalise') || 
+                 !$builder->getData()->getIdReservationPersonalise();
+        
+        // Only set default data for new entities
+        $fieldConfig = [
+            'nom' => [
                 'label' => 'last_name',
                 'required' => true,
-                'data' => $userData['nom'], // Pre-fill with user's last name
                 'constraints' => [
                     new NotBlank(['message' => 'Last name is required.']),
                 ],
                 'translation_domain' => 'messages',
-            ])
-            ->add('prenom', TextType::class, [
+            ],
+            'prenom' => [
                 'label' => 'first_name',
                 'required' => true,
-                'data' => $userData['prenom'], // Pre-fill with user's first name
                 'constraints' => [
                     new NotBlank(['message' => 'First name is required.']),
                 ],
                 'translation_domain' => 'messages',
-            ])
-            ->add('email', EmailType::class, [
+            ],
+            'email' => [
                 'label' => 'email',
                 'required' => true,
-                'data' => $userData['email'], // Pre-fill with user's email
                 'constraints' => [
                     new NotBlank(['message' => 'Email is required.']),
                     new Email(['message' => 'Email is not valid.']),
                 ],
                 'translation_domain' => 'messages',
-            ])
-            ->add('numtel', TelType::class, [
+            ],
+            'numtel' => [
                 'label' => 'phone_number',
                 'required' => true,
-                'data' => $userData['numtel'], // Pre-fill with user's phone number (without +216)
                 'constraints' => [
                     new NotBlank(['message' => 'Phone number is required.']),
                     new Regex([
@@ -72,7 +74,22 @@ class ReservationPersonnaliseType extends AbstractType
                     ]),
                 ],
                 'translation_domain' => 'messages',
-            ])
+            ],
+        ];
+        
+        // Only set default data for new entities
+        if ($isNew) {
+            $fieldConfig['nom']['data'] = $userData['nom'];
+            $fieldConfig['prenom']['data'] = $userData['prenom'];
+            $fieldConfig['email']['data'] = $userData['email'];
+            $fieldConfig['numtel']['data'] = $userData['numtel'];
+        }
+
+        $builder
+            ->add('nom', TextType::class, $fieldConfig['nom'])
+            ->add('prenom', TextType::class, $fieldConfig['prenom'])
+            ->add('email', EmailType::class, $fieldConfig['email'])
+            ->add('numtel', TelType::class, $fieldConfig['numtel'])
             ->add('description', TextareaType::class, [
                 'label' => 'event_description',
                 'required' => true,
@@ -87,6 +104,17 @@ class ReservationPersonnaliseType extends AbstractType
                 'widget' => 'single_text',
                 'html5' => false,
                 'attr' => ['class' => 'flatpickr'],
+                'translation_domain' => 'messages',
+            ])
+            ->add('status', ChoiceType::class, [
+                'label' => 'status',
+                'required' => true,
+                'choices' => [
+                    'En attente' => 'En attente',
+                    'Confirmée' => 'Confirmée',
+                    'Annulée' => 'Annulée',
+                    'Terminée' => 'Terminée'
+                ],
                 'translation_domain' => 'messages',
             ])
             ->add('services', EntityType::class, [
@@ -117,8 +145,10 @@ class ReservationPersonnaliseType extends AbstractType
             'data_class' => Reservationpersonnalise::class,
             'user_data' => null, // Option to pass user data
             'translation_domain' => 'messages',
+            'is_admin' => false, // Add is_admin option with default value false
         ]);
 
         $resolver->setAllowedTypes('user_data', ['array', 'null']);
+        $resolver->setAllowedTypes('is_admin', 'bool'); // Define allowed type for is_admin
     }
 }

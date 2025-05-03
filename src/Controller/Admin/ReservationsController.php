@@ -182,7 +182,27 @@ class ReservationsController extends AbstractController
         $reservation->setMembre($defaultMembre);
         $reservation->setStatus('En attente');
 
-        $form = $this->createForm(ReservationPackType::class, $reservation, ['is_admin' => true]);
+        // Get current admin user for pre-filling form data
+        $currentUser = $this->getUser();
+        $userData = [];
+        
+        if ($currentUser) {
+            // If we have user data, prepare it for the form
+            $userData = [
+                'nom' => method_exists($currentUser, 'getNom') ? $currentUser->getNom() : '',
+                'prenom' => method_exists($currentUser, 'getPrenom') ? $currentUser->getPrenom() : '',
+                'email' => method_exists($currentUser, 'getEmail') ? $currentUser->getEmail() : '',
+                'numtel' => method_exists($currentUser, 'getNumTel') ? $currentUser->getNumTel() : '',
+            ];
+            
+            // Log the user data being passed to the form
+            $this->logger->info('Creating new reservation with user data', $userData);
+        }
+
+        $form = $this->createForm(ReservationPackType::class, $reservation, [
+            'is_admin' => true,
+            'user_data' => $userData,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -215,7 +235,27 @@ class ReservationsController extends AbstractController
         $reservation->setMembre($defaultMembre);
         $reservation->setStatus('En attente');
 
-        $form = $this->createForm(ReservationPersonnaliseType::class, $reservation, ['is_admin' => true]);
+        // Get current admin user for pre-filling form data
+        $currentUser = $this->getUser();
+        $userData = [];
+        
+        if ($currentUser) {
+            // If we have user data, prepare it for the form
+            $userData = [
+                'nom' => method_exists($currentUser, 'getNom') ? $currentUser->getNom() : '',
+                'prenom' => method_exists($currentUser, 'getPrenom') ? $currentUser->getPrenom() : '',
+                'email' => method_exists($currentUser, 'getEmail') ? $currentUser->getEmail() : '',
+                'numtel' => method_exists($currentUser, 'getNumTel') ? $currentUser->getNumTel() : '',
+            ];
+            
+            // Log the user data being passed to the form
+            $this->logger->info('Creating new personalized reservation with user data', $userData);
+        }
+
+        $form = $this->createForm(ReservationPersonnaliseType::class, $reservation, [
+            'is_admin' => true,
+            'user_data' => $userData,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -248,6 +288,19 @@ class ReservationsController extends AbstractController
         if (!$reservation) {
             throw $this->createNotFoundException('Réservation Pack non trouvée.');
         }
+        
+        // Debug: Log reservation data to verify it's loaded correctly
+        $this->logger->info('Editing reservation', [
+            'id' => $reservation->getIDReservationPack(),
+            'nom' => $reservation->getNom(),
+            'prenom' => $reservation->getPrenom(),
+            'email' => $reservation->getEmail(),
+            'numtel' => $reservation->getNumtel(),
+            'description' => $reservation->getDescription(),
+            'status' => $reservation->getStatus(),
+            'date' => $reservation->getDate() ? $reservation->getDate()->format('Y-m-d') : null,
+            'pack_id' => $reservation->getPack() ? $reservation->getPack()->getId() : null,
+        ]);
     
         $form = $this->createForm(ReservationPackType::class, $reservation, ['is_admin' => true]);
         $form->handleRequest($request);
@@ -351,6 +404,19 @@ class ReservationsController extends AbstractController
         if (!$reservation) {
             throw $this->createNotFoundException('Réservation Personnalisée non trouvée.');
         }
+
+        // Debug: Log reservation data to verify it's loaded correctly
+        $this->logger->info('Editing personalized reservation', [
+            'id' => $reservation->getIdReservationPersonalise(),
+            'nom' => $reservation->getNom(),
+            'prenom' => $reservation->getPrenom(),
+            'email' => $reservation->getEmail(),
+            'numtel' => $reservation->getNumtel(),
+            'description' => $reservation->getDescription(),
+            'status' => $reservation->getStatus(),
+            'date' => $reservation->getDate() ? $reservation->getDate()->format('Y-m-d') : null,
+            'services' => $reservation->getServices() ? count($reservation->getServices()) : 0,
+        ]);
     
         $form = $this->createForm(ReservationPersonnaliseType::class, $reservation, ['is_admin' => true]);
         $form->handleRequest($request);

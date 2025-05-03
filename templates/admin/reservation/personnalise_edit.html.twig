@@ -218,57 +218,162 @@
                         </div>
                         <div class="card-body p-4">
                             {% for message in app.flashes('success') %}
-                                <div class="alert alert-success alert-gradient">{{ message }}</div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-check-circle me-2"></i> {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
                             {% endfor %}
                             {% for message in app.flashes('error') %}
-                                <div class="alert alert-danger alert-gradient">{{ message }}</div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
                             {% endfor %}
 
-                            {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
-                                <div class="col-md-6">
-                                    {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
-                                    <div class="text-danger">{{ form_errors(form.nom) }}</div>
+                            {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                            
+                            <div class="row g-4">
+                                <!-- Section 1: Informations Client -->
+                                <div class="col-12 mb-4">
+                                    <div class="card shadow-sm border-radius-lg">
+                                        <div class="card-header p-3 bg-gradient-info">
+                                            <h6 class="mb-0 text-white">
+                                                <i class="fas fa-user-edit me-2"></i> Informations du Client
+                                            </h6>
+                                        </div>
+                                        <div class="card-body p-4">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'form-label text-gradient text-primary fw-bold'}}) }}
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-gradient-primary text-white"><i class="fas fa-user"></i></span>
+                                                            {{ form_widget(form.nom, {'attr': {'class': 'form-control border ps-3'}}) }}
+                                                        </div>
+                                                        <div class="text-danger">{{ form_errors(form.nom) }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'form-label text-gradient text-primary fw-bold'}}) }}
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-gradient-primary text-white"><i class="fas fa-user"></i></span>
+                                                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control border ps-3'}}) }}
+                                                        </div>
+                                                        <div class="text-danger">{{ form_errors(form.prenom) }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label text-gradient text-primary fw-bold'}}) }}
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-gradient-primary text-white"><i class="fas fa-envelope"></i></span>
+                                                            {{ form_widget(form.email, {'attr': {'class': 'form-control border ps-3'}}) }}
+                                                        </div>
+                                                        <div class="text-danger">{{ form_errors(form.email) }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        {{ form_label(form.numtel, 'Numéro de téléphone', {'label_attr': {'class': 'form-label text-gradient text-primary fw-bold'}}) }}
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-gradient-primary text-white"><i class="fas fa-phone"></i></span>
+                                                            {{ form_widget(form.numtel, {'attr': {'class': 'form-control border ps-3'}}) }}
+                                                        </div>
+                                                        <div class="text-danger">{{ form_errors(form.numtel) }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
-                                    <div class="text-danger">{{ form_errors(form.prenom) }}</div>
+                                
+                                <!-- Section 2: Détails de la Réservation -->
+                                <div class="col-12 mb-4">
+                                    <div class="card shadow-sm border-radius-lg">
+                                        <div class="card-header p-3 bg-gradient-success">
+                                            <h6 class="mb-0 text-white">
+                                                <i class="fas fa-calendar-alt me-2"></i> Détails de l'Événement
+                                            </h6>
+                                        </div>
+                                        <div class="card-body p-4">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        {{ form_label(form.date, 'Date de l\'événement', {'label_attr': {'class': 'form-label text-gradient text-success fw-bold'}}) }}
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-gradient-success text-white"><i class="fas fa-calendar"></i></span>
+                                                            {{ form_widget(form.date, {'attr': {'class': 'form-control border ps-3 flatpickr'}}) }}
+                                                        </div>
+                                                        <div class="text-danger">{{ form_errors(form.date) }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        {{ form_label(form.status, 'Statut de la réservation', {'label_attr': {'class': 'form-label text-gradient text-success fw-bold'}}) }}
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-gradient-success text-white"><i class="fas fa-tasks"></i></span>
+                                                            {{ form_widget(form.status, {'attr': {'class': 'form-select custom-select border ps-3'}}) }}
+                                                        </div>
+                                                        <div class="text-danger">{{ form_errors(form.status) }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        {{ form_label(form.description, 'Description de l\'événement', {'label_attr': {'class': 'form-label text-gradient text-success fw-bold'}}) }}
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-gradient-success text-white"><i class="fas fa-align-left"></i></span>
+                                                            {{ form_widget(form.description, {'attr': {'class': 'form-control border ps-3', 'rows': '4'}}) }}
+                                                        </div>
+                                                        <div class="text-danger">{{ form_errors(form.description) }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-                                    <div class="text-danger">{{ form_errors(form.email) }}</div>
+                                
+                                <!-- Section 3: Services -->
+                                <div class="col-12 mb-4">
+                                    <div class="card shadow-sm border-radius-lg">
+                                        <div class="card-header p-3 bg-gradient-warning">
+                                            <h6 class="mb-0 text-white">
+                                                <i class="fas fa-concierge-bell me-2"></i> Services Sélectionnés
+                                            </h6>
+                                        </div>
+                                        <div class="card-body p-4">
+                                            <div class="services-container">
+                                                <div class="services-selection">
+                                                    {{ form_widget(form.services, {'attr': {'class': 'service-list-improved'}}) }}
+                                                    <div class="text-danger">{{ form_errors(form.services) }}</div>
+                                                </div>
+                                                <div class="services-visual mt-4">
+                                                    <div class="selected-services-header">
+                                                        <h6 class="text-gradient text-warning fw-bold mb-3">
+                                                            <i class="fas fa-list-check me-2"></i> Aperçu des services sélectionnés
+                                                        </h6>
+                                                    </div>
+                                                    <div class="selected-services-preview" id="servicesPreview">
+                                                        <!-- Will be filled dynamically by JavaScript -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    {{ form_label(form.numtel, 'Numéro de téléphone', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.numtel, {'attr': {'class': 'form-control'}}) }}
-                                    <div class="text-danger">{{ form_errors(form.numtel) }}</div>
-                                </div>
+                                
+                                <!-- Actions -->
                                 <div class="col-12">
-                                    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '3'}}) }}
-                                    <div class="text-danger">{{ form_errors(form.description) }}</div>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{{ path('admin_reservations_personnalise') }}" class="btn btn-link text-secondary m-0 ps-0">
+                                            <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+                                        </a>
+                                        <button type="submit" class="btn bg-gradient-primary">
+                                            <i class="fas fa-save me-1"></i> Enregistrer les modifications
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    {{ form_label(form.date, 'Date', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
-                                    <div class="text-danger">{{ form_errors(form.date) }}</div>
-                                </div>
-                                <div class="col-md-6">
-                                    {{ form_label(form.status, 'Statut', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
-                                    <div class="text-danger">{{ form_errors(form.status) }}</div>
-                                </div>
-                                <div class="col-12">
-                                    {{ form_label(form.services, 'Services', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(form.services, {'attr': {'class': 'form-control'}}) }}
-                                    <div class="text-danger">{{ form_errors(form.services) }}</div>
-                                </div>
-                                <div class="col-12 action-buttons">
-                                    <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
-                                    <a href="{{ path('admin_reservations_personnalise') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
-                                </div>
+                            </div>
                             {{ form_end(form) }}
                         </div>
                     </div>
@@ -419,5 +524,253 @@
                 padding: 0.8rem;
             }
         }
+
+        /* Card Styling */
+        .card {
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+        }
+        .card-header {
+            padding: 1.2rem !important;
+            border-bottom: 0;
+        }
+        .card-header h6 {
+            font-weight: 600;
+            font-size: 1rem;
+            margin: 0;
+        }
+        .card-body {
+            padding: 1.5rem !important;
+        }
+
+        /* Form styling */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-label {
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .input-group {
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .input-group-text {
+            border: 0;
+            padding: 0.6rem 1rem;
+        }
+        .form-control, .form-select {
+            border: 0;
+            padding: 0.6rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            box-shadow: none;
+            border-color: #5e72e4;
+        }
+        textarea.form-control {
+            min-height: 120px;
+        }
+
+        /* Services styling */
+        .services-container {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .services-selection {
+            margin-bottom: 1rem;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .service-list-improved {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 0.8rem;
+        }
+        
+        .service-list-improved > div {
+            margin-bottom: 0;
+        }
+        
+        .service-list-improved label {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-list-improved label:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(310deg, #f5b004, #ffca28);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .service-list-improved label:hover {
+            background: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+            border-color: rgba(255, 178, 30, 0.3);
+        }
+        
+        .service-list-improved label:hover:before {
+            opacity: 1;
+        }
+        
+        .service-list-improved input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.8rem;
+            border-radius: 4px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .service-list-improved input[type="checkbox"]:checked {
+            border-color: transparent;
+            background-color: #ffb21e;
+        }
+        
+        .service-list-improved input[type="checkbox"]:checked + span {
+            font-weight: 600;
+            color: #ff8f00;
+        }
+        
+        .service-list-improved input[type="checkbox"]:checked ~ label {
+            background: #fff9e6;
+            border-color: #ffb21e;
+            box-shadow: 0 5px 15px rgba(255, 178, 30, 0.2);
+        }
+        
+        .service-list-improved input[type="checkbox"]:checked ~ label:before {
+            opacity: 1;
+            width: 6px;
+        }
+        
+        .selected-services-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .service-tag {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(310deg, #f5b004, #ffca28);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(255, 178, 30, 0.2);
+            transition: all 0.3s ease;
+            animation: fadeInRight 0.5s forwards;
+            margin-bottom: 0.5rem;
+        }
+        
+        .service-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 178, 30, 0.3);
+        }
+        
+        .service-tag i {
+            margin-right: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .service-list-improved {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation pour les alerts
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.animation = 'fadeInDown 0.5s ease forwards';
+            });
+            
+            // Initialisation de flatpickr pour la date
+            if (typeof flatpickr !== 'undefined') {
+                flatpickr(".flatpickr", {
+                    dateFormat: "Y-m-d",
+                    locale: "fr"
+                });
+            }
+            
+            // Visualisation des services sélectionnés
+            function updateServicesPreview() {
+                const servicesPreview = document.getElementById('servicesPreview');
+                servicesPreview.innerHTML = '';
+                
+                const checkboxes = document.querySelectorAll('.service-list-improved input[type="checkbox"]:checked');
+                
+                if (checkboxes.length === 0) {
+                    servicesPreview.innerHTML = '<div class="text-muted">Aucun service sélectionné</div>';
+                    return;
+                }
+                
+                checkboxes.forEach(checkbox => {
+                    const serviceLabel = checkbox.nextElementSibling.textContent.trim();
+                    const serviceTag = document.createElement('div');
+                    serviceTag.className = 'service-tag';
+                    serviceTag.innerHTML = `<i class="fas fa-check-circle"></i>${serviceLabel}`;
+                    servicesPreview.appendChild(serviceTag);
+                });
+            }
+            
+            // Mettre à jour l'aperçu au chargement
+            updateServicesPreview();
+            
+            // Mettre à jour l'aperçu lorsqu'on change les services
+            const serviceCheckboxes = document.querySelectorAll('.service-list-improved input[type="checkbox"]');
+            serviceCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateServicesPreview);
+            });
+        });
+    </script>
 {% endblock %}

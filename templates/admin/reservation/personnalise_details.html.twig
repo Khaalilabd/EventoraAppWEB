@@ -211,48 +211,328 @@
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-12">
-                    <div class="card mb-4 shadow-sm border-radius-xl">
-                        <div class="card-header p-3">
-                            <h6 class="font-weight-bolder mb-0">Détails de la Réservation #{{ reservation.IDReservationPersonalise }}</h6>
+                    <div class="card mb-4 shadow-lg border-radius-xl overflow-hidden">
+                        <div class="card-header p-3 bg-gradient-primary">
+                            <h6 class="font-weight-bolder mb-0 text-white">Détails de la Réservation #{{ reservation.IDReservationPersonalise }}</h6>
                         </div>
-                        <div class="card-body p-3">
-                            <div class="row">
+                        <div class="card-body p-4">
+                            <div class="row g-4">
                                 <div class="col-md-6">
-                                    <p><strong>Nom :</strong> {{ reservation.nom }}</p>
-                                    <p><strong>Prénom :</strong> {{ reservation.prenom }}</p>
-                                    <p><strong>Email :</strong> {{ reservation.email }}</p>
-                                    <p><strong>Téléphone :</strong> {{ reservation.numtel }}</p>
-                                    <p><strong>ID Membre :</strong> {{ reservation.idMembre }}</p>
+                                    <div class="info-card p-4 shadow-sm rounded-lg">
+                                        <h5 class="text-gradient text-primary font-weight-bold mb-4"><i class="fas fa-user-circle me-2"></i>Informations Client</h5>
+                                        <div class="detail-item mb-3 d-flex align-items-center">
+                                            <div class="icon-box bg-gradient-primary shadow-sm me-3">
+                                                <i class="fas fa-user text-white"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-uppercase text-muted mb-1">Nom Complet</p>
+                                                <h6 class="mb-0">{{ reservation.nom }} {{ reservation.prenom }}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="detail-item mb-3 d-flex align-items-center">
+                                            <div class="icon-box bg-gradient-primary shadow-sm me-3">
+                                                <i class="fas fa-envelope text-white"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-uppercase text-muted mb-1">Email</p>
+                                                <h6 class="mb-0">{{ reservation.email }}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="detail-item mb-3 d-flex align-items-center">
+                                            <div class="icon-box bg-gradient-primary shadow-sm me-3">
+                                                <i class="fas fa-phone text-white"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-uppercase text-muted mb-1">Téléphone</p>
+                                                <h6 class="mb-0">{{ reservation.numtel }}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="detail-item mb-3 d-flex align-items-center">
+                                            <div class="icon-box bg-gradient-primary shadow-sm me-3">
+                                                <i class="fas fa-id-card text-white"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-uppercase text-muted mb-1">ID Membre</p>
+                                                <h6 class="mb-0">{{ reservation.idMembre }}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><strong>Description :</strong> {{ reservation.description }}</p>
-                                    <p><strong>Date :</strong> {{ reservation.date ? reservation.date|date('d/m/Y H:i') : 'Non définie' }}</p>
-                                    <p>
-                                        <strong>Statut :</strong>
-                                        <span class="badge 
-                                            {{ reservation.status == 'Validé' ? 'bg-success' : 
-                                               reservation.status == 'Refusé' ? 'bg-danger' : 
-                                               'bg-warning' }}">
-                                            {{ reservation.status }}
-                                        </span>
-                                    </p>
-                                    <p><strong>Services :</strong></p>
-                                    <ul>
-                                        {% for service in reservation.services %}
-                                            <li>{{ service.titre }} ({{ service.prix }}) - {{ service.location }}</li>
+                                    <div class="info-card p-4 shadow-sm rounded-lg">
+                                        <h5 class="text-gradient text-primary font-weight-bold mb-4"><i class="fas fa-info-circle me-2"></i>Détails de la Réservation</h5>
+                                        <div class="detail-item mb-3">
+                                            <p class="text-xs text-uppercase text-muted mb-1">Description</p>
+                                            <div class="description-box p-3 bg-light rounded-lg mb-3">
+                                                <p class="mb-0">{{ reservation.description }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="detail-item mb-3 d-flex align-items-center">
+                                            <div class="icon-box bg-gradient-primary shadow-sm me-3">
+                                                <i class="fas fa-calendar-day text-white"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-uppercase text-muted mb-1">Date</p>
+                                                <h6 class="mb-0">{{ reservation.date ? reservation.date|date('d/m/Y H:i') : 'Non définie' }}</h6>
+                                            </div>
+                                        </div>
+                                        <div class="detail-item mb-3 d-flex align-items-center">
+                                            <div class="icon-box 
+                                                {{ reservation.status == 'Validé' ? 'bg-gradient-success' : 
+                                                   reservation.status == 'Refusé' ? 'bg-gradient-danger' : 
+                                                   'bg-gradient-warning' }} shadow-sm me-3">
+                                                <i class="fas {{ reservation.status == 'Validé' ? 'fa-check-circle' : 
+                                                                 reservation.status == 'Refusé' ? 'fa-times-circle' : 
+                                                                 'fa-clock' }} text-white"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-uppercase text-muted mb-1">Statut</p>
+                                                <span class="badge badge-lg 
+                                                    {{ reservation.status == 'Validé' ? 'bg-gradient-success' : 
+                                                       reservation.status == 'Refusé' ? 'bg-gradient-danger' : 
+                                                       'bg-gradient-warning' }}">
+                                                    {{ reservation.status }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Services Section -->
+                                <div class="col-12">
+                                    <div class="info-card p-4 shadow-sm rounded-lg">
+                                        <h5 class="text-gradient text-primary font-weight-bold mb-4"><i class="fas fa-concierge-bell me-2"></i>Services Sélectionnés</h5>
+                                        {% if reservation.services|length > 0 %}
+                                        <div class="row g-3">
+                                            {% for service in reservation.services %}
+                                            <div class="col-md-4 col-sm-6">
+                                                <div class="service-card p-3 shadow-sm rounded-lg h-100">
+                                                    <div class="d-flex align-items-center mb-3">
+                                                        <div class="icon-shape icon-md me-3 bg-gradient-primary shadow text-center rounded-circle">
+                                                            <i class="fas fa-tools text-white"></i>
+                                                        </div>
+                                                        <h6 class="mb-0 text-sm service-title">{{ service.titre }}</h6>
+                                                    </div>
+                                                    <div class="service-details">
+                                                        <div class="detail-row mb-2">
+                                                            <span class="detail-label"><i class="fas fa-tag text-primary me-2"></i> Prix:</span>
+                                                            <span class="detail-value fw-bold">{{ service.prix }}</span>
+                                                        </div>
+                                                        <div class="detail-row">
+                                                            <span class="detail-label"><i class="fas fa-map-marker-alt text-primary me-2"></i> Emplacement:</span>
+                                                            <span class="detail-value">{{ service.location }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
                                         {% else %}
-                                            <li>Aucun service sélectionné</li>
-                                        {% endfor %}
-                                    </ul>
+                                        <div class="alert alert-light text-center my-4">
+                                            <i class="fas fa-info-circle me-2"></i> Aucun service sélectionné pour cette réservation
+                                        </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                            <a href="{{ path('admin_reservations_personnalise_edit', {'id': reservation.IDReservationPersonalise}) }}" class="btn btn-warning mt-3">Modifier</a>
-                            <a href="{{ path('admin_reservations_personnalise_pdf', {'id': reservation.IDReservationPersonalise}) }}" class="btn btn-primary mt-3">Exporter en PDF</a>
-                            <a href="{{ path('admin_reservations_personnalise') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+                            
+                            <!-- Action Buttons -->
+                            <div class="action-buttons mt-4 d-flex flex-wrap gap-3">
+                                <a href="{{ path('admin_reservations_personnalise') }}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-arrow-left me-2"></i> Retour à la liste
+                                </a>
+                                <a href="{{ path('admin_reservations_personnalise_edit', {'id': reservation.IDReservationPersonalise}) }}" class="btn bg-gradient-warning btn-lg">
+                                    <i class="fas fa-edit me-2"></i> Modifier
+                                </a>
+                                <a href="{{ path('admin_reservations_personnalise_pdf', {'id': reservation.IDReservationPersonalise}) }}" class="btn bg-gradient-primary btn-lg">
+                                    <i class="fas fa-file-pdf me-2"></i> Exporter en PDF
+                                </a>
+                                <form method="post" action="{{ path('admin_reservations_delete', {'type': 'personnalise', 'id': reservation.IDReservationPersonalise}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.IDReservationPersonalise) }}">
+                                    <button class="btn btn-lg text-danger" style="background: transparent !important; box-shadow: none !important; border: 1px solid #dc3545;">
+                                        <i class="fas fa-trash me-2"></i> Supprimer
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Modern UI Styles */
+        .bg-gradient-primary {
+            background-image: linear-gradient(310deg, #7928CA 0%, #FF0080 100%);
+        }
+        
+        .bg-gradient-success {
+            background-image: linear-gradient(310deg, #17ad37 0%, #98ec2d 100%);
+        }
+        
+        .bg-gradient-warning {
+            background-image: linear-gradient(310deg, #f53939 0%, #fbcf33 100%);
+        }
+        
+        .bg-gradient-danger {
+            background-image: linear-gradient(310deg, #ea0606 0%, #ff667c 100%);
+        }
+        
+        .text-gradient.text-primary {
+            background-image: linear-gradient(310deg, #7928CA, #FF0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .card {
+            border: 0;
+            box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+            border-radius: 0.75rem;
+        }
+        
+        .card .card-header {
+            padding: 1.5rem;
+        }
+        
+        .shadow-lg {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+        }
+        
+        .info-card {
+            background: #fff;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .detail-item:hover .icon-box {
+            transform: scale(1.1);
+        }
+        
+        .description-box {
+            background-color: #f8f9fa;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid #7928CA;
+        }
+        
+        .action-buttons .btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .action-buttons .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2) !important;
+        }
+        
+        .table th {
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-size: 0.65rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .table td {
+            padding: 0.5rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+            transform: translateY(-2px);
+        }
+        
+        .badge {
+            padding: 0.55em 0.9em;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+        }
+        
+        .badge.badge-lg {
+            padding: 0.65em 1em;
+            font-size: 0.75rem;
+        }
+        
+        /* Media Queries */
+        @media (max-width: 992px) {
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .action-buttons .btn {
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        /* Service Cards */
+        .service-card {
+            background: white;
+            transition: all 0.3s ease;
+            border-left: 3px solid #7928CA;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+        }
+        
+        .icon-shape.icon-md {
+            width: 48px;
+            height: 48px;
+        }
+        
+        .service-title {
+            font-weight: 600;
+            color: #344767;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e9ecef;
+        }
+        
+        .detail-label {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        
+        .detail-value {
+            color: #1e293b;
+            font-size: 0.9rem;
+        }
+    </style>
 {% endblock %}

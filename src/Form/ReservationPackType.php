@@ -47,8 +47,12 @@ class ReservationPackType extends AbstractType
             ->getQuery()
             ->getResult();
 
-        $builder
-            ->add('nom', TextType::class, [
+        // Check if we're creating a new entity (no ID) or editing an existing one
+        $isNew = !$builder->getData() || !$builder->getData()->getIDReservationPack();
+        
+        // Only set default data for new entities
+        $fieldConfig = [
+            'nom' => [
                 'label' => 'last_name',
                 'constraints' => [
                     new NotBlank(['message' => 'Last name is required.']),
@@ -58,10 +62,9 @@ class ReservationPackType extends AbstractType
                     ]),
                 ],
                 'attr' => ['class' => 'form-control'],
-                'data' => $userData['nom'], // Pre-fill with user's last name
                 'translation_domain' => 'messages',
-            ])
-            ->add('prenom', TextType::class, [
+            ],
+            'prenom' => [
                 'label' => 'first_name',
                 'constraints' => [
                     new NotBlank(['message' => 'First name is required.']),
@@ -71,10 +74,9 @@ class ReservationPackType extends AbstractType
                     ]),
                 ],
                 'attr' => ['class' => 'form-control'],
-                'data' => $userData['prenom'], // Pre-fill with user's first name
                 'translation_domain' => 'messages',
-            ])
-            ->add('email', EmailType::class, [
+            ],
+            'email' => [
                 'label' => 'email',
                 'constraints' => [
                     new NotBlank(['message' => 'Email is required.']),
@@ -84,10 +86,9 @@ class ReservationPackType extends AbstractType
                     ]),
                 ],
                 'attr' => ['class' => 'form-control'],
-                'data' => $userData['email'], // Pre-fill with user's email
                 'translation_domain' => 'messages',
-            ])
-            ->add('numtel', TelType::class, [
+            ],
+            'numtel' => [
                 'label' => 'phone_number',
                 'constraints' => [
                     new NotBlank(['message' => 'Phone number is required.']),
@@ -107,9 +108,23 @@ class ReservationPackType extends AbstractType
                     'placeholder' => '12345678',
                 ],
                 'help' => 'Enter an 8-digit Tunisian phone number (e.g. 12345678).',
-                'data' => $userData['numtel'], // Pre-fill with user's phone number (without +216)
                 'translation_domain' => 'messages',
-            ])
+            ],
+        ];
+        
+        // Only set default data for new entities
+        if ($isNew) {
+            $fieldConfig['nom']['data'] = $userData['nom'];
+            $fieldConfig['prenom']['data'] = $userData['prenom'];
+            $fieldConfig['email']['data'] = $userData['email'];
+            $fieldConfig['numtel']['data'] = $userData['numtel'];
+        }
+
+        $builder
+            ->add('nom', TextType::class, $fieldConfig['nom'])
+            ->add('prenom', TextType::class, $fieldConfig['prenom'])
+            ->add('email', EmailType::class, $fieldConfig['email'])
+            ->add('numtel', TelType::class, $fieldConfig['numtel'])
             ->add('description', TextareaType::class, [
                 'label' => 'event_description',
                 'required' => false,

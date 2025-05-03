@@ -119,13 +119,13 @@ class UserReservationsController extends AbstractController
                         // Add Google Calendar event
                         $calendarLink = $this->googleCalendarService->addEvent($reservation, 'pack');
                         if (!$calendarLink) {
-                            $this->logger->warning('Failed to add Google Calendar event for pack reservation: ' . $reservation->getId());
+                            $this->logger->warning('Failed to add Google Calendar event for pack reservation: ' . $reservation->getIDReservationPack());
                         }
     
                         $packName = $reservation->getPack() ? $reservation->getPack()->getNomPack() : 'Non spécifié';
                         $eventDate = $reservation->getDate()->format('d/m/Y');
                         $userName = $reservation->getPrenom() ?: 'Client';
-                        $smsMessage = sprintf(
+                        $successMessage = sprintf(
                             'Cher(e) %s, votre réservation pour le pack "%s" du %s a été confirmée. %s Merci de choisir Eventora !',
                             $userName,
                             $packName,
@@ -151,6 +151,7 @@ class UserReservationsController extends AbstractController
                             $this->logger->info('Brevo API response: ' . json_encode($result));
                         } catch (ApiException $e) {
                             $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
+                            $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi de l\'email.');
                         }
     
                         // Send SMS via Twilio
@@ -159,20 +160,21 @@ class UserReservationsController extends AbstractController
                                 $reservation->getNumtel(),
                                 [
                                     'from' => $this->twilioFromNumber,
-                                    'body' => $smsMessage
+                                    'body' => $successMessage
                                 ]
                             );
                             $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
                         } catch (\Exception $e) {
                             $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
+                            $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi du SMS.');
                         }
     
-                        // Return redirect URL for AJAX
-                        $redirectUrl = $this->generateUrl('app_user_history');
-    
+                        // Return redirect URL for AJAX - Use Calendar Link if available
+                        $redirectUrl = $calendarLink ?: $this->generateUrl('app_user_history');
+
                         return new JsonResponse([
                             'success' => true,
-                            'message' => $smsMessage,
+                            'message' => $successMessage,
                             'redirectUrl' => $redirectUrl
                         ]);
                     } catch (ApiException $e) {
@@ -182,7 +184,7 @@ class UserReservationsController extends AbstractController
                                 $reservation->getNumtel(),
                                 [
                                     'from' => $this->twilioFromNumber,
-                                    'body' => $smsMessage
+                                    'body' => $successMessage
                                 ]
                             );
                         } catch (\Exception $e) {
@@ -239,7 +241,7 @@ class UserReservationsController extends AbstractController
                 // Add Google Calendar event
                 $calendarLink = $this->googleCalendarService->addEvent($reservation, 'pack');
                 if (!$calendarLink) {
-                    $this->logger->warning('Failed to add Google Calendar event for pack reservation: ' . $reservation->getId());
+                    $this->logger->warning('Failed to add Google Calendar event for pack reservation: ' . $reservation->getIDReservationPack());
                     $this->addFlash('warning', 'Événement non ajouté au calendrier Google.');
                 }
     
@@ -291,6 +293,11 @@ class UserReservationsController extends AbstractController
                 }
     
                 $this->addFlash('success', $successMessage);
+                
+                // Redirect to Google Calendar event if available, otherwise to history
+                if ($calendarLink) {
+                    return $this->redirect($calendarLink);
+                }
                 return $this->redirectToRoute('app_user_history');
             } catch (ApiException $e) {
                 $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
@@ -308,10 +315,20 @@ class UserReservationsController extends AbstractController
                     $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
                     $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email et SMS.');
                 }
+                
+                // Redirect to Google Calendar event if available, otherwise to history
+                if ($calendarLink) {
+                    return $this->redirect($calendarLink);
+                }
                 return $this->redirectToRoute('app_user_history');
             } catch (\Exception $e) {
                 $this->logger->error('Error saving pack reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', 'Erreur serveur lors de la création de la réservation.');
+                
+                // Redirect to Google Calendar event if available, otherwise to history
+                if ($calendarLink) {
+                    return $this->redirect($calendarLink);
+                }
                 return $this->redirectToRoute('app_user_history');
             }
         }
@@ -375,14 +392,14 @@ class UserReservationsController extends AbstractController
                         // Add Google Calendar event
                         $calendarLink = $this->googleCalendarService->addEvent($reservation, 'personnalise');
                         if (!$calendarLink) {
-                            $this->logger->warning('Failed to add Google Calendar event for personnalise reservation: ' . $reservation->getId());
+                            $this->logger->warning('Failed to add Google Calendar event for personnalise reservation: ' . $reservation->getIdReservationPersonalise());
                         }
     
                         $services = $reservation->getServices();
                         $servicesList = ($services === null || $services->isEmpty()) ? 'Non spécifié' : implode(', ', array_map(fn($s) => $s->getTitre(), $services->toArray()));
                         $eventDate = $reservation->getDate()->format('d/m/Y');
                         $userName = $reservation->getPrenom() ?: 'Client';
-                        $smsMessage = sprintf(
+                        $successMessage = sprintf(
                             'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été confirmée. %s Eventora vous remercie !',
                             $userName,
                             $servicesList,
@@ -416,20 +433,20 @@ class UserReservationsController extends AbstractController
                                 $reservation->getNumtel(),
                                 [
                                     'from' => $this->twilioFromNumber,
-                                    'body' => $smsMessage
+                                    'body' => $successMessage
                                 ]
                             );
                             $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
                         } catch (\Exception $e) {
                             $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
                         }
-    
-                        // Return redirect URL for AJAX
-                        $redirectUrl = $this->generateUrl('app_user_history');
-    
+
+                        // Return redirect URL for AJAX - Use Calendar Link if available
+                        $redirectUrl = $calendarLink ?: $this->generateUrl('app_user_history');
+
                         return new JsonResponse([
                             'success' => true,
-                            'message' => $smsMessage,
+                            'message' => $successMessage,
                             'redirectUrl' => $redirectUrl
                         ]);
                     } catch (ApiException $e) {
@@ -439,7 +456,7 @@ class UserReservationsController extends AbstractController
                                 $reservation->getNumtel(),
                                 [
                                     'from' => $this->twilioFromNumber,
-                                    'body' => $smsMessage
+                                    'body' => $successMessage
                                 ]
                             );
                         } catch (\Exception $e) {
@@ -495,8 +512,7 @@ class UserReservationsController extends AbstractController
                 // Add Google Calendar event
                 $calendarLink = $this->googleCalendarService->addEvent($reservation, 'personnalise');
                 if (!$calendarLink) {
-                    $this->logger->warning('Failed to add Google Calendar event for personnalise reservation: ' . $reservation->getId());
-                    $this->addFlash('warning', 'Événement non ajouté au calendrier Google.');
+                    $this->logger->warning('Failed to add Google Calendar event for personnalise reservation: ' . $reservation->getIdReservationPersonalise());
                 }
     
                 $services = $reservation->getServices();
@@ -548,6 +564,11 @@ class UserReservationsController extends AbstractController
                 }
     
                 $this->addFlash('success', $successMessage);
+                
+                // Redirect to Google Calendar event if available, otherwise to history
+                if ($calendarLink) {
+                    return $this->redirect($calendarLink);
+                }
                 return $this->redirectToRoute('app_user_history');
             } catch (ApiException $e) {
                 $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
@@ -565,11 +586,18 @@ class UserReservationsController extends AbstractController
                     $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
                     $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email et SMS.');
                 }
+                
+                // Redirect to Google Calendar event if available, otherwise to history
+                if ($calendarLink) {
+                    return $this->redirect($calendarLink);
+                }
                 return $this->redirectToRoute('app_user_history');
             } catch (\Exception $e) {
                 $this->logger->error('Error saving personnalise reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
-                $this->addFlash('error', 'Erreur serveur lors de la création de la réservation.');
-                return $this->redirectToRoute('app_user_history');
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Erreur serveur lors de la création de la réservation.'
+                ], 500);
             }
         }
     

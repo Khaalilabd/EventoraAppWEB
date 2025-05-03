@@ -211,81 +211,101 @@
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-12">
-                    <!-- Filtering Block -->
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="card shadow-sm p-3 bg-light border-radius-xl">
-                                <h6 class="mb-3 text-dark font-weight-bold"><i class="fas fa-filter me-2"></i> Options de Filtrage</h6>
-                                <form method="get" action="{{ path('admin_reservations_pack') }}" class="row g-3 align-items-center">
-                                    <div class="col-md-4">
-                                        <label for="status_filter" class="form-label text-sm font-weight-bold">Filtrer par Statut</label>
-                                        <select name="status_filter" id="status_filter" class="form-select" onchange="this.form.submit()">
-                                            <option value="">Tous les statuts</option>
-                                            <option value="En attente" {{ selected_status|default('') == 'En attente' ? 'selected' : '' }}>En attente</option>
-                                            <option value="Validé" {{ selected_status|default('') == 'Validé' ? 'selected' : '' }}>Validé</option>
-                                            <option value="Refusé" {{ selected_status|default('') == 'Refusé' ? 'selected' : '' }}>Refusé</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label text-sm font-weight-bold">Trier par Date</label>
-                                        <div class="input-group">
-                                            <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ selected_date|default('') }}" onchange="this.form.submit()">
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ path('admin_reservations_pack', {'sort_by': 'date', 'sort_order': 'asc', 'status_filter': selected_status|default(''), 'date_filter': selected_date|default('')}) }}"
-                                                   class="btn btn-outline-primary {{ sort_by|default('') == 'date' and sort_order|default('') == 'asc' ? 'active' : '' }}">
-                                                    <i class="fas fa-arrow-up"></i>
-                                                </a>
-                                                <a href="{{ path('admin_reservations_pack', {'sort_by': 'date', 'sort_order': 'desc', 'status_filter': selected_status|default(''), 'date_filter': selected_date|default('')}) }}"
-                                                   class="btn btn-outline-primary {{ sort_by|default('') == 'date' and sort_order|default('') == 'desc' ? 'active' : '' }}">
-                                                    <i class="fas fa-arrow-down"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 d-flex align-items-end">
-                                        <a href="{{ path('admin_reservations_pack') }}" class="btn btn-outline-secondary w-100">
-                                            <i class="fas fa-undo me-1"></i> Réinitialiser
-                                        </a>
-                                    </div>
-                                </form>
+                    <!-- Advanced Filtering Section -->
+                    <div class="filter-section card shadow-lg mb-4 p-3 bg-white border-radius-xl">
+                        <h5 class="text-gradient text-primary font-weight-bold mb-3"><i class="fas fa-sliders-h me-2"></i> Options de Filtrage Avancées</h5>
+                        <form method="get" action="{{ path('admin_reservations_pack') }}" class="row g-3 filter-form">
+                            <div class="col-md-3">
+                                <label for="status_filter" class="form-label text-sm font-weight-bold">Statut</label>
+                                <select name="status_filter" id="status_filter" class="form-select custom-select">
+                                    <option value="">Tous les statuts</option>
+                                    <option value="En attente" {{ selected_status|default('') == 'En attente' ? 'selected' : '' }}>En attente</option>
+                                    <option value="Validé" {{ selected_status|default('') == 'Validé' ? 'selected' : '' }}>Validé</option>
+                                    <option value="Refusé" {{ selected_status|default('') == 'Refusé' ? 'selected' : '' }}>Refusé</option>
+                                </select>
                             </div>
-                        </div>
+                            
+                            <div class="col-md-3">
+                                <label for="date_filter" class="form-label text-sm font-weight-bold">Date</label>
+                                <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ selected_date|default('') }}">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label text-sm font-weight-bold">Tri par Date</label>
+                                <div class="sort-buttons">
+                                    <a href="{{ path('admin_reservations_pack', {'sort_by': 'date', 'sort_order': 'asc', 'status_filter': selected_status|default(''), 'date_filter': selected_date|default('')}) }}" 
+                                       class="sort-button {{ sort_by|default('') == 'date' and sort_order|default('') == 'asc' ? 'active' : '' }}">
+                                        <i class="fas fa-arrow-up me-1"></i> Ascendant
+                                    </a>
+                                    <a href="{{ path('admin_reservations_pack', {'sort_by': 'date', 'sort_order': 'desc', 'status_filter': selected_status|default(''), 'date_filter': selected_date|default('')}) }}"
+                                       class="sort-button {{ sort_by|default('') == 'date' and sort_order|default('') == 'desc' ? 'active' : '' }}">
+                                        <i class="fas fa-arrow-down me-1"></i> Descendant
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label>&nbsp;</label>
+                                <div class="d-flex">
+                                    <button type="submit" class="btn btn-primary me-2 w-100">
+                                        <i class="fas fa-filter me-1"></i> Appliquer
+                                    </button>
+                                    <a href="{{ path('admin_reservations_pack') }}" class="reset-btn w-100 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-undo me-1"></i> Réinitialiser
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
                     </div>
 
                     <!-- Main Content -->
-                    <div class="card mb-4 shadow-sm border-radius-xl">
-                        <div class="card-header p-3 d-flex justify-content-between align-items-center">
-                            <h6 class="font-weight-bolder mb-0">Liste des Réservations Pack</h6>
+                    <div class="card mb-4 shadow-lg border-radius-xl overflow-hidden">
+                        <div class="card-header p-3 bg-gradient-primary d-flex justify-content-between align-items-center">
+                            <h6 class="font-weight-bolder mb-0 text-white">Liste des Réservations Pack</h6>
+                            <a href="{{ path('admin_reservations_pack_new') }}" class="btn btn-light btn-sm d-flex align-items-center">
+                                <i class="fas fa-plus me-2"></i> Nouvelle Réservation
+                            </a>
                         </div>
                         <div class="card-body p-3">
                             {% for message in app.flashes('success') %}
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ message }}
+                                    <i class="fas fa-check-circle me-2"></i> {{ message }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             {% endfor %}
                             {% for message in app.flashes('error') %}
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ message }}
+                                    <i class="fas fa-exclamation-circle me-2"></i> {{ message }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             {% endfor %}
 
-                            <a href="{{ path('admin_reservations_pack_new') }}" class="btn btn-primary mb-3">Nouvelle Réservation</a>
+                            <!-- Search box -->
+                            <div class="search-wrapper mb-4">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchInput" class="form-control" placeholder="Rechercher une réservation...">
+                            </div>
 
-                            <div class="kanban-board row g-4">
+                            <!-- Reservations container -->
+                            <div class="reservations-container">
                                 <!-- En attente -->
-                                <div class="col-lg-4 col-md-6 kanban-column">
-                                    <div class="kanban-column-header bg-gradient-warning text-white">
-                                        <h6 class="mb-0">En attente</h6>
+                                <div class="status-column">
+                                    <div class="status-column-header status-pending">
+                                        <h5>En attente</h5>
+                                        <span class="status-count">{{ reservationPacks|filter(r => r.status == 'En attente')|length }}</span>
                                     </div>
-                                    <div class="kanban-column-body">
+                                    <div class="status-column-body">
+                                        {% set pendingCount = 0 %}
                                         {% for reservation in reservationPacks %}
                                             {% if reservation.status == 'En attente' %}
-                                                <div class="kanban-card reservation-card">
-                                                    <div class="card h-100 shadow-sm border-0">
+                                                {% set pendingCount = pendingCount + 1 %}
+                                                <div class="reservation-card">
+                                                    <div class="card">
                                                         <div class="card-body">
-                                                            <h6 class="card-title mb-2">Réservation #{{ reservation.idReservationPack }}</h6>
+                                                            <span class="status-badge status-badge-pending">
+                                                                <i class="fas fa-clock me-1"></i> En attente
+                                                            </span>
+                                                            <h6 class="card-title">Réservation #{{ reservation.idReservationPack }}</h6>
                                                             <p class="card-text"><strong>Nom :</strong> {{ reservation.nom }} {{ reservation.prenom }}</p>
                                                             <p class="card-text"><strong>Email :</strong> {{ reservation.email }}</p>
                                                             <p class="card-text"><strong>Téléphone :</strong> {{ reservation.numtel }}</p>
@@ -293,18 +313,18 @@
                                                             <p class="card-text"><strong>Description :</strong> 
                                                                 {{ reservation.description|length > 50 ? reservation.description|slice(0, 50) ~ '...' : reservation.description }}
                                                             </p>
-                                                            <div class="d-flex gap-2">
-                                                                <a href="{{ path('admin_reservations_pack_details', {'id': reservation.idReservationPack}) }}" class="btn btn-outline-primary btn-sm">
+                                                            <div class="action-buttons">
+                                                                <a href="{{ path('admin_reservations_pack_details', {'id': reservation.idReservationPack}) }}" class="btn-action btn-view">
                                                                     <i class="fas fa-info-circle"></i> Détails
                                                                 </a>
-                                                                <a href="{{ path('admin_reservations_pack_edit', {'id': reservation.idReservationPack}) }}" class="btn btn-outline-primary btn-sm">
+                                                                <a href="{{ path('admin_reservations_pack_edit', {'id': reservation.idReservationPack}) }}" class="btn-action btn-edit">
                                                                     <i class="fas fa-edit"></i> Modifier
                                                                 </a>
-                                                                <form method="post" action="{{ path('admin_reservations_delete', {'type': 'pack', 'id': reservation.idReservationPack}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                                                                <button type="submit" class="btn-action btn-delete" form="delete-form-{{ reservation.idReservationPack }}" style="flex: 1; background: transparent; box-shadow: none;">
+                                                                    <i class="fas fa-trash"></i> Supprimer
+                                                                </button>
+                                                                <form id="delete-form-{{ reservation.idReservationPack }}" method="post" action="{{ path('admin_reservations_delete', {'type': 'pack', 'id': reservation.idReservationPack}) }}" style="display: none;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
                                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.idReservationPack) }}">
-                                                                    <button class="btn btn-outline-danger btn-sm">
-                                                                        <i class="fas fa-trash"></i> Supprimer
-                                                                    </button>
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -312,21 +332,30 @@
                                                 </div>
                                             {% endif %}
                                         {% endfor %}
+                                        {% if pendingCount == 0 %}
+                                            <p class="text-center text-muted my-4">Aucune réservation en attente</p>
+                                        {% endif %}
                                     </div>
                                 </div>
 
                                 <!-- Validé -->
-                                <div class="col-lg-4 col-md-6 kanban-column">
-                                    <div class="kanban-column-header bg-gradient-success text-white">
-                                        <h6 class="mb-0">Validé</h6>
+                                <div class="status-column">
+                                    <div class="status-column-header status-approved">
+                                        <h5>Validé</h5>
+                                        <span class="status-count">{{ reservationPacks|filter(r => r.status == 'Validé')|length }}</span>
                                     </div>
-                                    <div class="kanban-column-body">
+                                    <div class="status-column-body">
+                                        {% set approvedCount = 0 %}
                                         {% for reservation in reservationPacks %}
                                             {% if reservation.status == 'Validé' %}
-                                                <div class="kanban-card reservation-card">
-                                                    <div class="card h-100 shadow-sm border-0">
+                                                {% set approvedCount = approvedCount + 1 %}
+                                                <div class="reservation-card">
+                                                    <div class="card">
                                                         <div class="card-body">
-                                                            <h6 class="card-title mb-2">Réservation #{{ reservation.idReservationPack }}</h6>
+                                                            <span class="status-badge status-badge-approved">
+                                                                <i class="fas fa-check-circle me-1"></i> Validé
+                                                            </span>
+                                                            <h6 class="card-title">Réservation #{{ reservation.idReservationPack }}</h6>
                                                             <p class="card-text"><strong>Nom :</strong> {{ reservation.nom }} {{ reservation.prenom }}</p>
                                                             <p class="card-text"><strong>Email :</strong> {{ reservation.email }}</p>
                                                             <p class="card-text"><strong>Téléphone :</strong> {{ reservation.numtel }}</p>
@@ -334,18 +363,18 @@
                                                             <p class="card-text"><strong>Description :</strong> 
                                                                 {{ reservation.description|length > 50 ? reservation.description|slice(0, 50) ~ '...' : reservation.description }}
                                                             </p>
-                                                            <div class="d-flex gap-2">
-                                                                <a href="{{ path('admin_reservations_pack_details', {'id': reservation.idReservationPack}) }}" class="btn btn-outline-primary btn-sm">
+                                                            <div class="action-buttons">
+                                                                <a href="{{ path('admin_reservations_pack_details', {'id': reservation.idReservationPack}) }}" class="btn-action btn-view">
                                                                     <i class="fas fa-info-circle"></i> Détails
                                                                 </a>
-                                                                <a href="{{ path('admin_reservations_pack_edit', {'id': reservation.idReservationPack}) }}" class="btn btn-outline-primary btn-sm">
+                                                                <a href="{{ path('admin_reservations_pack_edit', {'id': reservation.idReservationPack}) }}" class="btn-action btn-edit">
                                                                     <i class="fas fa-edit"></i> Modifier
                                                                 </a>
-                                                                <form method="post" action="{{ path('admin_reservations_delete', {'type': 'pack', 'id': reservation.idReservationPack}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                                                                <button type="submit" class="btn-action btn-delete" form="delete-form-{{ reservation.idReservationPack }}" style="flex: 1; background: transparent; box-shadow: none;">
+                                                                    <i class="fas fa-trash"></i> Supprimer
+                                                                </button>
+                                                                <form id="delete-form-{{ reservation.idReservationPack }}" method="post" action="{{ path('admin_reservations_delete', {'type': 'pack', 'id': reservation.idReservationPack}) }}" style="display: none;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
                                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.idReservationPack) }}">
-                                                                    <button class="btn btn-outline-danger btn-sm">
-                                                                        <i class="fas fa-trash"></i> Supprimer
-                                                                    </button>
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -353,21 +382,30 @@
                                                 </div>
                                             {% endif %}
                                         {% endfor %}
+                                        {% if approvedCount == 0 %}
+                                            <p class="text-center text-muted my-4">Aucune réservation validée</p>
+                                        {% endif %}
                                     </div>
                                 </div>
 
                                 <!-- Refusé -->
-                                <div class="col-lg-4 col-md-6 kanban-column">
-                                    <div class="kanban-column-header bg-gradient-danger text-white">
-                                        <h6 class="mb-0">Refusé</h6>
+                                <div class="status-column">
+                                    <div class="status-column-header status-rejected">
+                                        <h5>Refusé</h5>
+                                        <span class="status-count">{{ reservationPacks|filter(r => r.status == 'Refusé')|length }}</span>
                                     </div>
-                                    <div class="kanban-column-body">
+                                    <div class="status-column-body">
+                                        {% set rejectedCount = 0 %}
                                         {% for reservation in reservationPacks %}
                                             {% if reservation.status == 'Refusé' %}
-                                                <div class="kanban-card reservation-card">
-                                                    <div class="card h-100 shadow-sm border-0">
+                                                {% set rejectedCount = rejectedCount + 1 %}
+                                                <div class="reservation-card">
+                                                    <div class="card">
                                                         <div class="card-body">
-                                                            <h6 class="card-title mb-2">Réservation #{{ reservation.idReservationPack }}</h6>
+                                                            <span class="status-badge status-badge-rejected">
+                                                                <i class="fas fa-times-circle me-1"></i> Refusé
+                                                            </span>
+                                                            <h6 class="card-title">Réservation #{{ reservation.idReservationPack }}</h6>
                                                             <p class="card-text"><strong>Nom :</strong> {{ reservation.nom }} {{ reservation.prenom }}</p>
                                                             <p class="card-text"><strong>Email :</strong> {{ reservation.email }}</p>
                                                             <p class="card-text"><strong>Téléphone :</strong> {{ reservation.numtel }}</p>
@@ -375,18 +413,18 @@
                                                             <p class="card-text"><strong>Description :</strong> 
                                                                 {{ reservation.description|length > 50 ? reservation.description|slice(0, 50) ~ '...' : reservation.description }}
                                                             </p>
-                                                            <div class="d-flex gap-2">
-                                                                <a href="{{ path('admin_reservations_pack_details', {'id': reservation.idReservationPack}) }}" class="btn btn-outline-primary btn-sm">
+                                                            <div class="action-buttons">
+                                                                <a href="{{ path('admin_reservations_pack_details', {'id': reservation.idReservationPack}) }}" class="btn-action btn-view">
                                                                     <i class="fas fa-info-circle"></i> Détails
                                                                 </a>
-                                                                <a href="{{ path('admin_reservations_pack_edit', {'id': reservation.idReservationPack}) }}" class="btn btn-outline-primary btn-sm">
+                                                                <a href="{{ path('admin_reservations_pack_edit', {'id': reservation.idReservationPack}) }}" class="btn-action btn-edit">
                                                                     <i class="fas fa-edit"></i> Modifier
                                                                 </a>
-                                                                <form method="post" action="{{ path('admin_reservations_delete', {'type': 'pack', 'id': reservation.idReservationPack}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                                                                <button type="submit" class="btn-action btn-delete" form="delete-form-{{ reservation.idReservationPack }}" style="flex: 1; background: transparent; box-shadow: none;">
+                                                                    <i class="fas fa-trash"></i> Supprimer
+                                                                </button>
+                                                                <form id="delete-form-{{ reservation.idReservationPack }}" method="post" action="{{ path('admin_reservations_delete', {'type': 'pack', 'id': reservation.idReservationPack}) }}" style="display: none;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
                                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation.idReservationPack) }}">
-                                                                    <button class="btn btn-outline-danger btn-sm">
-                                                                        <i class="fas fa-trash"></i> Supprimer
-                                                                    </button>
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -394,22 +432,41 @@
                                                 </div>
                                             {% endif %}
                                         {% endfor %}
+                                        {% if rejectedCount == 0 %}
+                                            <p class="text-center text-muted my-4">Aucune réservation refusée</p>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Pagination Controls -->
+                            <!-- Improved Pagination -->
                             {% if reservationPacks.getTotalItemCount > reservationPacks.getPaginationData().numItemsPerPage %}
-                                <div class="pagination mt-4 d-flex justify-content-center">
-                                    {{ knp_pagination_render(reservationPacks, null, {}, {
-                                        'align': 'center',
-                                        'size': 'medium',
-                                        'rounded': true
-                                    }) }}
+                                <div class="pagination-container">
+                                    <ul class="pagination">
+                                        <li class="page-item {{ reservationPacks.currentPageNumber == 1 ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ path('admin_reservations_pack', {'page': reservationPacks.currentPageNumber - 1}) }}" aria-label="Précédent">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </a>
+                                        </li>
+                                        
+                                        {% for i in 1..reservationPacks.pageCount %}
+                                            <li class="page-item {{ reservationPacks.currentPageNumber == i ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ path('admin_reservations_pack', {'page': i}) }}">{{ i }}</a>
+                                            </li>
+                                        {% endfor %}
+                                        
+                                        <li class="page-item {{ reservationPacks.currentPageNumber == reservationPacks.pageCount ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ path('admin_reservations_pack', {'page': reservationPacks.currentPageNumber + 1}) }}" aria-label="Suivant">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </div>
                             {% endif %}
 
-                            <a href="{{ path('admin_dashboard') }}" class="btn btn-secondary mt-3">Retour</a>
+                            <a href="{{ path('admin_dashboard') }}" class="btn btn-secondary mt-3">
+                                <i class="fas fa-arrow-left me-2"></i>Retour
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -420,311 +477,424 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style.ConcurrentModificationException: Cannot concurrently modify artifact in different conversations
-        /* Global Styling */
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styling - Modern UI */
         body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #fce4ec, #f48fb1);
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
         }
-
-        /* Sidebar Styling */
-        .sidenav {
-            background: linear-gradient(180deg, #ffffff, #fce4ec);
-            width: 250px;
-            height: 100vh;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border-right: 2px solid transparent;
-            border-image: linear-gradient(to bottom, #f06292, #d81b60) 1;
+        
+        /* Gradient Backgrounds */
+        .bg-gradient-primary {
+            background-image: linear-gradient(310deg, #7928CA 0%, #FF0080 100%);
         }
-        .sidenav-header {
-            padding: 15px;
+        
+        .text-gradient.text-primary {
+            background-image: linear-gradient(310deg, #7928CA, #FF0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            color: #2d3436;
-        }
-        .navbar-brand:hover {
-            color: #f06292;
-        }
-        .navbar-nav .nav-link {
-            padding: 12px 15px;
-            color: #2d3436;
-            transition: all 0.3s ease;
-        }
-        .navbar-nav .nav-link:hover {
-            background: linear-gradient(90deg, #f06292, #d81b60);
-            color: #fff;
-        }
-        .navbar-nav .nav-link.active {
-            background: linear-gradient(90deg, #f06292, #d81b60);
-            color: #fff;
-        }
-        .navbar-nav .nav-link .icon {
-            width: 30px;
-            height: 30px;
-            background-color: #fff;
-            transition: background-color 0.3s ease;
-        }
-        .navbar-nav .nav-link:hover .icon,
-        .navbar-nav .nav-link.active .icon {
-            background: linear-gradient(90deg, #f06292, #d81b60);
-        }
-        .navbar-nav .nav-link .icon i {
-            font-size: 16px;
-        }
-        .navbar-nav .dropdown-toggle::after {
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-        .navbar-nav .dropdown-toggle[aria-expanded="true"]::after {
-            transform: rotate(180deg);
-        }
-        .collapse {
-            transition: all 0.3s ease;
-        }
-        .navbar-nav .collapse .nav-link {
-            padding-left: 40px;
-            font-size: 0.9em;
-        }
-        .navbar-nav .collapse .nav-link:hover {
-            background: linear-gradient(90deg, #ec407a, #c2185b);
-        }
-        hr.horizontal {
+        
+        /* Modern Card Design */
+        .card {
             border: 0;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #f06292, transparent);
+            box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+            border-radius: 0.75rem;
         }
-
-        /* Kanban Styling */
-        .kanban-board {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding-bottom: 20px;
+        
+        .card .card-header {
+            padding: 1.5rem;
         }
-        .kanban-column {
-            flex: 1;
-            min-width: 300px;
-            background: linear-gradient(135deg, #ffffff, #fce4ec);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 2px solid transparent;
-            border-image: linear-gradient(to right, #f06292, #d81b60) 1;
+        
+        .shadow-lg {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
         }
-        .kanban-column-header {
-            padding: 15px;
-            border-radius: 12px 12px 0 0;
-            text-align: center;
+        
+        .reservation-card {
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .reservation-card .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            height: 100%;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .reservation-card .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .reservation-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .reservation-card .card-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        
+        .reservation-card .card-text {
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .reservation-card .card-text strong {
+            color: #333;
             font-weight: 600;
         }
-        .kanban-column-header.bg-gradient-warning {
-            background: linear-gradient(90deg, #f1c40f, #f39c12);
+
+        /* Form Elements */
+        .form-select, .form-control {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            border: 1px solid #d2d6da;
+            transition: all 0.15s ease-in;
         }
-        .kanban-column-header.bg-gradient-success {
-            background: linear-gradient(90deg, #27ae60, #2ecc71);
+        
+        .form-select:focus, .form-control:focus {
+            border-color: #7928CA;
+            box-shadow: 0 0 0 2px rgba(121, 40, 202, 0.25);
         }
-        .kanban-column-header.bg-gradient-danger {
-            background: linear-gradient(90deg, #c0392b, #e74c3c);
+        
+        .custom-select {
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
         }
-        .kanban-column-body {
-            padding: 15px;
-            min-height: 200px;
-        }
-        .kanban-card {
+        
+        /* Status badges */
+        .status-badge {
+            padding: 8px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
             margin-bottom: 15px;
         }
-        .kanban-card .card {
-            background: linear-gradient(135deg, #ffffff, #fce4ec);
-            border-radius: 8px;
-            border: 2px solid transparent;
-            border-image: linear-gradient(to right, #f06292, #d81b60) 1;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        .status-badge-pending {
+            background: linear-gradient(310deg, #f53939 0%, #fbcf33 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(245, 57, 57, 0.3);
         }
-        .kanban-card .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        
+        .status-badge-approved {
+            background: linear-gradient(310deg, #17ad37 0%, #98ec2d 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(23, 173, 55, 0.3);
         }
-        .kanban-card .card-body {
+        
+        .status-badge-rejected {
+            background: linear-gradient(310deg, #ea0606 0%, #ff667c 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(234, 6, 6, 0.3);
+        }
+        
+        /* Status column headers */
+        .status-column-header {
+            background: #ffffff;
             padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border-bottom: 3px solid;
         }
-        .kanban-card .card-title {
-            font-size: 1rem;
+        
+        .status-column-header h5 {
+            font-weight: 600;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .status-column-header.status-pending {
+            border-bottom-color: #fbcf33;
+        }
+        
+        .status-column-header.status-approved {
+            border-bottom-color: #98ec2d;
+        }
+        
+        .status-column-header.status-rejected {
+            border-bottom-color: #ff667c;
+        }
+        
+        .status-count {
+            background: #f1f5f9;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* Button styling */
+        .btn {
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            box-shadow: 0 4px 7px -1px rgba(0, 0, 0, 0.11), 0 2px 4px -1px rgba(0, 0, 0, 0.07);
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.15s ease-in;
+        }
+        
+        .btn-light {
+            color: #344767;
+            border-color: #e9ecef;
+        }
+        
+        .btn-light:hover {
+            background-color: #e9ecef;
+            color: #344767;
+            transform: translateY(-2px);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .btn-action {
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
             font-weight: 500;
-            color: #2d3436;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex: 1;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: auto;
+            text-align: center;
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
         }
-        .kanban-card .card-text {
-            font-size: 0.85rem;
-            color: #2d3436;
+        
+        .btn-action i {
+            margin-right: 5px;
+        }
+        
+        .btn-view {
+            background-color: #0ea5e9;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background-color: #0284c7;
+            transform: translateY(-3px);
+        }
+        
+        .btn-edit {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #d97706;
+            transform: translateY(-3px);
+        }
+        
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            color: #ef4444;
+            transform: translateY(-3px);
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        .filter-section {
+            margin-bottom: 30px;
+        }
+        
+        .filter-form label {
+            font-weight: 500;
+            color: #4f46e5;
             margin-bottom: 8px;
         }
-        .kanban-card .card-text strong {
-            color: #2d3436;
+        
+        .sort-buttons {
+            display: flex;
+            gap: 10px;
         }
-        .kanban-card .btn {
+        
+        .sort-button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #475569;
+            text-decoration: none;
+            transition: all 0.2s ease;
             font-size: 0.8rem;
-            padding: 5px 10px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            text-align: center;
+            flex: 1;
         }
-        .kanban-card .btn-outline-primary {
-            border-color: #f06292;
-            color: #f06292;
+        
+        .sort-button:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
         }
-        .kanban-card .btn-outline-primary:hover {
-            background: linear-gradient(90deg, #f06292, #d81b60);
-            color: #fff;
-            border-color: transparent;
+        
+        .sort-button.active {
+            background: #7928CA;
+            color: white;
         }
-        .kanban-card .btn-outline-danger {
-            border-color: #e74c3c;
-            color: #e74c3c;
-        }
-        .kanban-card .btn-outline-danger:hover {
-            background: linear-gradient(90deg, #c0392b, #e74c3c);
-            color: #fff;
-            border-color: transparent;
-        }
-
-        /* Filter Block Styling */
-        .card.bg-light {
-            background: linear-gradient(135deg, #ffffff, #fce4ec) !important;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 2px solid transparent;
-            border-image: linear-gradient(to right, #f06292, #d81b60) 1;
-        }
-        .form-select, .btn, .form-control {
+        
+        .filter-reset {
+            padding: 8px 16px;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            background: #f1f5f9;
+            color: #475569;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
-        .btn-outline-primary.active {
-            background: linear-gradient(90deg, #f06292, #d81b60);
-            color: white;
-            border-color: transparent;
+        
+        .filter-reset:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
         }
-        .btn-outline-primary:hover {
-            background: linear-gradient(90deg, #ec407a, #c2185b);
-            color: white;
-            border-color: transparent;
+        
+        /* Search */
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 20px;
         }
-        .btn-outline-secondary:hover {
-            background: linear-gradient(90deg, #6c757d, #5a6268);
-            color: white;
-            border-color: transparent;
+        
+        .search-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
         }
-        .input-group .form-control[type="date"] {
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
+        
+        .search-wrapper .form-control {
+            padding-left: 40px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
-        .input-group .btn-group {
-            flex: 0 0 auto;
+        
+        /* Column Layout */
+        .reservations-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
-
-        /* Search Input Styling */
-        .input-group {
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(135deg, #ffffff, #fce4ec);
+        
+        /* Alerts */
+        .alert {
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            border: 0;
         }
-        .input-group-text {
-            background: transparent;
-            border: none;
-            color: #f06292;
+        
+        .alert-success {
+            background-color: rgba(66, 186, 150, 0.15);
+            color: #42ba96;
         }
-        #searchInput {
-            border: none;
-            padding: 10px;
-            font-size: 0.9rem;
-            background: transparent;
+        
+        .alert-danger {
+            background-color: rgba(245, 57, 57, 0.15);
+            color: #f53939;
         }
-        #searchInput:focus {
-            outline: none;
-            box-shadow: inset 0 0 5px rgba(240, 98, 146, 0.3);
+        
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
         }
-
-        /* Pagination Styling */
+        
         .pagination {
             display: flex;
-            justify-content: center;
-            margin-top: 30px;
-            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 5px;
         }
-        .pagination .page-item {
-            display: inline-flex;
-            align-items: center;
-        }
-        .pagination .page-link {
+        
+        .page-item .page-link {
+            min-width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 40px;
-            height: 40px;
-            padding: 0;
-            background: linear-gradient(135deg, #ffffff, #fce4ec);
-            color: #f06292;
-            border: 2px solid transparent;
-            border-image: linear-gradient(to right, #f06292, #d81b60) 1;
-            border-radius: 8px;
-            font-size: 1rem;
+            color: #475569;
+            background: transparent;
+            border: none;
             font-weight: 500;
+            transition: all 0.2s ease;
+            margin: 0 2px;
+            border-radius: 16px;
+            font-size: 0.85rem;
             text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .pagination .page-link:hover {
-            background: linear-gradient(90deg, #f06292, #d81b60);
-            color: #ffffff;
-            border-color: transparent;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        
+        .page-item.active .page-link {
+            background-image: linear-gradient(310deg, #7928CA 0%, #FF0080 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(121, 40, 202, 0.4);
         }
-        .pagination .page-item.active .page-link {
-            background: linear-gradient(90deg, #f06292, #d81b60);
-            border-color: transparent;
-            color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        
+        .page-item .page-link:hover:not(.page-item.active .page-link) {
+            background: #f1f5f9;
+            color: #7928CA;
+            transform: translateY(-3px);
         }
-        .pagination .page-item.disabled .page-link {
-            background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
-            border-color: #dee2e6;
-            color: #6c757d;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        .pagination .page-item.disabled .page-link:hover {
-            background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
-            color: #6c757d;
-            transform: none;
-            box-shadow: none;
+        
+        .page-item.disabled .page-link {
+            color: #94a3b8;
+            pointer-events: none;
+            background-color: transparent;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .kanban-board {
+        @media (max-width: 992px) {
+            .reservations-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-header {
                 flex-direction: column;
+                align-items: flex-start !important;
             }
-            .kanban-column {
-                min-width: 100%;
-            }
-            .kanban-card .card-body {
-                padding: 10px;
-            }
-            .kanban-card .btn {
-                width: 100%;
-                margin-bottom: 8px;
-            }
-            .input-group {
-                max-width: 100%;
-                margin-bottom: 10px;
-            }
-            .pagination .page-link {
-                min-width: 35px;
-                height: 35px;
-                font-size: 0.9rem;
+            
+            .card-header a {
+                margin-top: 1rem;
+                align-self: flex-start;
             }
         }
     </style>
@@ -735,27 +905,163 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('searchInput');
-            const cards = document.querySelectorAll('.kanban-card');
-
-            // Recherche dynamique
+            const cards = document.querySelectorAll('.reservation-card');
+            const statusColumns = document.querySelectorAll('.status-column-body');
+            const emptyMessages = document.querySelectorAll('.text-center.text-muted');
+            
+            // Enhanced search functionality
             if (searchInput && cards.length) {
                 searchInput.addEventListener('input', () => {
                     const searchTerm = searchInput.value.toLowerCase();
-
+                    let visibleCards = {
+                        'En attente': 0,
+                        'Validé': 0,
+                        'Refusé': 0
+                    };
+                    
+                    // Hide all empty messages initially
+                    emptyMessages.forEach(msg => {
+                        msg.style.display = 'none';
+                    });
+                    
+                    // Search through cards
                     cards.forEach(card => {
                         const texts = card.querySelectorAll('.card-text, .card-title');
                         let match = false;
-
+                        
                         texts.forEach(text => {
                             if (text.textContent.toLowerCase().includes(searchTerm)) {
                                 match = true;
                             }
                         });
-
-                        card.style.display = match ? '' : 'none';
+                        
+                        // Get the status from the badge
+                        let status;
+                        if (card.querySelector('.status-badge-pending')) {
+                            status = 'En attente';
+                        } else if (card.querySelector('.status-badge-approved')) {
+                            status = 'Validé';
+                        } else if (card.querySelector('.status-badge-rejected')) {
+                            status = 'Refusé';
+                        }
+                        
+                        // Show/hide card based on match
+                        if (match) {
+                            card.style.display = '';
+                            visibleCards[status]++;
+                            
+                            // Add reveal animation
+                            card.classList.add('reveal');
+                            setTimeout(() => {
+                                card.classList.remove('reveal');
+                            }, 300);
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    
+                    // Update empty status messages
+                    statusColumns.forEach(column => {
+                        let status;
+                        if (column.parentElement.querySelector('.status-pending')) {
+                            status = 'En attente';
+                        } else if (column.parentElement.querySelector('.status-approved')) {
+                            status = 'Validé';
+                        } else if (column.parentElement.querySelector('.status-rejected')) {
+                            status = 'Refusé';
+                        }
+                        
+                        const emptyMsg = column.querySelector('.text-center.text-muted');
+                        if (emptyMsg) {
+                            if (visibleCards[status] === 0) {
+                                emptyMsg.style.display = 'block';
+                                if (searchTerm) {
+                                    emptyMsg.textContent = 'Aucun résultat pour cette recherche';
+                                } else {
+                                    emptyMsg.textContent = `Aucune réservation ${status.toLowerCase()}`;
+                                }
+                            } else {
+                                emptyMsg.style.display = 'none';
+                            }
+                        }
+                    });
+                    
+                    // Update counters
+                    document.querySelectorAll('.status-count').forEach(counter => {
+                        const parentHeader = counter.closest('.status-column-header');
+                        let status;
+                        
+                        if (parentHeader.classList.contains('status-pending')) {
+                            status = 'En attente';
+                            counter.textContent = visibleCards[status];
+                        } else if (parentHeader.classList.contains('status-approved')) {
+                            status = 'Validé';
+                            counter.textContent = visibleCards[status];
+                        } else if (parentHeader.classList.contains('status-rejected')) {
+                            status = 'Refusé';
+                            counter.textContent = visibleCards[status];
+                        }
                     });
                 });
+                
+                // Add clear button for search
+                const searchWrapper = searchInput.parentElement;
+                const clearButton = document.createElement('button');
+                clearButton.className = 'search-clear';
+                clearButton.innerHTML = '<i class="fas fa-times"></i>';
+                clearButton.style.display = 'none';
+                searchWrapper.appendChild(clearButton);
+                
+                searchInput.addEventListener('input', () => {
+                    clearButton.style.display = searchInput.value ? 'block' : 'none';
+                });
+                
+                clearButton.addEventListener('click', () => {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+                    clearButton.style.display = 'none';
+                    searchInput.focus();
+                });
             }
+            
+            // Add CSS for search clear button and animations
+            const style = document.createElement('style');
+            style.textContent = `
+                .search-clear {
+                    position: absolute;
+                    right: 15px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: none;
+                    border: none;
+                    color: #adb5bd;
+                    cursor: pointer;
+                    z-index: 10;
+                    font-size: 1rem;
+                    padding: 0;
+                    line-height: 1;
+                }
+                
+                .search-clear:hover {
+                    color: #6c757d;
+                }
+                
+                @keyframes reveal {
+                    0% {
+                        opacity: 0;
+                        transform: translateY(10px);
+                    }
+                    100% {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                
+                .reveal {
+                    animation: reveal 0.3s ease-out forwards;
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
 {% endblock %}
