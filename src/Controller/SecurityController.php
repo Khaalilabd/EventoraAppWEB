@@ -32,6 +32,7 @@ use Symfony\Component\Mime\Email;
 use App\Form\ResetPasswordRequestType;
 use App\Form\ResetPasswordFormType;
 use Psr\Log\LoggerInterface;
+use App\Service\TwoFactorAuthService;
 
 class SecurityController extends AbstractController
 {
@@ -138,42 +139,47 @@ class SecurityController extends AbstractController
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        TwoFactorAuthService $twoFactorAuthService
     ): Response {
-        $membre = new Membre();
-        $form = $this->createForm(RegistrationFormType::class, $membre);
+        $user = new Membre();
+        $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Vérifier si l'email existe déjà
+            $existingUser = $entityManager->getRepository(Membre::class)->findOneBy(['email' => $user->getEmail()]);
+            if ($existingUser) {
+                $this->addFlash('error', 'Cette adresse email est déjà utilisée. Veuillez utiliser une autre adresse email ou vous connecter.');
+                return $this->render('security/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
+            }
+
+            // encode the plain password
+            $user->setMotDePasse(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('motDePasse')->getData()
+                )
+            );
+
             try {
-                $plainPassword = $form->get('motDePasse')->getData();
-                $hashedPassword = $userPasswordHasher->hashPassword($membre, $plainPassword);
-                $membre->setMotDePasse($hashedPassword);
-                $membre->setRole('MEMBRE');
-                $membre->setIsConfirmed(true);
-
-                $imageFile = $form->get('image')->getData();
-                if ($imageFile) {
-                    $newFilename = uniqid() . '.' . $imageFile->guessExtension();
-                    $imageFile->move(
-                        $this->getParameter('images_directory'),
-                        $newFilename
-                    );
-                    $membre->setImage($newFilename);
-                }
-
-                $entityManager->persist($membre);
+                $entityManager->persist($user);
                 $entityManager->flush();
-
-                $this->addFlash('success', 'Votre compte a été créé avec succès !');
+                
+                $this->addFlash('success', 'Votre compte a été créé avec succès ! Vous pouvez maintenant vous connecter.');
                 return $this->redirectToRoute('app_auth');
             } catch (\Exception $e) {
-                $this->addFlash('error', 'Erreur lors de l\'inscription : ' . $e->getMessage());
+                $this->addFlash('error', 'Erreur technique : ' . $e->getMessage());
+                return $this->render('security/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
             }
         }
 
         return $this->render('security/register.html.twig', [
-            'registration_form' => $form->createView(),
+            'registrationForm' => $form->createView(),
         ]);
     }
 

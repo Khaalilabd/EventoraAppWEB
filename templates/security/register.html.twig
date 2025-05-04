@@ -35,35 +35,35 @@
         {% endfor %}
     </div>
 
-            {{ form_start(registration_form, {'attr': {'enctype': 'multipart/form-data', 'class': 'register-form'}}) }}
+            {{ form_start(registrationForm, {'attr': {'enctype': 'multipart/form-data', 'class': 'register-form'}}) }}
                 <div class="form-two-columns">
                     <!-- Colonne gauche -->
                     <div class="form-column left-column">
                         <h2 class="section-title">Informations personnelles</h2>
                         <div class="compact-row">
                             <div class="form-group half">
-                                {{ form_label(registration_form.nom) }}
-                                {{ form_widget(registration_form.nom) }}
+                                {{ form_label(registrationForm.nom) }}
+                                {{ form_widget(registrationForm.nom) }}
                             </div>
                             <div class="form-group half">
-                                {{ form_label(registration_form.prenom) }}
-                                {{ form_widget(registration_form.prenom) }}
+                                {{ form_label(registrationForm.prenom) }}
+                                {{ form_widget(registrationForm.prenom) }}
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            {{ form_label(registration_form.email) }}
-                            {{ form_widget(registration_form.email) }}
+                            {{ form_label(registrationForm.email) }}
+                            {{ form_widget(registrationForm.email) }}
                         </div>
                         
                         <div class="compact-row">
                             <div class="form-group half">
-                                {{ form_label(registration_form.username) }}
-                                {{ form_widget(registration_form.username) }}
+                                {{ form_label(registrationForm.username) }}
+                                {{ form_widget(registrationForm.username) }}
                             </div>
                             <div class="form-group half">
-                                {{ form_label(registration_form.adresse) }}
-                                {{ form_widget(registration_form.adresse) }}
+                                {{ form_label(registrationForm.adresse) }}
+                                {{ form_widget(registrationForm.adresse) }}
                             </div>
                         </div>
                     </div>
@@ -73,8 +73,8 @@
                         <h2 class="section-title">Informations supplémentaires</h2>
                         <div class="compact-row">
                             <div class="form-group half">
-                                {{ form_label(registration_form.dateOfBirth) }}
-                                {{ form_widget(registration_form.dateOfBirth, {
+                                {{ form_label(registrationForm.dateOfBirth) }}
+                                {{ form_widget(registrationForm.dateOfBirth, {
                         'attr': {
                             'type': 'date',
                             'min': '1900-01-01',
@@ -84,26 +84,26 @@
                     }) }}
                             </div>
                             <div class="form-group half">
-                                {{ form_label(registration_form.gender) }}
-                                {{ form_widget(registration_form.gender) }}
+                                {{ form_label(registrationForm.gender) }}
+                                {{ form_widget(registrationForm.gender) }}
                             </div>
                         </div>
                         
                         <div class="compact-row">
                             <div class="form-group half">
-                                {{ form_label(registration_form.cin) }}
-                                {{ form_widget(registration_form.cin) }}
+                                {{ form_label(registrationForm.cin) }}
+                                {{ form_widget(registrationForm.cin) }}
                             </div>
                             <div class="form-group half">
-                                {{ form_label(registration_form.numTel) }}
-                                {{ form_widget(registration_form.numTel) }}
+                                {{ form_label(registrationForm.numTel) }}
+                                {{ form_widget(registrationForm.numTel) }}
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            {{ form_label(registration_form.motDePasse) }}
+                            {{ form_label(registrationForm.motDePasse) }}
                             <div class="password-wrapper">
-                                {{ form_widget(registration_form.motDePasse, {'attr': {'autocomplete': 'new-password', 'class': 'password-input'}}) }}
+                                {{ form_widget(registrationForm.motDePasse, {'attr': {'autocomplete': 'new-password', 'class': 'password-input'}}) }}
                                 <span id="toggle-password" class="toggle-password">
                                     <i class="fas fa-eye" id="toggleIcon"></i>
                                 </span>
@@ -116,8 +116,8 @@
                 <div class="form-footer">
                     <div class="compact-row">
                         <div class="form-group image-group two-thirds">
-                            {{ form_label(registration_form.image) }}
-                            {{ form_widget(registration_form.image, {'attr': {'accept': 'image/*', 'class': 'image-input'}}) }}
+                            {{ form_label(registrationForm.image) }}
+                            {{ form_widget(registrationForm.image, {'attr': {'accept': 'image/*', 'class': 'image-input'}}) }}
                         </div>
                         
                         <div class="actions-group one-third">
@@ -127,11 +127,11 @@
                                 </a>
                                 <button type="submit" class="submit-btn">{{ 'sign_up'|trans({'default': 'Inscription'}) }}</button>
                             </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-                </div>
-            {{ form_end(registration_form) }}
-            </div>
+            {{ form_end(registrationForm) }}
+        </div>
     </div>
 
     <style>

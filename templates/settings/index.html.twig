@@ -1270,6 +1270,19 @@
                         </div>
                     </div>
 
+                    <!-- Section 3: Two-Factor Authentication -->
+                    <div class="settings-section animate-box" id="two-factor" data-animate-effect="fadeIn">
+                        <h3>Double authentification</h3>
+                        <div class="form-group">
+                            <p>La double authentification ajoute une couche de sécurité supplémentaire à votre compte. 
+                               Lorsqu'elle est activée, vous devrez entrer un code de vérification envoyé par email 
+                               à chaque connexion.</p>
+                            <a href="{{ path('app_2fa_toggle') }}" class="btn btn-primary">
+                                {{ app.user.isTwoFactorEnabled ? 'Désactiver' : 'Activer' }} la double authentification
+                            </a>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         {{ form_widget(form.save, {'label': 'save_changes'|trans}) }}
                     </div>

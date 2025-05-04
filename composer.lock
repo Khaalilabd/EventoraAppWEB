@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a585632e0000919ef39d34dcee8bbf8",
+    "content-hash": "d95218221ae58e51872cc1fb9a0cc0c8",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5496,16 +5496,16 @@
         },
         {
             "name": "sendinblue/api-v3-sdk",
-            "version": "v8.4.0",
+            "version": "v8.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sendinblue/APIv3-php-library.git",
-                "reference": "de2367dacd55f3143101ccb70ca0fb41d731d974"
+                "reference": "5d08398c7247a2f5d80f285d08a6dbe169f18eab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sendinblue/APIv3-php-library/zipball/de2367dacd55f3143101ccb70ca0fb41d731d974",
-                "reference": "de2367dacd55f3143101ccb70ca0fb41d731d974",
+                "url": "https://api.github.com/repos/sendinblue/APIv3-php-library/zipball/5d08398c7247a2f5d80f285d08a6dbe169f18eab",
+                "reference": "5d08398c7247a2f5d80f285d08a6dbe169f18eab",
                 "shasum": ""
             },
             "require": {
@@ -5553,10 +5553,10 @@
             ],
             "support": {
                 "issues": "https://github.com/sendinblue/APIv3-php-library/issues",
-                "source": "https://github.com/sendinblue/APIv3-php-library/tree/v8.4.0"
+                "source": "https://github.com/sendinblue/APIv3-php-library/tree/v8.4.2"
             },
             "abandoned": "getbrevo/brevo-php",
-            "time": "2023-01-05T08:27:22+00:00"
+            "time": "2023-03-10T04:21:43+00:00"
         },
         {
             "name": "stripe/stripe-php",
@@ -5764,6 +5764,75 @@
                 }
             ],
             "time": "2025-02-26T00:25:36+00:00"
+        },
+        {
+            "name": "symfony/brevo-mailer",
+            "version": "v6.4.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/brevo-mailer.git",
+                "reference": "fa1d07838dbe712e1b5a061ea8a2e2d9855cdcea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/brevo-mailer/zipball/fa1d07838dbe712e1b5a061ea8a2e2d9855cdcea",
+                "reference": "fa1d07838dbe712e1b5a061ea8a2e2d9855cdcea",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "symfony/mailer": "^5.4.21|^6.2.7|^7.0"
+            },
+            "conflict": {
+                "symfony/mime": "<6.2"
+            },
+            "require-dev": {
+                "symfony/http-client": "^6.3|^7.0",
+                "symfony/webhook": "^6.3|^7.0"
+            },
+            "type": "symfony-mailer-bridge",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Mailer\\Bridge\\Brevo\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pierre Tanguy",
+                    "homepage": "https://github.com/petanguy"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Brevo Mailer Bridge",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/brevo-mailer/tree/v6.4.13"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-09-25T14:18:03+00:00"
         },
         {
             "name": "symfony/cache",
@@ -13799,7 +13868,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -13807,6 +13876,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

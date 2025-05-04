@@ -56,8 +56,6 @@ services:
             $params: '@parameter_bag'
             $logger: '@monolog.logger'
 
-
-
     App\Controller\Users\UserReservationsController:
         arguments:
             $twilioAccountSid: '%twilio_account_sid%'
@@ -82,7 +80,6 @@ services:
         arguments:
             $geminiApiKey: '%env(GOOGLE_GEMINI_API_KEY)%'
 
-
     App\Service\GoogleCalendarService:
         arguments:
             $credentialsPath: '%kernel.project_dir%/config/credentials.json'
@@ -103,5 +100,14 @@ services:
             $params: '@parameter_bag'
             $twig: '@twig'
             $logger: '@monolog.logger'
+
+    App\EventSubscriber\TwoFactorSubscriber:
+        arguments:
+            $requestStack: '@request_stack'
+
+    App\Service\BrevoSmsSender:
+        arguments:
+            $apiKey: '%env(BREVO_API_KEY)%'
+            $sender: 'Eventora'
 
         

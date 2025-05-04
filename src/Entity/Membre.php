@@ -73,9 +73,11 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean', nullable: true, name: 'isConfirmed')]
     private ?bool $isConfirmed = false;
 
+    /**
+     * @Assert\Type(type="DateTimeInterface", message="La date de naissance doit être une date valide.")
+     * @Assert\Past(message="La date de naissance doit être dans le passé.")
+     */
     #[ORM\Column(type: 'date', nullable: true)]
-    #[Assert\Type(\DateTimeInterface::class, message: "La date de naissance doit être au format date valide.")]
-    #[Assert\Past(message: "La date de naissance doit être dans le passé.")]
     private ?\DateTimeInterface $dateOfBirth = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
@@ -96,6 +98,15 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: Reservationpersonnalise::class, mappedBy: 'membre')]
     private Collection $reservationpersonnalises;
+
+    #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => true])]
+    private bool $isTwoFactorEnabled = true;
+
+    #[ORM\Column(type: 'string', length: 6, nullable: true)]
+    private ?string $twoFactorCode = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $twoFactorCodeExpiresAt = null;
 
     public function __construct()
     {
@@ -396,6 +407,39 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
                 $reservationpersonnalise->setMembre(null);
             }
         }
+        return $this;
+    }
+
+    public function isTwoFactorEnabled(): bool
+    {
+        return $this->isTwoFactorEnabled;
+    }
+
+    public function setIsTwoFactorEnabled(bool $isTwoFactorEnabled): self
+    {
+        $this->isTwoFactorEnabled = $isTwoFactorEnabled;
+        return $this;
+    }
+
+    public function getTwoFactorCode(): ?string
+    {
+        return $this->twoFactorCode;
+    }
+
+    public function setTwoFactorCode(?string $twoFactorCode): self
+    {
+        $this->twoFactorCode = $twoFactorCode;
+        return $this;
+    }
+
+    public function getTwoFactorCodeExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->twoFactorCodeExpiresAt;
+    }
+
+    public function setTwoFactorCodeExpiresAt(?\DateTimeInterface $twoFactorCodeExpiresAt): self
+    {
+        $this->twoFactorCodeExpiresAt = $twoFactorCodeExpiresAt;
         return $this;
     }
 }
