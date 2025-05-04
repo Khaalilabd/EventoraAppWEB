@@ -456,13 +456,239 @@
                             <h6 class="font-weight-bolder mb-0">Modifier le service #{{ GService.id }}</h6>
                         </div>
                         <div class="card-body">
-                            <form method="post">
-                                {{ form_start(form) }}
-                                {{ form_widget(form) }}
-                                <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                                {{ form_end(form) }}
-                            </form>
-                            <a href="{{ path('admin_services') }}" class="btn btn-outline-secondary">Retour</a>
+                            {% for label, messages in app.flashes %}
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                            
+                            {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'modern-form'}}) }}
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="form-card p-4 rounded shadow-sm">
+                                            <h5 class="form-section-title mb-4">Informations générales</h5>
+                                            
+                                            <div class="form-floating mb-4">
+                                                {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Titre du service'}}) }}
+                                                {{ form_label(form.titre) }}
+                                                {{ form_errors(form.titre, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                            </div>
+                                            
+                                            <div class="form-group mb-4">
+                                                {{ form_label(form.sponsor, null, {'label_attr': {'class': 'form-label'}}) }}
+                                                {{ form_widget(form.sponsor, {'attr': {'class': 'form-select select2'}}) }}
+                                                {{ form_errors(form.sponsor, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                <div class="form-text text-muted">{{ form_help(form.sponsor) }}</div>
+                                            </div>
+                                            
+                                            <div class="form-group mb-4">
+                                                {{ form_label(form.typeService, null, {'label_attr': {'class': 'form-label'}}) }}
+                                                {{ form_widget(form.typeService, {'attr': {'class': 'form-select select2'}}) }}
+                                                {{ form_errors(form.typeService, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                <div class="form-text text-muted">{{ form_help(form.typeService) }}</div>
+                                            </div>
+                                            
+                                            <div class="form-group mb-4">
+                                                {{ form_label(form.location, null, {'label_attr': {'class': 'form-label'}}) }}
+                                                {{ form_widget(form.location, {'attr': {'class': 'form-select select2'}}) }}
+                                                {{ form_errors(form.location, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                <div class="form-text text-muted">{{ form_help(form.location) }}</div>
+                                            </div>
+                                            
+                                            <div class="form-floating mb-4">
+                                                {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': 'Prix'}}) }}
+                                                {{ form_label(form.prix) }}
+                                                {{ form_errors(form.prix, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                <div class="form-text text-muted">{{ form_help(form.prix) }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="form-card p-4 rounded shadow-sm">
+                                            <h5 class="form-section-title mb-4">Détails et média</h5>
+                                            
+                                            <div class="form-group mb-4">
+                                                {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                {{ form_errors(form.description, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                <div class="form-text text-muted">{{ form_help(form.description) }}</div>
+                                            </div>
+                                            
+                                            <div class="form-group mb-4">
+                                                <label class="form-label">{{ form_label(form.image) }}</label>
+                                                
+                                                {% if GService.image %}
+                                                    <div class="current-image-container p-3 mb-3 rounded bg-light text-center">
+                                                        <p class="text-muted mb-2"><i class="fas fa-image me-2"></i>Image actuelle</p>
+                                                        <img src="{{ asset(GService.image) }}" alt="{{ GService.titre }}" class="img-thumbnail mb-2" style="max-height: 200px; max-width: 100%;">
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <div class="custom-file-upload">
+                                                    {{ form_widget(form.image, {'attr': {'class': 'form-control file-input', 'onchange': 'previewImage(this)'}}) }}
+                                                    <div class="form-text text-muted">{{ form_help(form.image) }}</div>
+                                                    {{ form_errors(form.image, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                </div>
+                                                
+                                                <div id="imagePreviewContainer" class="preview-container mt-3 p-3 rounded bg-light text-center" style="display: none;">
+                                                    <p class="text-muted mb-2"><i class="fas fa-eye me-2"></i>Aperçu de la nouvelle image</p>
+                                                    <img id="imagePreview" src="#" alt="Aperçu" class="img-thumbnail" style="max-height: 200px; max-width: 100%;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions d-flex justify-content-end gap-2 mt-4">
+                                    <a href="{{ path('admin_services') }}" class="btn btn-outline-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>Retour
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Mettre à jour
+                                    </button>
+                                </div>
+                            {{ form_end(form) }}
+
+                            <script>
+                                function previewImage(input) {
+                                    const preview = document.getElementById('imagePreview');
+                                    const previewContainer = document.getElementById('imagePreviewContainer');
+                                    
+                                    if (input.files && input.files[0]) {
+                                        const reader = new FileReader();
+                                        
+                                        reader.onload = function(e) {
+                                            preview.src = e.target.result;
+                                            previewContainer.style.display = 'block';
+                                        }
+                                        
+                                        reader.readAsDataURL(input.files[0]);
+                                    } else {
+                                        previewContainer.style.display = 'none';
+                                    }
+                                }
+
+                                // Initialisation des select2 pour un meilleur design des listes déroulantes
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    if (typeof $ !== 'undefined' && $.fn.select2) {
+                                        $('.select2').select2({
+                                            theme: 'bootstrap-5',
+                                            width: '100%'
+                                        });
+                                    }
+                                });
+                            </script>
+
+                            <style>
+                                .modern-form {
+                                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+                                }
+                                
+                                .form-card {
+                                    background-color: #fff;
+                                    border: 1px solid rgba(0, 0, 0, 0.05);
+                                    transition: all 0.3s ease;
+                                }
+                                
+                                .form-card:hover {
+                                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+                                    transform: translateY(-2px);
+                                }
+                                
+                                .form-section-title {
+                                    color: #344767;
+                                    font-weight: 600;
+                                    border-bottom: 2px solid #f0f2f5;
+                                    padding-bottom: 10px;
+                                    position: relative;
+                                }
+                                
+                                .form-section-title:after {
+                                    content: '';
+                                    position: absolute;
+                                    bottom: -2px;
+                                    left: 0;
+                                    width: 50px;
+                                    height: 2px;
+                                    background: linear-gradient(to right, #ff6200, #ff8c00);
+                                }
+                                
+                                .form-control, .form-select {
+                                    border-radius: 0.5rem;
+                                    border: 1px solid #dee2e6;
+                                    padding: 0.625rem 1rem;
+                                    font-size: 0.875rem;
+                                    transition: all 0.2s ease;
+                                }
+                                
+                                .form-control:focus, .form-select:focus {
+                                    border-color: #ff6200;
+                                    box-shadow: 0 0 0 0.2rem rgba(255, 98, 0, 0.1);
+                                }
+                                
+                                .custom-file-upload {
+                                    position: relative;
+                                    overflow: hidden;
+                                    margin-top: 10px;
+                                }
+                                
+                                .current-image-container, .preview-container {
+                                    border: 1px dashed #ccc;
+                                    background-color: #f9f9f9;
+                                    transition: all 0.3s ease;
+                                }
+                                
+                                .btn-primary {
+                                    background: linear-gradient(to right, #ff6200, #ff8c00);
+                                    border: none;
+                                    box-shadow: 0 2px 12px rgba(255, 98, 0, 0.3);
+                                    transition: all 0.3s ease;
+                                }
+                                
+                                .btn-primary:hover {
+                                    background: linear-gradient(to right, #ff5500, #ff7b00);
+                                    transform: translateY(-2px);
+                                    box-shadow: 0 4px 15px rgba(255, 98, 0, 0.4);
+                                }
+                                
+                                .btn-outline-secondary {
+                                    border-color: #d4d9e2;
+                                    color: #495057;
+                                    transition: all 0.3s ease;
+                                }
+                                
+                                .btn-outline-secondary:hover {
+                                    background-color: #f8f9fa;
+                                    transform: translateY(-2px);
+                                }
+                                
+                                .form-text {
+                                    font-size: 0.75rem;
+                                }
+                                
+                                .form-floating > .form-control:focus ~ label,
+                                .form-floating > .form-control:not(:placeholder-shown) ~ label {
+                                    color: #ff6200;
+                                }
+                                
+                                /* Ajout d'animations pour un formulaire plus dynamique */
+                                @keyframes fadeIn {
+                                    from { opacity: 0; transform: translateY(10px); }
+                                    to { opacity: 1; transform: translateY(0); }
+                                }
+                                
+                                .form-card {
+                                    animation: fadeIn 0.5s ease forwards;
+                                }
+                                
+                                .col-md-6:nth-child(2) .form-card {
+                                    animation-delay: 0.2s;
+                                }
+                            </style>
                         </div>
                     </div>
                 </div>

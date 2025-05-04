@@ -598,6 +598,11 @@
                                         <span class="badge badge-{{ Gservice.sponsor.type_partenaire|lower|replace({'é': 'e', ' ': '-'}) }}">{{ Gservice.sponsor.type_partenaire }}</span>
                                     </div>
                                     <div class="fiche-body">
+                                        {% if Gservice.image %}
+                                        <div class="text-center mb-2">
+                                            <img src="{{ asset(Gservice.image) }}" alt="{{ Gservice.titre }}" class="img-fluid" style="max-height: 80px; max-width: 100%;">
+                                        </div>
+                                        {% endif %}
                                         <p><strong>Partenaire :</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
                                         <p><strong>Type :</strong> {{ Gservice.type_service }}</p>
                                         <p><strong>Prix :</strong> {{ Gservice.prix }} €</p>
@@ -729,6 +734,11 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                         </div>
                         <div class="modal-body">
+                            {% if Gservice.image %}
+                            <div class="text-center mb-3">
+                                <img src="{{ asset(Gservice.image) }}" alt="{{ Gservice.titre }}" class="img-fluid" style="max-height: 200px;">
+                            </div>
+                            {% endif %}
                             <p><strong>ID :</strong> {{ Gservice.id }}</p>
                             <p><strong>Partenaire :</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
                             <p><strong>Type de Partenaire :</strong> {{ Gservice.sponsor.type_partenaire }}</p>

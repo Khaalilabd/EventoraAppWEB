@@ -747,7 +747,7 @@
                     </card>
                     <card data-image="https://i.pinimg.com/736x/1e/92/c4/1e92c41b988484af5a080b0eba820538.jpg">
                         <h1 slot="header">Lumiere</h1>
-                        <p slot="content">Notre service met la lumière au cœur de vos espaces. Avec des solutions d’éclairage sur mesure, nous créons des ambiances chaleureuses et modernes, jouant sur l’intensité, les couleurs et le design pour sublimer chaque pièce ou événement. Laissez vos espaces briller d’élégance !</p>
+                        <p slot="content">Notre service met la lumière au cœur de vos espaces. Avec des solutions d'éclairage sur mesure, nous créons des ambiances chaleureuses et modernes, jouant sur l'intensité, les couleurs et le design pour sublimer chaque pièce ou événement. Laissez vos espaces briller d'élégance !</p>
                     </card>
                     <card data-image="https://i.pinimg.com/474x/25/6e/75/256e75cd9f5e71cad09b060871e0e51b.jpg">
                         <h1 slot="header">Sono</h1>
@@ -770,11 +770,15 @@
                 </div>
                 <div class="card-container">
                     {% for service in GServices %}
-                        <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" role="article" aria-labelledby="service-title-{{ service.id }}" data-service-id="{{ service.id }}" data-service-title="{{ service.titre }}" data-service-description="{{ service.description }}" data-service-location="{{ service.location }}" data-service-type="{{ service.type_service }}" data-service-price="{{ service.prix }}" data-service-image="{{ asset(service.image) }}" data-service-partenaire="{{ service.sponsor.nom_partenaire }}">
+                        <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" role="article" aria-labelledby="service-title-{{ service.id }}" data-service-id="{{ service.id }}" data-service-title="{{ service.titre }}" data-service-description="{{ service.description }}" data-service-location="{{ service.location }}" data-service-type="{{ service.type_service }}" data-service-price="{{ service.prix }}" data-service-image="{% if service.image %}{{ asset(service.image) }}{% else %}{{ asset('service/default.jpg') }}{% endif %}" data-service-partenaire="{{ service.sponsor.nom_partenaire }}">
                             <div class="content">
                                 <div class="front">
                                     <div class="img">
-                                        <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img" loading="lazy">
+                                        {% if service.image %}
+                                            <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img" loading="lazy">
+                                        {% else %}
+                                            <img src="{{ asset('service/default.jpg') }}" alt="Image par défaut" class="service-img" loading="lazy">
+                                        {% endif %}
                                         <div class="circle" id="right"></div>
                                         <div class="circle" id="bottom"></div>
                                     </div>
@@ -806,7 +810,7 @@
         <div class="details-container" id="detailsContainer" role="dialog" aria-labelledby="details-title">
             <div class="details-content">
                 <button class="close-btn" aria-label="Fermer les détails"><i class="fas fa-times"></i></button>
-                <img id="details-image" src="" alt="">
+                <img id="details-image" src="" alt="" onerror="this.src='{{ asset('service/default.jpg') }}'">
                 <h2 id="details-title"></h2>
                 <div class="badges">
                     <small class="badge location" id="details-location"></small>
@@ -957,7 +961,12 @@
                                 detailsDescription.textContent = card.dataset.serviceDescription;
                                 detailsPrice.textContent = card.dataset.servicePrice;
                                 detailsPartenaire.textContent = card.dataset.servicePartenaire;
-            
+                                
+                                // Gestion des erreurs d'image
+                                detailsImage.onerror = function() {
+                                    this.src = '{{ asset('service/default.jpg') }}';
+                                };
+
                                 // Stocker l'ID du service pour le bouton Réserver
                                 reserveButton.dataset.serviceId = card.dataset.serviceId;
             

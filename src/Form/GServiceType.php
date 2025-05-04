@@ -129,6 +129,7 @@ class GServiceType extends AbstractType
                 'label' => 'Image',
                 'required' => false,
                 'mapped' => false, // Géré manuellement dans le contrôleur
+                'data_class' => null,
                 'constraints' => [
                     new Assert\File([
                         'maxSize' => '2M',

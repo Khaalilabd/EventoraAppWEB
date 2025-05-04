@@ -25,6 +25,11 @@
                 <li class="nav-item">
                     <a class="nav-link {{ app.request.attributes.get('_route') == 'app_feedback_new' ? 'active' : '' }}" href="{{ path('app_feedback_new') }}">Feedback</a>
                 </li>
+                {% if app.user %}
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_event_planning' ? 'active' : '' }}" href="{{ path('app_event_planning') }}">Planification d'événements</a>
+                </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="#">Talk with Evi</a>
                 </li>
@@ -45,6 +50,9 @@
                             <li><a class="dropdown-item" href="{{ path('app_home') }}">Historique</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('user_dashboard') }}">Mon compte</a>
+                            </li>
                         {% else %}
                             <li><a class="dropdown-item" href="{{ path('app_auth') }}">Connexion</a></li>
                             <li><a class="dropdown-item" href="{{ path('app_auth') }}">Inscription</a></li>
