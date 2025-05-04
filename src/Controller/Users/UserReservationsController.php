@@ -122,16 +122,44 @@ class UserReservationsController extends AbstractController
                             $this->logger->warning('Failed to add Google Calendar event for pack reservation: ' . $reservation->getIDReservationPack());
                         }
     
-                        $packName = $reservation->getPack() ? $reservation->getPack()->getNomPack() : 'Non spécifié';
+                        $pack = $reservation->getPack();
+                        $packName = $pack ? $pack->getNomPack() : 'Non spécifié';
                         $eventDate = $reservation->getDate()->format('d/m/Y');
                         $userName = $reservation->getPrenom() ?: 'Client';
                         $successMessage = sprintf(
-                            'Cher(e) %s, votre réservation pour le pack "%s" du %s a été confirmée. %s Merci de choisir Eventora !',
+                            'Cher(e) %s, votre réservation pour le pack "%s" du %s a été enregistrée. Merci de vérifier votre panier et procéder au paiement.',
                             $userName,
                             $packName,
-                            $eventDate,
-                            $calendarLink ? "Consultez votre événement : $calendarLink" : ''
+                            $eventDate
                         );
+    
+                        // Ajouter le pack au panier
+                        $cartItems = $request->getSession()->get('cartItems', []);
+                        
+                        // Vider le panier d'abord pour ne pas avoir de duplication
+                        $cartItems = [];
+                        
+                        if ($pack) {
+                            $cartItems[] = [
+                                'id' => $pack->getId(),
+                                'title' => $pack->getNomPack(),
+                                'price' => $pack->getPrix() . ' dt',
+                                'location' => 'N/A',
+                                'type' => 'Pack',
+                                'quantity' => 1,
+                                'image' => $pack->getImagePath() ?? 'https://via.placeholder.com/400x200',
+                                'reservation_id' => $reservation->getIDReservationPack(),
+                                'reservation_type' => 'pack'
+                            ];
+                        }
+                        
+                        $request->getSession()->set('cartItems', $cartItems);
+                        $request->getSession()->set('reservation_data', [
+                            'id' => $reservation->getIDReservationPack(),
+                            'type' => 'pack',
+                            'date' => $eventDate,
+                            'client' => $userName
+                        ]);
     
                         $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
                         $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
@@ -169,8 +197,8 @@ class UserReservationsController extends AbstractController
                             $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi du SMS.');
                         }
     
-                        // Return redirect URL for AJAX - Use Calendar Link if available
-                        $redirectUrl = $calendarLink ?: $this->generateUrl('app_user_history');
+                        // Return redirect URL for AJAX - Always use history route
+                        $redirectUrl = $this->generateUrl('app_user_history');
 
                         return new JsonResponse([
                             'success' => true,
@@ -242,63 +270,51 @@ class UserReservationsController extends AbstractController
                 $calendarLink = $this->googleCalendarService->addEvent($reservation, 'pack');
                 if (!$calendarLink) {
                     $this->logger->warning('Failed to add Google Calendar event for pack reservation: ' . $reservation->getIDReservationPack());
-                    $this->addFlash('warning', 'Événement non ajouté au calendrier Google.');
                 }
     
-                $packName = $reservation->getPack() ? $reservation->getPack()->getNomPack() : 'Non spécifié';
+                $pack = $reservation->getPack();
+                $packName = $pack ? $pack->getNomPack() : 'Non spécifié';
                 $eventDate = $reservation->getDate()->format('d/m/Y');
                 $userName = $reservation->getPrenom() ?: 'Client';
                 $successMessage = sprintf(
-                    'Cher(e) %s, votre réservation pour le pack "%s" du %s a été confirmée. %s Merci de choisir Eventora !',
+                    'Cher(e) %s, votre réservation pour le pack "%s" du %s a été enregistrée. Merci de vérifier votre panier et procéder au paiement.',
                     $userName,
                     $packName,
-                    $eventDate,
-                    $calendarLink ? "Consultez votre événement : $calendarLink" : ''
+                    $eventDate
                 );
     
-                $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
-                $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
-                    'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
-                    'to' => [['email' => $recipientEmail, 'name' => $userName]],
-                    'templateId' => 1,
-                    'params' => [
-                        'name' => $userName,
-                        'date' => $eventDate,
-                        'packName' => $packName,
-                        'calendarLink' => $calendarLink ?: 'N/A'
-                    ]
+                // Ajouter le pack au panier
+                $cartItems = $request->getSession()->get('cartItems', []);
+                
+                // Vider le panier d'abord pour ne pas avoir de duplication
+                $cartItems = [];
+                
+                if ($pack) {
+                    $cartItems[] = [
+                        'id' => $pack->getId(),
+                        'title' => $pack->getNomPack(),
+                        'price' => $pack->getPrix() . ' dt',
+                        'location' => 'N/A',
+                        'type' => 'Pack',
+                        'quantity' => 1,
+                        'image' => $pack->getImagePath() ?? 'https://via.placeholder.com/400x200',
+                        'reservation_id' => $reservation->getIDReservationPack(),
+                        'reservation_type' => 'pack'
+                    ];
+                }
+                
+                $request->getSession()->set('cartItems', $cartItems);
+                $request->getSession()->set('reservation_data', [
+                    'id' => $reservation->getIDReservationPack(),
+                    'type' => 'pack',
+                    'date' => $eventDate,
+                    'client' => $userName
                 ]);
-    
-                try {
-                    $result = $this->emailApiInstance->sendTransacEmail($emailData);
-                    $this->logger->info('Brevo API response: ' . json_encode($result));
-                } catch (ApiException $e) {
-                    $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
-                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi de l\'email.');
-                }
-    
-                // Send SMS via Twilio
-                try {
-                    $this->twilioClient->messages->create(
-                        $reservation->getNumtel(),
-                        [
-                            'from' => $this->twilioFromNumber,
-                            'body' => $successMessage
-                        ]
-                    );
-                    $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
-                } catch (\Exception $e) {
-                    $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
-                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi du SMS.');
-                }
     
                 $this->addFlash('success', $successMessage);
                 
-                // Redirect to Google Calendar event if available, otherwise to history
-                if ($calendarLink) {
-                    return $this->redirect($calendarLink);
-                }
-                return $this->redirectToRoute('app_user_history');
+                // Rediriger vers le panier
+                return $this->redirectToRoute('app_panier_index');
             } catch (ApiException $e) {
                 $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
                 try {
@@ -310,26 +326,20 @@ class UserReservationsController extends AbstractController
                         ]
                     );
                     $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
-                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi de l\'email.');
+                    $this->addFlash('warning', 'Réservation enregistrée, mais erreur lors de l\'envoi de l\'email.');
                 } catch (\Exception $e) {
                     $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
                     $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email et SMS.');
                 }
                 
-                // Redirect to Google Calendar event if available, otherwise to history
-                if ($calendarLink) {
-                    return $this->redirect($calendarLink);
-                }
-                return $this->redirectToRoute('app_user_history');
+                // Rediriger vers le panier même en cas d'erreur avec les e-mails/SMS
+                return $this->redirectToRoute('app_panier_index');
             } catch (\Exception $e) {
                 $this->logger->error('Error saving pack reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', 'Erreur serveur lors de la création de la réservation.');
                 
-                // Redirect to Google Calendar event if available, otherwise to history
-                if ($calendarLink) {
-                    return $this->redirect($calendarLink);
-                }
-                return $this->redirectToRoute('app_user_history');
+                // Rediriger vers la page de réservation en cas d'erreur
+                return $this->redirectToRoute('user_reservation_pack_new');
             }
         }
     
@@ -388,61 +398,76 @@ class UserReservationsController extends AbstractController
                         $recipientEmail = $form->get('email')->getData();
                         $entityManager->persist($reservation);
                         $entityManager->flush();
-    
+
                         // Add Google Calendar event
                         $calendarLink = $this->googleCalendarService->addEvent($reservation, 'personnalise');
                         if (!$calendarLink) {
                             $this->logger->warning('Failed to add Google Calendar event for personnalise reservation: ' . $reservation->getIdReservationPersonalise());
                         }
-    
+
                         $services = $reservation->getServices();
                         $servicesList = ($services === null || $services->isEmpty()) ? 'Non spécifié' : implode(', ', array_map(fn($s) => $s->getTitre(), $services->toArray()));
                         $eventDate = $reservation->getDate()->format('d/m/Y');
                         $userName = $reservation->getPrenom() ?: 'Client';
                         $successMessage = sprintf(
-                            'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été confirmée. %s Eventora vous remercie !',
+                            'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été enregistrée. Merci de vérifier votre panier et procéder au paiement.',
                             $userName,
                             $servicesList,
-                            $eventDate,
-                            $calendarLink ? "Consultez votre événement : $calendarLink" : ''
+                            $eventDate
                         );
-    
-                        $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
-                        $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
-                            'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
-                            'to' => [['email' => $recipientEmail, 'name' => $userName]],
-                            'templateId' => 1,
-                            'params' => [
-                                'name' => $userName,
-                                'date' => $eventDate,
-                                'servicesList' => $servicesList,
-                                'calendarLink' => $calendarLink ?: 'N/A'
-                            ]
+
+                        // Ajouter les services au panier
+                        $cartItems = $request->getSession()->get('cartItems', []);
+                        
+                        // Vider le panier d'abord pour ne pas avoir de duplication
+                        $cartItems = [];
+                        
+                        if ($services) {
+                            foreach ($services as $service) {
+                                $cartItems[] = [
+                                    'id' => $service->getId(),
+                                    'title' => $service->getTitre(),
+                                    'price' => $service->getPrix() . ' dt',
+                                    'location' => $service->getLocation(),
+                                    'type' => $service->getTypeService(),
+                                    'quantity' => 1,
+                                    'image' => $service->getImage() ?? 'https://via.placeholder.com/400x200',
+                                    'reservation_id' => $reservation->getIDReservationPersonalise(),
+                                    'reservation_type' => 'personnalise'
+                                ];
+                            }
+                        }
+                        
+                        $request->getSession()->set('cartItems', $cartItems);
+                        $request->getSession()->set('reservation_data', [
+                            'id' => $reservation->getIDReservationPersonalise(),
+                            'type' => 'personnalise',
+                            'date' => $eventDate,
+                            'client' => $userName
                         ]);
-    
+
+                        $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
+                        // Envoyer e-mail de confirmation
+                        $sendSmtpEmail = new \SendinBlue\Client\Model\SendSmtpEmail();
+                        $sendSmtpEmail['to'] = [['email' => $recipientEmail, 'name' => $userName]];
+                        $sendSmtpEmail['templateId'] = 1;
+                        $sendSmtpEmail['params'] = [
+                            'message' => $successMessage,
+                            'userName' => $userName
+                        ];
+                        $sendSmtpEmail['subject'] = 'Confirmation de réservation - Eventora';
+                        $sendSmtpEmail['sender'] = ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail];
+                        
                         try {
-                            $result = $this->emailApiInstance->sendTransacEmail($emailData);
-                            $this->logger->info('Brevo API response: ' . json_encode($result));
+                            $this->emailApiInstance->sendTransacEmail($sendSmtpEmail);
                         } catch (ApiException $e) {
                             $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
                         }
-    
-                        // Send SMS via Twilio
-                        try {
-                            $this->twilioClient->messages->create(
-                                $reservation->getNumtel(),
-                                [
-                                    'from' => $this->twilioFromNumber,
-                                    'body' => $successMessage
-                                ]
-                            );
-                            $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
-                        } catch (\Exception $e) {
-                            $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
-                        }
 
-                        // Return redirect URL for AJAX - Use Calendar Link if available
-                        $redirectUrl = $calendarLink ?: $this->generateUrl('app_user_history');
+                        $this->addFlash('success', $successMessage);
+                        
+                        // Rediriger vers le panier
+                        $redirectUrl = $this->generateUrl('app_panier_index');
 
                         return new JsonResponse([
                             'success' => true,
@@ -520,56 +545,46 @@ class UserReservationsController extends AbstractController
                 $eventDate = $reservation->getDate()->format('d/m/Y');
                 $userName = $reservation->getPrenom() ?: 'Client';
                 $successMessage = sprintf(
-                    'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été confirmée. %s Eventora vous remercie !',
+                    'Cher(e) %s, votre réservation personnalisée pour les services "%s" du %s a été enregistrée. Merci de vérifier votre panier et procéder au paiement.',
                     $userName,
                     $servicesList,
-                    $eventDate,
-                    $calendarLink ? "Consultez votre événement : $calendarLink" : ''
+                    $eventDate
                 );
-    
-                $this->logger->info('Sending Brevo email to: ' . $recipientEmail);
-                $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
-                    'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
-                    'to' => [['email' => $recipientEmail, 'name' => $userName]],
-                    'templateId' => 1,
-                    'params' => [
-                        'name' => $userName,
-                        'date' => $eventDate,
-                        'servicesList' => $servicesList,
-                        'calendarLink' => $calendarLink ?: 'N/A'
-                    ]
+
+                // Ajouter les services au panier
+                $cartItems = $request->getSession()->get('cartItems', []);
+                
+                // Vider le panier d'abord pour ne pas avoir de duplication
+                $cartItems = [];
+                
+                if ($services) {
+                    foreach ($services as $service) {
+                        $cartItems[] = [
+                            'id' => $service->getId(),
+                            'title' => $service->getTitre(),
+                            'price' => $service->getPrix() . ' dt',
+                            'location' => $service->getLocation(),
+                            'type' => $service->getTypeService(),
+                            'quantity' => 1,
+                            'image' => $service->getImage() ?? 'https://via.placeholder.com/400x200',
+                            'reservation_id' => $reservation->getIDReservationPersonalise(),
+                            'reservation_type' => 'personnalise'
+                        ];
+                    }
+                }
+                
+                $request->getSession()->set('cartItems', $cartItems);
+                $request->getSession()->set('reservation_data', [
+                    'id' => $reservation->getIDReservationPersonalise(),
+                    'type' => 'personnalise',
+                    'date' => $eventDate,
+                    'client' => $userName
                 ]);
-    
-                try {
-                    $result = $this->emailApiInstance->sendTransacEmail($emailData);
-                    $this->logger->info('Brevo API response: ' . json_encode($result));
-                } catch (ApiException $e) {
-                    $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
-                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi de l\'email.');
-                }
-    
-                // Send SMS via Twilio
-                try {
-                    $this->twilioClient->messages->create(
-                        $reservation->getNumtel(),
-                        [
-                            'from' => $this->twilioFromNumber,
-                            'body' => $successMessage
-                        ]
-                    );
-                    $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
-                } catch (\Exception $e) {
-                    $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
-                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi du SMS.');
-                }
-    
+
                 $this->addFlash('success', $successMessage);
                 
-                // Redirect to Google Calendar event if available, otherwise to history
-                if ($calendarLink) {
-                    return $this->redirect($calendarLink);
-                }
-                return $this->redirectToRoute('app_user_history');
+                // Rediriger vers le panier
+                return $this->redirectToRoute('app_panier_index');
             } catch (ApiException $e) {
                 $this->logger->error('Brevo API error: ' . $e->getMessage() . ' | Response: ' . $e->getResponseBody());
                 try {
@@ -581,23 +596,20 @@ class UserReservationsController extends AbstractController
                         ]
                     );
                     $this->logger->info('Twilio SMS sent to: ' . $reservation->getNumtel());
-                    $this->addFlash('warning', 'Réservation confirmée, mais erreur lors de l\'envoi de l\'email.');
+                    $this->addFlash('warning', 'Réservation enregistrée, mais erreur lors de l\'envoi de l\'email.');
                 } catch (\Exception $e) {
                     $this->logger->error('Twilio SMS error: ' . $e->getMessage(), ['exception' => $e]);
                     $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email et SMS.');
                 }
                 
-                // Redirect to Google Calendar event if available, otherwise to history
-                if ($calendarLink) {
-                    return $this->redirect($calendarLink);
-                }
-                return $this->redirectToRoute('app_user_history');
+                // Rediriger vers le panier même en cas d'erreur avec les e-mails/SMS
+                return $this->redirectToRoute('app_panier_index');
             } catch (\Exception $e) {
                 $this->logger->error('Error saving personnalise reservation or sending SMS: ' . $e->getMessage(), ['exception' => $e]);
-                return new JsonResponse([
-                    'success' => false,
-                    'message' => 'Erreur serveur lors de la création de la réservation.'
-                ], 500);
+                $this->addFlash('error', 'Erreur serveur lors de la création de la réservation.');
+                
+                // Rediriger vers la page de réservation en cas d'erreur
+                return $this->redirectToRoute('user_reservation_personnalise_new');
             }
         }
     

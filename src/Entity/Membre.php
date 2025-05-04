@@ -97,12 +97,16 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Reservationpersonnalise::class, mappedBy: 'membre')]
     private Collection $reservationpersonnalises;
 
+    #[ORM\OneToMany(mappedBy: 'membre', targetEntity: PaymentHistory::class)]
+    private Collection $paymentHistories;
+
     public function __construct()
     {
         $this->feedbacks = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
         $this->reservationpacks = new ArrayCollection();
         $this->reservationpersonnalises = new ArrayCollection();
+        $this->paymentHistories = new ArrayCollection();
     }
 
     public function getRoles(): array
@@ -396,6 +400,36 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
                 $reservationpersonnalise->setMembre(null);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaymentHistory>
+     */
+    public function getPaymentHistories(): Collection
+    {
+        return $this->paymentHistories;
+    }
+
+    public function addPaymentHistory(PaymentHistory $paymentHistory): self
+    {
+        if (!$this->paymentHistories->contains($paymentHistory)) {
+            $this->paymentHistories->add($paymentHistory);
+            $paymentHistory->setMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentHistory(PaymentHistory $paymentHistory): self
+    {
+        if ($this->paymentHistories->removeElement($paymentHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($paymentHistory->getMembre() === $this) {
+                $paymentHistory->setMembre(null);
+            }
+        }
+
         return $this;
     }
 }

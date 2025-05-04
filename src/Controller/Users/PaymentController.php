@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\PaymentHistory;
 
 class PaymentController extends AbstractController
 {
@@ -45,12 +47,54 @@ class PaymentController extends AbstractController
     }
 
     #[Route('/stripe/success', name: 'app_stripe_success')]
-    public function success(SessionInterface $session): Response
+    public function success(SessionInterface $session, EntityManagerInterface $entityManager): Response
     {
+        // Récupérer les informations de réservation avant de vider le panier
+        $reservationData = $session->get('reservation_data', null);
+        $cartItems = $session->get('cartItems', []);
+        
+        // Calculer le montant total du panier
+        $totalAmount = 0;
+        foreach ($cartItems as $item) {
+            $price = floatval(preg_replace('/[^0-9,.]/', '', $item['price']));
+            $totalAmount += $price * ($item['quantity'] ?? 1);
+        }
+        
+        // Créer un enregistrement dans l'historique des paiements
+        if ($reservationData && $this->getUser()) {
+            $paymentHistory = new PaymentHistory();
+            $paymentHistory->setTransactionId('tr_' . uniqid());
+            $paymentHistory->setAmount($totalAmount);
+            $paymentHistory->setCurrency('TND');
+            $paymentHistory->setStatus('completed');
+            $paymentHistory->setPaymentMethod('card');
+            $paymentHistory->setMembre($this->getUser());
+            $paymentHistory->setReservationType($reservationData['type']);
+            $paymentHistory->setReservationId($reservationData['id']);
+            
+            // Enregistrer les détails du paiement (items achetés)
+            $paymentHistory->setDetails([
+                'items' => $cartItems,
+                'reservation' => $reservationData
+            ]);
+            
+            $entityManager->persist($paymentHistory);
+            $entityManager->flush();
+        }
+        
         // Vider le panier après un paiement réussi
         $session->set('cartItems', []);
+        
+        // Mais garder les informations de réservation pour affichage
+        if ($reservationData) {
+            $this->addFlash('success', 'Paiement réussi pour la réservation du ' . $reservationData['date']);
+        } else {
+            $this->addFlash('success', 'Paiement effectué avec succès!');
+        }
 
-        return $this->render('user/payment/success.html.twig');
+        return $this->render('user/payment/success.html.twig', [
+            'reservation_data' => $reservationData
+        ]);
     }
 
     #[Route('/stripe/create-payment-intent', name: 'app_stripe_create_payment_intent', methods: ['POST'])]

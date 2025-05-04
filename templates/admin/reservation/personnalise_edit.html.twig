@@ -338,23 +338,60 @@
                                     <div class="card shadow-sm border-radius-lg">
                                         <div class="card-header p-3 bg-gradient-warning">
                                             <h6 class="mb-0 text-white">
-                                                <i class="fas fa-concierge-bell me-2"></i> Services Sélectionnés
+                                                <i class="fas fa-concierge-bell me-2"></i> Services Disponibles
                                             </h6>
                                         </div>
                                         <div class="card-body p-4">
                                             <div class="services-container">
-                                                <div class="services-selection">
-                                                    {{ form_widget(form.services, {'attr': {'class': 'service-list-improved'}}) }}
-                                                    <div class="text-danger">{{ form_errors(form.services) }}</div>
-                                                </div>
-                                                <div class="services-visual mt-4">
-                                                    <div class="selected-services-header">
-                                                        <h6 class="text-gradient text-warning fw-bold mb-3">
-                                                            <i class="fas fa-list-check me-2"></i> Aperçu des services sélectionnés
-                                                        </h6>
+                                                <!-- Barre de recherche pour les services -->
+                                                <div class="search-services mb-4">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-gradient-warning text-white">
+                                                            <i class="fas fa-search"></i>
+                                                        </span>
+                                                        <input type="text" id="serviceSearchInput" class="form-control" placeholder="Rechercher un service...">
                                                     </div>
-                                                    <div class="selected-services-preview" id="servicesPreview">
-                                                        <!-- Will be filled dynamically by JavaScript -->
+                                                    <!-- Message quand aucun résultat n'est trouvé -->
+                                                    <div id="noSearchResults" class="no-results-message" style="display: none;">
+                                                        <i class="fas fa-info-circle me-2"></i> Aucun service ne correspond à votre recherche
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Division en deux colonnes -->
+                                                <div class="row">
+                                                    <!-- Colonne de sélection des services -->
+                                                    <div class="col-md-7">
+                                                        <h6 class="text-gradient text-warning fw-bold mb-3">
+                                                            <i class="fas fa-list me-2"></i> Choisir les services
+                                                        </h6>
+                                                        <div class="services-selection mb-3">
+                                                            <div class="service-list-container">
+                                                                {{ form_widget(form.services, {'attr': {'class': 'service-list-improved'}}) }}
+                                                                <div class="text-danger">{{ form_errors(form.services) }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Colonne d'aperçu des services sélectionnés -->
+                                                    <div class="col-md-5">
+                                                        <div class="services-summary card border-0 h-100">
+                                                            <div class="card-header bg-light">
+                                                                <h6 class="text-gradient text-warning fw-bold mb-0">
+                                                                    <i class="fas fa-check-circle me-2"></i> Services sélectionnés (<span id="selectedServicesCount">0</span>)
+                                                                </h6>
+                                                            </div>
+                                                            <div class="card-body bg-light rounded-bottom">
+                                                                <div class="selected-services-preview" id="servicesPreview">
+                                                                    <!-- Sera rempli dynamiquement par JavaScript -->
+                                                                    <div class="text-muted text-center empty-selection">
+                                                                        <div class="empty-icon mb-3">
+                                                                            <i class="fas fa-hand-pointer opacity-6"></i>
+                                                                        </div>
+                                                                        <p>Sélectionnez des services dans la liste</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -581,24 +618,55 @@
 
         /* Services styling */
         .services-container {
-            display: flex;
-            flex-direction: column;
+            position: relative;
         }
         
-        .services-selection {
-            margin-bottom: 1rem;
+        .search-services .input-group {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
         }
         
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
+        .search-services .form-control {
+            border: none;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+        }
+        
+        .search-services .input-group-text {
+            border: none;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        
+        /* Liste des services améliorée */
+        .service-list-container {
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 10px;
+            border-radius: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #c3af91 #f8f5f0;
+        }
+        
+        .service-list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .service-list-container::-webkit-scrollbar-track {
+            background: #f8f5f0;
+            border-radius: 10px;
+        }
+        
+        .service-list-container::-webkit-scrollbar-thumb {
+            background-color: #c3af91;
+            border-radius: 10px;
         }
         
         .service-list-improved {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-            gap: 0.8rem;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
         
         .service-list-improved > div {
@@ -608,101 +676,124 @@
         .service-list-improved label {
             display: flex;
             align-items: center;
-            padding: 1rem;
-            border-radius: 0.75rem;
+            padding: 15px;
+            border-radius: 10px;
             transition: all 0.3s ease;
             cursor: pointer;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            background: #f8f9fa;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            background: #ffffff;
             border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .service-list-improved label:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(310deg, #f5b004, #ffca28);
-            opacity: 0;
-            transition: all 0.3s ease;
+            margin: 0;
         }
         
         .service-list-improved label:hover {
-            background: #ffffff;
             transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
-            border-color: rgba(255, 178, 30, 0.3);
-        }
-        
-        .service-list-improved label:hover:before {
-            opacity: 1;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            border-color: rgba(195, 175, 145, 0.3);
+            background: #fcfaf7;
         }
         
         .service-list-improved input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-right: 0.8rem;
-            border-radius: 4px;
-            border: 2px solid #ddd;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            margin-right: 12px;
+            border-radius: 6px;
+            border: 2px solid #d9caab;
             cursor: pointer;
             position: relative;
             transition: all 0.2s ease;
+            background-color: #fff;
+            flex-shrink: 0;
         }
         
         .service-list-improved input[type="checkbox"]:checked {
-            border-color: transparent;
-            background-color: #ffb21e;
+            border-color: #c3af91;
+            background-color: #c3af91;
+        }
+        
+        .service-list-improved input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
         
         .service-list-improved input[type="checkbox"]:checked + span {
             font-weight: 600;
-            color: #ff8f00;
+            color: #c3af91;
         }
         
         .service-list-improved input[type="checkbox"]:checked ~ label {
-            background: #fff9e6;
-            border-color: #ffb21e;
-            box-shadow: 0 5px 15px rgba(255, 178, 30, 0.2);
+            background: #f8f5f0;
+            border-color: #c3af91;
+            box-shadow: 0 5px 15px rgba(195, 175, 145, 0.2);
         }
         
-        .service-list-improved input[type="checkbox"]:checked ~ label:before {
-            opacity: 1;
-            width: 6px;
+        /* Amélioration de l'aperçu des services */
+        .services-summary {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            border-radius: 15px !important;
+            background: #f8f5f0;
+            height: 100%;
+        }
+        
+        .services-summary .card-header {
+            background: #f8f5f0 !important;
+            border-bottom: 1px solid rgba(195, 175, 145, 0.2);
+            border-radius: 15px 15px 0 0 !important;
         }
         
         .selected-services-preview {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 10px;
+            min-height: 100px;
         }
         
         .service-tag {
             display: inline-flex;
             align-items: center;
-            background: linear-gradient(310deg, #f5b004, #ffca28);
+            background: linear-gradient(135deg, #d9caab, #c3af91);
             color: #fff;
-            padding: 0.5rem 1rem;
+            padding: 8px 15px;
             border-radius: 30px;
             font-size: 0.85rem;
-            font-weight: 600;
-            box-shadow: 0 3px 10px rgba(255, 178, 30, 0.2);
+            font-weight: 500;
+            box-shadow: 0 3px 10px rgba(195, 175, 145, 0.2);
             transition: all 0.3s ease;
             animation: fadeInRight 0.5s forwards;
-            margin-bottom: 0.5rem;
+            margin-bottom: 5px;
+            max-width: 100%;
         }
         
         .service-tag:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 178, 30, 0.3);
+            box-shadow: 0 5px 15px rgba(195, 175, 145, 0.3);
         }
         
         .service-tag i {
-            margin-right: 0.5rem;
+            margin-right: 8px;
             font-size: 0.8rem;
+        }
+        
+        .empty-selection {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            color: #6c757d;
+        }
+        
+        .empty-icon {
+            font-size: 2.5rem;
+            color: #c3af91;
+            opacity: 0.5;
         }
         
         @keyframes fadeInRight {
@@ -716,10 +807,63 @@
             }
         }
         
+        /* Service masqué lors de la recherche */
+        .service-hidden {
+            display: none !important;
+        }
+        
         @media (max-width: 768px) {
-            .service-list-improved {
-                grid-template-columns: 1fr;
+            .service-list-container {
+                max-height: 250px;
             }
+        }
+
+        /* Style pour le bouton d'effacement de la recherche */
+        .btn-clear-search {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #6c757d;
+            font-size: 0.8rem;
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        
+        .btn-clear-search:hover {
+            background-color: rgba(195, 175, 145, 0.1);
+            color: #c3af91;
+        }
+        
+        /* Style pour le message d'absence de résultats */
+        .no-results-message {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #fff3cd;
+            color: #856404;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+            animation: fadeIn 0.3s ease forwards;
+        }
+        
+        /* Améliorer la position relative pour l'input group */
+        .search-services .input-group {
+            position: relative;
+        }
+        
+        /* Amélioration de l'espace pour le texte de recherche */
+        .search-services .form-control {
+            padding-right: 40px;
         }
     </style>
 {% endblock %}
@@ -742,17 +886,86 @@
                 });
             }
             
+            // IMPLÉMENTATION DE RECHERCHE ULTRA-SIMPLE AVEC JQUERY
+            if (typeof $ !== 'undefined') {
+                $("#serviceSearchInput").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    
+                    // Nettoyer l'ancienne recherche d'abord
+                    $(".service-list-improved > div").show();
+                    
+                    if (value) {
+                        // Cacher les éléments qui ne correspondent pas
+                        $(".service-list-improved > div").each(function() {
+                            if ($(this).text().toLowerCase().indexOf(value) === -1) {
+                                $(this).hide();
+                            }
+                        });
+                        
+                        // Vérifier s'il y a des résultats visibles
+                        var visibleItems = $(".service-list-improved > div:visible").length;
+                        $("#noSearchResults").toggle(visibleItems === 0);
+                        
+                        // Afficher le bouton d'effacement
+                        $("<button>")
+                            .attr("id", "clearBtn")
+                            .addClass("btn-clear-search")
+                            .html('<i class="fas fa-times"></i>')
+                            .css({
+                                "position": "absolute",
+                                "right": "10px",
+                                "top": "50%",
+                                "transform": "translateY(-50%)",
+                                "background": "transparent",
+                                "border": "none",
+                                "color": "#6c757d",
+                                "cursor": "pointer",
+                                "width": "28px",
+                                "height": "28px",
+                                "border-radius": "50%",
+                                "display": "flex",
+                                "align-items": "center",
+                                "justify-content": "center",
+                                "z-index": 10
+                            })
+                            .click(function() {
+                                $("#serviceSearchInput").val("").trigger("keyup").focus();
+                                $(this).remove();
+                            })
+                            .appendTo($("#serviceSearchInput").parent());
+                    } else {
+                        // Cacher le message et le bouton quand la recherche est vide
+                        $("#noSearchResults").hide();
+                        $("#clearBtn").remove();
+                    }
+                });
+            }
+            
             // Visualisation des services sélectionnés
             function updateServicesPreview() {
                 const servicesPreview = document.getElementById('servicesPreview');
-                servicesPreview.innerHTML = '';
+                const selectedCountElement = document.getElementById('selectedServicesCount');
+                const emptySelection = servicesPreview.querySelector('.empty-selection');
+                
+                if (!servicesPreview) return;
+                
+                // Supprimer les tags existants mais pas le message vide
+                const existingTags = servicesPreview.querySelectorAll('.service-tag');
+                existingTags.forEach(tag => tag.remove());
                 
                 const checkboxes = document.querySelectorAll('.service-list-improved input[type="checkbox"]:checked');
+                const count = checkboxes.length;
                 
-                if (checkboxes.length === 0) {
-                    servicesPreview.innerHTML = '<div class="text-muted">Aucun service sélectionné</div>';
+                if (selectedCountElement) {
+                    selectedCountElement.textContent = count;
+                }
+                
+                if (count === 0) {
+                    if (emptySelection) emptySelection.style.display = 'flex';
                     return;
                 }
+                
+                if (emptySelection) emptySelection.style.display = 'none';
                 
                 checkboxes.forEach(checkbox => {
                     const serviceLabel = checkbox.nextElementSibling.textContent.trim();

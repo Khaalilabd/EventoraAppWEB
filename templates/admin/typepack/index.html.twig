@@ -12,15 +12,19 @@
 
         /* Variables de couleurs */
         :root {
-            --primary-color: #3a7bd5;
-            --primary-gradient: linear-gradient(135deg, #3a7bd5, #00d2ff);
-            --secondary-color: #f8f9fa;
+            --primary-color: #c3af91;
+            --primary-gradient: linear-gradient(135deg, #d9caab, #c3af91);
+            --secondary-color: #f8f5f0;
             --text-dark: #1f2937;
             --text-light: #6c757d;
             --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             --hover-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             --border-radius: 16px;
             --card-border: 1px solid rgba(0, 0, 0, 0.05);
+            --danger-color: #d1a3a3;
+            --danger-gradient: linear-gradient(135deg, #e4c7c7, #d1a3a3);
+            --edit-color: #9dbab8;
+            --edit-gradient: linear-gradient(135deg, #bfd8d5, #9dbab8);
         }
 
         /* Général */
@@ -216,35 +220,55 @@
             background: rgba(248, 249, 250, 0.7);
             border-top: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            gap: 15px;
         }
         .card-footer .action-btns {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
         .card-btn {
-            width: 36px;
-            height: 36px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            color: var(--text-light);
-            background: white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             border: none;
             cursor: pointer;
+            font-size: 1rem;
         }
-        .btn-edit { color: #3a7bd5; }
-        .btn-delete { color: #ef4444; }
+        .btn-edit { 
+            background-image: var(--edit-gradient);
+            color: #fff;
+        }
+        .btn-delete { 
+            background-image: var(--danger-gradient);
+            color: #fff;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            box-shadow: 0 4px 10px rgba(209, 163, 163, 0.3);
+            padding: 0;
+        }
         .card-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
-        .btn-edit:hover { background: rgba(58, 123, 213, 0.1); }
-        .btn-delete:hover { background: rgba(239, 68, 68, 0.1); }
+        .btn-edit:hover { 
+            background-image: linear-gradient(135deg, #9dbab8, #83a7a5);
+            box-shadow: 0 6px 12px rgba(157, 186, 184, 0.3);
+        }
+        .btn-delete:hover { 
+            background-image: linear-gradient(135deg, #d1a3a3, #c28989);
+            box-shadow: 0 6px 12px rgba(209, 163, 163, 0.3);
+            color: #fff;
+        }
 
         /* List View Items */
         .typepack-item {
@@ -291,7 +315,32 @@
         }
         .item-actions {
             display: flex;
-            gap: 8px;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+        .item-actions .card-btn {
+            width: 45px;
+            height: 45px;
+        }
+        .card-footer form {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button.card-btn {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: transparent;
+        }
+        .card-btn.btn-delete, 
+        .card-btn.btn-delete:focus,
+        .card-btn.btn-delete:active {
+            background-image: var(--danger-gradient) !important;
+            background-color: transparent !important;
+            color: #fff !important;
         }
 
         /* Empty state */

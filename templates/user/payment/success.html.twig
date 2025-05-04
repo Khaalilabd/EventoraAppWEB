@@ -32,14 +32,32 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="success-container">
-            <div class="success-message">
-                Paiement réussi ! Merci pour votre achat.
-            </div>
-            <div class="redirect-message">
-                Vous serez redirigé vers la page d'accueil dans quelques secondes...
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 80px;"></i>
+                    </div>
+                    <h2 class="card-title mb-4">Paiement Réussi!</h2>
+                    {% if reservation_data %}
+                    <div class="alert alert-info">
+                        <h4>Détails de votre réservation:</h4>
+                        <p><strong>Type:</strong> {{ reservation_data.type == 'pack' ? 'Pack' : 'Réservation Personnalisée' }}</p>
+                        <p><strong>Date:</strong> {{ reservation_data.date }}</p>
+                        <p><strong>Référence:</strong> #{{ reservation_data.id }}</p>
+                    </div>
+                    {% endif %}
+                    <p class="card-text">Merci pour votre paiement. Votre transaction a été traitée avec succès.</p>
+                    <p class="text-muted mb-4">Un email de confirmation vous a été envoyé.</p>
+                    <div class="mt-4">
+                        <a href="{{ path('app_user_history_reservations') }}" class="btn btn-primary">Voir mes réservations</a>
+                        <a href="{{ path('app_home') }}" class="btn btn-outline-secondary">Retour à l'accueil</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

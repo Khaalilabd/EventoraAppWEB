@@ -15,6 +15,7 @@ use App\Repository\TypepackRepository; // Correct
 use App\Repository\FeedbackRepository;
 use App\Repository\ReservationpackRepository;
 use App\Repository\ReservationpersonnaliseRepository;
+use App\Repository\PaymentHistoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\DebugStack;
@@ -366,43 +367,22 @@ class SecurityController extends AbstractController
 
     #[Route('/admin/dashboard', name: 'admin_dashboard')]
     public function index(
-        ReclamationRepository $reclamationRepository,
+        ReclamationRepository $reclRepo,
+        MembreRepository $membreRepo,
+        GServiceRepository $gserviceRepo,
+        PackRepository $packRepo,
+        SponsorRepository $sponsorRepo,
+        TypepackRepository $typepackRepo,
         FeedbackRepository $feedbackRepository,
-        ReservationpackRepository $reservationpackRepository,
-        ReservationpersonnaliseRepository $reservationpersonnaliseRepository,
-        MembreRepository $membreRepository,
-        GServiceRepository $gServiceRepository,
-        PackRepository $packRepository,
-        SponsorRepository $sponsorRepository,
-        TypepackRepository $typepackRepository,
-        Request $request,
+        ReservationpackRepository $reservationPackRepo,
+        ReservationpersonnaliseRepository $reservationPersoRepo,
+        PaymentHistoryRepository $paymentHistoryRepo,
         Connection $connection
-    ): Response {
-        $this->logger->info('Début de la méthode index pour admin_dashboard');
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
-        // Configurer DebugStack pour logger les requêtes SQL
-        $debugStack = new DebugStack();
-        $connection->getConfiguration()->setSQLLogger($debugStack);
-
-        // Gestion de la plage de dates
-        $startDate = $request->query->get('startDate');
-        $endDate = $request->query->get('endDate');
-        $endDateObj = $endDate ? new \DateTime($endDate) : new \DateTime();
-        $startDateObj = $startDate ? new \DateTime($startDate) : (clone $endDateObj)->modify('-30 days');
-
-        if ($startDateObj > $endDateObj) {
-            $temp = $startDateObj;
-            $startDateObj = $endDateObj;
-            $endDateObj = $temp;
-        }
-
-        // Réclamations
-        $reclamationsByDateRaw = $reclamationRepository->createQueryBuilder('r')
+    ): Response
+    {
+        // Reclamations
+        $reclamationsByDateRaw = $reclRepo->createQueryBuilder('r')
             ->select('r.date as date, COUNT(r.id) as count')
-            ->where('r.date BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
-            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
             ->groupBy('r.date')
             ->orderBy('r.date', 'ASC')
             ->getQuery()
@@ -417,25 +397,19 @@ class SecurityController extends AbstractController
         }, $reclamationsByDateRaw);
 
         $totalReclamationsSelected = array_sum(array_column($reclamationsByDate, 'count'));
-        $totalReclamations = $reclamationRepository->count([]);
-        $reclamationsTraitees = $reclamationRepository->count(['statut' => 'Resolue']);
+        $totalReclamations = $reclRepo->count([]);
+        $reclamationsTraitees = $reclRepo->count(['statut' => 'Resolue']);
         $pourcentageTraitees = $totalReclamations > 0 ? ($reclamationsTraitees / $totalReclamations) * 100 : 0;
         $pourcentageNonTraitees = 100 - $pourcentageTraitees;
 
-        $reclamationsParType = $reclamationRepository->createQueryBuilder('r')
+        $reclamationsParType = $reclRepo->createQueryBuilder('r')
             ->select('r.Type as type, COUNT(r.id) as count')
-            ->where('r.date BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
-            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
             ->groupBy('r.Type')
             ->getQuery()
             ->getResult();
 
-        $reclamationsParStatut = $reclamationRepository->createQueryBuilder('r')
+        $reclamationsParStatut = $reclRepo->createQueryBuilder('r')
             ->select('r.statut as statut, COUNT(r.id) as count')
-            ->where('r.date BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
-            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
             ->groupBy('r.statut')
             ->getQuery()
             ->getResult();
@@ -445,14 +419,11 @@ class SecurityController extends AbstractController
         $avgVote = count($feedbacks) > 0 ? array_sum(array_map(fn($f) => $f->getVote(), $feedbacks)) / count($feedbacks) : 0;
         $feedbacksWithImage = count(array_filter($feedbacks, fn($f) => !is_null($f->getSouvenirs())));
         $imageFeedbackRate = count($feedbacks) > 0 ? ($feedbacksWithImage / count($feedbacks)) * 100 : 0;
-        $npsScore = $feedbackRepository->calculateNps($startDateObj, $endDateObj);
+        $npsScore = $feedbackRepository->calculateNps(new \DateTime(), new \DateTime());
         $avgVoteTrend = 0; // À implémenter si historique disponible
 
         $feedbacksByVote = $feedbackRepository->createQueryBuilder('f')
             ->select('f.Vote as vote, COUNT(f.ID) as count')
-            ->where('f.date BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
-            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
             ->groupBy('f.Vote')
             ->orderBy('f.Vote', 'ASC')
             ->getQuery()
@@ -461,9 +432,6 @@ class SecurityController extends AbstractController
         $userEngagement = $feedbackRepository->createQueryBuilder('f')
             ->select('m.email as email, COUNT(f.ID) as feedbackCount')
             ->join('f.membre', 'm')
-            ->where('f.date BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
-            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
             ->groupBy('m.email')
             ->orderBy('feedbackCount', 'DESC')
             ->setMaxResults(10)
@@ -471,44 +439,38 @@ class SecurityController extends AbstractController
             ->getResult();
 
         // Réservations
-        $totalReservations = $reservationpackRepository->countAll() + $reservationpersonnaliseRepository->count([]);
+        $totalReservations = $reservationPackRepo->countAll() + $reservationPersoRepo->count([]);
         $reservationsByType = [
-            ['type' => 'Pack', 'count' => $reservationpackRepository->countAll()],
-            ['type' => 'Personnalisé', 'count' => $reservationpersonnaliseRepository->count([])],
+            ['type' => 'Pack', 'count' => $reservationPackRepo->countAll()],
+            ['type' => 'Personnalisé', 'count' => $reservationPersoRepo->count([])],
         ];
-        $reservationsByStatus = $reservationpackRepository->createQueryBuilder('rp')
+        $reservationsByStatus = $reservationPackRepo->createQueryBuilder('rp')
             ->select('rp.status as status, COUNT(rp.status) as count')
-            ->where('rp.date BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
-            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
             ->groupBy('rp.status')
             ->getQuery()
             ->getResult();
 
-        $refusedReservations = $reservationpackRepository->countByStatus('Refusé') + $reservationpersonnaliseRepository->count(['status' => 'Refusé']);
+        $refusedReservations = $reservationPackRepo->countByStatus('Refusé') + $reservationPersoRepo->count(['status' => 'Refusé']);
         $refusalRate = $totalReservations > 0 ? ($refusedReservations / $totalReservations) * 100 : 0;
 
-        $avgReservationValue = $reservationpackRepository->createQueryBuilder('rp')
+        $avgReservationValue = $reservationPackRepo->createQueryBuilder('rp')
             ->select('AVG(p.prix) as avgPrice')
             ->join('rp.pack', 'p')
-            ->where('rp.date BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
-            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
             ->getQuery()
             ->getSingleScalarResult() ?? 0;
 
         // Membres
-        $totalMembers = $membreRepository->count([]);
-        $activeMembers = $membreRepository->count(['isConfirmed' => true]);
-        $membersByRole = $membreRepository->createQueryBuilder('m')
+        $totalMembers = $membreRepo->count([]);
+        $activeMembers = $membreRepo->count(['isConfirmed' => true]);
+        $membersByRole = $membreRepo->createQueryBuilder('m')
             ->select('m.role as role, COUNT(m.id) as count')
             ->groupBy('m.role')
             ->getQuery()
             ->getResult();
-        $recentRegistrations = $membreRepository->createQueryBuilder('m')
+        $recentRegistrations = $membreRepo->createQueryBuilder('m')
             ->select('COUNT(m.id) as count')
             ->where('m.id >= :minId')
-            ->setParameter('minId', $membreRepository->createQueryBuilder('m2')
+            ->setParameter('minId', $membreRepo->createQueryBuilder('m2')
                 ->select('MIN(m2.id)')
                 ->where('m2.id > :threshold')
                 ->setParameter('threshold', max(0, $totalMembers - 100))
@@ -518,7 +480,7 @@ class SecurityController extends AbstractController
             ->getSingleScalarResult() ?? 0;
 
         // Services (GService)
-        $totalServices = $gServiceRepository->count([]);
+        $totalServices = $gserviceRepo->count([]);
         $avgServicePriceResult = $connection->executeQuery(
             "SELECT AVG(prix + 0) as avgPrice 
              FROM g_service 
@@ -526,17 +488,14 @@ class SecurityController extends AbstractController
         )->fetchOne();
         $avgServicePrice = $avgServicePriceResult ? (float) $avgServicePriceResult : 0;
 
-        $servicesByType = $gServiceRepository->createQueryBuilder('s')
+        $servicesByType = $gserviceRepo->createQueryBuilder('s')
             ->select('s.type_service as type_service, COUNT(s.id) as count')
             ->groupBy('s.type_service')
             ->getQuery()
             ->getResult();
-        $topServices = $reservationpersonnaliseRepository->createQueryBuilder('rp')
+        $topServices = $reservationPersoRepo->createQueryBuilder('rp')
             ->select('s.titre as titre, COUNT(rp.IDReservationPersonalise) as count')
             ->join('rp.services', 's')
-            ->where('rp.date BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
-            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
             ->groupBy('s.titre')
             ->orderBy('count', 'DESC')
             ->setMaxResults(5)
@@ -544,18 +503,15 @@ class SecurityController extends AbstractController
             ->getResult();
 
         // Packs
-        $totalPacks = $packRepository->count([]);
-        $avgPackPrice = $packRepository->createQueryBuilder('p')
+        $totalPacks = $packRepo->count([]);
+        $avgPackPrice = $packRepo->createQueryBuilder('p')
             ->select('AVG(p.prix) as avgPrice')
             ->getQuery()
             ->getSingleScalarResult() ?? 0;
-        $packsByType = $packRepository->countByType();
-        $popularPacks = $reservationpackRepository->createQueryBuilder('rp')
+        $packsByType = $packRepo->countByType();
+        $popularPacks = $reservationPackRepo->createQueryBuilder('rp')
             ->select('p.nomPack as nomPack, COUNT(rp.status) as count')
             ->join('rp.pack', 'p')
-            ->where('rp.date BETWEEN :startDate AND :endDate')
-            ->setParameter('startDate', $startDateObj->format('Y-m-d'))
-            ->setParameter('endDate', $endDateObj->format('Y-m-d'))
             ->groupBy('p.nomPack')
             ->orderBy('count', 'DESC')
             ->setMaxResults(5)
@@ -563,17 +519,17 @@ class SecurityController extends AbstractController
             ->getResult();
 
         // Sponsors
-        $totalSponsors = $sponsorRepository->count([]);
-        $activeSponsors = $sponsorRepository->createQueryBuilder('sp')
+        $totalSponsors = $sponsorRepo->count([]);
+        $activeSponsors = $sponsorRepo->createQueryBuilder('sp')
             ->select('COUNT(DISTINCT sp.id_partenaire) as count')
             ->join('sp.gServices', 's')
             ->getQuery()
             ->getSingleScalarResult() ?? 0;
-        $avgServicesPerSponsor = $totalSponsors > 0 ? ($gServiceRepository->count([]) / $totalSponsors) : 0;
-        $newSponsors = $sponsorRepository->createQueryBuilder('sp')
+        $avgServicesPerSponsor = $totalSponsors > 0 ? ($gserviceRepo->count([]) / $totalSponsors) : 0;
+        $newSponsors = $sponsorRepo->createQueryBuilder('sp')
             ->select('COUNT(sp.id_partenaire) as count')
             ->where('sp.id_partenaire >= :minId')
-            ->setParameter('minId', $sponsorRepository->createQueryBuilder('sp2')
+            ->setParameter('minId', $sponsorRepo->createQueryBuilder('sp2')
                 ->select('MIN(sp2.id_partenaire)')
                 ->where('sp2.id_partenaire > :threshold')
                 ->setParameter('threshold', max(0, $totalSponsors - 50))
@@ -582,13 +538,126 @@ class SecurityController extends AbstractController
             ->getQuery()
             ->getSingleScalarResult() ?? 0;
 
-        // Logger les requêtes SQL capturées par DebugStack
-        foreach ($debugStack->queries as $query) {
-            $this->logger->debug('SQL Query: ' . $query['sql'], [
-                'params' => $query['params'],
-                'executionMS' => $query['executionMS']
-            ]);
+        // Historique des paiements
+        $currentDate = new \DateTime();
+        $firstDayOfMonth = new \DateTime($currentDate->format('Y-m-01'));
+        $firstDayOfYear = new \DateTime($currentDate->format('Y-01-01'));
+        
+        // Récupérer tous les paiements
+        $allPayments = $paymentHistoryRepo->findBy([], ['createdAt' => 'DESC']);
+        $totalPayments = count($allPayments);
+        
+        // Récupérer le total des montants
+        $totalAmount = 0;
+        foreach ($allPayments as $payment) {
+            $totalAmount += $payment->getAmount();
         }
+        
+        // Paiements du mois courant
+        $currentMonthPayments = $paymentHistoryRepo->findByPeriod($firstDayOfMonth, $currentDate);
+        $currentMonthCount = count($currentMonthPayments);
+        $currentMonthAmount = 0;
+        foreach ($currentMonthPayments as $payment) {
+            $currentMonthAmount += $payment->getAmount();
+        }
+        
+        // Paiements par type
+        $paymentsByType = [];
+        // Paiements de type pack
+        $packPayments = $paymentHistoryRepo->findBy(['reservationType' => 'pack']);
+        $packPaymentsCount = count($packPayments);
+        $packPaymentsTotal = 0;
+        foreach ($packPayments as $payment) {
+            $packPaymentsTotal += $payment->getAmount();
+        }
+        $paymentsByType[] = [
+            'type' => 'pack',
+            'count' => $packPaymentsCount,
+            'total' => $packPaymentsTotal
+        ];
+        
+        // Paiements de type personnalisé
+        $persoPayments = $paymentHistoryRepo->findBy(['reservationType' => 'personnalise']);
+        $persoPaymentsCount = count($persoPayments);
+        $persoPaymentsTotal = 0;
+        foreach ($persoPayments as $payment) {
+            $persoPaymentsTotal += $payment->getAmount();
+        }
+        $paymentsByType[] = [
+            'type' => 'personnalise',
+            'count' => $persoPaymentsCount,
+            'total' => $persoPaymentsTotal
+        ];
+        
+        // Montant mensuel sur les 12 derniers mois
+        $monthlyRevenue = [];
+        for ($i = 0; $i < 12; $i++) {
+            $monthStart = (new \DateTime())->modify('-' . $i . ' months')->format('Y-m-01');
+            $monthEnd = (new \DateTime($monthStart))->modify('last day of this month')->format('Y-m-d');
+            
+            $monthPayments = $paymentHistoryRepo->findByPeriod(
+                new \DateTime($monthStart),
+                new \DateTime($monthEnd . ' 23:59:59')
+            );
+            
+            $monthTotal = 0;
+            foreach ($monthPayments as $payment) {
+                $monthTotal += $payment->getAmount();
+            }
+            
+            $monthlyRevenue[] = [
+                'month' => (new \DateTime($monthStart))->format('m/Y'),
+                'total' => $monthTotal
+            ];
+        }
+        
+        // Transactions récentes (limité à 10)
+        $recentPayments = $paymentHistoryRepo->findBy([], ['createdAt' => 'DESC'], 10);
+        
+        // Données pour tendances
+        $previousMonthStart = (new \DateTime())->modify('-1 month')->format('Y-m-01');
+        $previousMonthEnd = (new \DateTime($previousMonthStart))->modify('last day of this month')->format('Y-m-d');
+        
+        $previousMonthPayments = $paymentHistoryRepo->findByPeriod(
+            new \DateTime($previousMonthStart),
+            new \DateTime($previousMonthEnd . ' 23:59:59')
+        );
+        
+        $previousMonthAmount = 0;
+        foreach ($previousMonthPayments as $payment) {
+            $previousMonthAmount += $payment->getAmount();
+        }
+        
+        // Calcul du taux de changement par rapport au mois précédent (en %)
+        $monthlyChangeRate = $previousMonthAmount > 0 
+            ? (($currentMonthAmount - $previousMonthAmount) / $previousMonthAmount) * 100 
+            : 0;
+            
+        // Évolution quotidienne du mois en cours
+        $dailyData = [];
+        $daysInMonth = (int) $currentDate->format('t');
+        
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $dayDate = new \DateTime($currentDate->format('Y-m-') . sprintf('%02d', $day));
+            $nextDay = (clone $dayDate)->modify('+1 day');
+            
+            if ($dayDate <= $currentDate) {
+                $dayPayments = $paymentHistoryRepo->findByPeriod($dayDate, $nextDay);
+                $dayAmount = 0;
+                foreach ($dayPayments as $payment) {
+                    $dayAmount += $payment->getAmount();
+                }
+                
+                $dailyData[] = [
+                    'day' => $day,
+                    'amount' => $dayAmount
+                ];
+            }
+        }
+
+        // Initialize date objects for the view
+        $startDateObj = clone $firstDayOfMonth;
+        $endDateObj = clone $currentDate;
 
         return $this->render('admin/dashboard.html.twig', [
             'start_date' => $startDateObj->format('Y-m-d'),
@@ -627,6 +696,16 @@ class SecurityController extends AbstractController
             'active_sponsors' => $activeSponsors,
             'avg_services_per_sponsor' => $avgServicesPerSponsor,
             'new_sponsors' => $newSponsors,
+            'total_payments' => $totalPayments,
+            'total_amount' => $totalAmount,
+            'current_month_count' => $currentMonthCount,
+            'current_month_amount' => $currentMonthAmount,
+            'previous_month_amount' => $previousMonthAmount,
+            'monthly_change_rate' => $monthlyChangeRate,
+            'payments_by_type' => $paymentsByType,
+            'monthly_revenue' => $monthlyRevenue,
+            'recent_payments' => $recentPayments,
+            'daily_data' => $dailyData
         ]);
     }
 }

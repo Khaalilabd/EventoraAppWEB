@@ -9,63 +9,6 @@
     </video>
 
     <div class="container" id="container">
-        <div class="form-container sign-up-container">
-            <form action="{{ path('app_register') }}" method="post" enctype="multipart/form-data">
-                <h1>Create Account</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="{{ path('connect_google') }}" class="social"><i class="fab fa-google-plus-g"></i></a>
-
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-                <span>or use your email for registration</span>
-                <div class="form-columns">
-                    <div class="form-column">
-                        <div class="form-group">
-                            {{ form_label(registration_form.nom) }}
-                            {{ form_widget(registration_form.nom) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_label(registration_form.prenom) }}
-                            {{ form_widget(registration_form.prenom) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_label(registration_form.email) }}
-                            {{ form_widget(registration_form.email) }}
-                        </div>
-                    </div>
-                    <div class="form-column">
-                        <div class="form-group">
-                            {{ form_label(registration_form.cin) }}
-                            {{ form_widget(registration_form.cin) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_label(registration_form.numTel) }}
-                            {{ form_widget(registration_form.numTel) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_label(registration_form.adresse) }}
-                            {{ form_widget(registration_form.adresse) }}
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group password-group">
-                    {{ form_label(registration_form.motDePasse) }}
-                    <div class="password-wrapper">
-                        {{ form_widget(registration_form.motDePasse) }}
-                        <button type="button" id="generate-password" class="btn-generate-password">Générer</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    {{ form_label(registration_form.image) }}
-                    {{ form_widget(registration_form.image, {'attr': {'accept': 'image/*', 'class': 'image-input'}}) }}
-                </div>
-                <div class="button-container">
-                    <button type="submit" class="submit-btn">Sign Up</button>
-                </div>
-            </form>
-        </div>
-
         <div class="form-container sign-in-container">
             {{ form_start(login_form) }}
                 <h1>Sign in</h1>
@@ -117,15 +60,10 @@
 
         <div class="overlay-container">
             <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h1>Welcome Back!</h1>
-                    <p>To keep connected with us please login with your personal info</p>
-                    <button class="ghost" id="signIn">Sign In</button>
-                </div>
                 <div class="overlay-panel overlay-right">
                     <h1>Hello, Friend!</h1>
                     <p>Enter your personal details and start journey with us</p>
-                    <button class="ghost" id="signUp">Sign Up</button>
+                    <a href="{{ path('app_register') }}" class="ghost" id="signUp">Sign Up</a>
                     <img src="https://i.pinimg.com/736x/4f/02/9c/4f029c9bfa1290dc2a401046d528ac43.jpg" alt="Background" class="welcome-image">
                 </div>
             </div>
@@ -172,44 +110,9 @@
             position: absolute;
             top: 0;
             height: 100%;
-            transition: all 0.6s ease-in-out;
-        }
-        
-        .sign-in-container {
             width: 50%;
             left: 0;
             z-index: 2;
-        }
-        
-        .sign-up-container {
-            width: 50%;
-            left: 0;
-            opacity: 0;
-            z-index: 1;
-            overflow-y: auto;
-            padding-bottom: 30px;
-        }
-        
-        .container.right-panel-active .sign-in-container {
-            transform: translateX(100%);
-        }
-        
-        .container.right-panel-active .sign-up-container {
-            transform: translateX(100%);
-            opacity: 1;
-            z-index: 5;
-            animation: show 0.6s;
-        }
-        
-        @keyframes show {
-            0%, 49.99% {
-                opacity: 0;
-                z-index: 1;
-            }
-            50%, 100% {
-                opacity: 1;
-                z-index: 5;
-            }
         }
         
         .overlay-container {
@@ -219,12 +122,7 @@
             width: 50%;
             height: 100%;
             overflow: hidden;
-            transition: transform 0.6s ease-in-out;
             z-index: 100;
-        }
-        
-        .container.right-panel-active .overlay-container {
-            transform: translateX(-100%);
         }
         
         .overlay {
@@ -238,12 +136,6 @@
             left: -100%;
             height: 100%;
             width: 200%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-        }
-        
-        .container.right-panel-active .overlay {
-            transform: translateX(50%);
         }
         
         .overlay-panel {
@@ -257,25 +149,7 @@
             height: 100%;
             width: 50%;
             text-align: center;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-        }
-        
-        .overlay-left {
-            transform: translateX(-20%);
-        }
-        
-        .container.right-panel-active .overlay-left {
-            transform: translateX(0);
-        }
-        
-        .overlay-right {
             right: 0;
-            transform: translateX(0);
-        }
-        
-        .container.right-panel-active .overlay-right {
-            transform: translateX(20%);
         }
         
         .overlay-panel h1 {
@@ -337,17 +211,6 @@
             margin-bottom: 15px;
         }
         
-        .form-columns {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 5px;
-        }
-        
-        .form-column {
-            width: 48%;
-        }
-        
         .form-group {
             width: 100%;
             margin-bottom: 10px;
@@ -387,37 +250,6 @@
             margin-bottom: 10px;
         }
         
-        .password-wrapper {
-            display: flex;
-            align-items: center;
-        }
-        
-        .password-wrapper input {
-            flex: 1;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-        
-        .btn-generate-password {
-            height: 40px;
-            margin: 0;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-            background-color: #f0f0f0;
-            color: #666;
-            font-size: 12px;
-            padding: 0 15px;
-            text-transform: none;
-            letter-spacing: 0;
-            transition: background-color 0.3s;
-        }
-        
-        .btn-generate-password:hover {
-            background-color: #e0e0e0;
-            color: #333;
-            transform: none;
-        }
-        
         .password-container {
             position: relative;
             width: 100%;
@@ -439,12 +271,6 @@
         
         .toggle-password:hover {
             color: #333;
-        }
-        
-        .image-input {
-            height: auto !important;
-            padding: 8px !important;
-            font-size: 12px !important;
         }
         
         .button-container {
@@ -479,7 +305,7 @@
             transform: scale(0.95);
         }
         
-        button.ghost {
+        .ghost {
             background-color: transparent;
             border: 2px solid white;
             margin-bottom: 20px;
@@ -492,9 +318,11 @@
             text-transform: uppercase;
             cursor: pointer;
             transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
         
-        button.ghost:hover {
+        .ghost:hover {
             background-color: rgba(255, 255, 255, 0.2);
         }
         
@@ -604,34 +432,12 @@
                 min-height: 600px;
             }
             
-            .form-columns {
-                flex-direction: column;
-            }
-            
-            .form-column {
-                width: 100%;
-            }
-            
             form {
                 padding: 0 15px 20px;
             }
             
             button {
                 padding: 10px 25px;
-            }
-            
-            .password-wrapper {
-                flex-direction: column;
-            }
-            
-            .password-wrapper input {
-                border-radius: 5px;
-                margin-bottom: 5px;
-            }
-            
-            .btn-generate-password {
-                width: 100%;
-                border-radius: 5px;
             }
             
             .welcome-image {
@@ -672,8 +478,7 @@
             
             .form-group input,
             .form-group select,
-            .form-group textarea,
-            .btn-generate-password {
+            .form-group textarea {
                 height: 36px;
                 padding: 8px 10px;
             }
@@ -699,23 +504,10 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const signUpButton = document.getElementById('signUp');
-            const signInButton = document.getElementById('signIn');
-            const container = document.getElementById('container');
             const toggleIcon = document.getElementById('toggleIcon');
             const goToRegisterBtn = document.getElementById('go-to-register');
-
-            if (signUpButton) {
-                signUpButton.addEventListener('click', () => {
-                    container.classList.add('right-panel-active');
-                });
-            }
-
-            if (signInButton) {
-                signInButton.addEventListener('click', () => {
-                    container.classList.remove('right-panel-active');
-                });
-            }
+            const signUpButton = document.getElementById('signUp');
+            const container = document.getElementById('container');
 
             // Password toggle functionality
             document.querySelector('.toggle-password').addEventListener('click', function() {
@@ -731,63 +523,27 @@
                 }
             });
 
-            // Password generator
-            const generatePasswordBtn = document.getElementById('generate-password');
-            if (generatePasswordBtn) {
-                generatePasswordBtn.addEventListener('click', function() {
-                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
-                    let password = '';
-                    for (let i = 0; i < 12; i++) {
-                        password += chars.charAt(Math.floor(Math.random() * chars.length));
-                    }
-                    // Find the password field in the registration form
-                    const passwordField = document.querySelector('input[name*="motDePasse"]');
-                    if (passwordField) {
-                        passwordField.value = password;
-                        passwordField.type = 'text';
-                        setTimeout(() => {
-                            passwordField.type = 'password';
-                        }, 3000);
-                    }
-                });
+            // Animation for redirecting to registration page
+            function handleRedirect(e, href) {
+                e.preventDefault();
+                container.style.animation = 'fadeOut 0.5s forwards';
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 500);
             }
-            
-            // Ensure Sign Up button is visible by scrolling to it after form activation
-            function scrollToSignUpButton() {
-                if (container.classList.contains('right-panel-active')) {
-                    const signUpForm = document.querySelector('.sign-up-container form');
-                    const signUpButton = signUpForm.querySelector('.submit-btn');
-                    if (signUpButton) {
-                        setTimeout(() => {
-                            signUpButton.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }, 600);
-                    }
-                }
-            }
-            
-            if (signUpButton) {
-                signUpButton.addEventListener('click', scrollToSignUpButton);
-            }
-            
-            // Animation pour passer à la page d'inscription complète
+
+            // Handle "Créer un compte" link click
             if (goToRegisterBtn) {
                 goToRegisterBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const href = this.getAttribute('href');
-                    
-                    // Animer la sortie du container
-                    container.style.animation = 'fadeOut 0.5s forwards';
-                    
-                    // Rediriger après l'animation
-                    setTimeout(() => {
-                        window.location.href = href;
-                    }, 500);
+                    handleRedirect(e, this.getAttribute('href'));
                 });
             }
-            
-            // Check if we should scroll to the button on page load (if form is active)
-            if (container.classList.contains('right-panel-active')) {
-                scrollToSignUpButton();
+
+            // Handle "Sign Up" button click
+            if (signUpButton) {
+                signUpButton.addEventListener('click', function(e) {
+                    handleRedirect(e, this.getAttribute('href'));
+                });
             }
         });
     </script>

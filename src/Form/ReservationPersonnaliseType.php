@@ -115,6 +115,8 @@ class ReservationPersonnaliseType extends AbstractType
                     'Annulée' => 'Annulée',
                     'Terminée' => 'Terminée'
                 ],
+                'attr' => ['style' => 'display: none;'],
+                'label_attr' => ['style' => 'display: none;'],
                 'translation_domain' => 'messages',
             ])
             ->add('services', EntityType::class, [
@@ -145,10 +147,8 @@ class ReservationPersonnaliseType extends AbstractType
             'data_class' => Reservationpersonnalise::class,
             'user_data' => null, // Option to pass user data
             'translation_domain' => 'messages',
-            'is_admin' => false, // Add is_admin option with default value false
         ]);
 
         $resolver->setAllowedTypes('user_data', ['array', 'null']);
-        $resolver->setAllowedTypes('is_admin', 'bool'); // Define allowed type for is_admin
     }
 }

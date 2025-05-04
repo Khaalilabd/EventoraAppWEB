@@ -430,6 +430,135 @@
                     }
                 }
 
+                /* Navbar styles */
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    background: #fff;
+                    z-index: 1000;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                }
+
+                .fh5co-logo {
+                    float: left;
+                    padding: 15px 0;
+                }
+
+                .fh5co-logo a {
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: #934D1A;
+                    text-decoration: none;
+                }
+
+                .menu-toggle {
+                    display: none;
+                    float: right;
+                    padding: 15px;
+                    cursor: pointer;
+                }
+
+                .menu-toggle i {
+                    font-size: 24px;
+                    color: #1a202c;
+                }
+
+                .menu-1 ul {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    float: right;
+                }
+
+                .menu-1 ul li {
+                    position: relative;
+                    padding: 15px;
+                }
+
+                .menu-1 ul li a {
+                    color: #1a202c;
+                    text-decoration: none;
+                    font-size: 16px;
+                    font-weight: 500;
+                    transition: color 0.3s ease;
+                }
+
+                .menu-1 ul li a:hover {
+                    color: #934D1A;
+                }
+
+                .menu-1 ul li.active > a {
+                    color: #934D1A;
+                    font-weight: bold;
+                }
+
+                .menu-1 ul li.has-dropdown > a::after {
+                    content: '\f078';
+                    font-family: 'Font Awesome 5 Free';
+                    font-weight: 900;
+                    margin-left: 5px;
+                    font-size: 12px;
+                }
+
+                .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    background: #fff;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    min-width: 200px;
+                    z-index: 1000;
+                    border-radius: 4px;
+                    padding: 10px 0;
+                    opacity: 0;
+                    visibility: hidden;
+                    transform: translateY(10px);
+                    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+                }
+
+                .menu-1 ul li.has-dropdown:hover .dropdown,
+                .menu-1 ul li.has-dropdown.active .dropdown {
+                    display: block;
+                    opacity: 1;
+                    visibility: visible;
+                    transform: translateY(0);
+                }
+
+                .menu-1 ul li.has-dropdown .dropdown li {
+                    padding: 10px 20px;
+                }
+
+                .menu-1 ul li.has-dropdown .dropdown li a {
+                    color: #1a202c;
+                    font-size: 14px;
+                    display: block;
+                }
+
+                .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #934D1A;
+                }
+
+                .user-circle {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    background: #f8f9fa;
+                    margin-right: 10px;
+                }
+
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+
                 /* Responsive adjustments for navbar */
                 @media (max-width: 768px) {
                     .menu-toggle {
@@ -457,17 +586,18 @@
                         transform: translateY(0);
                     }
 
-                    .fh5co-nav .menu-1 ul li {
+                    .menu-1 ul li {
                         margin: 10px 0;
                         text-align: center;
                     }
 
-                    .user-circle {
-                        margin-right: 0;
-                        margin-bottom: 5px;
+                    .menu-1 ul li.has-dropdown > a::after {
+                        content: '\f078';
+                        float: right;
+                        margin-right: 20px;
                     }
 
-                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    .menu-1 ul li.has-dropdown .dropdown {
                         position: static;
                         display: none;
                         box-shadow: none;
@@ -475,15 +605,17 @@
                         padding: 10px 0;
                         opacity: 1;
                         visibility: visible;
+                        transform: none;
                         transition: none;
                     }
 
-                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none;
+                    .menu-1 ul li.has-dropdown.active .dropdown {
+                        display: block;
                     }
 
-                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block;
+                    .user-circle {
+                        margin-right: 0;
+                        margin-bottom: 5px;
                     }
                 }
 
@@ -925,209 +1057,215 @@
     <body>
         <div class="fh5co-loader"></div>
         {% block body %}
-          <nav class="fh5co-nav" role="navigation">
-            <div class="container">
-                <div class="fh5co-logo">
-                    <a href="{{ path('app_home') }}">Eventora</a>
-                </div>
-                <div class="menu-toggle">
-                    <i class="icon-menu"></i>
-                </div>
-                <div class="menu-1">
-                    <ul>
-                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                        <li class="has-dropdown">
-                            <a href="#">Reservation</a>
-                            <ul class="dropdown">
-                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
-                                <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
-                            </ul>
-                        </li>
-                        <li class="has-dropdown">
-                            <a href="{{ path('user_packs') }}">Packs</a>
-                        </li>
-                        <li class="has-dropdown">
-                            <a href="#">Services</a>
-                            <ul class="dropdown">
-                                <li><a href="{{ path('user_services') }}">Service</a></li>
-                                <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
-                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                        <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                        <li class="has-dropdown">
-                            <a href="#">
-                                <span class="user-circle">
-                                    {% if app.user and app.user.image %}
-                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
+                    </div>
+                    <div class="menu-toggle" aria-label="Toggle menu" role="button" tabindex="0">
+                        <i class="icon-menu"></i>
+                    </div>
+                    <div class="menu-1">
+                        <ul>
+                            <li><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#" aria-haspopup="true" aria-expanded="false">Reservation</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="#" aria-haspopup="true" aria-expanded="false">Packs</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
+                                    {% if not is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                            <li class="has-dropdown active">
+                                <a href="#" aria-haspopup="true" aria-expanded="false">Services</a>
+                                <ul class="dropdown">
+                                    <li class="active"><a href="{{ path('user_services') }}">Service</a></li>
+                                    <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
+                            <li class="has-dropdown">
+                                <a href="#" aria-haspopup="true" aria-expanded="false">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        {% else %}
+                                            <i class="icon-user"></i>
+                                        {% endif %}
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
+                                        <li><a href="{{ path('app_logout') }}">Log out</a></li>
                                     {% else %}
-                                        <i class="icon-user"></i>
+                                        <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Sign up</a></li>
                                     {% endif %}
-                                </span>
-                                Contact
-                            </a>
-                            <ul class="dropdown">
-                                {% if app.user %}
-                                    <li><a href="{{ path('app_settings') }}">Settings</a></li>
-                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
-                                    {% if is_granted('ROLE_ADMIN') %}
-                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                    {% endif %}
-                                    <li><a href="{{ path('app_logout') }}">Log out</a></li>
-                                {% else %}
-                                    <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
-                                    <li><a href="{{ path('app_auth') }}">Log in</a></li>
-                                    <li><a href="{{ path('app_auth') }}">Sign up</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div id="page">
-            <header id="fh5co-header" class="fh5co-cover" role="banner">
-                <div id="app" class="container">
-                    <card data-image="https://i.pinimg.com/474x/15/49/c6/1549c6e76659befe1795734071a36ea7.jpg">
-                        <h1 slot="header">Decoration</h1>
-                        <p slot="content">Notre service de décoration transforme vos espaces avec élégance et créativité. Que ce soit pour votre maison, bureau ou événement, nous concevons des ambiances uniques, adaptées à vos goûts et besoins. Faites confiance à notre expertise pour sublimer chaque détail !</p>
-                    </card>
-                    <card data-image="https://i.pinimg.com/736x/1e/92/c4/1e92c41b988484af5a080b0eba820538.jpg">
-                        <h1 slot="header">Lumiere</h1>
-                        <p slot="content">Notre service met la lumière au cœur de vos espaces. Avec des solutions d'éclairage sur mesure, nous créons des ambiances chaleureuses et modernes, jouant sur l'intensité, les couleurs et le design pour sublimer chaque pièce ou événement. Laissez vos espaces briller d'élégance !</p>
-                    </card>
-                    <card data-image="https://i.pinimg.com/474x/25/6e/75/256e75cd9f5e71cad09b060871e0e51b.jpg">
-                        <h1 slot="header">Sono</h1>
-                        <p slot="content">Notre service intègre le son pour sublimer vos espaces. Avec des systèmes audio soigneusement sélectionnés, nous créons des ambiances sonores immersives, harmonisées à votre style et vos événements. Du design discret à la qualité exceptionnelle, laissez le son magnifier chaque instant !</p>
-                    </card>
-                    <card data-image="https://i.pinimg.com/474x/af/99/37/af9937a06d9e315b1de6edf673bdba62.jpg">
-                        <h1 slot="header">Traiteur</h1>
-                        <p slot="content">Notre service de traiteur apporte une touche savoureuse à vos événements. Avec des menus raffinés et personnalisés, nous marions saveurs, élégance et créativité pour ravir vos convives. Du cocktail à la réception, chaque plat est une expérience culinaire qui sublime votre occasion !</p>
-                    </card>
-                    <card data-image="https://i.pinimg.com/474x/f0/58/e6/f058e6c75153040684804fec0528e588.jpg">
-                        <h1 slot="header">Fleuriste</h1>
-                        <p slot="content">Notre service de fleuriste embellit vos espaces et événements avec des créations florales uniques. Des bouquets élégants aux arrangements sur mesure, nous apportons couleur, fraîcheur et poésie à chaque occasion. Laissez nos fleurs sublimer vos moments avec charme et raffinement !</p>
-                    </card>
-                </div>
-            </header>
-            <section id="services-section">
-                <div class="services-intro" data-aos="fade-in">
-                    <h2 class="intro-title">Nos Services d'Exception</h2>
-                    <p class="intro-text">Découvrez nos prestations sur mesure pour sublimer vos espaces et événements avec élégance et créativité.</p>
-                </div>
-                
-                <!-- Système de filtrage -->
-                <div class="filter-container" data-aos="fade-up">
-                    <div class="filter-section">
-                        <span class="filter-title">Catégories :</span>
-                        <button class="filter-btn active" data-filter="all">Tous</button>
-                        <button class="filter-btn" data-filter="Decoration">Décoration</button>
-                        <button class="filter-btn" data-filter="Lumiere">Lumière</button>
-                        <button class="filter-btn" data-filter="Sono">Sono</button>
-                        <button class="filter-btn" data-filter="Traiteur">Traiteur</button>
-                        <button class="filter-btn" data-filter="Fleuriste">Fleuriste</button>
-                    </div>
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="Rechercher un service..." aria-label="Rechercher un service">
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                
-                <div class="card-container">
-                    {% for service in GServices %}
-                        <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" role="article" aria-labelledby="service-title-{{ service.id }}" data-service-id="{{ service.id }}" data-service-title="{{ service.titre }}" data-service-description="{{ service.description }}" data-service-location="{{ service.location }}" data-service-type="{{ service.type_service }}" data-service-price="{{ service.prix }}" data-service-image="{{ asset(service.image) }}" data-service-partenaire="{{ service.sponsor.nom_partenaire }}">
-                            <div class="wishlist-badge" role="button" aria-label="Ajouter aux favoris" data-id="{{ service.id }}">
-                                <i class="far fa-heart"></i>
-                            </div>
-                            <div class="availability-badge available">Disponible</div>
-                            <div class="content">
-                                <div class="front">
-                                    <div class="img">
-                                        <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img" loading="lazy">
-                                        <div class="circle" id="right"></div>
-                                        <div class="circle" id="bottom"></div>
-                                    </div>
-                                    <div class="front-content">
-                                        <div class="badges">
-                                            <small class="badge location"><i class="fas fa-map-marker-alt"></i> {{ service.location }}</small>
-                                            <small class="badge type-service"><i class="fas fa-concierge-bell"></i> {{ service.type_service }}</small>
+            </nav>
+            <div id="page">
+                <header id="fh5co-header" class="fh5co-cover" role="banner">
+                    <div id="app" class="container">
+                        <card data-image="https://i.pinimg.com/474x/15/49/c6/1549c6e76659befe1795734071a36ea7.jpg">
+                            <h1 slot="header">Decoration</h1>
+                            <p slot="content">Notre service de décoration transforme vos espaces avec élégance et créativité. Que ce soit pour votre maison, bureau ou événement, nous concevons des ambiances uniques, adaptées à vos goûts et besoins. Faites confiance à notre expertise pour sublimer chaque détail !</p>
+                        </card>
+                        <card data-image="https://i.pinimg.com/736x/1e/92/c4/1e92c41b988484af5a080b0eba820538.jpg">
+                            <h1 slot="header">Lumiere</h1>
+                            <p slot="content">Notre service met la lumière au cœur de vos espaces. Avec des solutions d'éclairage sur mesure, nous créons des ambiances chaleureuses et modernes, jouant sur l'intensité, les couleurs et le design pour sublimer chaque pièce ou événement. Laissez vos espaces briller d'élégance !</p>
+                        </card>
+                        <card data-image="https://i.pinimg.com/474x/25/6e/75/256e75cd9f5e71cad09b060871e0e51b.jpg">
+                            <h1 slot="header">Sono</h1>
+                            <p slot="content">Notre service intègre le son pour sublimer vos espaces. Avec des systèmes audio soigneusement sélectionnés, nous créons des ambiances sonores immersives, harmonisées à votre style et vos événements. Du design discret à la qualité exceptionnelle, laissez le son magnifier chaque instant !</p>
+                        </card>
+                        <card data-image="https://i.pinimg.com/474x/af/99/37/af9937a06d9e315b1de6edf673bdba62.jpg">
+                            <h1 slot="header">Traiteur</h1>
+                            <p slot="content">Notre service de traiteur apporte une touche savoureuse à vos événements. Avec des menus raffinés et personnalisés, nous marions saveurs, élégance et créativité pour ravir vos convives. Du cocktail à la réception, chaque plat est une expérience culinaire qui sublime votre occasion !</p>
+                        </card>
+                        <card data-image="https://i.pinimg.com/474x/f0/58/e6/f058e6c75153040684804fec0528e588.jpg">
+                            <h1 slot="header">Fleuriste</h1>
+                            <p slot="content">Notre service de fleuriste embellit vos espaces et événements avec des créations florales uniques. Des bouquets élégants aux arrangements sur mesure, nous apportons couleur, fraîcheur et poésie à chaque occasion. Laissez nos fleurs sublimer vos moments avec charme et raffinement !</p>
+                        </card>
+                    </div>
+                </header>
+                <section id="services-section">
+                    <div class="services-intro" data-aos="fade-in">
+                        <h2 class="intro-title">Nos Services d'Exception</h2>
+                        <p class="intro-text">Découvrez nos prestations sur mesure pour sublimer vos espaces et événements avec élégance et créativité.</p>
+                    </div>
+                    
+                    <!-- Système de filtrage -->
+                    <div class="filter-container" data-aos="fade-up">
+                        <div class="filter-section">
+                            <span class="filter-title">Catégories :</span>
+                            <button class="filter-btn active" data-filter="all">Tous</button>
+                            <button class="filter-btn" data-filter="Decoration">Décoration</button>
+                            <button class="filter-btn" data-filter="Lumiere">Lumière</button>
+                            <button class="filter-btn" data-filter="Sono">Sono</button>
+                            <button class="filter-btn" data-filter="Traiteur">Traiteur</button>
+                            <button class="filter-btn" data-filter="Fleuriste">Fleuriste</button>
+                        </div>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Rechercher un service..." aria-label="Rechercher un service">
+                        </div>
+                    </div>
+                    
+                    <div class="card-container">
+                        {% for service in GServices %}
+                            <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" role="article" aria-labelledby="service-title-{{ service.id }}" data-service-id="{{ service.id }}" data-service-title="{{ service.titre }}" data-service-description="{{ service.description }}" data-service-location="{{ service.location }}" data-service-type="{{ service.type_service }}" data-service-price="{{ service.prix }}" data-service-image="{{ asset(service.image) }}" data-service-partenaire="{{ service.sponsor.nom_partenaire }}">
+                                <div class="wishlist-badge" role="button" aria-label="Ajouter aux favoris" data-id="{{ service.id }}">
+                                    <i class="far fa-heart"></i>
+                                </div>
+                                <div class="availability-badge available">Disponible</div>
+                                <div class="content">
+                                    <div class="front">
+                                        <div class="img">
+                                            <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img" loading="lazy">
+                                            <div class="circle" id="right"></div>
+                                            <div class="circle" id="bottom"></div>
                                         </div>
-                                        <div class="description">
-                                            <div class="title">
-                                                <p class="title" id="service-title-{{ service.id }}"><strong>{{ service.titre }}</strong></p>
+                                        <div class="front-content">
+                                            <div class="badges">
+                                                <small class="badge location"><i class="fas fa-map-marker-alt"></i> {{ service.location }}</small>
+                                                <small class="badge type-service"><i class="fas fa-concierge-bell"></i> {{ service.type_service }}</small>
                                             </div>
-                                            <p class="card-footer">{{ service.prix }}</p>
+                                            <div class="description">
+                                                <div class="title">
+                                                    <p class="title" id="service-title-{{ service.id }}"><strong>{{ service.titre }}</strong></p>
+                                                </div>
+                                                <p class="card-footer">{{ service.prix }}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
+                    <div id="noResultsMessage" class="no-results" style="display: none; text-align: center; padding: 30px; background: #f9f9f9; border-radius: 10px; margin: 20px auto; max-width: 600px;">
+                        <i class="fas fa-search" style="font-size: 2rem; color: #a0aec0; margin-bottom: 15px;"></i>
+                        <h3>Aucun service ne correspond à votre recherche</h3>
+                        <p>Essayez d'autres termes de recherche ou filtres.</p>
+                    </div>
+                </section>
+                <!-- Bouton de panier flottant -->
+                <div class="cart-button" id="cartButton" role="button" aria-label="Ouvrir le panier" tabindex="0">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
                 </div>
-                <div id="noResultsMessage" class="no-results" style="display: none; text-align: center; padding: 30px; background: #f9f9f9; border-radius: 10px; margin: 20px auto; max-width: 600px;">
-                    <i class="fas fa-search" style="font-size: 2rem; color: #a0aec0; margin-bottom: 15px;"></i>
-                    <h3>Aucun service ne correspond à votre recherche</h3>
-                    <p>Essayez d'autres termes de recherche ou filtres.</p>
-                </div>
-            </section>
-            <!-- Bouton de panier flottant -->
-            <div class="cart-button" id="cartButton" role="button" aria-label="Ouvrir le panier" tabindex="0">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count" id="cartCount">0</span>
             </div>
-        </div>
-        <!-- Details Container -->
-        <div class="details-container" id="detailsContainer" role="dialog" aria-labelledby="details-title">
-            <div class="details-content">
-                <button class="close-btn" aria-label="Fermer les détails"><i class="fas fa-times"></i></button>
-                <img id="details-image" src="" alt="">
-                <h2 id="details-title"></h2>
-                <div class="badges">
-                    <small class="badge location" id="details-location"></small>
-                    <small class="badge type-service" id="details-type"></small>
-                </div>
-                <p><strong>Partenaire:</strong> <span id="details-partenaire"></span></p>
-                <p class="service-description"><strong>Description: </strong><span id="details-description"></span></p>
-                <div class="service-features">
-                    <span class="feature-tag"><i class="fas fa-clock"></i> Durée: 3-5 heures</span>
-                    <span class="feature-tag"><i class="fas fa-calendar-alt"></i> Disponibilité: 7j/7</span>
-                    <span class="feature-tag"><i class="fas fa-users"></i> Capacité: 10-200 pers.</span>
-                    <span class="feature-tag"><i class="fas fa-star"></i> Note: 4.8/5</span>
-                </div>
-                <p class="service-price"><strong>Prix:</strong> <span id="details-price"></span></p>
-                
-                <!-- Services complémentaires -->
-                <div class="related-services">
-                    <h4 class="related-services-title">Services complémentaires</h4>
-                    <div class="related-services-list">
-                        <div class="related-service-item">
-                            <div class="related-service-title">Animation DJ</div>
-                            <div class="related-service-price">350€</div>
-                        </div>
-                        <div class="related-service-item">
-                            <div class="related-service-title">Éclairage Ambiance</div>
-                            <div class="related-service-price">200€</div>
-                        </div>
-                        <div class="related-service-item">
-                            <div class="related-service-title">Photo Booth</div>
-                            <div class="related-service-price">150€</div>
-                        </div>
-                        <div class="related-service-item">
-                            <div class="related-service-title">Décoration Fleurie</div>
-                            <div class="related-service-price">280€</div>
+            <!-- Details Container -->
+            <div class="details-container" id="detailsContainer" role="dialog" aria-labelledby="details-title">
+                <div class="details-content">
+                    <button class="close-btn" aria-label="Fermer les détails"><i class="fas fa-times"></i></button>
+                    <img id="details-image" src="" alt="">
+                    <h2 id="details-title"></h2>
+                    <div class="badges">
+                        <small class="badge location" id="details-location"></small>
+                        <small class="badge type-service" id="details-type"></small>
+                    </div>
+                    <p><strong>Partenaire:</strong> <span id="details-partenaire"></span></p>
+                    <p class="service-description"><strong>Description: </strong><span id="details-description"></span></p>
+                    <div class="service-features">
+                        <span class="feature-tag"><i class="fas fa-clock"></i> Durée: 3-5 heures</span>
+                        <span class="feature-tag"><i class="fas fa-calendar-alt"></i> Disponibilité: 7j/7</span>
+                        <span class="feature-tag"><i class="fas fa-users"></i> Capacité: 10-200 pers.</span>
+                        <span class="feature-tag"><i class="fas fa-star"></i> Note: 4.8/5</span>
+                    </div>
+                    <p class="service-price"><strong>Prix:</strong> <span id="details-price"></span></p>
+                    
+                    <!-- Services complémentaires -->
+                    <div class="related-services">
+                        <h4 class="related-services-title">Services complémentaires</h4>
+                        <div class="related-services-list">
+                            <div class="related-service-item">
+                                <div class="related-service-title">Animation DJ</div>
+                                <div class="related-service-price">350€</div>
+                            </div>
+                            <div class="related-service-item">
+                                <div class="related-service-title">Éclairage Ambiance</div>
+                                <div class="related-service-price">200€</div>
+                            </div>
+                            <div class="related-service-item">
+                                <div class="related-service-title">Photo Booth</div>
+                                <div class="related-service-price">150€</div>
+                            </div>
+                            <div class="related-service-item">
+                                <div class="related-service-title">Décoration Fleurie</div>
+                                <div class="related-service-price">280€</div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- Bouton Réserver -->
+                    <button class="reserve-btn" id="reserveButton" aria-label="Réserver ce service">Ajouter au panier</button>
                 </div>
-                
-                <!-- Bouton Réserver -->
-                <button class="reserve-btn" id="reserveButton" aria-label="Réserver ce service">Ajouter au panier</button>
             </div>
-        </div>
-        
-        <!-- Conteneur de notifications -->
-        <div class="toast-container" id="toastContainer"></div>
+            
+            <!-- Conteneur de notifications -->
+            <div class="toast-container" id="toastContainer"></div>
         {% endblock %}
         {% block javascripts %}
             <!-- Charger d'abord jQuery -->
@@ -1160,9 +1298,14 @@
                     const menuToggle = $('.menu-toggle');
                     const navMenu = $('.fh5co-nav .menu-1 ul');
                     if (menuToggle.length && navMenu.length) {
-                        menuToggle.on('click', function() {
-                            navMenu.toggleClass('active');
-                            $(this).find('i').toggleClass('icon-menu icon-close');
+                        menuToggle.on('click keydown', function(e) {
+                            if (e.type === 'click' || e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                navMenu.toggleClass('active');
+                                $(this).find('i').toggleClass('icon-menu icon-close');
+                                const isExpanded = navMenu.hasClass('active');
+                                menuToggle.attr('aria-expanded', isExpanded);
+                            }
                         });
 
                         // Close mobile menu when clicking outside
@@ -1170,6 +1313,7 @@
                             if (!menuToggle.is(e.target) && !navMenu.is(e.target) && navMenu.has(e.target).length === 0 && navMenu.hasClass('active')) {
                                 navMenu.removeClass('active');
                                 menuToggle.find('i').removeClass('icon-close').addClass('icon-menu');
+                                menuToggle.attr('aria-expanded', 'false');
                             }
                         });
 
@@ -1178,25 +1322,60 @@
                             if (e.key === 'Escape' && navMenu.hasClass('active')) {
                                 navMenu.removeClass('active');
                                 menuToggle.find('i').removeClass('icon-close').addClass('icon-menu');
+                                menuToggle.attr('aria-expanded', 'false');
                             }
                         });
                     }
 
-                    // Handle dropdowns on mobile
-                    const dropdownToggles = $('.dropdown-toggle');
-                    if (dropdownToggles.length) {
-                        dropdownToggles.on('click', function(e) {
-                            if ($(window).width() <= 768) {
-                                e.preventDefault();
-                                const parentLi = $(this).parent();
-                                const isActive = parentLi.hasClass('active');
+                    // Handle dropdowns
+                    const dropdownItems = $('.has-dropdown');
+                    if (dropdownItems.length) {
+                        dropdownItems.each(function() {
+                            const item = $(this);
+                            const link = item.children('a');
+                            const dropdown = item.children('.dropdown');
 
-                                // Close all other dropdowns
-                                $('.has-dropdown').removeClass('active');
-                                // Toggle current dropdown
-                                if (!isActive) {
-                                    parentLi.addClass('active');
+                            // Desktop: Hover to show dropdown
+                            if ($(window).width() > 768) {
+                                item.on('mouseenter', function() {
+                                    dropdownItems.removeClass('active');
+                                    item.addClass('active');
+                                    link.attr('aria-expanded', 'true');
+                                }).on('mouseleave', function() {
+                                    item.removeClass('active');
+                                    link.attr('aria-expanded', 'false');
+                                });
+                            }
+
+                            // Mobile: Click to toggle dropdown
+                            link.on('click keydown', function(e) {
+                                if ($(window).width() <= 768 && (e.type === 'click' || e.key === 'Enter' || e.key === ' ')) {
+                                    e.preventDefault();
+                                    const isActive = item.hasClass('active');
+                                    dropdownItems.removeClass('active');
+                                    if (!isActive) {
+                                        item.addClass('active');
+                                        link.attr('aria-expanded', 'true');
+                                    } else {
+                                        link.attr('aria-expanded', 'false');
+                                    }
                                 }
+                            });
+                        });
+
+                        // Close dropdowns when clicking outside
+                        $(document).on('click', function(e) {
+                            if (!dropdownItems.is(e.target) && dropdownItems.has(e.target).length === 0) {
+                                dropdownItems.removeClass('active');
+                                dropdownItems.find('a').attr('aria-expanded', 'false');
+                            }
+                        });
+
+                        // Close dropdowns with Escape key
+                        $(document).on('keydown', function(e) {
+                            if (e.key === 'Escape') {
+                                dropdownItems.removeClass('active');
+                                dropdownItems.find('a').attr('aria-expanded', 'false');
                             }
                         });
                     }
@@ -1204,7 +1383,8 @@
                     // Set active state for Services in navbar dropdown
                     $('.fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a').each(function() {
                         if ($(this).attr('href') === '{{ path('user_services') }}') {
-                            $(this).closest('.has-dropdown').addClass('active');
+                            $(this).parent().addClass('active');
+                            $(this).closest('.has-dropdown').addClass('current-menu');
                         }
                     });
                 });
@@ -1227,8 +1407,6 @@
                         const cartButton = document.getElementById('cartButton');
                         const cartCount = document.getElementById('cartCount');
                         const reserveButton = document.getElementById('reserveButton');
-                        const scrollProgress = document.getElementById('scrollProgress');
-                        const backToTop = document.getElementById('backToTop');
                         const filterBtns = document.querySelectorAll('.filter-btn');
                         const searchInput = document.getElementById('searchInput');
                         const noResultsMessage = document.getElementById('noResultsMessage');
@@ -1570,31 +1748,6 @@
                             });
                         });
             
-                        // Fonction pour mettre à jour l'indicateur de défilement
-                        window.addEventListener('scroll', function() {
-                            const scrollPosition = window.scrollY;
-                            const windowHeight = window.innerHeight;
-                            const documentHeight = document.documentElement.scrollHeight;
-                            const scrollPercentage = (scrollPosition / (documentHeight - windowHeight)) * 100;
-                            
-                            scrollProgress.style.width = scrollPercentage + '%';
-                            
-                            // Afficher/masquer le bouton retour en haut
-                            if (scrollPosition > 300) {
-                                backToTop.classList.add('visible');
-                            } else {
-                                backToTop.classList.remove('visible');
-                            }
-                        });
-                        
-                        // Fonction de retour en haut de page
-                        backToTop.addEventListener('click', function() {
-                            window.scrollTo({
-                                top: 0,
-                                behavior: 'smooth'
-                            });
-                        });
-
                         // Gestion des services complémentaires
                         const relatedServiceItems = document.querySelectorAll('.related-service-item');
                         relatedServiceItems.forEach(item => {

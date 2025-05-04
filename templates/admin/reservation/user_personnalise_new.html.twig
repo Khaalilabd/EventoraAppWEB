@@ -983,6 +983,57 @@
                 .modal-content { width: 95%; padding: 15px; }
                 .modal-content h4 { font-size: 18px; }
             }
+            
+            /* Calendar Preview Styles */
+            .calendar-card {
+                background-color: white;
+                border-radius: 12px;
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                border: 1px solid rgba(147, 77, 26, 0.2);
+                transition: all 0.3s ease;
+                animation: fadeIn 0.5s ease-out;
+            }
+            
+            .calendar-card:hover {
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+                transform: translateY(-3px);
+            }
+            
+            .calendar-header {
+                background: linear-gradient(135deg, #934D1A, #CAB69A);
+                color: white;
+                padding: 15px;
+                font-weight: 600;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .calendar-body {
+                padding: 15px;
+            }
+            
+            .calendar-detail {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 12px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .calendar-detail:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+            }
+            
+            .calendar-detail i {
+                color: #934D1A;
+                width: 20px;
+                text-align: center;
+            }
         </style>
     {% endblock %}
     <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
@@ -994,7 +1045,7 @@
     </video>
 
     <div id="page">
-        <nav class="fh5co-nav" role="navigation">
+            <nav class="fh5co-nav" role="navigation">
             <div class="container">
                 <div class="fh5co-logo">
                     <a href="{{ path('app_home') }}">Eventora</a>
@@ -1004,17 +1055,23 @@
                 </div>
                 <div class="menu-1">
                     <ul>
-                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                        <li class="has-dropdown">
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown active">
                             <a href="#">Reservation</a>
                             <ul class="dropdown">
-                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
                                 <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
                             </ul>
                         </li>
-                        <li class="has-dropdown">
-                            <a href="{{ path('user_packs') }}">Packs</a>
-                        </li>
+                                <li class="has-dropdown">
+                                <a href="#">Packs</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
+                                    {% if not is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
                         <li class="has-dropdown">
                             <a href="#">Services</a>
                             <ul class="dropdown">
@@ -1056,7 +1113,6 @@
                 </div>
             </div>
         </nav>
-
         <div id="fh5co-event">
             <div class="container">
                 <div class="row">
@@ -1108,6 +1164,35 @@
                                                 {{ form_widget(form.date, {'attr': {'class': 'form-control flatpickr', 'required': 'required', 'placeholder': 'Select a date'}}) }}
                                                 <div class="form-error">{{ form_errors(form.date) }}</div>
                                             </div>
+                                            
+                                            <!-- Calendar Preview -->
+                                            <div id="calendar-preview" class="form-group" style="display: none; margin-top: 20px;">
+                                                <h4>Reservation Preview</h4>
+                                                <div class="calendar-card">
+                                                    <div class="calendar-header">
+                                                        <i class="fa fa-calendar"></i> 
+                                                        <span id="preview-date"></span>
+                                                    </div>
+                                                    <div class="calendar-body">
+                                                        <div class="calendar-detail">
+                                                            <i class="fa fa-user"></i> 
+                                                            <span id="preview-name"></span>
+                                                        </div>
+                                                        <div class="calendar-detail">
+                                                            <i class="fa fa-envelope"></i> 
+                                                            <span id="preview-email"></span>
+                                                        </div>
+                                                        <div class="calendar-detail">
+                                                            <i class="fa fa-phone"></i> 
+                                                            <span id="preview-phone"></span>
+                                                        </div>
+                                                        <div class="calendar-detail">
+                                                            <i class="fa fa-list"></i> 
+                                                            <span id="preview-services">No services selected yet</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 {{ form_label(form.services, 'Select Services') }}
                                                 <button type="button" class="btn btn-secondary service-button" id="open-services-modal">
@@ -1151,6 +1236,23 @@
             <div class="modal-content">
                 <span class="close-modal" id="close-services-modal">×</span>
                 <h4 style="background-color: #6d28d9; color: white; padding: 16px 0; margin: -25px -25px 25px -25px; border-radius: 16px 16px 0 0; font-size: 18px;">Choose Your Services</h4>
+                
+                <!-- Search input for services -->
+                <div class="service-search-container" style="margin-bottom: 20px; position: relative;">
+                    <div class="input-group" style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-radius: 10px; overflow: hidden;">
+                        <span class="input-group-text" style="background: linear-gradient(135deg, #6d28d9, #9333ea); border: none; color: white; padding-left: 15px; padding-right: 15px;">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" id="service-search-input" class="form-control" placeholder="Search services..." style="border: none; padding: 12px 15px; font-size: 0.95rem;">
+                        <button type="button" id="clear-service-search" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #6c757d; cursor: pointer; display: none; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; z-index: 5;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="no-services-found" style="display: none; margin-top: 10px; padding: 8px 12px; background-color: #fff3cd; color: #856404; border-radius: 8px; font-size: 0.9rem; text-align: center;">
+                        <i class="fas fa-info-circle me-2"></i> No services match your search
+                    </div>
+                </div>
+                
                 <div class="services-columns">
                     <div class="services-column" id="services-column-container"></div>
                 </div>
@@ -1226,15 +1328,22 @@
                 });
 
                 // Flatpickr initialization
-                flatpickr(".flatpickr", {
+                const $dateInput = $('#{{ form.date.vars.id }}');
+                const flatpickrInstance = $dateInput.flatpickr({
+                    enableTime: false,
+                    altInput: true,
+                    altFormat: "F j, Y",
                     dateFormat: "Y-m-d",
                     minDate: "today",
-                    locale: "fr",
-                    allowInput: true,
+                    clickOpens: true,
                     onChange: function(selectedDates, dateStr, instance) {
-                        const $input = $(instance.element);
+                        // Toggle invalid class based on selection
+                        $input = $(instance.input);
                         $input.toggleClass('is-invalid', selectedDates.length === 0)
-                              .next('.form-error').text(selectedDates.length === 0 ? 'The date is required.' : '');
+                        .next('.form-error').text(selectedDates.length === 0 ? 'The date is required.' : '');
+                        
+                        // Update calendar preview
+                        updateCalendarPreview();
                     }
                 });
 
@@ -1416,6 +1525,66 @@
                     }, 300);
                 });
 
+                // Service search functionality
+                const $serviceSearchInput = $('#service-search-input');
+                const $clearServiceSearch = $('#clear-service-search');
+                const $noServicesFound = $('#no-services-found');
+                
+                // Function to normalize text (remove accents and special characters)
+                function normalizeText(text) {
+                    return text.toLowerCase()
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '') // Remove accents
+                        .replace(/[^\w\s]/gi, ''); // Remove special characters
+                }
+                
+                // Function to filter services based on search input
+                function filterServices() {
+                    const searchValue = $serviceSearchInput.val().trim().toLowerCase();
+                    const $services = $('.form-check');
+                    let visibleCount = 0;
+                    
+                    $services.each(function() {
+                        const $service = $(this);
+                        const serviceText = $service.find('.form-check-label').text().toLowerCase();
+                        
+                        // Check if service text contains search value
+                        const isVisible = searchValue === '' || 
+                                          serviceText.includes(searchValue) || 
+                                          normalizeText(serviceText).includes(normalizeText(searchValue));
+                        
+                        // Show or hide service
+                        if (isVisible) {
+                            $service.show();
+                            visibleCount++;
+                        } else {
+                            $service.hide();
+                        }
+                    });
+                    
+                    // Show or hide "no results" message
+                    $noServicesFound.toggle(searchValue !== '' && visibleCount === 0);
+                    
+                    // Show or hide clear button
+                    $clearServiceSearch.css('display', searchValue !== '' ? 'flex' : 'none');
+                }
+                
+                // Initialize search events
+                $serviceSearchInput.on('input', filterServices);
+                
+                $clearServiceSearch.on('click', function() {
+                    $serviceSearchInput.val('').focus();
+                    filterServices();
+                });
+                
+                // Reset search when modal opens
+                $('#open-services-modal').on('click', function() {
+                    $serviceSearchInput.val('');
+                    $noServicesFound.hide();
+                    $clearServiceSearch.hide();
+                    $('.form-check').show(); // Show all services
+                });
+                
                 // Service Details Modal
                 const $serviceDetailsModal = $('#service-details-modal');
                 const $serviceDetailsContent = $('#service-details-content');
@@ -1688,6 +1857,49 @@
                         });
                     {% endfor %}
                 {% endfor %}
+
+                // Function to update the calendar preview
+                function updateCalendarPreview() {
+                    const firstName = $('#{{ form.prenom.vars.id }}').val();
+                    const lastName = $('#{{ form.nom.vars.id }}').val();
+                    const email = $('#{{ form.email.vars.id }}').val();
+                    const phone = $('#{{ form.numtel.vars.id }}').val();
+                    const date = $('#{{ form.date.vars.id }}').val();
+                    
+                    if (date) {
+                        // Format the date for display
+                        const eventDate = new Date(date);
+                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                        const formattedDate = eventDate.toLocaleDateString('fr-FR', options);
+                        
+                        // Update preview elements
+                        $('#preview-date').text(formattedDate);
+                        $('#preview-name').text((firstName && lastName) ? `${firstName} ${lastName}` : 'Name not provided');
+                        $('#preview-email').text(email || 'Email not provided');
+                        $('#preview-phone').text(phone ? `+216 ${phone}` : 'Phone not provided');
+                        
+                        // Get selected services
+                        const selectedServices = [];
+                        $('input[name="reservation_personnalise[services][]"]:checked').each(function() {
+                            selectedServices.push($(this).parent().find('.checkbox-label').text().trim());
+                        });
+                        $('#preview-services').text(selectedServices.length > 0 ? selectedServices.join(', ') : 'No services selected');
+                        
+                        // Show the calendar preview
+                        $('#calendar-preview').show();
+                    } else {
+                        // Hide the preview if no date selected
+                        $('#calendar-preview').hide();
+                    }
+                }
+                
+                // Call update preview on field changes
+                $('#{{ form.prenom.vars.id }}, #{{ form.nom.vars.id }}, #{{ form.email.vars.id }}, #{{ form.numtel.vars.id }}').on('input', updateCalendarPreview);
+                
+                // Check if date is already selected on page load
+                if ($('#{{ form.date.vars.id }}').val()) {
+                    updateCalendarPreview();
+                }
             });
         </script>
     {% endblock %}

@@ -68,6 +68,7 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                position: relative; /* For positioning delete button */
             }
 
             .favorite-card:hover {
@@ -169,6 +170,33 @@
                 transform: scale(1.05);
             }
 
+            /* Delete button */
+            .favorite-card .delete-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: #ff4d4d;
+                color: #fff;
+                border: none;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background 0.3s ease, transform 0.3s ease;
+            }
+
+            .favorite-card .delete-button:hover {
+                background: #cc0000;
+                transform: scale(1.1);
+            }
+
+            .favorite-card .delete-button i {
+                font-size: 16px;
+            }
+
             /* No favorites message */
             .no-favorites {
                 text-align: center;
@@ -250,74 +278,77 @@
         <div class="fh5co-loader"></div>
         <div id="page">
             <!-- Navbar -->
-              <nav class="fh5co-nav" role="navigation">
-                    <div class="container">
-                        <div class="fh5co-logo">
-                            <a href="{{ path('app_home') }}">Eventora</a>
-                        </div>
-                        <div class="menu-toggle">
-                            <i class="icon-menu"></i>
-                        </div>
-                        <div class="menu-1">
-                            <ul>
-                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">Reservation</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
-                                        <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="{{ path('user_packs') }}">Packs</a>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{{ path('user_services') }}">Service</a></li>
-                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
-                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                    <ul class="dropdown">
-                                        {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Settings</a></li>
-                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
-                                            {% if is_granted('ROLE_ADMIN') %}
-                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                            {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Log out</a></li>
-                                        {% else %}
-                                            <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Sign up</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
                     </div>
-                </nav>
+                    <div class="menu-toggle">
+                        <i class="icon-menu"></i>
+                    </div>
+                    <div class="menu-1">
+                        <ul>
+                            <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Reservation</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="{{ path('user_packs') }}">Packs</a>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_services') }}">Service</a></li>
+                                    <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        {% else %}
+                                            <i class="icon-user"></i>
+                                        {% endif %}
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
+                                        <li><a href="{{ path('app_logout') }}">Log out</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Sign up</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
             <!-- Favorites content -->
             <div class="favorites-content">
                 {% if favorites|length > 0 %}
                     <div class="favorites-grid">
                         {% for favorite in favorites %}
-                            <div class="favorite-card">
+                            <div class="favorite-card" data-pack-id="{{ favorite.pack.id }}">
+                                <button class="delete-button" title="Remove from favorites" data-pack-id="{{ favorite.pack.id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                                 <h3>{{ favorite.pack.nomPack }}</h3>
                                 <div class="pack-image-wrapper">
                                     <img src="{{ asset(favorite.pack.imagePath ?: 'images/default-pack.jpg') }}" alt="{{ favorite.pack.nomPack }}">
@@ -367,6 +398,47 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-countto/1.2.0/jquery.countTo.min.js"></script>
         <script src="{{ asset('js/main.js') }}"></script>
         
-        <!-- La gestion de navbar est déjà dans main.js -->
+        <!-- JavaScript for handling delete favorite -->
+        <script>
+            $(document).ready(function() {
+                $('.delete-button').on('click', function() {
+                    const packId = $(this).data('pack-id');
+                    const card = $(this).closest('.favorite-card');
+                    const token = '{{ csrf_token('toggle-favorite') }}';
+
+                    if (confirm('Are you sure you want to remove this pack from your favorites?')) {
+                        $.ajax({
+                            url: '{{ path('user_toggle_favorite', {'id': 0}) }}'.replace('0', packId),
+                            method: 'POST',
+                            data: {
+                                token: token
+                            },
+                            success: function(response) {
+                                if (response.isFavorited === false) {
+                                    card.fadeOut(300, function() {
+                                        $(this).remove();
+                                        // Check if there are any favorites left
+                                        if ($('.favorite-card').length === 0) {
+                                            $('.favorites-content').html(`
+                                                <div class="no-favorites">
+                                                    <p>Vous n'avez aucun pack favori pour le moment.</p>
+                                                    <a href="{{ path('user_packs') }}" class="explore-button">Découvrir les Packs</a>
+                                                </div>
+                                            `);
+                                        }
+                                    });
+                                } else {
+                                    alert('Error: Could not remove favorite.');
+                                }
+                            },
+                            error: function(xhr) {
+                                const error = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred.';
+                                alert(error);
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

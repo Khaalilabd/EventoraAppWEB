@@ -1028,41 +1028,60 @@
                 justify-content: center;
                 margin-top: 30px;
                 flex-wrap: wrap;
+                gap: 4px;
             }
            
             .pagination .page-item {
-                margin: 0 3px;
+                margin: 0;
             }
            
             .pagination .page-link {
-                border-radius: var(--radius-sm);
-                border: 1px solid var(--border-color);
-                color: var(--text-secondary);
-                padding: 8px 14px;
-                transition: var(--transition);
+                border-radius: 30px;
+                border: none;
+                color: #5f6368;
+                padding: 10px 16px;
+                transition: all 0.2s ease;
                 text-decoration: none;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                min-width: 36px;
+                min-width: 40px;
+                font-weight: 500;
+                font-size: 14px;
+                background: white;
+                box-shadow: 0 1px 3px rgba(60,64,67,0.1);
             }
            
             .pagination .page-item.active .page-link {
-                background: var(--primary-color);
+                background: #1a73e8;
                 color: white;
-                border-color: var(--primary-color);
+                box-shadow: 0 2px 5px rgba(26,115,232,0.3);
             }
            
             .pagination .page-link:hover {
-                background: var(--background-accent);
-                border-color: var(--primary-light);
-                color: var(--primary-color);
+                background: #e8f0fe;
+                color: #1a73e8;
+                transform: translateY(-2px);
+                box-shadow: 0 3px 6px rgba(60,64,67,0.2);
             }
            
             .pagination .page-item.disabled .page-link {
-                color: var(--text-light);
+                color: #bdc1c6;
                 pointer-events: none;
-                background: var(--background-main);
+                background: #f8f9fa;
+                box-shadow: none;
+            }
+            
+            .pagination .page-item.prev .page-link,
+            .pagination .page-item.next .page-link {
+                padding: 10px 20px;
+                font-weight: 500;
+            }
+            
+            .pagination .page-item.prev .page-link i,
+            .pagination .page-item.next .page-link i {
+                font-size: 12px;
+                margin: 0 4px;
             }
            
             /* QR code popup */
@@ -1127,12 +1146,203 @@
                 z-index: 9999;
                 backdrop-filter: blur(3px);
             }
+
+            /* Styles de calendrier pour les détails de réservation */
+            .reservation-calendar {
+                margin: 30px 0;
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .reservation-calendar h4 {
+                text-align: center;
+                margin-bottom: 15px;
+                color: #3c4043;
+                font-weight: 500;
+                font-size: 18px;
+                font-family: 'Google Sans', 'Helvetica', sans-serif;
+            }
+            
+            .calendar-card {
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+                overflow: hidden;
+                border: none;
+                transition: all 0.3s ease;
+            }
+            
+            .calendar-card:hover {
+                box-shadow: 0 2px 6px 2px rgba(60,64,67,0.15), 0 8px 12px 4px rgba(60,64,67,0.1);
+            }
+            
+            .calendar-header {
+                background: #1a73e8;
+                color: white;
+                padding: 16px 20px;
+                font-weight: 500;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-family: 'Google Sans', 'Helvetica', sans-serif;
+            }
+            
+            .calendar-header i {
+                font-size: 18px;
+            }
+            
+            .calendar-body {
+                padding: 0;
+            }
+            
+            .calendar-event {
+                border-left: 4px solid #1a73e8;
+                margin: 12px 0;
+                padding: 8px 14px 8px 16px;
+                position: relative;
+            }
+            
+            .calendar-event-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+            
+            .calendar-event-time {
+                color: #3c4043;
+                font-weight: 500;
+                font-size: 14px;
+            }
+            
+            .calendar-event-status {
+                padding: 2px 8px;
+                font-size: 11px;
+                border-radius: 4px;
+                font-weight: 500;
+                background: #e8f0fe;
+                color: #1967d2;
+            }
+            
+            .calendar-event-status.confirmed {
+                background: #e6f4ea;
+                color: #137333;
+            }
+            
+            .calendar-event-status.pending {
+                background: #fef7e0;
+                color: #b06000;
+            }
+            
+            .calendar-event-status.rejected {
+                background: #fce8e6;
+                color: #c5221f;
+            }
+            
+            .calendar-event-title {
+                font-size: 16px;
+                font-weight: 500;
+                color: #3c4043;
+                margin-bottom: 6px;
+            }
+            
+            .calendar-event-details {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+            
+            .calendar-event-detail {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 13px;
+                color: #5f6368;
+            }
+            
+            .calendar-event-detail i {
+                color: #5f6368;
+                width: 16px;
+                font-size: 14px;
+            }
+            
+            .calendar-actions {
+                display: flex;
+                justify-content: space-between;
+                padding: 12px 16px;
+                border-top: 1px solid #e8eaed;
+                background: #f8f9fa;
+            }
+            
+            .calendar-action-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 16px;
+                border-radius: 4px;
+                font-size: 14px;
+                font-weight: 500;
+                color: #1a73e8;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            
+            .calendar-action-btn:hover {
+                background: #e8f0fe;
+            }
+            
+            .calendar-action-btn i {
+                font-size: 16px;
+            }
+            
+            .calendar-month {
+                padding: 12px 16px;
+                border-bottom: 1px solid #e8eaed;
+                background: #f1f3f4;
+                color: #3c4043;
+                font-size: 14px;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            
+            .calendar-month-name {
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .calendar-month-nav {
+                display: flex;
+                gap: 8px;
+            }
+            
+            .calendar-month-nav button {
+                background: transparent;
+                border: none;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                color: #5f6368;
+            }
+            
+            .calendar-month-nav button:hover {
+                background: rgba(60,64,67,0.08);
+            }
         </style>
     {% endblock %}
 </head>
 <body>
     <div id="page">
-         <nav class="fh5co-nav" role="navigation">
+              <nav class="fh5co-nav" role="navigation">
             <div class="container">
                 <div class="fh5co-logo">
                     <a href="{{ path('app_home') }}">Eventora</a>
@@ -1142,7 +1352,7 @@
                 </div>
                 <div class="menu-1">
                     <ul>
-                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
                         <li class="has-dropdown">
                             <a href="#">Reservation</a>
                             <ul class="dropdown">
@@ -1150,9 +1360,15 @@
                                 <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
                             </ul>
                         </li>
-                        <li class="has-dropdown">
-                            <a href="{{ path('user_packs') }}">Packs</a>
-                        </li>
+                                <li class="has-dropdown">
+                                <a href="#">Packs</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
+                                    {% if not is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
                         <li class="has-dropdown">
                             <a href="#">Services</a>
                             <ul class="dropdown">
@@ -1178,7 +1394,7 @@
                                 {% if app.user %}
                                     <li><a href="{{ path('app_settings') }}">Settings</a></li>
                                     <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                    <li class="active"><a href="{{ path('app_user_history') }}">History</a></li>
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                                     {% endif %}
@@ -1444,9 +1660,88 @@
                                         </ul>
                                     </p>
                                 {% endif %}
-                                <div class="text-center">
-                                    <a href="{{ path('app_user_history_reservations', {'type': reservation_type}) }}" class="btn btn-secondary">Retour à l'historique</a>
-                                    <a href="{{ path(reservation_type == 'pack' ? 'user_reservation_pack_pdf' : 'user_reservation_personnalise_pdf', {'id': selected_reservation.IDReservationPack ?: selected_reservation.IDReservationPersonalise}) }}" class="btn btn-primary">Télécharger PDF</a>
+                                
+                                <!-- Les boutons de navigation sont maintenant intégrés dans le calendrier -->
+                            </div>
+                            
+                            <!-- Calendrier de la réservation -->
+                            <div class="reservation-calendar">
+                                <h4>Détails dans votre calendrier</h4>
+                                <div class="calendar-card">
+                                    <div class="calendar-header">
+                                        <i class="fas fa-calendar-alt"></i> 
+                                        <span>Évènement{{ reservation_type == 'pack' ? ' Pack' : ' Personnalisé' }}</span>
+                                    </div>
+                                    <div class="calendar-month">
+                                        <div class="calendar-month-name">{{ selected_reservation.date|date('F Y')|upper }}</div>
+                                        <div class="calendar-month-nav">
+                                            <button type="button" aria-label="Mois précédent">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button type="button" aria-label="Mois suivant">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="calendar-body">
+                                        <div class="calendar-event">
+                                            <div class="calendar-event-header">
+                                                <div class="calendar-event-time">{{ selected_reservation.date|date('H:i') }}</div>
+                                                <div class="calendar-event-status {{ selected_reservation.status == 'Validé' ? 'confirmed' : (selected_reservation.status == 'Refusé' ? 'rejected' : 'pending') }}">
+                                                    {{ selected_reservation.status }}
+                                                </div>
+                                            </div>
+                                            <div class="calendar-event-title">
+                                                {{ selected_reservation.prenom }} {{ selected_reservation.nom }}
+                                            </div>
+                                            <div class="calendar-event-details">
+                                                <div class="calendar-event-detail">
+                                                    <i class="fas fa-clock"></i> 
+                                                    <span>{{ selected_reservation.date|date('H:i') }} - {{ selected_reservation.date|date_modify('+2 hours')|date('H:i') }}</span>
+                                                </div>
+                                                <div class="calendar-event-detail">
+                                                    <i class="fas fa-calendar-day"></i> 
+                                                    <span>{{ selected_reservation.date|date('d MMMM Y') }}</span>
+                                                </div>
+                                                {% if reservation_type == 'pack' and selected_reservation.pack %}
+                                                <div class="calendar-event-detail">
+                                                    <i class="fas fa-gift"></i> 
+                                                    <span>{{ selected_reservation.pack.nomPack }}</span>
+                                                </div>
+                                                {% elseif reservation_type == 'personnalise' and selected_reservation.services|length > 0 %}
+                                                <div class="calendar-event-detail">
+                                                    <i class="fas fa-list-ul"></i> 
+                                                    <span>
+                                                        {% if selected_reservation.services|length <= 3 %}
+                                                            {% for service in selected_reservation.services %}
+                                                                {{ service.titre }}{% if not loop.last %}, {% endif %}
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            {{ selected_reservation.services|length }} services sélectionnés
+                                                        {% endif %}
+                                                    </span>
+                                                </div>
+                                                {% endif %}
+                                                <div class="calendar-event-detail">
+                                                    <i class="fas fa-align-left"></i> 
+                                                    <span>{{ selected_reservation.description|u.truncate(100, '...') }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="calendar-actions">
+                                        <a href="{{ path('app_user_history_reservations', {'type': reservation_type}) }}" class="calendar-action-btn">
+                                            <i class="fas fa-arrow-left"></i> Retour
+                                        </a>
+                                        <div>
+                                            <a href="{{ path(reservation_type == 'pack' ? 'user_reservation_pack_pdf' : 'user_reservation_personnalise_pdf', {'id': selected_reservation.IDReservationPack ?: selected_reservation.IDReservationPersonalise}) }}" class="calendar-action-btn">
+                                                <i class="fas fa-file-pdf"></i> PDF
+                                            </a>
+                                            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text={{ selected_reservation.prenom }}%20{{ selected_reservation.nom }}%20-%20Reservation%20{{ reservation_type == 'pack' ? 'Pack' : 'Personnalisée' }}&dates={{ selected_reservation.date|date('Ymd\\THi00\\Z') }}/{{ selected_reservation.date|date_modify('+2 hours')|date('Ymd\\THi00\\Z') }}&details={{ selected_reservation.description|url_encode }}" target="_blank" class="calendar-action-btn">
+                                                <i class="fab fa-google"></i> Google Agenda
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         {% else %}
