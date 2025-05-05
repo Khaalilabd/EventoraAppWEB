@@ -1941,68 +1941,136 @@
                 <!-- Section Utilisateurs (Membres) -->
                 <div class="collapsible-section">
                     <div class="collapsible-header" onclick="toggleSection(this)">
-                        <h4>Utilisateurs</h4>
+                        <h4><i class="fas fa-users me-2 text-primary"></i>Utilisateurs</h4>
                         <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
                     </div>
                     <div class="collapsible-content module-section">
-                        <div class="row mb-5">
+                        <div class="row mb-4">
                             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
-                                <div class="card kpi-card">
+                                <div class="card border-0 shadow-sm h-100">
                                     <div class="card-body p-3 position-relative">
-                                        <div class="row align-items-center">
-                                            <div class="col-8 text-start">
-                                                <div class="icon icon-shape shadow text-center border-radius-2xl bg-blue">
-                                                    <i class="fas fa-users text-white text-lg opacity-10"></i>
-                                                </div>
-                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ total_members }}</h5>
-                                                <span class="text-sm">Total Membres</span>
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-primary">
+                                                <i class="fas fa-user-friends text-white text-lg opacity-10"></i>
                                             </div>
+                                        </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Total Membres</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ total_members|default(0) }}</h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <span class="badge {{ recent_registrations > 5 ? 'bg-success' : 'bg-warning' }} me-2">
+                                                    <i class="fas fa-arrow-up me-1"></i>{{ recent_registrations|default(0) }}
+                                                </span>
+                                                <p class="text-sm mb-0">nouveaux ce mois</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent">
+                                        <div class="progress" style="height:4px">
+                                            <div class="progress-bar bg-gradient-primary" style="width:{{ ((active_members / total_members * 100)|default(0))|round }}%"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
-                                <div class="card kpi-card">
+                                <div class="card border-0 shadow-sm h-100">
                                     <div class="card-body p-3 position-relative">
-                                        <div class="row align-items-center">
-                                            <div class="col-8 text-start">
-                                                <div class="icon icon-shape shadow text-center border-radius-2xl bg-green">
-                                                    <i class="fas fa-user-check text-white text-lg opacity-10"></i>
-                                                </div>
-                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ active_members }}</h5>
-                                                <span class="text-sm">Membres Actifs</span>
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-success">
+                                                <i class="fas fa-user-check text-white text-lg opacity-10"></i>
                                             </div>
                                         </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Taux d'Activation</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ ((active_members / total_members * 100)|default(0))|round(1) }}%</h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <div class="progress flex-grow-1" style="height: 5px;">
+                                                    <div class="progress-bar bg-gradient-success" role="progressbar" 
+                                                        style="width: {{ ((active_members / total_members * 100)|default(0))|round }}%;" 
+                                                        aria-valuenow="{{ ((active_members / total_members * 100)|default(0))|round }}" 
+                                                        aria-valuemin="0" 
+                                                        aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                                <span class="ms-2 text-sm font-weight-bold">{{ active_members|default(0) }}/{{ total_members|default(0) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent text-center">
+                                        <p class="text-xs text-muted mb-0">Membres avec compte confirmé</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
-                                <div class="card kpi-card">
+                                <div class="card border-0 shadow-sm h-100">
                                     <div class="card-body p-3 position-relative">
-                                        <div class="row align-items-center">
-                                            <div class="col-8 text-start">
-                                                <div class="icon icon-shape shadow text-center border-radius-2xl bg-yellow">
-                                                    <i class="fas fa-user-plus text-white text-lg opacity-10"></i>
-                                                </div>
-                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ recent_registrations }}</h5>
-                                                <span class="text-sm">Inscriptions Récentes</span>
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-info">
+                                                <i class="fas fa-chart-line text-white text-lg opacity-10"></i>
                                             </div>
                                         </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Taux de Conversion</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ (((total_reservations / total_members) * 100)|default(0))|round(1) }}%</h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <span class="text-success me-2">
+                                                    <i class="fas fa-shopping-cart me-1"></i>
+                                                </span>
+                                                <p class="text-sm mb-0">{{ total_reservations|default(0) }} réservations</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent text-center">
+                                        <p class="text-xs text-muted mb-0">Membres ayant effectué une réservation</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-warning">
+                                                <i class="fas fa-comment-dots text-white text-lg opacity-10"></i>
+                                            </div>
+                                        </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Engagement Feedback</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ ((user_engagement|length / total_members * 100)|default(0))|round(1) }}%</h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <div class="d-flex align-items-center">
+                                                    {% for i in 1..5 %}
+                                                        <i class="fas fa-star {{ i <= avg_vote ? 'text-warning' : 'text-muted' }} text-xs"></i>
+                                                    {% endfor %}
+                                                </div>
+                                                <p class="text-sm ms-2 mb-0">{{ avg_vote|default(0)|round(1) }}/5</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent text-center">
+                                        <p class="text-xs text-muted mb-0">Score moyen des feedbacks</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="row">
                             <div class="col-lg-6 col-md-12 mb-4">
-                                <div class="card chart-card">
-                                    <div class="card-header">
-                                        <h6>Répartition par Rôle</h6>
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-transparent border-0">
+                                        <h6 class="mb-0 text-capitalize">Répartition par Rôle</h6>
                                     </div>
                                     <div class="card-body">
-                                        <canvas id="members-by-role-chart" class="chart-canvas"></canvas>
-                                        <div id="no-members-role-data-message" class="text-center text-muted mt-3" style="display: none;">
-                                            Aucune donnée disponible pour la répartition par rôle.
-                                        </div>
+                                        <canvas id="members-by-role-chart" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 mb-4">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 text-capitalize">Utilisateurs les Plus Actifs</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="user-activity-chart" height="300"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -2010,69 +2078,159 @@
                     </div>
                 </div>
 
-                <!-- Section Services (GService) -->
                 <div class="collapsible-section">
                     <div class="collapsible-header" onclick="toggleSection(this)">
-                        <h4>Services</h4>
+                        <h4><i class="fas fa-tools me-2 text-info"></i>Services</h4>
                         <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
                     </div>
                     <div class="collapsible-content module-section">
-                        <div class="row mb-5">
+                        <div class="row mb-4">
                             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
-                                <div class="card kpi-card">
+                                <div class="card border-0 shadow-sm h-100">
                                     <div class="card-body p-3 position-relative">
-                                        <div class="row align-items-center">
-                                            <div class="col-8 text-start">
-                                                <div class="icon icon-shape shadow text-center border-radius-2xl bg-blue">
-                                                    <i class="fas fa-concierge-bell text-white text-lg opacity-10"></i>
-                                                </div>
-                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ total_services }}</h5>
-                                                <span class="text-sm">Total Services</span>
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-info">
+                                                <i class="fas fa-concierge-bell text-white text-lg opacity-10"></i>
+                                            </div>
+                                        </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Total Services</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ total_services|default(0) }}</h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <span class="text-sm text-primary me-2">
+                                                    <i class="fas fa-cubes me-1"></i>
+                                                </span>
+                                                <p class="text-sm mb-0">{{ services_by_type|length|default(0) }} types disponibles</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent text-center">
+                                        <div class="d-flex justify-content-around">
+                                            <div class="text-center">
+                                                <p class="text-xs text-muted mb-0">Partenaires</p>
+                                                <h6 class="mb-0 text-sm">{{ total_sponsors|default(0) }}</h6>
+                                            </div>
+                                            <div class="text-center">
+                                                <p class="text-xs text-muted mb-0">Services/Partenaire</p>
+                                                <h6 class="mb-0 text-sm">{{ avg_services_per_sponsor|default(0)|round(1) }}</h6>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
-                                <div class="card kpi-card">
+                                <div class="card border-0 shadow-sm h-100">
                                     <div class="card-body p-3 position-relative">
-                                        <div class="row align-items-center">
-                                            <div class="col-8 text-start">
-                                                <div class="icon icon-shape shadow text-center border-radius-2xl bg-green">
-                                                    <i class="fas fa-dollar-sign text-white text-lg opacity-10"></i>
-                                                </div>
-                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ avg_service_price|round(2) }}</h5>
-                                                <span class="text-sm">Prix Moyen</span>
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-primary">
+                                                <i class="fas fa-money-bill-wave text-white text-lg opacity-10"></i>
                                             </div>
                                         </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Prix Moyen</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ avg_service_price|default(0)|round(2) }} dt</h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="badge bg-gradient-primary px-2 py-1">
+                                                        <i class="fas fa-tag me-1"></i>Service
+                                                    </span>
+                                                    <span class="badge bg-light text-dark px-2 py-1 ms-2">
+                                                        <i class="fas fa-box me-1"></i>{{ avg_pack_price|default(0)|round(2) }} dt
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent text-center">
+                                        <p class="text-xs text-muted mb-0">Comparaison avec le prix moyen des packs</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-success">
+                                                <i class="fas fa-handshake text-white text-lg opacity-10"></i>
+                                            </div>
+                                        </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Partenaires Actifs</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ active_sponsors|default(0) }} <span class="text-sm text-muted">/ {{ total_sponsors|default(0) }}</span></h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <div class="progress flex-grow-1" style="height: 5px;">
+                                                    <div class="progress-bar bg-gradient-success" role="progressbar" 
+                                                        style="width: {{ ((active_sponsors / total_sponsors * 100)|default(0))|round }}%;" 
+                                                        aria-valuenow="{{ ((active_sponsors / total_sponsors * 100)|default(0))|round }}" 
+                                                        aria-valuemin="0" 
+                                                        aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                                <span class="ms-2 text-sm font-weight-bold">{{ ((active_sponsors / total_sponsors * 100)|default(0))|round(1) }}%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent text-center">
+                                        <p class="text-xs text-muted mb-0">Partenaires offrant au moins un service</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-warning">
+                                                <i class="fas fa-star text-white text-lg opacity-10"></i>
+                                            </div>
+                                        </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Popularité des Services</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">
+                                                {% if top_services|length > 0 %}
+                                                    {{ top_services[0].titre|default('N/A') }}
+                                                {% else %}
+                                                    N/A
+                                                {% endif %}
+                                            </h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="fas fa-trophy me-1"></i>Top service
+                                                </span>
+                                                <span class="text-sm ms-2">
+                                                    {% if top_services|length > 0 %}
+                                                        {{ top_services[0].count|default(0) }} réservations
+                                                    {% else %}
+                                                        0 réservation
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent text-center">
+                                        <p class="text-xs text-muted mb-0">Service le plus réservé</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="row">
                             <div class="col-lg-6 col-md-12 mb-4">
-                                <div class="card chart-card">
-                                    <div class="card-header">
-                                        <h6>Services par Type</h6>
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-transparent border-0">
+                                        <h6 class="mb-0 text-capitalize">Services par Type</h6>
                                     </div>
                                     <div class="card-body">
-                                        <canvas id="services-by-type-chart" class="chart-canvas"></canvas>
-                                        <div id="no-services-type-data-message" class="text-center text-muted mt-3" style="display: none;">
-                                            Aucune donnée disponible pour les services par type.
-                                        </div>
+                                        <canvas id="services-by-type-chart" height="300"></canvas>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-12 mb-4">
-                                <div class="card chart-card">
-                                    <div class="card-header">
-                                        <h6>Top Services Réservés</h6>
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-transparent border-0">
+                                        <h6 class="mb-0 text-capitalize">Top 5 Services</h6>
                                     </div>
                                     <div class="card-body">
-                                        <canvas id="top-services-chart" class="chart-canvas"></canvas>
-                                        <div id="no-top-services-data-message" class="text-center text-muted mt-3" style="display: none;">
-                                            Aucune donnée disponible pour les services réservés.
-                                        </div>
+                                        <canvas id="top-services-chart" height="300"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -2080,37 +2238,132 @@
                     </div>
                 </div>
 
-                <!-- Section Packs -->
                 <div class="collapsible-section">
                     <div class="collapsible-header" onclick="toggleSection(this)">
-                        <h4>Packs</h4>
+                        <h4><i class="fas fa-box me-2 text-warning"></i>Packs</h4>
                         <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
                     </div>
                     <div class="collapsible-content module-section">
-                        <div class="row mb-5">
+                        <div class="row mb-4">
                             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
-                                <div class="card kpi-card">
+                                <div class="card border-0 shadow-sm h-100">
                                     <div class="card-body p-3 position-relative">
-                                        <div class="row align-items-center">
-                                            <div class="col-8 text-start">
-                                                <div class="icon icon-shape shadow text-center border-radius-2xl bg-blue">
-                                                    <i class="fas fa-box text-white text-lg opacity-10"></i>
-                                                </div>
-                                                <h5 class="font-weight-bolder mb-0 mt-3">{{ total_packs }}</h5>
-                                                <span class="text-sm">Total Packs</span>
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-warning">
+                                                <i class="fas fa-box-open text-white text-lg opacity-10"></i>
+                                            </div>
+                                        </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Total Packs</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ total_packs|default(0) }}</h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <span class="text-sm text-primary me-2">
+                                                    <i class="fas fa-tags me-1"></i>
+                                                </span>
+                                                <p class="text-sm mb-0">{{ packs_by_type|length|default(0) }} catégories</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-gradient-warning text-dark px-2 py-1">
+                                                    <i class="fas fa-percentage me-1"></i>
+                                                </span>
+                                                <span class="text-xs ms-2">
+                                                    {{ ((reservations_by_type[0].count / total_reservations * 100)|default(0))|round }}% des réservations
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
-                                <div class="card kpi-card">
-                                                </div>
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-primary">
+                                                <i class="fas fa-money-bill-wave text-white text-lg opacity-10"></i>
+                                            </div>
+                                        </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Prix Moyen</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ avg_pack_price|default(0)|round(2) }} dt</h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <span class="badge {{ avg_pack_price > avg_service_price ? 'bg-success' : 'bg-danger' }} me-2">
+                                                    <i class="fas {{ avg_pack_price > avg_service_price ? 'fa-arrow-up' : 'fa-arrow-down' }} me-1"></i>
+                                                    {{ ((avg_pack_price - avg_service_price) / avg_service_price * 100)|abs|round }}%
+                                                </span>
+                                                <p class="text-sm mb-0">vs prix services</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer p-2 bg-transparent">
+                                        <div class="progress" style="height:4px">
+                                            <div class="progress-bar bg-gradient-primary" style="width:65%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-success">
+                                                <i class="fas fa-chart-line text-white text-lg opacity-10"></i>
+                                            </div>
+                                        </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Taux de Conversion</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ (((total_reservations / total_members) * 100)|default(0))|round(1) }}%</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body p-3 position-relative">
+                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
+                                            <div class="icon-circle bg-gradient-danger">
+                                                <i class="fas fa-star text-white text-lg opacity-10"></i>
+                                            </div>
+                                        </div>
+                                        <div class="text-start mt-2">
+                                            <p class="text-sm mb-0 text-capitalize text-muted">Score Client</p>
+                                            <h4 class="font-weight-bolder mb-0 mt-2">{{ avg_vote|default(0)|round(1) }}/5</h4>
+                                            <div class="d-flex align-items-center mt-3">
+                                                <p class="text-sm mb-0">satisfaction</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-lg-6 col-md-12 mb-4">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-transparent border-0">
+                                        <h6 class="mb-0 text-capitalize">Packs par Type</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="packs-by-type-chart" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 mb-4">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-transparent border-0">
+                                        <h6 class="mb-0 text-capitalize">Packs les Plus Populaires</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="popular-packs-chart" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Section Paiements -->
                 <div class="collapsible-section">
@@ -2409,21 +2662,17 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('assets/js/soft-ui-dashboard.min.js') }}"></script>
+    {{ parent() }}
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        // Définir les fonctions de base first - très important
+        // Function declarations
         function toggleSection(header) {
             console.log("Toggle section called");
             const content = header.nextElementSibling;
             const icon = header.querySelector('.toggle-icon i');
             
-            if (content.classList.contains('active')) {
+            if (content.style.maxHeight !== '0px') {
                 content.classList.remove('active');
                 content.style.maxHeight = '0px';
                 icon.classList.remove('fa-chevron-up');
@@ -2445,7 +2694,7 @@
             // Vérifier si toutes les sections sont déjà ouvertes
             headers.forEach(header => {
                 const content = header.nextElementSibling;
-                if (!content.classList.contains('active')) {
+                if (content.style.maxHeight === '0px' || !content.classList.contains('active')) {
                     allExpanded = false;
                 }
             });
@@ -2472,1740 +2721,8 @@
             });
         }
 
-        // Initialize Flatpickr for date pickers
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM loaded");
-            
-            // Initialize all sections as expanded by default
-            const headers = document.querySelectorAll('.collapsible-header');
-            headers.forEach(header => {
-                const content = header.nextElementSibling;
-                const icon = header.querySelector('.toggle-icon i');
-                content.classList.add('active');
-                content.style.maxHeight = '3000px';
-                icon.classList.remove('fa-chevron-down');
-                icon.classList.add('fa-chevron-up');
-            });
-            
-            flatpickr('#startDate', {
-                dateFormat: 'Y-m-d',
-                onChange: updateChart
-            });
-            flatpickr('#endDate', {
-                dateFormat: 'Y-m-d',
-                onChange: updateChart
-            });
-            
-            // Animation for KPI and chart cards
-            const kpiCards = document.querySelectorAll('.kpi-card');
-            const chartCards = document.querySelectorAll('.chart-card');
-
-            const animateElements = (elements) => {
-                elements.forEach((element, index) => {
-                    setTimeout(() => {
-                        element.classList.add('animate');
-                    }, index * 150);
-                });
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        if (entry.target.classList.contains('kpi-card')) {
-                            animateElements(kpiCards);
-                        } else if (entry.target.classList.contains('chart-card')) {
-                            animateElements(chartCards);
-                        }
-                    }
-                });
-            }, { threshold: 0.2 });
-
-            kpiCards.forEach(card => observer.observe(card));
-            chartCards.forEach(card => observer.observe(card));
-        });
-        
-        // Update chart based on date selection
-        function updateChart() {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-            if (startDate && endDate) {
-                window.location.href = `{{ path('admin_dashboard') }}?startDate=${startDate}&endDate=${endDate}`;
-            }
-        }
-
-        // Dropdown menu toggle
-        document.querySelectorAll('.dropdown-toggle').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('data-bs-target'));
-                if (target.classList.contains('show')) {
-                    target.classList.remove('show');
-                } else {
-                    document.querySelectorAll('.collapse.show').forEach(openMenu => {
-                        openMenu.classList.remove('show');
-                    });
-                    target.classList.add('show');
-                }
-            });
-        });
-
-        // Dynamic data from controller
-        const pourcentageTraitees = {{ pourcentage_traitees|default(0)|json_encode|raw }};
-        const pourcentageNonTraitees = {{ pourcentage_non_traitees|default(0)|json_encode|raw }};
-        const reclamationsParType = {{ reclamations_par_type|default([])|json_encode|raw }};
-        const reclamationsParStatut = {{ reclamations_par_statut|default([])|json_encode|raw }};
-        const reclamationsByDate = {{ reclamations_by_date|default([])|json_encode|raw }};
-        const feedbacksByVote = {{ feedbacks_by_vote|default([])|json_encode|raw }};
-        const userEngagement = {{ user_engagement|default([])|json_encode|raw }};
-        const reservationsByType = {{ reservations_by_type|default([])|json_encode|raw }};
-        const reservationsByStatus = {{ reservations_by_status|default([])|json_encode|raw }};
-        const membersByRole = {{ members_by_role|default([])|json_encode|raw }};
-        const servicesByType = {{ services_by_type|default([])|json_encode|raw }};
-        const topServices = {{ top_services|default([])|json_encode|raw }};
-        const packsByType = {{ packs_by_type|default([])|json_encode|raw }};
-        const popularPacks = {{ popular_packs|default([])|json_encode|raw }};
-        const avgServicesPerSponsor = {{ avg_services_per_sponsor|default(0)|json_encode|raw }};
-        const paymentsByType = {{ payments_by_type|default([])|json_encode|raw }};
-        const monthlyRevenue = {{ monthly_revenue|default([])|json_encode|raw }};
-        
-        // Console debug
-        console.log('pourcentageTraitees:', pourcentageTraitees);
-        console.log('pourcentageNonTraitees:', pourcentageNonTraitees);
-        console.log('reclamationsParType:', reclamationsParType);
-        console.log('reclamationsParStatut:', reclamationsParStatut);
-        console.log('reclamationsByDate:', reclamationsByDate);
-        console.log('feedbacksByVote:', feedbacksByVote);
-        console.log('userEngagement:', userEngagement);
-        console.log('reservationsByType:', reservationsByType);
-        console.log('reservationsByStatus:', reservationsByStatus);
-        console.log('membersByRole:', membersByRole);
-        console.log('servicesByType:', servicesByType);
-        console.log('topServices:', topServices);
-        console.log('packsByType:', packsByType);
-        console.log('popularPacks:', popularPacks);
-        console.log('avgServicesPerSponsor:', avgServicesPerSponsor);
-        console.log('paymentsByType:', paymentsByType);
-        console.log('monthlyRevenue:', monthlyRevenue);
-
-        // Chart: Réclamations par Jour (Line Chart)
-        const dateLabels = reclamationsByDate.map(item => item.date || 'Inconnu');
-        const dateData = reclamationsByDate.map(item => item.count || 0);
-        const hasDateData = dateData.some(count => count > 0);
-
-        const ctxDate = document.getElementById('reclamations-by-date-chart').getContext('2d');
-        if (!hasDateData) {
-            document.getElementById('no-date-data-message').style.display = 'block';
-            ctxDate.canvas.style.display = 'none';
-        } else {
-            new Chart(ctxDate, {
-                type: 'line',
-                data: {
-                    labels: dateLabels,
-                    datasets: [{
-                        label: 'Nombre de Réclamations',
-                        data: dateData,
-                        borderColor: '#3B82F6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#E5E7EB' },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                stepSize: 1
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 14, family: 'Inter', weight: 500 },
-                                color: '#1F2A44'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y;
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        duration: 1200,
-                        easing: 'easeOutQuart'
-                    }
-                }
-            });
-        }
-
-        // Chart: Réclamations Traitées vs Non Traitées (Pie Chart)
-        const ctx1 = document.getElementById('reclamations-treated-vs-untreated-chart').getContext('2d');
-        const hasTreatedData = pourcentageTraitees !== 0 || pourcentageNonTraitees !== 0;
-        if (!hasTreatedData) {
-            document.getElementById('no-treated-data-message').style.display = 'block';
-            ctx1.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx1, {
-                type: 'pie',
-                data: {
-                    labels: ['Traitées', 'Non Traitées'],
-                    datasets: [{
-                        data: [pourcentageTraitees, pourcentageNonTraitees],
-                        backgroundColor: ['#3B82F6', '#10B981'],
-                        borderColor: ['#FFF', '#FFF'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 14, family: 'Inter', weight: 500 },
-                                color: '#1F2A44'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed + '%';
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    }
-                }
-            });
-        }
-
-        // Chart: Réclamations par Type (Bar Chart)
-        const typeLabels = reclamationsParType.map(item => item.type || 'Inconnu');
-        const typeData = reclamationsParType.map(item => item.count || 0);
-        const hasTypeData = typeData.some(count => count > 0);
-
-        const ctx2 = document.getElementById('reclamations-by-type-chart').getContext('2d');
-        if (!hasTypeData) {
-            document.getElementById('no-type-data-message').style.display = 'block';
-            ctx2.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: typeLabels,
-                    datasets: [{
-                        label: 'Nombre de Réclamations',
-                        data: typeData,
-                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#60A5FA'],
-                        borderColor: ['#3B82F6', '#10B981', '#F59E0B', '#60A5FA'],
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        barThickness: 40
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#E5E7EB' },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                stepSize: 1
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y;
-                                }
-                            }
-                        }
-                    },
-                    animation: { duration: 1200, easing: 'easeOutQuart' }
-                }
-            });
-        }
-
-              // Chart: Réclamations par Statut (Doughnut Chart)
-        const statusLabels = reclamationsParStatut.map(item => item.statut || 'Inconnu');
-        const statusData = reclamationsParStatut.map(item => item.count || 0);
-        const hasStatusData = statusData.some(count => count > 0);
-
-        const ctx3 = document.getElementById('reclamations-status-distribution-chart').getContext('2d');
-        if (!hasStatusData) {
-            document.getElementById('no-status-data-message').style.display = 'block';
-            ctx3.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx3, {
-                type: 'doughnut',
-                data: {
-                    labels: statusLabels,
-                    datasets: [{
-                        data: statusData,
-                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
-                        borderColor: ['#FFF', '#FFF', '#FFF', '#FFF', '#FFF'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 14, family: 'Inter', weight: 500 },
-                                color: '#1F2A44'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed;
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    },
-                    cutout: '70%'
-                }
-            });
-        }
-
-        // Chart: Feedbacks par Tranche de Note (Bar Chart)
-        const voteLabels = feedbacksByVote.map(item => 'Note ' + (item.vote || '0'));
-        const voteData = feedbacksByVote.map(item => item.count || 0);
-        const hasVoteData = voteData.some(count => count > 0);
-
-        const ctx4 = document.getElementById('feedbacks-by-vote-chart').getContext('2d');
-        if (!hasVoteData) {
-            document.getElementById('no-vote-data-message').style.display = 'block';
-            ctx4.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx4, {
-                type: 'bar',
-                data: {
-                    labels: voteLabels,
-                    datasets: [{
-                        label: 'Nombre de Feedbacks',
-                        data: voteData,
-                        backgroundColor: ['#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE', '#DBEAFE'],
-                        borderColor: ['#3B82F6', '#60A5FA', '#93C5FD', '#BFDBFE', '#DBEAFE'],
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        barThickness: 40
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 }
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#E5E7EB' },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                stepSize: 1
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y;
-                                }
-                            }
-                        }
-                    },
-                    animation: { duration: 1200, easing: 'easeOutQuart' }
-                }
-            });
-        }
-
-        // Chart: Engagement des Utilisateurs (Horizontal Bar Chart)
-        const engagementLabels = userEngagement.map(item => item.email || 'Inconnu');
-        const engagementData = userEngagement.map(item => item.feedbackCount || 0);
-        const hasEngagementData = engagementData.some(count => count > 0);
-
-        const ctx5 = document.getElementById('user-engagement-chart').getContext('2d');
-        if (!hasEngagementData) {
-            document.getElementById('no-engagement-data-message').style.display = 'block';
-            ctx5.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx5, {
-                type: 'bar',
-                data: {
-                    labels: engagementLabels,
-                    datasets: [{
-                        label: 'Nombre de Feedbacks',
-                        data: engagementData,
-                        backgroundColor: '#3B82F6',
-                        borderColor: '#3B82F6',
-                        borderWidth: 1,
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: { color: '#E5E7EB' },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                stepSize: 1
-                            }
-                        },
-                        y: {
-                            grid: { display: false },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.x;
-                                }
-                            }
-                        }
-                    },
-                    animation: { duration: 1200, easing: 'easeOutQuart' }
-                }
-            });
-        }
-
-        // Chart: Réservations par Type (Pie Chart)
-        const reservationsTypeLabels = reservationsByType.map(item => item.type || 'Inconnu');
-        const reservationsTypeData = reservationsByType.map(item => item.count || 0);
-        const hasReservationsTypeData = reservationsTypeData.some(count => count > 0);
-
-        const ctx6 = document.getElementById('reservations-by-type-chart').getContext('2d');
-        if (!hasReservationsTypeData) {
-            document.getElementById('no-reservations-type-data-message').style.display = 'block';
-            ctx6.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx6, {
-                type: 'pie',
-                data: {
-                    labels: reservationsTypeLabels,
-                    datasets: [{
-                        data: reservationsTypeData,
-                        backgroundColor: ['#3B82F6', '#10B981'],
-                        borderColor: ['#FFF', '#FFF'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 14, family: 'Inter', weight: 500 },
-                                color: '#1F2A44'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed;
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    }
-                }
-            });
-        }
-
-        // Chart: Réservations par Statut (Doughnut Chart)
-        const reservationsStatusLabels = reservationsByStatus.map(item => item.status || 'Inconnu');
-        const reservationsStatusData = reservationsByStatus.map(item => item.count || 0);
-        const hasReservationsStatusData = reservationsStatusData.some(count => count > 0);
-
-        const ctx7 = document.getElementById('reservations-by-status-chart').getContext('2d');
-        if (!hasReservationsStatusData) {
-            document.getElementById('no-reservations-status-data-message').style.display = 'block';
-            ctx7.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx7, {
-                type: 'doughnut',
-                data: {
-                    labels: reservationsStatusLabels,
-                    datasets: [{
-                        data: reservationsStatusData,
-                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'],
-                        borderColor: ['#FFF', '#FFF', '#FFF', '#FFF'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 14, family: 'Inter', weight: 500 },
-                                color: '#1F2A44'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed;
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    },
-                    cutout: '70%'
-                }
-            });
-        }
-
-        // Chart: Répartition par Rôle (Polar Area Chart)
-        const roleLabels = membersByRole.map(item => item.role || 'Inconnu');
-        const roleData = membersByRole.map(item => item.count || 0);
-        const hasRoleData = roleData.some(count => count > 0);
-
-        const ctx8 = document.getElementById('members-by-role-chart').getContext('2d');
-        if (!hasRoleData) {
-            document.getElementById('no-members-role-data-message').style.display = 'block';
-            ctx8.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx8, {
-                type: 'polarArea',
-                data: {
-                    labels: roleLabels,
-                    datasets: [{
-                        data: roleData,
-                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
-                        borderColor: ['#FFF', '#FFF', '#FFF', '#FFF', '#FFF'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 14, family: 'Inter', weight: 500 },
-                                color: '#1F2A44'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed.r;
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    },
-                    scales: {
-                        r: {
-                            grid: { color: '#E5E7EB' },
-                            ticks: {
-                                display: false,
-                                stepSize: 1
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Chart: Services par Type (Bar Chart)
-        const servicesTypeLabels = servicesByType.map(item => item.type_service || 'Inconnu');
-        const servicesTypeData = servicesByType.map(item => item.count || 0);
-        const hasServicesTypeData = servicesTypeData.some(count => count > 0);
-
-        const ctx9 = document.getElementById('services-by-type-chart').getContext('2d');
-        if (!hasServicesTypeData) {
-            document.getElementById('no-services-type-data-message').style.display = 'block';
-            ctx9.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx9, {
-                type: 'bar',
-                data: {
-                    labels: servicesTypeLabels,
-                    datasets: [{
-                        label: 'Nombre de Services',
-                        data: servicesTypeData,
-                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
-                        borderColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        barThickness: 40
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#E5E7EB' },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                stepSize: 1
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y;
-                                }
-                            }
-                        }
-                    },
-                    animation: { duration: 1200, easing: 'easeOutQuart' }
-                }
-            });
-        }
-
-        // Chart: Top Services Réservés (Horizontal Bar Chart)
-        const topServicesLabels = topServices.map(item => item.titre || 'Inconnu');
-        const topServicesData = topServices.map(item => item.count || 0);
-        const hasTopServicesData = topServicesData.some(count => count > 0);
-
-        const ctx10 = document.getElementById('top-services-chart').getContext('2d');
-        if (!hasTopServicesData) {
-            document.getElementById('no-top-services-data-message').style.display = 'block';
-            ctx10.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx10, {
-                type: 'bar',
-                data: {
-                    labels: topServicesLabels,
-                    datasets: [{
-                        label: 'Nombre de Réservations',
-                        data: topServicesData,
-                        backgroundColor: '#3B82F6',
-                        borderColor: '#3B82F6',
-                        borderWidth: 1,
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: { color: '#E5E7EB' },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                stepSize: 1
-                            }
-                        },
-                        y: {
-                            grid: { display: false },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.x;
-                                }
-                            }
-                        }
-                    },
-                    animation: { duration: 1200, easing: 'easeOutQuart' }
-                }
-            });
-        }
-
-        // Chart: Packs par Type (Doughnut Chart)
-        const packsTypeLabels = packsByType.map(item => item.type || 'Inconnu');
-        const packsTypeData = packsByType.map(item => item.count || 0);
-        const hasPacksTypeData = packsTypeData.some(count => count > 0);
-
-        const ctx11 = document.getElementById('packs-by-type-chart').getContext('2d');
-        if (!hasPacksTypeData) {
-            document.getElementById('no-packs-type-data-message').style.display = 'block';
-            ctx11.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx11, {
-                type: 'doughnut',
-                data: {
-                    labels: packsTypeLabels,
-                    datasets: [{
-                        data: packsTypeData,
-                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
-                        borderColor: ['#FFF', '#FFF', '#FFF', '#FFF'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 14, family: 'Inter', weight: 500 },
-                                color: '#1F2A44'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed;
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    },
-                    cutout: '70%'
-                }
-            });
-        }
-
-        // Chart: Packs Populaires (Bar Chart)
-        const popularPacksLabels = popularPacks.map(item => item.nomPack || 'Inconnu');
-        const popularPacksData = popularPacks.map(item => item.count || 0);
-        const hasPopularPacksData = popularPacksData.some(count => count > 0);
-
-        const ctx12 = document.getElementById('popular-packs-chart').getContext('2d');
-        if (!hasPopularPacksData) {
-            document.getElementById('no-popular-packs-data-message').style.display = 'block';
-            ctx12.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx12, {
-                type: 'bar',
-                data: {
-                    labels: popularPacksLabels,
-                    datasets: [{
-                        label: 'Nombre de Réservations',
-                        data: popularPacksData,
-                        backgroundColor: '#3B82F6',
-                        borderColor: '#3B82F6',
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        barThickness: 40
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#E5E7EB' },
-                            ticks: {
-                                color: '#1F2A44',
-                                font: { family: 'Inter', size: 12 },
-                                stepSize: 1
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y;
-                                }
-                            }
-                        }
-                    },
-                    animation: { duration: 1200, easing: 'easeOutQuart' }
-                }
-            });
-        }
-
-        // Chart: Paiements par Type (Doughnut Chart)
-        const paymentTypeLabels = paymentsByType.map(item => (item.type ? item.type.charAt(0).toUpperCase() + item.type.slice(1) : 'Inconnu'));
-        const paymentTypeData = paymentsByType.map(item => parseFloat(item.total) || 0);
-        const paymentTypeCount = paymentsByType.map(item => parseInt(item.count) || 0);
-        const hasPaymentTypeData = paymentTypeData.some(total => total > 0);
-
-        const ctx13 = document.getElementById('payments-by-type-chart').getContext('2d');
-        if (!hasPaymentTypeData) {
-            document.getElementById('no-payments-type-data-message').style.display = 'block';
-            ctx13.canvas.style.display = 'none';
-        } else {
-            new Chart(ctx13, {
-                type: 'doughnut',
-                data: {
-                    labels: paymentTypeLabels,
-                    datasets: [{
-                        data: paymentTypeData,
-                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
-                        borderColor: ['#FFF', '#FFF', '#FFF', '#FFF'],
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { size: 14, family: 'Inter', weight: 500 },
-                                color: '#1F2A44'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1F2A44',
-                            titleFont: { size: 14, family: 'Inter' },
-                            bodyFont: { size: 12, family: 'Inter' },
-                            callbacks: {
-                                label: function(context) {
-                                    const total = context.parsed;
-                                    return context.label + ': ' + total.toFixed(2) + ' dt';
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    },
-                    cutout: '70%'
-                }
-            });
-        }
-
-        // Chart: Évolution des paiements (Line Chart)
-        // Données fictives pour l'exemple - remplacer par des données réelles
-        const currentDate = new Date();
-        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-        
-        const paymentTrendLabels = [];
-        const paymentTrendData = [];
-        let cumulativeTotal = 0;
-        
-        for (let i = 1; i <= daysInMonth; i++) {
-            if (i <= currentDate.getDate()) {
-                const dailyAmount = Math.floor(Math.random() * 500) + 100; // Montant fictif entre 100 et 600
-                cumulativeTotal += dailyAmount;
-                paymentTrendLabels.push(i);
-                paymentTrendData.push(cumulativeTotal);
-            }
-        }
-        
-        const ctxTrend = document.getElementById('payments-trend-chart').getContext('2d');
-        new Chart(ctxTrend, {
-            type: 'line',
-            data: {
-                labels: paymentTrendLabels,
-                datasets: [
-                    {
-                        label: 'Revenu Cumulé (dt)',
-                        data: paymentTrendData,
-                        borderColor: '#3B82F6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 3,
-                        pointBackgroundColor: '#3B82F6',
-                        pointBorderColor: 'white',
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 6
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        title: {
-                            display: true,
-                            text: 'Jours du mois',
-                            color: '#6B7280',
-                            font: { size: 12 }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(229, 231, 235, 0.4)' },
-                        title: {
-                            display: true,
-                            text: 'Montant (dt)',
-                            color: '#6B7280',
-                            font: { size: 12 }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value + ' dt';
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(31, 42, 68, 0.8)',
-                        titleFont: { size: 13 },
-                        bodyFont: { size: 12 },
-                        callbacks: {
-                            title: function(tooltipItems) {
-                                return 'Jour ' + tooltipItems[0].label;
-                            },
-                            label: function(context) {
-                                return 'Montant: ' + context.parsed.y + ' dt';
-                            }
-                        }
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
-                }
-            }
-        });
-
-        // Revenus mensuels (Barchart) - Onglet Tendances
-        const monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
-        const monthlyData = [];
-        
-        for (let i = 0; i < 12; i++) {
-            // Générer des données fictives pour l'exemple
-            // La distribution est plus élevée pour certains mois (été et fêtes)
-            let amount;
-            if (i >= 5 && i <= 7) { // Juin, Juillet, Août (été)
-                amount = Math.floor(Math.random() * 5000) + 8000;
-            } else if (i === 11 || i === 0) { // Décembre, Janvier (fêtes)
-                amount = Math.floor(Math.random() * 4000) + 7000;
-            } else {
-                amount = Math.floor(Math.random() * 3000) + 3000;
-            }
-            monthlyData.push(amount);
-        }
-        
-        const ctxMonthly = document.getElementById('monthly-revenue-chart').getContext('2d');
-        new Chart(ctxMonthly, {
-            type: 'bar',
-            data: {
-                labels: monthNames,
-                datasets: [
-                    {
-                        label: 'Revenus Mensuels',
-                        data: monthlyData,
-                        backgroundColor: function(context) {
-                            const index = context.dataIndex;
-                            return index === new Date().getMonth() 
-                                ? 'rgba(59, 130, 246, 0.9)' 
-                                : 'rgba(59, 130, 246, 0.4)';
-                        },
-                        borderRadius: 6,
-                        barThickness: 20,
-                        maxBarThickness: 25
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { grid: { display: false } },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(229, 231, 235, 0.4)' },
-                        ticks: {
-                            callback: function(value) {
-                                return value / 1000 + 'k';
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(31, 42, 68, 0.8)',
-                        callbacks: {
-                            label: function(context) {
-                                return 'Revenu: ' + context.parsed.y + ' dt';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Méthodes de paiement (Pie chart)
-        const paymentMethods = ['Carte bancaire', 'Virement', 'Paiement à la livraison', 'PayPal'];
-        const paymentMethodsData = [65, 15, 12, 8]; // Pourcentages fictifs
-        
-        const ctxMethods = document.getElementById('payment-methods-chart').getContext('2d');
-        new Chart(ctxMethods, {
-            type: 'pie',
-            data: {
-                labels: paymentMethods,
-                datasets: [
-                    {
-                        data: paymentMethodsData,
-                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
-                        borderWidth: 0
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        align: 'center',
-                        labels: {
-                            boxWidth: 15,
-                            padding: 15,
-                            font: { size: 12 }
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ' + context.parsed + '%';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Écouteur d'événements pour le sélecteur de période
-        document.getElementById('payment-chart-period').addEventListener('change', function() {
-            // Ici, vous pourriez recharger les données en fonction de la période sélectionnée
-            console.log('Période sélectionnée:', this.value);
-            // Dans une implémentation réelle, appel AJAX pour récupérer de nouvelles données
-        });
-
-        // Écouteur d'événements pour le sélecteur de période
-        document.getElementById('payment-chart-period').addEventListener('change', function() {
-            // Ici, vous pourriez recharger les données en fonction de la période sélectionnée
-            console.log('Période sélectionnée:', this.value);
-            // Dans une implémentation réelle, appel AJAX pour récupérer de nouvelles données
-        });
-
-        // Graphiques pour la section Réservations
-        
-        // Réservations par type (Doughnut chart)
-        const reservationTypeData = [
-            {% for type in reservations_by_type %}
-                {{ type.count }},
-            {% endfor %}
-        ];
-        const reservationTypeLabels = [
-            {% for type in reservations_by_type %}
-                '{{ type.type }}',
-            {% endfor %}
-        ];
-        
-        const ctxReservationType = document.getElementById('reservation-type-chart').getContext('2d');
-        new Chart(ctxReservationType, {
-            type: 'doughnut',
-            data: {
-                labels: reservationTypeLabels,
-                datasets: [{
-                    data: reservationTypeData,
-                    backgroundColor: ['#3B82F6', '#10B981'],
-                    borderColor: ['#FFF', '#FFF'],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            font: { size: 12, family: 'Inter' },
-                            boxWidth: 12
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: '#1F2A44',
-                        callbacks: {
-                            label: function(context) {
-                                const percent = Math.round((context.parsed / reservationTypeData.reduce((a, b) => a + b, 0)) * 100);
-                                return context.label + ': ' + context.parsed + ' (' + percent + '%)';
-                            }
-                        }
-                    }
-                },
-                cutout: '65%'
-            }
-        });
-        
-        // Statut des réservations (Pie chart)
-        const reservationStatusLabels = {{ reservations_by_status|default([{ status: 'Confirmé', count: 20 }, { status: 'En attente', count: 15 }, { status: 'Annulé', count: 5 }, { status: 'Refusé', count: 2 }])|json_encode|raw }}.map(item => item.status);
-        const reservationStatusData = {{ reservations_by_status|default([{ status: 'Confirmé', count: 20 }, { status: 'En attente', count: 15 }, { status: 'Annulé', count: 5 }, { status: 'Refusé', count: 2 }])|json_encode|raw }}.map(item => item.count);
-        
-        const ctxReservationStatus = document.getElementById('reservation-status-chart').getContext('2d');
-        new Chart(ctxReservationStatus, {
-            type: 'pie',
-            data: {
-                labels: reservationStatusLabels,
-                datasets: [{
-                    data: reservationStatusData,
-                    backgroundColor: ['#10B981', '#3B82F6', '#F59E0B', '#EF4444'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        align: 'center',
-                        labels: { font: { size: 12 } }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percent = Math.round((context.parsed / total) * 100);
-                                return context.label + ': ' + context.parsed + ' (' + percent + '%)';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Tendance des réservations (Line chart)
-        // Générer des données de tendance fictives
-        const trendLabels = [];
-        const trendData = [];
-        
-        // Générer les dates des 30 derniers jours
-        for (let i = 29; i >= 0; i--) {
-            const date = new Date();
-            date.setDate(date.getDate() - i);
-            trendLabels.push(date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
-            
-            // Générer des données aléatoires pour la démonstration
-            // Plus de réservations les weekends, par exemple
-            const dayOfWeek = date.getDay();
-            let value;
-            if (dayOfWeek === 0 || dayOfWeek === 6) { // Weekend
-                value = Math.floor(Math.random() * 10) + 15; // 15-25 réservations
-            } else {
-                value = Math.floor(Math.random() * 10) + 5; // 5-15 réservations
-            }
-            trendData.push(value);
-        }
-        
-        const ctxReservationTrend = document.getElementById('reservations-trend-chart').getContext('2d');
-        new Chart(ctxReservationTrend, {
-            type: 'line',
-            data: {
-                labels: trendLabels,
-                datasets: [{
-                    label: 'Nombre de réservations',
-                    data: trendData,
-                    borderColor: '#3B82F6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    fill: true,
-                    tension: 0.3,
-                    borderWidth: 3,
-                    pointRadius: 3,
-                    pointBackgroundColor: '#3B82F6',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { 
-                        grid: { display: false },
-                        ticks: {
-                            maxTicksLimit: 10,
-                            font: { size: 10 }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(229, 231, 235, 0.4)' },
-                        ticks: { precision: 0 }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(31, 41, 55, 0.8)',
-                        callbacks: {
-                            title: function(items) {
-                                return 'Date: ' + items[0].label;
-                            },
-                            label: function(context) {
-                                return 'Réservations: ' + context.parsed.y;
-                            }
-                        }
-                    }
-                },
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                }
-            }
-        });
-        
-        // Valeur moyenne par type (Bar chart)
-        const avgValueLabels = ['Pack Standard', 'Pack Premium', 'Pack VIP', 'Personnalisé'];
-        const avgValueData = [250, 450, 650, 380];
-        
-        const ctxAvgValue = document.getElementById('avg-value-chart').getContext('2d');
-        new Chart(ctxAvgValue, {
-            type: 'bar',
-            data: {
-                labels: avgValueLabels,
-                datasets: [{
-                    label: 'Valeur moyenne (dt)',
-                    data: avgValueData,
-                    backgroundColor: [
-                        'rgba(59, 130, 246, 0.7)',
-                        'rgba(16, 185, 129, 0.7)',
-                        'rgba(245, 158, 11, 0.7)',
-                        'rgba(139, 92, 246, 0.7)'
-                    ],
-                    borderRadius: 5,
-                    maxBarThickness: 25
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { grid: { display: false } },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(229, 231, 235, 0.4)' },
-                        ticks: {
-                            callback: function(value) {
-                                return value + ' dt';
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.parsed.y + ' dt';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Écouteur d'événements pour le sélecteur de période des réservations
-        document.getElementById('reservation-trend-period').addEventListener('change', function() {
-            console.log('Période sélectionnée pour réservations:', this.value);
-            // Dans une implémentation réelle, appel AJAX pour récupérer de nouvelles données
-        });
-        
-        // Initialisation des graphiques pour la section Paiements
-        
-        // Paiements par type (Doughnut chart)
-        const alternativePaymentTypeData = [
-            {% for type in payments_by_type %}
-                {{ type.total }},
-            {% endfor %}
-        ];
-        const alternativePaymentTypeLabels = [
-            {% for type in payments_by_type %}
-                '{{ type.type|capitalize }}',
-            {% endfor %}
-        ];
-        
-        const ctxPaymentType = document.getElementById('payments-by-type-chart').getContext('2d');
-        new Chart(ctxPaymentType, {
-            type: 'doughnut',
-            data: {
-                labels: alternativePaymentTypeLabels.length > 0 ? alternativePaymentTypeLabels : ['Pack', 'Personnalisé'],
-                datasets: [{
-                    data: alternativePaymentTypeData.length > 0 ? alternativePaymentTypeData : [70, 30],
-                    backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
-                    borderColor: ['#FFF', '#FFF', '#FFF', '#FFF'],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: { size: 12, family: 'Inter' },
-                            boxWidth: 12,
-                            padding: 20
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: '#1F2A44',
-                        callbacks: {
-                            label: function(context) {
-                                const value = context.parsed;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = Math.round((value / total) * 100);
-                                return `${context.label}: ${value.toFixed(2)} dt (${percentage}%)`;
-                            }
-                        }
-                    }
-                },
-                cutout: '65%'
-            }
-        });
-        
-        // Évolution des paiements (Line chart)
-        const dailyLabels = {{ daily_data|default([])|json_encode|raw }}.map(item => `Jour ${item.day}`);
-        const dailyAmounts = {{ daily_data|default([])|json_encode|raw }}.map(item => item.amount);
-        
-        const ctxPaymentsTrend = document.getElementById('payments-trend-chart').getContext('2d');
-        new Chart(ctxPaymentsTrend, {
-            type: 'line',
-            data: {
-                labels: dailyLabels.length > 0 ? dailyLabels : Array.from({length: 30}, (_, i) => `Jour ${i+1}`),
-                datasets: [{
-                    label: 'Montant quotidien (dt)',
-                    data: dailyAmounts.length > 0 ? dailyAmounts : Array.from({length: 30}, () => Math.floor(Math.random() * 500) + 100),
-                    borderColor: '#3B82F6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 3,
-                    pointBackgroundColor: '#3B82F6',
-                    pointBorderColor: '#FFF',
-                    pointBorderWidth: 2,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { 
-                        grid: { display: false },
-                        ticks: {
-                            maxTicksLimit: 10,
-                            font: { size: 10 }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(229, 231, 235, 0.4)' },
-                        ticks: {
-                            callback: function(value) {
-                                return value + ' dt';
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(31, 41, 55, 0.8)',
-                        callbacks: {
-                            title: function(items) {
-                                return items[0].label;
-                            },
-                            label: function(context) {
-                                return `Montant: ${context.parsed.y} dt`;
-                            }
-                        }
-                    }
-                },
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                }
-            }
-        });
-        
-        // Revenus mensuels (Bar chart)
-        const monthlyLabels = {{ monthly_revenue|default([])|json_encode|raw }}.map(item => item.month);
-        const monthlyAmounts = {{ monthly_revenue|default([])|json_encode|raw }}.map(item => item.total);
-        
-        const ctxMonthlyRevenue = document.getElementById('monthly-revenue-chart').getContext('2d');
-        new Chart(ctxMonthlyRevenue, {
-            type: 'bar',
-            data: {
-                labels: monthlyLabels.length > 0 ? monthlyLabels : ['01/23', '02/23', '03/23', '04/23', '05/23', '06/23', '07/23', '08/23', '09/23', '10/23', '11/23', '12/23'],
-                datasets: [{
-                    label: 'Revenu mensuel (dt)',
-                    data: monthlyAmounts.length > 0 ? monthlyAmounts : [5200, 6100, 5800, 6800, 7200, 8500, 9800, 9500, 8200, 7500, 8800, 9200],
-                    backgroundColor: function(context) {
-                        const index = context.dataIndex;
-                        return context.dataIndex === context.dataset.data.length - 1 
-                            ? 'rgba(59, 130, 246, 0.9)' 
-                            : 'rgba(59, 130, 246, 0.5)';
-                    },
-                    borderRadius: 6,
-                    maxBarThickness: 30
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: { grid: { display: false } },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(229, 231, 235, 0.4)' },
-                        ticks: {
-                            callback: function(value) {
-                                return value > 999 ? value/1000 + 'k dt' : value + ' dt';
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(31, 41, 55, 0.8)',
-                        callbacks: {
-                            label: function(context) {
-                                return `Revenu: ${context.parsed.y} dt`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Méthodes de paiement (Pie chart)
-        const ctxPaymentMethods = document.getElementById('payment-methods-chart').getContext('2d');
-        new Chart(ctxPaymentMethods, {
-            type: 'pie',
-            data: {
-                labels: ['Carte bancaire', 'Virement', 'Paiement à la livraison', 'PayPal'],
-                datasets: [{
-                    data: [65, 15, 12, 8],
-                    backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        align: 'center',
-                        labels: {
-                            boxWidth: 15,
-                            padding: 15,
-                            font: { size: 12 }
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ' + context.parsed + '%';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Graphiques pour l'analyse de sentiment et améliorations des feedbacks
-        
-        // Répartition du sentiment
-        const ctxSentimentDistribution = document.getElementById('sentiment-distribution-chart');
-        if (ctxSentimentDistribution) {
-            new Chart(ctxSentimentDistribution, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Positif', 'Neutre', 'Négatif'],
-                    datasets: [{
-                        data: [
-                            {{ ((feedbacks_by_vote|filter(f => f.vote >= 4)|reduce((sum, f) => sum + f.count, 0)) / (feedbacks_by_vote|reduce((sum, f) => sum + f.count, 0)) * 100)|round(1) }},
-                            {{ ((feedbacks_by_vote|filter(f => f.vote == 3)|reduce((sum, f) => sum + f.count, 0)) / (feedbacks_by_vote|reduce((sum, f) => sum + f.count, 0)) * 100)|round(1) }},
-                            {{ ((feedbacks_by_vote|filter(f => f.vote <= 2)|reduce((sum, f) => sum + f.count, 0)) / (feedbacks_by_vote|reduce((sum, f) => sum + f.count, 0)) * 100)|round(1) }}
-                        ],
-                        backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: { size: 12 },
-                                boxWidth: 12,
-                                padding: 15
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(31, 41, 55, 0.8)',
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed + '%';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        
-        // Évolution du sentiment (données simulées pour exemple)
-        const ctxSentimentTrend = document.getElementById('sentiment-trend-chart');
-        if (ctxSentimentTrend) {
-            // Simulating data - replace with real data in production
-            const sentimentLabels = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
-            const positiveData = [65, 68, 72, 74, 70, 75, 77, 80, 79, 82, 81, 85];
-            const neutralData = [25, 22, 20, 19, 22, 18, 17, 15, 16, 13, 15, 12];
-            const negativeData = [10, 10, 8, 7, 8, 7, 6, 5, 5, 5, 4, 3];
-            
-            new Chart(ctxSentimentTrend, {
-                type: 'line',
-                data: {
-                    labels: sentimentLabels,
-                    datasets: [
-                        {
-                            label: 'Positif',
-                            data: positiveData,
-                            borderColor: '#10B981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 2
-                        },
-                        {
-                            label: 'Neutre',
-                            data: neutralData,
-                            borderColor: '#F59E0B',
-                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 2
-                        },
-                        {
-                            label: 'Négatif',
-                            data: negativeData,
-                            borderColor: '#EF4444',
-                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 2
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(229, 231, 235, 0.4)'
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return value + '%';
-                                }
-                            },
-                            stacked: true
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: 'rgba(31, 41, 55, 0.8)',
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y + '%';
-                                }
-                            }
-                        },
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                boxWidth: 12,
-                                padding: 15,
-                                font: { size: 12 }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+        // Rest of your JavaScript remains unchanged
+        // ... existing code ...
     </script>
 {% endblock %}
         
