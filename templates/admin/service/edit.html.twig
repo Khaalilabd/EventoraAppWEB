@@ -468,8 +468,8 @@
                             {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'modern-form'}}) }}
                                 <div class="row g-4">
                                     <div class="col-md-6">
-                                        <div class="form-card p-4 rounded shadow-sm">
-                                            <h5 class="form-section-title mb-4">Informations générales</h5>
+                                        <div class="form-card p-4 rounded">
+                                            <h5 class="form-section-title mb-4"><i class="fas fa-info-circle me-2"></i>Informations générales</h5>
                                             
                                             <div class="form-floating mb-4">
                                                 {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Titre du service'}}) }}
@@ -508,8 +508,8 @@
                                     </div>
                                     
                                     <div class="col-md-6">
-                                        <div class="form-card p-4 rounded shadow-sm">
-                                            <h5 class="form-section-title mb-4">Détails et média</h5>
+                                        <div class="form-card p-4 rounded">
+                                            <h5 class="form-section-title mb-4"><i class="fas fa-file-alt me-2"></i>Détails et média</h5>
                                             
                                             <div class="form-group mb-4">
                                                 {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
@@ -519,10 +519,10 @@
                                             </div>
                                             
                                             <div class="form-group mb-4">
-                                                <label class="form-label">{{ form_label(form.image) }}</label>
+                                                <label class="form-label">{{ form_label(form.image) }} <i class="fas fa-image ms-1 text-muted"></i></label>
                                                 
                                                 {% if GService.image %}
-                                                    <div class="current-image-container p-3 mb-3 rounded bg-light text-center">
+                                                    <div class="current-image-container mb-3 rounded text-center">
                                                         <p class="text-muted mb-2"><i class="fas fa-image me-2"></i>Image actuelle</p>
                                                         <img src="{{ asset(GService.image) }}" alt="{{ GService.titre }}" class="img-thumbnail mb-2" style="max-height: 200px; max-width: 100%;">
                                                     </div>
@@ -534,7 +534,7 @@
                                                     {{ form_errors(form.image, {'attr': {'class': 'text-danger mt-1'}}) }}
                                                 </div>
                                                 
-                                                <div id="imagePreviewContainer" class="preview-container mt-3 p-3 rounded bg-light text-center" style="display: none;">
+                                                <div id="imagePreviewContainer" class="preview-container mt-3 rounded text-center" style="display: none;">
                                                     <p class="text-muted mb-2"><i class="fas fa-eye me-2"></i>Aperçu de la nouvelle image</p>
                                                     <img id="imagePreview" src="#" alt="Aperçu" class="img-thumbnail" style="max-height: 200px; max-width: 100%;">
                                                 </div>
@@ -543,7 +543,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="form-actions d-flex justify-content-end gap-2 mt-4">
+                                <div class="form-actions d-flex justify-content-end gap-3 mt-4">
                                     <a href="{{ path('admin_services') }}" class="btn btn-outline-secondary">
                                         <i class="fas fa-arrow-left me-2"></i>Retour
                                     </a>
@@ -585,49 +585,66 @@
 
                             <style>
                                 .modern-form {
-                                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+                                    font-family: 'Poppins', sans-serif;
                                 }
                                 
                                 .form-card {
                                     background-color: #fff;
-                                    border: 1px solid rgba(0, 0, 0, 0.05);
-                                    transition: all 0.3s ease;
+                                    border-radius: 16px;
+                                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+                                    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                                    border: none;
+                                    overflow: hidden;
                                 }
                                 
                                 .form-card:hover {
-                                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-                                    transform: translateY(-2px);
+                                    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1);
+                                    transform: translateY(-5px);
                                 }
                                 
                                 .form-section-title {
-                                    color: #344767;
+                                    color: #1e40af;
                                     font-weight: 600;
-                                    border-bottom: 2px solid #f0f2f5;
-                                    padding-bottom: 10px;
+                                    border-bottom: 1px solid #e2e8f0;
+                                    padding-bottom: 15px;
                                     position: relative;
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 10px;
                                 }
-                                
-                                .form-section-title:after {
+
+                                .form-section-title::before {
                                     content: '';
                                     position: absolute;
-                                    bottom: -2px;
+                                    bottom: -1px;
                                     left: 0;
                                     width: 50px;
-                                    height: 2px;
-                                    background: linear-gradient(to right, #ff6200, #ff8c00);
+                                    height: 3px;
+                                    background: linear-gradient(45deg, #3b82f6, #2563eb);
+                                    border-radius: 10px;
                                 }
                                 
                                 .form-control, .form-select {
-                                    border-radius: 0.5rem;
-                                    border: 1px solid #dee2e6;
-                                    padding: 0.625rem 1rem;
-                                    font-size: 0.875rem;
-                                    transition: all 0.2s ease;
+                                    border-radius: 10px;
+                                    border: 1px solid #e2e8f0;
+                                    padding: 12px 16px;
+                                    font-size: 0.95rem;
+                                    transition: all 0.3s ease;
+                                    color: #334155;
+                                    background-color: #f8fafc;
                                 }
                                 
                                 .form-control:focus, .form-select:focus {
-                                    border-color: #ff6200;
-                                    box-shadow: 0 0 0 0.2rem rgba(255, 98, 0, 0.1);
+                                    border-color: #3b82f6;
+                                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+                                    background-color: #ffffff;
+                                }
+                                
+                                .form-label {
+                                    font-weight: 500;
+                                    color: #475569;
+                                    margin-bottom: 8px;
+                                    font-size: 0.95rem;
                                 }
                                 
                                 .custom-file-upload {
@@ -636,57 +653,194 @@
                                     margin-top: 10px;
                                 }
                                 
-                                .current-image-container, .preview-container {
-                                    border: 1px dashed #ccc;
-                                    background-color: #f9f9f9;
+                                .file-input {
+                                    padding: 15px;
+                                    border-radius: 10px;
+                                    background: #f8fafc;
+                                    border: 1px solid #e2e8f0;
+                                    color: #64748b;
                                     transition: all 0.3s ease;
+                                }
+                                
+                                .file-input:hover {
+                                    background: #f1f5f9;
+                                }
+                                
+                                .current-image-container,
+                                .preview-container {
+                                    border: 1px dashed #cbd5e1;
+                                    background-color: #f1f5f9;
+                                    border-radius: 10px;
+                                    transition: all 0.3s ease;
+                                    padding: 15px !important;
+                                }
+                                
+                                .current-image-container:hover,
+                                .preview-container:hover {
+                                    background-color: #e2e8f0;
+                                }
+                                
+                                .current-image-container img,
+                                .preview-container img {
+                                    border-radius: 8px;
+                                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+                                    transition: all 0.3s ease;
+                                }
+                                
+                                .current-image-container img:hover,
+                                .preview-container img:hover {
+                                    transform: scale(1.03);
+                                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
                                 }
                                 
                                 .btn-primary {
-                                    background: linear-gradient(to right, #ff6200, #ff8c00);
+                                    background: linear-gradient(45deg, #3b82f6, #2563eb);
                                     border: none;
-                                    box-shadow: 0 2px 12px rgba(255, 98, 0, 0.3);
+                                    border-radius: 10px;
+                                    padding: 12px 24px;
+                                    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
                                     transition: all 0.3s ease;
+                                    font-weight: 500;
                                 }
                                 
                                 .btn-primary:hover {
-                                    background: linear-gradient(to right, #ff5500, #ff7b00);
-                                    transform: translateY(-2px);
-                                    box-shadow: 0 4px 15px rgba(255, 98, 0, 0.4);
+                                    background: linear-gradient(45deg, #2563eb, #1d4ed8);
+                                    transform: translateY(-3px);
+                                    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
                                 }
                                 
                                 .btn-outline-secondary {
-                                    border-color: #d4d9e2;
-                                    color: #495057;
+                                    border: 2px solid #cbd5e1;
+                                    color: #475569;
+                                    background: transparent;
+                                    border-radius: 10px;
+                                    padding: 12px 24px;
                                     transition: all 0.3s ease;
+                                    font-weight: 500;
                                 }
                                 
                                 .btn-outline-secondary:hover {
-                                    background-color: #f8f9fa;
-                                    transform: translateY(-2px);
+                                    background-color: #f8fafc;
+                                    color: #334155;
+                                    border-color: #94a3b8;
+                                    transform: translateY(-3px);
+                                    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
                                 }
                                 
-                                .form-text {
-                                    font-size: 0.75rem;
+                                .form-floating > label {
+                                    padding: 12px 16px;
+                                    color: #64748b;
                                 }
                                 
                                 .form-floating > .form-control:focus ~ label,
                                 .form-floating > .form-control:not(:placeholder-shown) ~ label {
-                                    color: #ff6200;
+                                    color: #3b82f6;
+                                    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
                                 }
                                 
-                                /* Ajout d'animations pour un formulaire plus dynamique */
+                                .form-text {
+                                    color: #64748b;
+                                    font-size: 0.8rem;
+                                    margin-top: 5px;
+                                }
+                                
+                                /* Animation et effets visuels */
                                 @keyframes fadeIn {
-                                    from { opacity: 0; transform: translateY(10px); }
+                                    from { opacity: 0; transform: translateY(15px); }
                                     to { opacity: 1; transform: translateY(0); }
                                 }
                                 
                                 .form-card {
-                                    animation: fadeIn 0.5s ease forwards;
+                                    animation: fadeIn 0.6s ease forwards;
                                 }
                                 
                                 .col-md-6:nth-child(2) .form-card {
                                     animation-delay: 0.2s;
+                                }
+                                
+                                /* Style supplémentaire pour les messages d'erreur et les alertes */
+                                .text-danger {
+                                    color: #ef4444 !important;
+                                    font-size: 0.85rem;
+                                }
+                                
+                                .alert {
+                                    border-radius: 10px;
+                                    padding: 15px 20px;
+                                    border: none;
+                                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+                                    margin-bottom: 25px;
+                                }
+                                
+                                .alert-success {
+                                    background-color: #ecfdf5;
+                                    color: #047857;
+                                }
+                                
+                                .alert-danger {
+                                    background-color: #fef2f2;
+                                    color: #b91c1c;
+                                }
+                                
+                                .card {
+                                    border-radius: 16px;
+                                    border: none;
+                                    overflow: hidden;
+                                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+                                    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                                }
+                                
+                                .card:hover {
+                                    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1);
+                                }
+                                
+                                .card-header {
+                                    background: linear-gradient(45deg, #3b82f6, #2563eb);
+                                    color: white;
+                                    padding: 15px 20px;
+                                    border-bottom: none;
+                                }
+                                
+                                .card-header h6 {
+                                    margin: 0;
+                                    font-weight: 600;
+                                    font-size: 1.1rem;
+                                    color: white;
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 10px;
+                                }
+                                
+                                .card-body {
+                                    padding: 25px;
+                                }
+                                
+                                /* Amélioration du select2 si utilisé */
+                                .select2-container--bootstrap-5 .select2-selection {
+                                    border-radius: 10px;
+                                    border: 1px solid #e2e8f0;
+                                    height: auto;
+                                    min-height: 48px;
+                                    padding: 6px 12px;
+                                    background-color: #f8fafc;
+                                }
+                                
+                                .select2-container--bootstrap-5.select2-container--focus .select2-selection,
+                                .select2-container--bootstrap-5.select2-container--open .select2-selection {
+                                    border-color: #3b82f6;
+                                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+                                    background-color: #ffffff;
+                                }
+                                
+                                .select2-container--bootstrap-5 .select2-dropdown {
+                                    border-radius: 10px;
+                                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                                    border: none;
+                                    overflow: hidden;
+                                }
+                                
+                                .select2-container--bootstrap-5 .select2-results__option--highlighted {
+                                    background-color: #3b82f6;
                                 }
                             </style>
                         </div>

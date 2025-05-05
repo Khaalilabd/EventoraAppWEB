@@ -8,8 +8,180 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Main Content Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        .main-content {
+            margin-left: 270px; /* Ajusté pour la largeur de la sidenav */
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.15);
+        }
+        .card-header {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 25px 30px;
+            border: none;
+        }
+        .card-header h3 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin: 0;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-header h3 i {
+            font-size: 1.25rem;
+            color: #e0f2fe;
+        }
+        .card-body {
+            padding: 30px;
+            background: #ffffff;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #1e40af;
+            display: inline-block;
+            min-width: 120px;
+            margin-right: 10px;
+            position: relative;
+        }
+        .info-label::after {
+            content: ':';
+            position: absolute;
+            right: 10px;
+            color: #94a3b8;
+        }
+        .info-value {
+            color: #334155;
+            font-weight: 400;
+        }
+        p {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: baseline;
+        }
+        .btn-custom {
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-outline-primary {
+            color: #3b82f6;
+            border: 2px solid #3b82f6;
+        }
+        .btn-outline-primary:hover {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
+            border-color: transparent;
+        }
+        .btn-outline-success {
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+        .btn-outline-success:hover {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
+            border-color: transparent;
+        }
+        .service-image {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+        }
+        .service-image:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        .animate__fadeIn {
+            animation: fadeIn 0.8s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Info sections */
+        .info-section {
+            margin-bottom: 25px;
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .info-section:hover {
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.1);
+            transform: translateY(-5px);
+        }
+        .info-section h5 {
+            color: #3b82f6;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .info-section h5 i {
+            margin-right: 8px;
+            color: #3b82f6;
+        }
+        
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+            }
+            .card-body {
+                padding: 25px;
+            }
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+            .card-body {
+                padding: 20px;
+            }
+            .btn-custom {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+            .card-header h3 {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -195,10 +367,11 @@
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Pages</a></li>
-                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Services</li>
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_services') }}">Services</a></li>
+                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Détails</li>
                     </ol>
-                    <h6 class="font-weight-bolder mb-0">Gestion des Services</h6>
+                    <h6 class="font-weight-bolder mb-0">Détails du Service</h6>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -219,37 +392,63 @@
             </div>
         </nav>
 
-        <div class="container-fluid py-5">
+        <div class="container-fluid py-4">
             <div class="row justify-content-center">
-                <div class="col-lg-11 col-md-12 col-12">
-                    <div class="card mb-5 shadow-lg border-radius-2xl animate__fadeIn">
-                        <div class="card-header p-5">
-                            <h3 class="font-weight-bolder mb-0">Détails du Service : {{ GService.titre }}</h3>
+                <div class="col-lg-10 col-md-12">
+                    <div class="card mb-5 animate__fadeIn">
+                        <div class="card-header">
+                            <h3><i class="fas fa-concierge-bell"></i> {{ GService.titre }}</h3>
                         </div>
-                        <div class="card-body p-5">
-                            <div class="row g-5">
+                        <div class="card-body">
+                            <div class="row">
                                 <div class="col-md-6">
-                                    <p><span class="info-label fs-4">ID :</span> <span class="info-value fs-4">{{ GService.id }}</span></p>
-                                    <p><span class="info-label fs-4">Partenaire :</span> <span class="info-value fs-4">{{ GService.sponsor.nom_partenaire }}</span></p>
-                                    <p><span class="info-label fs-4">Titre :</span> <span class="info-value fs-4">{{ GService.titre }}</span></p>
-                                    <p><span class="info-label fs-4">Lieu :</span> <span class="info-value fs-4">{{ GService.getLocationLabel ?? GService.location|capitalize }}</span></p>
+                                    <div class="info-section">
+                                        <h5><i class="fas fa-info-circle"></i>Informations de base</h5>
+                                        <p><span class="info-label">ID</span> <span class="info-value badge bg-light text-dark">{{ GService.id }}</span></p>
+                                        <p><span class="info-label">Titre</span> <span class="info-value">{{ GService.titre }}</span></p>
+                                        <p><span class="info-label">Partenaire</span> <span class="info-value">{{ GService.sponsor.nom_partenaire }}</span></p>
+                                        <p><span class="info-label">Type de Partenaire</span> 
+                                           <span class="info-value badge" style="background: linear-gradient(45deg, #3b82f6, #2563eb); color: white; padding: 5px 10px; border-radius: 8px;">
+                                               {{ GService.sponsor.type_partenaire }}
+                                           </span>
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="info-section">
+                                        <h5><i class="fas fa-tag"></i>Détails du Service</h5>
+                                        <p><span class="info-label">Type</span> <span class="info-value">{{ GService.getTypeServiceLabel ?? GService.typeService|capitalize }}</span></p>
+                                        <p><span class="info-label">Lieu</span> <span class="info-value">{{ GService.getLocationLabel ?? GService.location|capitalize }}</span></p>
+                                        <p><span class="info-label">Prix</span> 
+                                           <span class="info-value badge" style="background: linear-gradient(45deg, #10b981, #059669); color: white; padding: 5px 10px; border-radius: 8px;">
+                                               {{ GService.prix }}
+                                           </span>
+                                        </p>
+                                    </div>
                                 </div>
+                                
                                 <div class="col-md-6">
-                                    <p><span class="info-label fs-4">Type de Service :</span> <span class="info-value fs-4">{{ GService.getTypeServiceLabel ?? GService.typeService|capitalize }}</span></p>
-                                    <p><span class="info-label fs-4">Prix :</span> <span class="info-value fs-4">{{ GService.prix }} </span></p>
-                                    <p><span class="info-label fs-4">Description :</span> <span class="info-value fs-4">{{ GService.description }}</span></p>
                                     {% if GService.image %}
-                                        <p><span class="info-label fs-4">Image :</span></p>
+                                    <div class="info-section text-center">
+                                        <h5><i class="fas fa-image"></i>Image du service</h5>
                                         <img src="{{ asset(GService.image) }}" alt="{{ GService.titre }}" class="service-image img-fluid">
+                                    </div>
                                     {% endif %}
+                                    
+                                    <div class="info-section">
+                                        <h5><i class="fas fa-align-left"></i>Description</h5>
+                                        <div class="p-3 bg-light rounded-3">
+                                            <p>{{ GService.description }}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mt-5 d-flex gap-3">
-                                <a href="{{ path('admin_services') }}" class="btn btn-lg btn-outline-primary btn-custom">
-                                    <i class="fas fa-arrow-left fs-4"></i> Retour à la liste
+                            
+                            <div class="mt-4 d-flex gap-3 justify-content-end">
+                                <a href="{{ path('admin_services') }}" class="btn btn-outline-primary btn-custom">
+                                    <i class="fas fa-arrow-left"></i> Retour à la liste
                                 </a>
-                                <a href="{{ path('admin_service_edit', {'id': GService.id}) }}" class="btn btn-lg btn-outline-success btn-custom">
-                                    <i class="fas fa-edit fs-4"></i> Modifier
+                                <a href="{{ path('admin_service_edit', {'id': GService.id}) }}" class="btn btn-outline-success btn-custom">
+                                    <i class="fas fa-edit"></i> Modifier
                                 </a>
                             </div>
                         </div>
@@ -258,181 +457,25 @@
             </div>
         </div>
     </main>
-
-    <style>
-        /* Sidebar Styling */
-        .sidenav {
-            background-color: #f8f9fa;
-            width: 250px;
-            height: 100vh;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        .sidenav-header {
-            padding: 15px;
-        }
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            color: #333;
-        }
-        .navbar-brand:hover {
-            color: #ff6200;
-        }
-        .navbar-nav .nav-link {
-            padding: 12px 15px;
-            color: #555;
-            transition: all 0.3s ease;
-        }
-        .navbar-nav .nav-link:hover {
-            background-color: #ff6200;
-            color: #fff;
-        }
-        .navbar-nav .nav-link.active {
-            background-color: #ff6200;
-            color: #fff;
-        }
-        .navbar-nav .nav-link .icon {
-            width: 30px;
-            height: 30px;
-            background-color: #fff;
-            transition: background-color 0.3s ease;
-        }
-        .navbar-nav .nav-link:hover .icon,
-        .navbar-nav .nav-link.active .icon {
-            background-color: #ff6200;
-        }
-        .navbar-nav .nav-link .icon i {
-            font-size: 16px;
-        }
-        .navbar-nav .dropdown-toggle::after {
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-        .navbar-nav .dropdown-toggle[aria-expanded="true"]::after {
-            transform: rotate(180deg);
-        }
-        .collapse {
-            transition: all 0.3s ease;
-        }
-        .navbar-nav .collapse .nav-link {
-            padding-left: 40px;
-            font-size: 0.9em;
-        }
-        .navbar-nav .collapse .nav-link:hover {
-            background-color: #ff8c00;
-        }
-        hr.horizontal {
-            border: 0;
-            height: 1px;
-            background-color: #ddd;
-        }
-        /* Main Content Styling */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        }
-        .main-content {
-            margin-left: 270px; /* Ajusté pour la largeur de la sidenav */
-        }
-        .card {
-            border: none;
-            border-radius: 25px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-        }
-        .card-header {
-            background: linear-gradient(90deg, #007bff, #00d4ff);
-            color: white;
-            border-radius: 25px 25px 0 0;
-            padding: 2.5rem;
-        }
-        .card-body {
-            padding: 3.5rem;
-        }
-        .info-label {
-            font-weight: 600;
-            color: #333;
-        }
-        .info-value {
-            color: #555;
-        }
-        .btn-custom {
-            border-radius: 12px;
-            padding: 1rem 2.5rem;
-            font-weight: 500;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-        }
-        .btn-custom i {
-            margin-right: 0.75rem;
-        }
-        .btn-outline-primary:hover {
-            background-color: #007bff;
-            color: white;
-        }
-        .btn-outline-success:hover {
-            background-color: #28a745;
-            color: white;
-        }
-        .service-image {
-            max-width: 400px;
-            border-radius: 15px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease;
-        }
-        .service-image:hover {
-            transform: scale(1.05);
-        }
-        .animate__fadeIn {
-            animation: fadeIn 0.6s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @media (max-width: 992px) {
-            .main-content {
-                margin-left: 270px;
-            }
-            .card-body {
-                padding: 2.5rem;
-            }
-            .service-image {
-                max-width: 100%;
-            }
-        }
-        @media (max-width: 768px) {
-            .sidenav {
-                width: 100%;
-                height: auto;
-                position: relative;
-                margin: 0;
-            }
-            .main-content {
-                margin-left: 0;
-            }
-            .card-body {
-                padding: 2rem;
-            }
-            .btn-custom {
-                font-size: 1.25rem;
-                padding: 0.75rem 2rem;
-            }
-            .info-label, .info-value {
-                font-size: 1.25rem !important;
-            }
-        }
-    </style>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <!-- Bootstrap 5 JS et Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Animation à l'entrée pour les sections d'information
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.info-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, 100 + (index * 150));
+            });
+        });
+    </script>
 {% endblock %}

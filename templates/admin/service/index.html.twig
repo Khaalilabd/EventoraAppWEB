@@ -6,13 +6,15 @@
     {{ parent() }}
     <!-- Inclusion explicite de Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Importation de la police Roboto */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+        /* Importation de la police Poppins */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
         /* Général */
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #f9fafb;
             color: #1f2937;
             overflow-x: hidden;
@@ -28,63 +30,108 @@
         /* Fiche spécialisée (mini cadre) */
         .service-fiche {
             background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            padding: 12px;
-            height: 220px; /* Hauteur fixe pour uniformité */
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            height: 250px;
             display: flex;
             flex-direction: column;
             position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid #e5e7eb;
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: none;
             overflow: hidden;
+            z-index: 1;
+        }
+        .service-fiche::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            z-index: 2;
+            transition: height 0.3s ease;
         }
         .service-fiche:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15);
+        }
+        .service-fiche:hover::before {
+            height: 7px;
         }
         .service-fiche .fiche-header {
             display: flex;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 15px;
             flex-shrink: 0;
+            position: relative;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f1f5f9;
         }
         .service-fiche .fiche-header h6 {
             margin: 0;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #1f2937;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e40af;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             flex-grow: 1;
+            letter-spacing: -0.02em;
         }
         .service-fiche .badge {
             color: #ffffff;
-            font-size: 0.65rem;
-            padding: 2px 5px;
-            border-radius: 3px;
-            margin-left: 6px;
+            font-size: 0.7rem;
+            padding: 5px 10px;
+            border-radius: 30px;
+            margin-left: 8px;
             flex-shrink: 0;
+            text-transform: capitalize;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        /* Couleurs spécifiques pour chaque type de partenaire */
-        .badge-traiteur { background: #f97316; }
-        .badge-photographe { background: #22c55e; }
-        .badge-decoration { background: #ec4899; }
-        .badge-sono { background: #3b82f6; }
-        .badge-autres { background: #6b7280; }
+        /* Couleurs spécifiques pour chaque type de partenaire - palette bleue */
+        .badge-traiteur { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
+        .badge-photographe { background: linear-gradient(45deg, #60a5fa, #2563eb); }
+        .badge-decoration { background: linear-gradient(45deg, #93c5fd, #3b82f6); }
+        .badge-sono { background: linear-gradient(45deg, #2563eb, #1e40af); }
+        .badge-autres { background: linear-gradient(45deg, #6b7280, #4b5563); }
+        .badge-fleuriste { background: linear-gradient(45deg, #8b5cf6, #6d28d9); }
+        .badge-lumiere { background: linear-gradient(45deg, #ec4899, #be185d); }
+        
         .service-fiche .fiche-body {
-            font-size: 0.8rem;
-            color: #6b7280;
+            font-size: 0.85rem;
+            color: #4b5563;
             flex-grow: 1;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
         .service-fiche .fiche-body p {
-            margin: 0 0 3px;
-            line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin: 0;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .service-fiche .fiche-body p i {
+            color: #3b82f6;
+            font-size: 0.9rem;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.1);
+            text-align: center;
+        }
+        .service-fiche .fiche-body p strong {
+            font-weight: 600;
+            color: #1f2937;
+            min-width: 80px;
         }
         .description-truncated {
             display: -webkit-box;
@@ -93,6 +140,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: normal;
+            background: linear-gradient(180deg, #4b5563, transparent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0px 0px 1px rgba(75, 85, 99, 0.3);
         }
         .service-fiche .actions {
             position: absolute;
@@ -100,72 +152,107 @@
             right: 12px;
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 5px;
             z-index: 10;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+        }
+        .service-fiche:hover .actions {
+            opacity: 1;
+            transform: translateX(0);
         }
         .service-fiche .actions a {
             color: #ffffff;
-            width: 20px;
-            height: 20px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 3px;
-            font-size: 0.8rem;
-            transition: transform 0.2s ease;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
             text-decoration: none;
+            opacity: 0.9;
         }
         .service-fiche .actions a:hover {
             transform: scale(1.1);
+            opacity: 1;
         }
-        .action-info { background: #06b6d4; }
-        .action-edit { background: #4f46e5; }
-        .action-delete { background: #ef4444; }
+        .action-info { background: linear-gradient(45deg, #0ea5e9, #0284c7); }
+        .action-edit { background: linear-gradient(45deg, #4f46e5, #4338ca); }
+        .action-delete { background: linear-gradient(45deg, #ef4444, #dc2626); }
 
         /* Barre de recherche et actions */
         .table-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            padding: 20px;
             background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            margin-bottom: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
         }
         .search-bar .input-group {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             border-radius: 12px;
             max-width: 350px;
-            background: #ffffff;
+            background: #f1f5f9;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
         }
         .search-bar .form-control {
             border: none;
             font-size: 0.9rem;
-            padding: 10px;
+            padding: 12px 15px;
+            background: transparent;
+        }
+        .search-bar .form-control:focus {
+            box-shadow: none;
+            background: #ffffff;
         }
         .search-bar .input-group-text {
             background: transparent;
             border: none;
-            color: #6b7280;
+            color: #3b82f6;
+            padding-left: 15px;
         }
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
         .add-btn, .export-btn {
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.9rem;
             color: #ffffff;
-            transition: background-color 0.2s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
         }
-        .add-btn { background: #4f46e5; }
-        .add-btn:hover { background: #4338ca; transform: translateY(-2px); }
-        .export-btn { background: #16a34a; }
-        .export-btn:hover { background: #15803d; transform: translateY(-2px); }
+        .add-btn { 
+            background: linear-gradient(45deg, #3b82f6, #2563eb); 
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .add-btn:hover { 
+            background: linear-gradient(45deg, #2563eb, #1d4ed8); 
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+        .export-btn { 
+            background: linear-gradient(45deg, #10b981, #059669); 
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        .export-btn:hover { 
+            background: linear-gradient(45deg, #059669, #047857); 
+            transform: translateY(-3px); 
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+        }
 
         /* Barre latérale de tri */
         .filter-sidebar {
@@ -174,10 +261,10 @@
             right: 0;
             width: 300px;
             height: calc(100vh - 80px);
-            background-color: #f8f9fa;
-            border-radius: 12px 0 0 12px;
-            box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
-            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 20px 0 0 20px;
+            box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             transition: transform 0.3s ease;
             z-index: 1000;
             overflow-y: auto;
@@ -186,56 +273,92 @@
             transform: translateX(100%);
         }
         .filter-toggle-btn {
-            background-color: #4f46e5;
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
             color: #fff;
             border: none;
-            border-radius: 8px;
-            padding: 8px 15px;
+            border-radius: 10px;
+            padding: 10px 18px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             width: 100%;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
-        .filter-toggle-btn:hover { background-color: #4338ca; }
-        .filter-content { margin-top: 15px; }
+        .filter-toggle-btn:hover { 
+            background: linear-gradient(45deg, #2563eb, #1d4ed8);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+        .filter-content { margin-top: 20px; }
         .filter-toggle-icon {
             position: fixed;
             top: 100px;
-            right: 10px;
-            background-color: #4f46e5;
+            right: 15px;
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
             color: #fff;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
             z-index: 1001;
             display: none;
         }
-        .filter-toggle-icon:hover { background-color: #4338ca; }
+        .filter-toggle-icon:hover { 
+            background: linear-gradient(45deg, #2563eb, #1d4ed8);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
         .filter-toggle-icon.visible { display: flex; }
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+        .btn-group {
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 15px;
+            width: 100%;
+        }
         .btn-group .btn {
             padding: 8px 15px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 5px;
+            flex: 1;
+            border: none;
+            background: #f1f5f9;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
-        .btn-group .btn i { font-size: 1rem; }
-        .btn-group .btn.active { background-color: #4f46e5; color: #fff; }
-        .btn-group .btn:hover { background-color: #e0f2fe; color: #1f2937; }
+        .btn-group .btn i { font-size: 0.8rem; }
+        .btn-group .btn.active { 
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: #fff; 
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .btn-group .btn:hover:not(.active) { 
+            background: #e0f2fe; 
+            color: #1e40af; 
+        }
 
         /* Contenu principal */
         .service-content {
             margin-right: 320px;
             padding: 0 15px;
+            transition: margin-right 0.3s ease;
         }
 
         /* Pagination */
@@ -246,24 +369,25 @@
             gap: 8px;
         }
         .pagination .page-item .page-link {
-            color: #4f46e5;
+            color: #3b82f6;
             border: none;
             padding: 10px 16px;
-            border-radius: 50%;
+            border-radius: 10px;
             font-size: 0.9rem;
             transition: all 0.3s ease;
             background: #ffffff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         .pagination .page-item.active .page-link {
-            background: #4f46e5;
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
             color: #ffffff;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
         .pagination .page-item .page-link:hover {
             background: #e0f2fe;
-            color: #4338ca;
+            color: #1e40af;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .pagination .page-item.disabled .page-link {
             color: #d1d5db;
@@ -273,32 +397,103 @@
 
         /* Modale */
         .modal-content {
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border: none;
         }
         .modal-header {
-            background: #1f2937;
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
             color: #ffffff;
-            border-radius: 12px 12px 0 0;
-            padding: 15px 20px;
+            border-bottom: none;
+            padding: 20px 25px;
+        }
+        .modal-header .modal-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .modal-header .btn-close {
+            color: #ffffff;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+        .modal-header .btn-close:hover {
+            opacity: 1;
+            transform: scale(1.1);
         }
         .modal-body {
-            padding: 20px;
-            font-size: 0.9rem;
+            padding: 25px;
+            font-size: 0.95rem;
             background: #ffffff;
         }
+        .modal-body .row {
+            margin-bottom: 15px;
+        }
+        .modal-body h6 {
+            color: #4b5563;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
         .modal-body p {
-            margin: 8px 0;
+            margin: 6px 0;
+            display: flex;
+            gap: 8px;
+        }
+        .modal-body p strong {
+            font-weight: 600;
             color: #1f2937;
+            min-width: 120px;
+        }
+        .modal-body img {
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .modal-body img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         .modal-footer {
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 0 0 12px 12px;
+            padding: 15px 25px 20px;
+            background: #f9fafb;
+            border-top: none;
         }
         .modal-footer .btn {
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        .modal-footer .btn-secondary {
+            background: #f1f5f9;
+            color: #4b5563;
+            border: none;
+        }
+        .modal-footer .btn-secondary:hover {
+            background: #e2e8f0;
+            color: #1f2937;
+            transform: translateY(-2px);
+        }
+        .modal-footer .btn-primary {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            border: none;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .modal-footer .btn-primary:hover {
+            background: linear-gradient(45deg, #2563eb, #1d4ed8);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
         }
 
         /* Responsive */
@@ -310,12 +505,13 @@
                 height: auto;
                 position: relative;
                 top: 0;
-                border-radius: 12px;
-                margin-top: 20px;
+                border-radius: 16px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             }
             .filter-sidebar.collapsed {
                 transform: translateX(0);
-                height: 50px;
+                height: 60px;
                 overflow: hidden;
             }
             .filter-sidebar.collapsed .filter-content { display: none; }
@@ -323,19 +519,19 @@
         }
         @media (max-width: 768px) {
             .service-fiche {
-                font-size: 0.75rem;
+                font-size: 0.8rem;
                 height: 200px;
             }
             .service-fiche .fiche-header h6 {
-                font-size: 0.85rem;
+                font-size: 0.9rem;
             }
             .service-fiche .fiche-body p {
-                font-size: 0.75rem;
+                font-size: 0.8rem;
             }
             .service-fiche .actions a {
-                width: 18px;
-                height: 18px;
-                font-size: 0.7rem;
+                width: 22px;
+                height: 22px;
+                font-size: 0.75rem;
             }
             .search-bar .input-group {
                 max-width: 100%;
@@ -346,12 +542,181 @@
                 align-items: stretch;
             }
             .action-buttons {
-                justify-content: center;
+                justify-content: space-between;
             }
             .pagination .page-link {
                 padding: 8px 12px;
                 font-size: 0.85rem;
             }
+        }
+        
+        /* Styles pour le compteur de résultats de recherche */
+        .search-results-count {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 5px;
+            display: none;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* État de recherche active */
+        body.searching .service-fiche {
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        /* Animation plus fluide pour les filtres */
+        .filter-sidebar {
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), 
+                        height 0.4s cubic-bezier(0.19, 1, 0.22, 1),
+                        opacity 0.4s ease;
+        }
+        
+        /* Amélioration du style des boutons actifs */
+        .btn-group .btn.active {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Style pour la barre de recherche */
+        .search-bar {
+            position: relative;
+        }
+        
+        .search-bar .input-group {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            max-width: 350px;
+            background: #f1f5f9;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar .input-group:focus-within {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            background: #ffffff;
+        }
+
+        /* Loader de recherche */
+        .search-loader {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            color: #3b82f6;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            animation: fadeIn 0.3s ease;
+            z-index: 10;
+        }
+        
+        .search-loader i {
+            animation: spin 1s infinite linear;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Style pour la notification d'export */
+        .export-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            z-index: 9999;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        /* Styles pour l'effet de perspective sur les cartes */
+        .service-fiche {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            will-change: transform;
+        }
+        
+        /* Style pour le bouton de recherche */
+        .search-btn {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .search-btn:hover {
+            background: linear-gradient(45deg, #2563eb, #1d4ed8);
+            transform: translateX(2px);
+        }
+        
+        /* Loader de page */
+        .page-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .page-loader .spinner {
+            font-size: 2rem;
+            color: #3b82f6;
+            margin-bottom: 10px;
+        }
+        
+        .page-loader .text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1f2937;
+        }
+        
+        .service-content.loading {
+            position: relative;
+            min-height: 300px;
+        }
+        
+        .service-content.loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(249, 250, 251, 0.7);
+            backdrop-filter: blur(2px);
+            z-index: 50;
         }
     </style>
 {% endblock %}
@@ -568,27 +933,30 @@
             <div class="table-header">
                 <div class="search-bar">
                     <div class="input-group">
-                        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                        <input type="text" class="form-control" placeholder="Rechercher par titre, partenaire..." id="searchService" aria-label="Rechercher des services">
+                        <span class="input-group-text"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" placeholder="Rechercher un service..." id="searchService" name="search" value="{{ searchTerm }}" aria-label="Rechercher des services">
+                        <!-- Les champs cachés pour maintenir l'état de tri dans le DOM -->
+                        <input type="hidden" id="sort_by" value="{{ sort_by }}">
+                        <input type="hidden" id="sort_order" value="{{ sort_order }}">
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <a href="{{ path('admin_service_create') }}" class="add-btn" aria-label="Ajouter un service"><i class="fas fa-plus me-1"></i> Ajouter</a>
-                    <a href="#" class="export-btn" onclick="exportToCSV()" aria-label="Exporter en CSV"><i class="fas fa-download me-1"></i> Exporter</a>
+                    <a href="{{ path('admin_service_create') }}" class="add-btn" aria-label="Ajouter un service"><i class="fas fa-plus-circle me-1"></i> Ajouter un service</a>
+                    <a href="#" class="export-btn" onclick="exportToCSV()" aria-label="Exporter en CSV"><i class="fas fa-file-export me-1"></i> Exporter CSV</a>
                 </div>
             </div>
 
             <!-- Contenu principal : Les fiches de services -->
             <div class="service-content">
-                <div class="row" id="serviceList">
+                <div class="row g-4" id="serviceList">
                     {% if GServices|length > 0 %}
                         {% for Gservice in GServices %}
-                            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
                                 <div class="service-fiche">
                                     <div class="actions">
-                                        <a href="#" class="action-info" data-bs-toggle="modal" data-bs-target="#serviceModal-{{ Gservice.id }}" aria-label="Voir les détails du service"><i class="fas fa-eye"></i></a>
-                                        <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="action-edit" aria-label="Modifier le service"><i class="fas fa-edit"></i></a>
-                                        <a href="#" class="action-delete" onclick="if(confirm('Voulez-vous vraiment supprimer ce service ?')) { document.getElementById('delete-form-{{ Gservice.id }}').submit(); } return false;" aria-label="Supprimer le service"><i class="fas fa-trash"></i><span class="sr-only">Supprimer</span></a>
+                                        <a href="#" class="action-info" data-bs-toggle="modal" data-bs-target="#serviceModal-{{ Gservice.id }}" aria-label="Voir les détails du service" data-bs-toggle="tooltip" title="Voir détails"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="action-edit" aria-label="Modifier le service" data-bs-toggle="tooltip" title="Modifier"><i class="fas fa-edit"></i></a>
+                                        <a href="#" class="action-delete" onclick="if(confirm('Voulez-vous vraiment supprimer ce service ?')) { document.getElementById('delete-form-{{ Gservice.id }}').submit(); } return false;" aria-label="Supprimer le service" data-bs-toggle="tooltip" title="Supprimer"><i class="fas fa-trash-alt"></i></a>
                                         <form id="delete-form-{{ Gservice.id }}" method="post" action="{{ path('admin_service_delete', {'id': Gservice.id}) }}" style="display: none;">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Gservice.id) }}">
                                         </form>
@@ -600,22 +968,23 @@
                                     <div class="fiche-body">
                                         {% if Gservice.image %}
                                         <div class="text-center mb-2">
-                                            <img src="{{ asset(Gservice.image) }}" alt="{{ Gservice.titre }}" class="img-fluid" style="max-height: 80px; max-width: 100%;">
+                                            <img src="{{ asset(Gservice.image) }}" alt="{{ Gservice.titre }}" class="img-fluid rounded-3 shadow-sm" style="max-height: 80px; object-fit: cover;">
                                         </div>
                                         {% endif %}
-                                        <p><strong>Partenaire :</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
-                                        <p><strong>Type :</strong> {{ Gservice.type_service }}</p>
-                                        <p><strong>Prix :</strong> {{ Gservice.prix }} €</p>
-                                        <p><strong>Location :</strong> {{ Gservice.Location }}</p>
-                                        <p><strong>Description :</strong> <span class="description-truncated">{{ Gservice.description }}</span></p>
+                                        <p><i class="fas fa-building"></i> <strong>Partenaire:</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
+                                        <p><i class="fas fa-tag"></i> <strong>Type:</strong> {{ Gservice.type_service }}</p>
+                                        <p><i class="fas fa-euro-sign"></i> <strong>Prix:</strong> <span class="badge" style="background: linear-gradient(45deg, #10b981, #059669);">{{ Gservice.prix }}</span></p>
+                                        <p><i class="fas fa-map-marker-alt"></i> <strong>Lieu:</strong> {{ Gservice.Location }}</p>
+                                        <p><i class="fas fa-align-left"></i> <strong>Description:</strong> <span class="description-truncated">{{ Gservice.description }}</span></p>
                                     </div>
                                 </div>
                             </div>
                         {% endfor %}
                     {% else %}
                         <div class="col-12">
-                            <div class="alert alert-info text-center" role="alert">
-                                Aucun service trouvé.
+                            <div class="alert shadow-sm" role="alert" style="background: linear-gradient(45deg, #e0f2fe, #dbeafe); border-radius: 12px; border: none; color: #1e40af; padding: 20px; text-align: center;">
+                                <i class="fas fa-info-circle me-2"></i> Aucun service trouvé. 
+                                <a href="{{ path('admin_service_create') }}" class="alert-link">Ajouter un premier service</a>.
                             </div>
                         </div>
                     {% endif %}
@@ -627,7 +996,7 @@
                         <ul class="pagination">
                             <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
                                 <a class="page-link" href="{{ path('admin_services', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Précédent">
-                                    <span aria-hidden="true">«</span>
+                                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
                                 </a>
                             </li>
                             {% for i in 1..total_pages %}
@@ -637,7 +1006,7 @@
                             {% endfor %}
                             <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
                                 <a class="page-link" href="{{ path('admin_services', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Suivant">
-                                    <span aria-hidden="true">»</span>
+                                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
                                 </a>
                             </li>
                         </ul>
@@ -647,20 +1016,20 @@
 
             <!-- Barre latérale de tri à droite -->
             <div class="filter-sidebar" id="filterSidebar">
-                <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">Masquer</button>
+                <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">Masquer les filtres</button>
                 <div class="filter-content">
-                    <h6><i class="fas fa-sort me-2"></i>Options de tri</h6>
-                    <form method="get" action="{{ path('admin_services') }}" class="row g-3">
+                    <h5 class="mb-4 text-primary fw-bold"><i class="fas fa-sort me-2"></i>Options de tri</h5>
+                    <div class="row g-3">
                         <div class="col-12">
                             <label class="form-label">Trier par Partenaire</label>
                             <div class="btn-group w-100">
-                                <a href="{{ path('admin_services', {'sort_by': 'sponsor.nom_partenaire', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'asc' ? 'active' : '' }}"
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('sponsor.nom_partenaire', 'asc')" 
+                                   class="btn {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'asc' ? 'active' : '' }}"
                                    aria-label="Trier par partenaire croissant">
                                     <i class="fas fa-arrow-up me-1"></i> Croissant
                                 </a>
-                                <a href="{{ path('admin_services', {'sort_by': 'sponsor.nom_partenaire', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'desc' ? 'active' : '' }}"
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('sponsor.nom_partenaire', 'desc')" 
+                                   class="btn {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'desc' ? 'active' : '' }}"
                                    aria-label="Trier par partenaire décroissant">
                                     <i class="fas fa-arrow-down me-1"></i> Décroissant
                                 </a>
@@ -669,13 +1038,13 @@
                         <div class="col-12">
                             <label class="form-label">Trier par Type de Service</label>
                             <div class="btn-group w-100">
-                                <a href="{{ path('admin_services', {'sort_by': 'type_service', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'type_service' and sort_order == 'asc' ? 'active' : '' }}"
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('type_service', 'asc')" 
+                                   class="btn {{ sort_by == 'type_service' and sort_order == 'asc' ? 'active' : '' }}"
                                    aria-label="Trier par type de service croissant">
                                     <i class="fas fa-arrow-up me-1"></i> Croissant
                                 </a>
-                                <a href="{{ path('admin_services', {'sort_by': 'type_service', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'type_service' and sort_order == 'desc' ? 'active' : '' }}"
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('type_service', 'desc')" 
+                                   class="btn {{ sort_by == 'type_service' and sort_order == 'desc' ? 'active' : '' }}"
                                    aria-label="Trier par type de service décroissant">
                                     <i class="fas fa-arrow-down me-1"></i> Décroissant
                                 </a>
@@ -684,13 +1053,13 @@
                         <div class="col-12">
                             <label class="form-label">Trier par Titre</label>
                             <div class="btn-group w-100">
-                                <a href="{{ path('admin_services', {'sort_by': 'titre', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'titre' and sort_order == 'asc' ? 'active' : '' }}"
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('titre', 'asc')" 
+                                   class="btn {{ sort_by == 'titre' and sort_order == 'asc' ? 'active' : '' }}"
                                    aria-label="Trier par titre croissant">
                                     <i class="fas fa-arrow-up me-1"></i> Croissant
                                 </a>
-                                <a href="{{ path('admin_services', {'sort_by': 'titre', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'titre' and sort_order == 'desc' ? 'active' : '' }}"
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('titre', 'desc')" 
+                                   class="btn {{ sort_by == 'titre' and sort_order == 'desc' ? 'active' : '' }}"
                                    aria-label="Trier par titre décroissant">
                                     <i class="fas fa-arrow-down me-1"></i> Décroissant
                                 </a>
@@ -699,22 +1068,25 @@
                         <div class="col-12">
                             <label class="form-label">Trier par Prix</label>
                             <div class="btn-group w-100">
-                                <a href="{{ path('admin_services', {'sort_by': 'prix', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'prix' and sort_order == 'asc' ? 'active' : '' }}"
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('prix', 'asc')" 
+                                   class="btn {{ sort_by == 'prix' and sort_order == 'asc' ? 'active' : '' }}"
                                    aria-label="Trier par prix croissant">
                                     <i class="fas fa-arrow-up me-1"></i> Croissant
                                 </a>
-                                <a href="{{ path('admin_services', {'sort_by': 'prix', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'prix' and sort_order == 'desc' ? 'active' : '' }}"
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('prix', 'desc')" 
+                                   class="btn {{ sort_by == 'prix' and sort_order == 'desc' ? 'active' : '' }}"
                                    aria-label="Trier par prix décroissant">
                                     <i class="fas fa-arrow-down me-1"></i> Décroissant
                                 </a>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <a href="{{ path('admin_services') }}" class="btn btn-outline-secondary w-100" aria-label="Réinitialiser les tris"><i class="fas fa-undo me-1"></i> Réinitialiser</a>
+                        <div class="col-12 mt-4">
+                            <a href="{{ path('admin_services') }}" class="btn btn-outline-secondary w-100" aria-label="Réinitialiser les tris" 
+                               style="border-radius: 10px; padding: 10px; font-weight: 500; transition: all 0.3s ease; border: 1px solid #cbd5e1;">
+                                <i class="fas fa-undo me-2"></i> Réinitialiser les filtres
+                            </a>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
 
@@ -727,30 +1099,57 @@
         <!-- Modales pour détails -->
         {% for Gservice in GServices %}
             <div class="modal fade" id="serviceModal-{{ Gservice.id }}" tabindex="-1" aria-labelledby="serviceModalLabel-{{ Gservice.id }}" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="serviceModalLabel-{{ Gservice.id }}">{{ Gservice.titre }}</h5>
+                            <h5 class="modal-title" id="serviceModalLabel-{{ Gservice.id }}">
+                                <i class="fas fa-concierge-bell me-2"></i>{{ Gservice.titre }}
+                            </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                         </div>
                         <div class="modal-body">
-                            {% if Gservice.image %}
-                            <div class="text-center mb-3">
-                                <img src="{{ asset(Gservice.image) }}" alt="{{ Gservice.titre }}" class="img-fluid" style="max-height: 200px;">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    {% if Gservice.image %}
+                                    <div class="text-center mb-4">
+                                        <img src="{{ asset(Gservice.image) }}" alt="{{ Gservice.titre }}" class="img-fluid rounded-3 shadow-sm">
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div>
+                                        <h6 class="d-flex align-items-center"><i class="fas fa-align-left me-2 text-primary"></i>Description</h6>
+                                        <div class="p-3 bg-light rounded-3">
+                                            <p class="mb-0">{{ Gservice.description }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="mb-4">
+                                        <h6 class="d-flex align-items-center"><i class="fas fa-info-circle me-2 text-primary"></i>Informations générales</h6>
+                                        <div class="info-grid">
+                                            <p><strong><i class="fas fa-hashtag text-primary me-1"></i> ID</strong> <span class="badge bg-light text-dark">{{ Gservice.id }}</span></p>
+                                            <p><strong><i class="fas fa-user-tie text-primary me-1"></i> Partenaire</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
+                                            <p><strong><i class="fas fa-tag text-primary me-1"></i> Type de partenaire</strong> 
+                                                <span class="badge badge-{{ Gservice.sponsor.type_partenaire|lower|replace({'é': 'e', ' ': '-'}) }}">
+                                                    {{ Gservice.sponsor.type_partenaire }}
+                                                </span>
+                                            </p>
+                                            <p><strong><i class="fas fa-heading text-primary me-1"></i> Titre</strong> {{ Gservice.titre }}</p>
+                                            <p><strong><i class="fas fa-map-marker-alt text-primary me-1"></i> Lieu</strong> {{ Gservice.Location }}</p>
+                                            <p><strong><i class="fas fa-cogs text-primary me-1"></i> Type de service</strong> {{ Gservice.type_service }}</p>
+                                            <p><strong><i class="fas fa-euro-sign text-primary me-1"></i> Prix</strong> <span class="badge bg-success">{{ Gservice.prix }}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            {% endif %}
-                            <p><strong>ID :</strong> {{ Gservice.id }}</p>
-                            <p><strong>Partenaire :</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
-                            <p><strong>Type de Partenaire :</strong> {{ Gservice.sponsor.type_partenaire }}</p>
-                            <p><strong>Titre :</strong> {{ Gservice.titre }}</p>
-                            <p><strong>Description :</strong> {{ Gservice.description }}</p>
-                            <p><strong>Location :</strong> {{ Gservice.Location }}</p>
-                            <p><strong>Type de Service :</strong> {{ Gservice.type_service }}</p>
-                            <p><strong>Prix :</strong> {{ Gservice.prix }} €</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                            <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="btn btn-primary">Modifier</a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Fermer
+                            </button>
+                            <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="btn btn-primary">
+                                <i class="fas fa-edit me-2"></i>Modifier
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -762,20 +1161,327 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Recherche en temps réel
+        // Fonction pour gérer la pagination via AJAX
+        function handlePagination(e, pageLink) {
+            e.preventDefault();
+            
+            // Obtenir l'URL de la page cible
+            const url = pageLink.getAttribute('href');
+            if (!url) return;
+            
+            // Mettre à jour l'URL dans le navigateur sans recharger
+            window.history.pushState({path: url}, '', url);
+            
+            // Afficher une animation de chargement
+            const contentArea = document.querySelector('.service-content');
+            contentArea.classList.add('loading');
+            
+            // Créer un loader
+            let loader = document.getElementById('pageLoader');
+            if (!loader) {
+                loader = document.createElement('div');
+                loader.id = 'pageLoader';
+                loader.className = 'page-loader';
+                loader.innerHTML = '<div class="spinner"><i class="fas fa-circle-notch fa-spin"></i></div><div class="text">Chargement de la page...</div>';
+                document.querySelector('.service-content').appendChild(loader);
+            }
+            
+            // Faire la requête AJAX
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Remplacer le contenu principal
+                    const newServiceList = doc.getElementById('serviceList');
+                    if (newServiceList) {
+                        document.getElementById('serviceList').innerHTML = newServiceList.innerHTML;
+                        initializeCardAnimations();
+                    }
+                    
+                    // Mettre à jour la pagination
+                    const newPagination = doc.querySelector('.pagination');
+                    const currentPagination = document.querySelector('.pagination');
+                    if (newPagination && currentPagination) {
+                        currentPagination.innerHTML = newPagination.innerHTML;
+                        // Réattacher les gestionnaires d'événements pour les nouveaux liens
+                        attachPaginationHandlers();
+                    }
+                    
+                    // Extraire le numéro de page actuel de l'URL
+                    const urlParams = new URLSearchParams(new URL(url).search);
+                    const currentPage = urlParams.get('page') || '1';
+                    
+                    // Mettre à jour les valeurs de tri cachées, au cas où elles ont changé
+                    const sortBy = urlParams.get('sort_by');
+                    const sortOrder = urlParams.get('sort_order');
+                    if (sortBy) document.getElementById('sort_by').value = sortBy;
+                    if (sortOrder) document.getElementById('sort_order').value = sortOrder;
+                    
+                    // Supprimer l'animation de chargement
+                    contentArea.classList.remove('loading');
+                    if (loader) loader.remove();
+                    
+                    // Faire défiler la page vers le haut en douceur
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                })
+                .catch(error => {
+                    console.error('Erreur lors du changement de page:', error);
+                    contentArea.classList.remove('loading');
+                    if (loader) loader.remove();
+                    showNotification('<i class="fas fa-exclamation-circle me-2"></i> Erreur lors du changement de page', 'error');
+                });
+        }
+
+        // Attacher les gestionnaires d'événements à tous les liens de pagination
+        function attachPaginationHandlers() {
+            const paginationLinks = document.querySelectorAll('.pagination .page-link');
+            paginationLinks.forEach(link => {
+                link.removeEventListener('click', function(e) { handlePagination(e, this); });
+                link.addEventListener('click', function(e) { handlePagination(e, this); });
+            });
+        }
+
+        // Animation d'entrée pour les cartes de service au chargement initial
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser les tooltips
+            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function(tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl, {
+                        delay: { show: 500, hide: 100 }
+                    });
+                });
+            }
+            
+            // Initialiser les animations des cartes au chargement
+            initializeCardAnimations();
+            
+            // Attacher les gestionnaires d'événements pour la pagination
+            attachPaginationHandlers();
+        });
+        
+        // Fonction pour récupérer les résultats de recherche via AJAX
+        function fetchSearchResults(searchText) {
+            // Construire l'URL avec les paramètres actuels
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('search', searchText);
+            urlParams.set('page', '1'); // Retour à la première page lors d'une recherche
+            
+            // Conserver les paramètres de tri depuis les éléments cachés
+            const sortBy = document.getElementById('sort_by').value || '{{ sort_by }}';
+            const sortOrder = document.getElementById('sort_order').value || '{{ sort_order }}';
+            urlParams.set('sort_by', sortBy);
+            urlParams.set('sort_order', sortOrder);
+            
+            // Mettre à jour l'URL dans le navigateur sans recharger la page
+            const newUrl = `{{ path('admin_services') }}?${urlParams.toString()}`;
+            window.history.pushState({path: newUrl}, '', newUrl);
+            
+            // Afficher une animation de chargement
+            const searchBar = document.querySelector('.search-bar');
+            let loader = document.getElementById('searchLoader');
+            if (!loader) {
+                loader = document.createElement('div');
+                loader.id = 'searchLoader';
+                loader.className = 'search-loader';
+                loader.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Recherche...';
+                searchBar.appendChild(loader);
+            }
+            
+            // Faire la requête AJAX
+            fetch(newUrl)
+                .then(response => response.text())
+                .then(html => {
+                    // Parser le HTML reçu
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Extraire la liste des services
+                    const newServiceList = doc.getElementById('serviceList');
+                    if (newServiceList) {
+                        // Remplacer le contenu
+                        document.getElementById('serviceList').innerHTML = newServiceList.innerHTML;
+                        
+                        // Initialiser les animations pour les nouvelles cartes
+                        initializeCardAnimations();
+                    }
+                    
+                    // Mettre à jour la pagination si présente
+                    const newPagination = doc.querySelector('.pagination');
+                    const currentPagination = document.querySelector('.pagination');
+                    if (newPagination && currentPagination) {
+                        currentPagination.innerHTML = newPagination.innerHTML;
+                    } else if (newPagination) {
+                        // Ajouter la pagination si elle n'existait pas
+                        const paginationContainer = document.createElement('nav');
+                        paginationContainer.setAttribute('aria-label', 'Page navigation');
+                        paginationContainer.className = 'mt-4';
+                        paginationContainer.innerHTML = newPagination.outerHTML;
+                        document.getElementById('serviceList').after(paginationContainer);
+                    }
+                    
+                    // Mettre à jour le compteur total des résultats
+                    updateSearchResultsCount(document.querySelectorAll('#serviceList .col-lg-3').length, searchText);
+                    
+                    // Supprimer l'animation de chargement
+                    if (loader) loader.remove();
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la recherche:', error);
+                    // Afficher une notification d'erreur
+                    showNotification('<i class="fas fa-exclamation-circle me-2"></i> Erreur lors de la recherche', 'error');
+                    
+                    // Supprimer l'animation de chargement
+                    if (loader) loader.remove();
+                });
+        }
+
+        // Fonction pour trier et soumettre le formulaire
+        function sortAndSubmit(sortBy, sortOrder) {
+            // Mettre à jour les éléments cachés pour le tri
+            document.getElementById('sort_by').value = sortBy;
+            document.getElementById('sort_order').value = sortOrder;
+            
+            // Récupérer la valeur de recherche actuelle
+            const searchInput = document.getElementById('searchService');
+            const searchValue = searchInput ? searchInput.value.trim() : '';
+            
+            // Construire l'URL avec les paramètres de tri et de recherche
+            const urlParams = new URLSearchParams();
+            urlParams.set('sort_by', sortBy);
+            urlParams.set('sort_order', sortOrder);
+            urlParams.set('page', '1');
+            
+            // Ajouter le terme de recherche s'il existe
+            if (searchValue && searchValue !== '') {
+                urlParams.set('search', searchValue);
+                // Déclencher une recherche AJAX qui respectera les nouveaux paramètres de tri
+                fetchSearchResults(searchValue);
+            } else {
+                // Faire une requête AJAX avec juste les paramètres de tri
+                const url = `{{ path('admin_services') }}?${urlParams.toString()}`;
+                
+                // Mettre à jour l'URL dans le navigateur sans recharger la page
+                window.history.pushState({path: url}, '', url);
+                
+                // Afficher une animation de chargement
+                const searchBar = document.querySelector('.search-bar');
+                let loader = document.getElementById('searchLoader');
+                if (!loader) {
+                    loader = document.createElement('div');
+                    loader.id = 'searchLoader';
+                    loader.className = 'search-loader';
+                    loader.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Tri en cours...';
+                    searchBar.appendChild(loader);
+                }
+                
+                // Faire la requête AJAX
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        
+                        // Remplacer le contenu principal
+                        const newServiceList = doc.getElementById('serviceList');
+                        if (newServiceList) {
+                            document.getElementById('serviceList').innerHTML = newServiceList.innerHTML;
+                            initializeCardAnimations();
+                        }
+                        
+                        // Mettre à jour la pagination
+                        const newPagination = doc.querySelector('.pagination');
+                        const currentPagination = document.querySelector('.pagination');
+                        if (newPagination && currentPagination) {
+                            currentPagination.innerHTML = newPagination.innerHTML;
+                        }
+                        
+                        // Supprimer l'animation de chargement
+                        if (loader) loader.remove();
+                        
+                        // Afficher une notification de succès
+                        showNotification('<i class="fas fa-check-circle me-2"></i> Liste triée', 'info');
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du tri:', error);
+                        if (loader) loader.remove();
+                        showNotification('<i class="fas fa-exclamation-circle me-2"></i> Erreur lors du tri', 'error');
+                    });
+            }
+        }
+
+        // Recherche en temps réel sur le front-end (filtrage visuel)
         document.getElementById('searchService').addEventListener('input', function(e) {
             const searchText = e.target.value.toLowerCase().trim();
-            const fiches = document.querySelectorAll('#serviceList .col-lg-3');
-            fiches.forEach(fiche => {
-                const titre = fiche.querySelector('.fiche-header h6').textContent.toLowerCase();
-                const partenaire = fiche.querySelector('.fiche-body p:nth-child(1)').textContent.toLowerCase();
-                const typeService = fiche.querySelector('.fiche-body p:nth-child(2)').textContent.toLowerCase();
-                const prix = fiche.querySelector('.fiche-body p:nth-child(3)').textContent.toLowerCase();
-                const location = fiche.querySelector('.fiche-body p:nth-child(4)').textContent.toLowerCase();
-                const description = fiche.querySelector('.fiche-body p:nth-child(5)').textContent.toLowerCase();
-                fiche.style.display = titre.includes(searchText) || partenaire.includes(searchText) || typeService.includes(searchText) || prix.includes(searchText) || location.includes(searchText) || description.includes(searchText) ? '' : 'none';
-            });
+            
+            // Debounce pour éviter trop d'appels rapides
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(() => {
+                // Mise à jour dynamique de la recherche côté client
+                if (searchText.length >= 2) {
+                    // Au lieu de filtrer localement, faire une requête AJAX
+                    fetchSearchResults(searchText);
+                } else if (searchText.length === 0) {
+                    // Retourner à la page initiale sans paramètres de recherche
+                    window.location.href = '{{ path('admin_services') }}';
+                }
+            }, 500); // Légèrement plus lent pour éviter trop de requêtes
         });
+        
+        // Initialiser les animations des cartes
+        function initializeCardAnimations() {
+            const cards = document.querySelectorAll('.service-fiche');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 50 + (index * 100)); // Décalage progressif pour effet en cascade
+                
+                // Effet 3D au survol
+                card.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateY = ((x - centerX) / centerX) * 5;
+                    const rotateX = ((centerY - y) / centerY) * 5;
+                    
+                    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(-8px)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+        }
+
+        // Fonction pour mettre à jour le compteur de résultats
+        function updateSearchResultsCount(count, searchText) {
+            let searchResultsCounter = document.getElementById('searchResultsCount');
+            if (!searchResultsCounter) {
+                searchResultsCounter = document.createElement('div');
+                searchResultsCounter.id = 'searchResultsCount';
+                searchResultsCounter.className = 'search-results-count';
+                document.querySelector('.search-bar').appendChild(searchResultsCounter);
+            }
+            
+            if (searchText) {
+                searchResultsCounter.textContent = `${count} résultat${count !== 1 ? 's' : ''} trouvé${count !== 1 ? 's' : ''}`;
+                searchResultsCounter.style.display = 'block';
+            } else {
+                searchResultsCounter.style.display = 'none';
+            }
+        }
 
         // Toggle pour la barre latérale de tri
         function toggleFilterSidebar() {
@@ -783,29 +1489,89 @@
             const btn = sidebar.querySelector('.filter-toggle-btn');
             const icon = document.getElementById('filterToggleIcon');
             sidebar.classList.toggle('collapsed');
-            btn.textContent = sidebar.classList.contains('collapsed') ? 'Afficher' : 'Masquer';
+            btn.textContent = sidebar.classList.contains('collapsed') ? 'Afficher les filtres' : 'Masquer les filtres';
             icon.classList.toggle('visible', sidebar.classList.contains('collapsed'));
         }
 
         // Exportation en CSV
         function exportToCSV() {
+            // Récupérer les données de tous les services visibles
             const fiches = document.querySelectorAll('#serviceList .col-lg-3');
             let csvContent = 'ID,Titre,Partenaire,Type de Service,Prix,Location,Description\n';
+            let exportCount = 0;
+            
             fiches.forEach(fiche => {
-                const id = fiche.querySelector('.fiche-header h6').textContent.replace('Service #', '');
-                const titre = fiche.querySelector('.fiche-header h6').textContent.replace(/,/g, '');
-                const partenaire = fiche.querySelector('.fiche-body p:nth-child(1)').textContent.replace('Partenaire : ', '').replace(/,/g, '');
-                const typeService = fiche.querySelector('.fiche-body p:nth-child(2)').textContent.replace('Type : ', '').replace(/,/g, '');
-                const prix = fiche.querySelector('.fiche-body p:nth-child(3)').textContent.replace('Prix : ', '').replace(/,/g, '');
-                const location = fiche.querySelector('.fiche-body p:nth-child(4)').textContent.replace('Location : ', '').replace(/,/g, '');
-                const description = fiche.querySelector('.fiche-body p:nth-child(5)').textContent.replace('Description : ', '').replace(/,/g, '');
-                csvContent += `${id},${titre},${partenaire},${typeService},${prix},${location},${description}\n`;
+                // Toutes les fiches sont maintenant visibles car le filtrage est côté serveur
+                try {
+                    const titre = fiche.querySelector('.fiche-header h6').textContent.trim().replace(/,/g, ' ');
+                    const partenaire = fiche.querySelector('.fiche-body p:nth-child(1)').textContent.replace(/Partenaire:|\s+/g, ' ').trim().replace(/,/g, ' ');
+                    const typeService = fiche.querySelector('.fiche-body p:nth-child(2)').textContent.replace(/Type:|\s+/g, ' ').trim().replace(/,/g, ' ');
+                    const prix = fiche.querySelector('.fiche-body p:nth-child(3)').textContent.replace(/Prix:|\s+/g, ' ').trim().replace(/,/g, ' ');
+                    const lieu = fiche.querySelector('.fiche-body p:nth-child(4)').textContent.replace(/Lieu:|\s+/g, ' ').trim().replace(/,/g, ' ');
+                    const description = fiche.querySelector('.fiche-body p:nth-child(5) .description-truncated').textContent.replace(/Description:|\s+/g, ' ').trim().replace(/,/g, ' ');
+                    
+                    // Récupérer l'ID depuis le formulaire de suppression
+                    const deleteForm = fiche.querySelector('form[id^="delete-form-"]');
+                    const id = deleteForm ? deleteForm.id.replace('delete-form-', '') : 'N/A';
+                    
+                    csvContent += `${id},"${titre}","${partenaire}","${typeService}","${prix}","${lieu}","${description}"\n`;
+                    exportCount++;
+                } catch(e) {
+                    console.error("Erreur lors de l'export d'une ligne:", e);
+                }
             });
+            
+            // Vérifier s'il y a des données à exporter
+            if (exportCount === 0) {
+                showNotification('<i class="fas fa-exclamation-circle me-2"></i> Aucune donnée à exporter', 'error');
+                return;
+            }
+            
+            // Créer et télécharger le fichier CSV
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'services.csv';
+            const date = new Date();
+            const dateStr = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            const searchTerm = document.getElementById('searchService').value.trim();
+            const filename = searchTerm ? 
+                `services_export_${searchTerm}_${dateStr}.csv` : 
+                `services_export_${dateStr}.csv`;
+            
+            link.download = filename;
             link.click();
+            
+            // Afficher une notification de succès
+            showNotification(`<i class="fas fa-check-circle me-2"></i> Export CSV réussi (${exportCount} services)`, 'success');
+        }
+        
+        // Fonction pour afficher des notifications
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'export-notification';
+            
+            // Définir le style en fonction du type
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(45deg, #10b981, #059669)';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(45deg, #ef4444, #dc2626)';
+            } else if (type === 'info') {
+                notification.style.background = 'linear-gradient(45deg, #3b82f6, #2563eb)';
+            }
+            
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(10px)';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
         }
     </script>
 {% endblock %}

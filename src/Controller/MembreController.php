@@ -61,6 +61,27 @@ class MembreController extends AbstractController
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+             // Calcul des statistiques de genre
+        $genderStats = $this->membreRepository->createQueryBuilder('m')
+        ->select('m.gender, COUNT(m.id) as count')
+        ->groupBy('m.gender')
+        ->getQuery()
+        ->getResult();
+
+    $stats = [
+        'Homme' => 0,
+        'Femme' => 0,
+        'total' => $totalMembres
+    ];
+
+    foreach ($genderStats as $stat) {
+        if ($stat['gender'] === 'Homme') {
+            $stats['Homme'] = $stat['count'];
+        } elseif ($stat['gender'] === 'Femme') {
+            $stats['Femme'] = $stat['count'];
+        }
+    }
+
 
         return $this->render('admin/membres/index.html.twig', [
             'membres' => $membres,
@@ -69,6 +90,8 @@ class MembreController extends AbstractController
             'searchTerm' => $searchTerm,
             'sort_by' => $sortBy,
             'sort_order' => $sortOrder,
+            'gender_stats' => $stats
+
         ]);
     }
 

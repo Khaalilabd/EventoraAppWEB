@@ -137,239 +137,371 @@
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-12">
-                    <div class="formbold-main-wrapper">
-                        <div class="formbold-form-wrapper">
-                            {# Affichage des messages flash #}
-                            {% for message in app.flashes('success') %}
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
-                            {% for message in app.flashes('error') %}
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
+                    <div class="card mb-4 shadow-sm border-radius-xl">
+                        <div class="card-header p-3">
+                            <h6 class="font-weight-bolder mb-0"><i class="fas fa-plus-circle me-2"></i>Ajouter un nouveau service</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="formbold-main-wrapper">
+                                <div class="formbold-form-wrapper">
+                                    {# Affichage des messages flash #}
+                                    {% for message in app.flashes('success') %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            <i class="fas fa-check-circle me-2"></i>{{ message }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    {% endfor %}
+                                    {% for message in app.flashes('error') %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    {% endfor %}
 
-                            {{ form_start(form, {'attr': {'class': 'modern-form'}}) }}
-                            <div class="row g-4">
-                                <div class="col-md-6">
-                                    <div class="form-card p-4 rounded shadow-sm">
-                                        <h5 class="form-section-title mb-4">Informations générales</h5>
-                                        
-                                        <div class="form-floating mb-4">
-                                            {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Titre du service'}}) }}
-                                            {{ form_label(form.titre) }}
-                                            {{ form_errors(form.titre, {'attr': {'class': 'text-danger mt-1'}}) }}
-                                        </div>
-                                        
-                                        <div class="form-group mb-4">
-                                            {{ form_label(form.sponsor, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.sponsor, {'attr': {'class': 'form-select select2'}}) }}
-                                            {{ form_errors(form.sponsor, {'attr': {'class': 'text-danger mt-1'}}) }}
-                                            <div class="form-text text-muted">{{ form_help(form.sponsor) }}</div>
-                                        </div>
-                                        
-                                        <div class="form-group mb-4">
-                                            {{ form_label(form.typeService, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.typeService, {'attr': {'class': 'form-select select2'}}) }}
-                                            {{ form_errors(form.typeService, {'attr': {'class': 'text-danger mt-1'}}) }}
-                                            <div class="form-text text-muted">{{ form_help(form.typeService) }}</div>
-                                        </div>
-                                        
-                                        <div class="form-group mb-4">
-                                            {{ form_label(form.location, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.location, {'attr': {'class': 'form-select select2'}}) }}
-                                            {{ form_errors(form.location, {'attr': {'class': 'text-danger mt-1'}}) }}
-                                            <div class="form-text text-muted">{{ form_help(form.location) }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="form-card p-4 rounded shadow-sm">
-                                        <h5 class="form-section-title mb-4">Détails et média</h5>
-                                        
-                                        <div class="form-floating mb-4">
-                                            {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': 'Prix'}}) }}
-                                            {{ form_label(form.prix) }}
-                                            {{ form_errors(form.prix, {'attr': {'class': 'text-danger mt-1'}}) }}
-                                            <div class="form-text text-muted">{{ form_help(form.prix) }}</div>
-                                        </div>
-                                        
-                                        <div class="form-group mb-4">
-                                            {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
-                                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
-                                            {{ form_errors(form.description, {'attr': {'class': 'text-danger mt-1'}}) }}
-                                            <div class="form-text text-muted">{{ form_help(form.description) }}</div>
-                                        </div>
-                                        
-                                        <div class="form-group mb-4">
-                                            <label class="form-label">{{ form_label(form.image) }}</label>
-                                            
-                                            <div class="custom-file-upload">
-                                                {{ form_widget(form.image, {'attr': {'class': 'form-control file-input', 'onchange': 'previewImage(this)'}}) }}
-                                                <div class="form-text text-muted">{{ form_help(form.image) }}</div>
-                                                {{ form_errors(form.image, {'attr': {'class': 'text-danger mt-1'}}) }}
-                                            </div>
-                                            
-                                            <div id="imagePreviewContainer" class="preview-container mt-3 p-3 rounded bg-light text-center" style="display: none;">
-                                                <p class="text-muted mb-2"><i class="fas fa-eye me-2"></i>Aperçu de l'image</p>
-                                                <img id="imagePreview" src="#" alt="Aperçu" class="img-thumbnail" style="max-height: 200px; max-width: 100%;">
+                                    {{ form_start(form, {'attr': {'class': 'modern-form'}}) }}
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="form-card p-4 rounded">
+                                                <h5 class="form-section-title mb-4"><i class="fas fa-info-circle me-2"></i>Informations générales</h5>
+                                                
+                                                <div class="form-floating mb-4">
+                                                    {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Titre du service'}}) }}
+                                                    {{ form_label(form.titre) }}
+                                                    {{ form_errors(form.titre, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                </div>
+                                                
+                                                <div class="form-group mb-4">
+                                                    {{ form_label(form.sponsor, null, {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.sponsor, {'attr': {'class': 'form-select select2'}}) }}
+                                                    {{ form_errors(form.sponsor, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                    <div class="form-text text-muted">{{ form_help(form.sponsor) }}</div>
+                                                </div>
+                                                
+                                                <div class="form-group mb-4">
+                                                    {{ form_label(form.typeService, null, {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.typeService, {'attr': {'class': 'form-select select2'}}) }}
+                                                    {{ form_errors(form.typeService, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                    <div class="form-text text-muted">{{ form_help(form.typeService) }}</div>
+                                                </div>
+                                                
+                                                <div class="form-group mb-4">
+                                                    {{ form_label(form.location, null, {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.location, {'attr': {'class': 'form-select select2'}}) }}
+                                                    {{ form_errors(form.location, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                    <div class="form-text text-muted">{{ form_help(form.location) }}</div>
+                                                </div>
                                             </div>
                                         </div>
+                                        
+                                        <div class="col-md-6">
+                                            <div class="form-card p-4 rounded">
+                                                <h5 class="form-section-title mb-4"><i class="fas fa-file-alt me-2"></i>Détails et média</h5>
+                                                
+                                                <div class="form-floating mb-4">
+                                                    {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': 'Prix'}}) }}
+                                                    {{ form_label(form.prix) }}
+                                                    {{ form_errors(form.prix, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                    <div class="form-text text-muted">{{ form_help(form.prix) }}</div>
+                                                </div>
+                                                
+                                                <div class="form-group mb-4">
+                                                    {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                                                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5'}}) }}
+                                                    {{ form_errors(form.description, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                    <div class="form-text text-muted">{{ form_help(form.description) }}</div>
+                                                </div>
+                                                
+                                                <div class="form-group mb-4">
+                                                    <label class="form-label">{{ form_label(form.image) }} <i class="fas fa-image ms-1 text-muted"></i></label>
+                                                    
+                                                    <div class="custom-file-upload">
+                                                        {{ form_widget(form.image, {'attr': {'class': 'form-control file-input', 'onchange': 'previewImage(this)'}}) }}
+                                                        <div class="form-text text-muted">{{ form_help(form.image) }}</div>
+                                                        {{ form_errors(form.image, {'attr': {'class': 'text-danger mt-1'}}) }}
+                                                    </div>
+                                                    
+                                                    <div id="imagePreviewContainer" class="preview-container mt-3 rounded text-center" style="display: none;">
+                                                        <p class="text-muted mb-2"><i class="fas fa-eye me-2"></i>Aperçu de l'image</p>
+                                                        <img id="imagePreview" src="#" alt="Aperçu" class="img-thumbnail" style="max-height: 200px; max-width: 100%;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-actions d-flex justify-content-end gap-2 mt-4">
-                                <a href="{{ path('admin_services') }}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-arrow-left me-2"></i>Retour
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-plus-circle me-2"></i>Ajouter
-                                </button>
-                            </div>
-                            {{ form_end(form) }}
-
-                            <script>
-                                function previewImage(input) {
-                                    const preview = document.getElementById('imagePreview');
-                                    const previewContainer = document.getElementById('imagePreviewContainer');
                                     
-                                    if (input.files && input.files[0]) {
-                                        const reader = new FileReader();
-                                        
-                                        reader.onload = function(e) {
-                                            preview.src = e.target.result;
-                                            previewContainer.style.display = 'block';
+                                    <div class="form-actions d-flex justify-content-end gap-3 mt-4">
+                                        <a href="{{ path('admin_services') }}" class="btn btn-outline-secondary">
+                                            <i class="fas fa-arrow-left me-2"></i>Retour
+                                        </a>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-plus-circle me-2"></i>Ajouter
+                                        </button>
+                                    </div>
+                                    {{ form_end(form) }}
+
+                                    <script>
+                                        function previewImage(input) {
+                                            const preview = document.getElementById('imagePreview');
+                                            const previewContainer = document.getElementById('imagePreviewContainer');
+                                            
+                                            if (input.files && input.files[0]) {
+                                                const reader = new FileReader();
+                                                
+                                                reader.onload = function(e) {
+                                                    preview.src = e.target.result;
+                                                    previewContainer.style.display = 'block';
+                                                }
+                                                
+                                                reader.readAsDataURL(input.files[0]);
+                                            } else {
+                                                previewContainer.style.display = 'none';
+                                            }
+                                        }
+
+                                        // Initialisation des select2 pour un meilleur design des listes déroulantes
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            if (typeof $ !== 'undefined' && $.fn.select2) {
+                                                $('.select2').select2({
+                                                    theme: 'bootstrap-5',
+                                                    width: '100%'
+                                                });
+                                            }
+                                        });
+                                    </script>
+
+                                    <style>
+                                        .modern-form {
+                                            font-family: 'Poppins', sans-serif;
                                         }
                                         
-                                        reader.readAsDataURL(input.files[0]);
-                                    } else {
-                                        previewContainer.style.display = 'none';
-                                    }
-                                }
+                                        .form-card {
+                                            background-color: #fff;
+                                            border-radius: 16px;
+                                            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+                                            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                                            border: none;
+                                            overflow: hidden;
+                                        }
+                                        
+                                        .form-card:hover {
+                                            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1);
+                                            transform: translateY(-5px);
+                                        }
+                                        
+                                        .form-section-title {
+                                            color: #1e40af;
+                                            font-weight: 600;
+                                            border-bottom: 1px solid #e2e8f0;
+                                            padding-bottom: 15px;
+                                            position: relative;
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 10px;
+                                        }
 
-                                // Initialisation des select2 pour un meilleur design des listes déroulantes
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    if (typeof $ !== 'undefined' && $.fn.select2) {
-                                        $('.select2').select2({
-                                            theme: 'bootstrap-5',
-                                            width: '100%'
-                                        });
-                                    }
-                                });
-                            </script>
-
-                            <style>
-                                .modern-form {
-                                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-                                }
-                                
-                                .form-card {
-                                    background-color: #fff;
-                                    border: 1px solid rgba(0, 0, 0, 0.05);
-                                    transition: all 0.3s ease;
-                                }
-                                
-                                .form-card:hover {
-                                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-                                    transform: translateY(-2px);
-                                }
-                                
-                                .form-section-title {
-                                    color: #344767;
-                                    font-weight: 600;
-                                    border-bottom: 2px solid #f0f2f5;
-                                    padding-bottom: 10px;
-                                    position: relative;
-                                }
-                                
-                                .form-section-title:after {
-                                    content: '';
-                                    position: absolute;
-                                    bottom: -2px;
-                                    left: 0;
-                                    width: 50px;
-                                    height: 2px;
-                                    background: linear-gradient(to right, #ff6200, #ff8c00);
-                                }
-                                
-                                .form-control, .form-select {
-                                    border-radius: 0.5rem;
-                                    border: 1px solid #dee2e6;
-                                    padding: 0.625rem 1rem;
-                                    font-size: 0.875rem;
-                                    transition: all 0.2s ease;
-                                }
-                                
-                                .form-control:focus, .form-select:focus {
-                                    border-color: #ff6200;
-                                    box-shadow: 0 0 0 0.2rem rgba(255, 98, 0, 0.1);
-                                }
-                                
-                                .custom-file-upload {
-                                    position: relative;
-                                    overflow: hidden;
-                                    margin-top: 10px;
-                                }
-                                
-                                .preview-container {
-                                    border: 1px dashed #ccc;
-                                    background-color: #f9f9f9;
-                                    transition: all 0.3s ease;
-                                }
-                                
-                                .btn-primary {
-                                    background: linear-gradient(to right, #ff6200, #ff8c00);
-                                    border: none;
-                                    box-shadow: 0 2px 12px rgba(255, 98, 0, 0.3);
-                                    transition: all 0.3s ease;
-                                }
-                                
-                                .btn-primary:hover {
-                                    background: linear-gradient(to right, #ff5500, #ff7b00);
-                                    transform: translateY(-2px);
-                                    box-shadow: 0 4px 15px rgba(255, 98, 0, 0.4);
-                                }
-                                
-                                .btn-outline-secondary {
-                                    border-color: #d4d9e2;
-                                    color: #495057;
-                                    transition: all 0.3s ease;
-                                }
-                                
-                                .btn-outline-secondary:hover {
-                                    background-color: #f8f9fa;
-                                    transform: translateY(-2px);
-                                }
-                                
-                                .form-text {
-                                    font-size: 0.75rem;
-                                }
-                                
-                                .form-floating > .form-control:focus ~ label,
-                                .form-floating > .form-control:not(:placeholder-shown) ~ label {
-                                    color: #ff6200;
-                                }
-                                
-                                /* Ajout d'animations pour un formulaire plus dynamique */
-                                @keyframes fadeIn {
-                                    from { opacity: 0; transform: translateY(10px); }
-                                    to { opacity: 1; transform: translateY(0); }
-                                }
-                                
-                                .form-card {
-                                    animation: fadeIn 0.5s ease forwards;
-                                }
-                                
-                                .col-md-6:nth-child(2) .form-card {
-                                    animation-delay: 0.2s;
-                                }
-                            </style>
+                                        .form-section-title::before {
+                                            content: '';
+                                            position: absolute;
+                                            bottom: -1px;
+                                            left: 0;
+                                            width: 50px;
+                                            height: 3px;
+                                            background: linear-gradient(45deg, #3b82f6, #2563eb);
+                                            border-radius: 10px;
+                                        }
+                                        
+                                        .form-control, .form-select {
+                                            border-radius: 10px;
+                                            border: 1px solid #e2e8f0;
+                                            padding: 12px 16px;
+                                            font-size: 0.95rem;
+                                            transition: all 0.3s ease;
+                                            color: #334155;
+                                            background-color: #f8fafc;
+                                        }
+                                        
+                                        .form-control:focus, .form-select:focus {
+                                            border-color: #3b82f6;
+                                            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+                                            background-color: #ffffff;
+                                        }
+                                        
+                                        .form-label {
+                                            font-weight: 500;
+                                            color: #475569;
+                                            margin-bottom: 8px;
+                                            font-size: 0.95rem;
+                                        }
+                                        
+                                        .custom-file-upload {
+                                            position: relative;
+                                            overflow: hidden;
+                                            margin-top: 10px;
+                                        }
+                                        
+                                        .file-input {
+                                            padding: 15px;
+                                            border-radius: 10px;
+                                            background: #f8fafc;
+                                            border: 1px solid #e2e8f0;
+                                            color: #64748b;
+                                            transition: all 0.3s ease;
+                                        }
+                                        
+                                        .file-input:hover {
+                                            background: #f1f5f9;
+                                        }
+                                        
+                                        .preview-container {
+                                            border: 1px dashed #cbd5e1;
+                                            background-color: #f1f5f9;
+                                            border-radius: 10px;
+                                            transition: all 0.3s ease;
+                                            padding: 15px !important;
+                                        }
+                                        
+                                        .preview-container:hover {
+                                            background-color: #e2e8f0;
+                                        }
+                                        
+                                        .btn-primary {
+                                            background: linear-gradient(45deg, #3b82f6, #2563eb);
+                                            border: none;
+                                            border-radius: 10px;
+                                            padding: 12px 24px;
+                                            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+                                            transition: all 0.3s ease;
+                                            font-weight: 500;
+                                        }
+                                        
+                                        .btn-primary:hover {
+                                            background: linear-gradient(45deg, #2563eb, #1d4ed8);
+                                            transform: translateY(-3px);
+                                            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+                                        }
+                                        
+                                        .btn-outline-secondary {
+                                            border: 2px solid #cbd5e1;
+                                            color: #475569;
+                                            background: transparent;
+                                            border-radius: 10px;
+                                            padding: 12px 24px;
+                                            transition: all 0.3s ease;
+                                            font-weight: 500;
+                                        }
+                                        
+                                        .btn-outline-secondary:hover {
+                                            background-color: #f8fafc;
+                                            color: #334155;
+                                            border-color: #94a3b8;
+                                            transform: translateY(-3px);
+                                            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+                                        }
+                                        
+                                        .form-floating > label {
+                                            padding: 12px 16px;
+                                            color: #64748b;
+                                        }
+                                        
+                                        .form-floating > .form-control:focus ~ label,
+                                        .form-floating > .form-control:not(:placeholder-shown) ~ label {
+                                            color: #3b82f6;
+                                            transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+                                        }
+                                        
+                                        .form-text {
+                                            color: #64748b;
+                                            font-size: 0.8rem;
+                                            margin-top: 5px;
+                                        }
+                                        
+                                        /* Animation et effets visuels */
+                                        @keyframes fadeIn {
+                                            from { opacity: 0; transform: translateY(15px); }
+                                            to { opacity: 1; transform: translateY(0); }
+                                        }
+                                        
+                                        .form-card {
+                                            animation: fadeIn 0.6s ease forwards;
+                                        }
+                                        
+                                        .col-md-6:nth-child(2) .form-card {
+                                            animation-delay: 0.2s;
+                                        }
+                                        
+                                        /* Style supplémentaire pour les messages d'erreur et les alertes */
+                                        .text-danger {
+                                            color: #ef4444 !important;
+                                            font-size: 0.85rem;
+                                        }
+                                        
+                                        .alert {
+                                            border-radius: 10px;
+                                            padding: 15px 20px;
+                                            border: none;
+                                            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+                                            margin-bottom: 25px;
+                                        }
+                                        
+                                        .alert-success {
+                                            background-color: #ecfdf5;
+                                            color: #047857;
+                                        }
+                                        
+                                        .alert-danger {
+                                            background-color: #fef2f2;
+                                            color: #b91c1c;
+                                        }
+                                        
+                                        .formbold-main-wrapper {
+                                            padding: 30px 0;
+                                        }
+                                        
+                                        /* Amélioration du select2 si utilisé */
+                                        .select2-container--bootstrap-5 .select2-selection {
+                                            border-radius: 10px;
+                                            border: 1px solid #e2e8f0;
+                                            height: auto;
+                                            min-height: 48px;
+                                            padding: 6px 12px;
+                                            background-color: #f8fafc;
+                                        }
+                                        
+                                        .select2-container--bootstrap-5.select2-container--focus .select2-selection,
+                                        .select2-container--bootstrap-5.select2-container--open .select2-selection {
+                                            border-color: #3b82f6;
+                                            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+                                            background-color: #ffffff;
+                                        }
+                                        
+                                        .select2-container--bootstrap-5 .select2-dropdown {
+                                            border-radius: 10px;
+                                            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                                            border: none;
+                                            overflow: hidden;
+                                        }
+                                        
+                                        .select2-container--bootstrap-5 .select2-results__option--highlighted {
+                                            background-color: #3b82f6;
+                                        }
+                                        
+                                        /* Header du formulaire */
+                                        .card-header {
+                                            background: linear-gradient(45deg, #3b82f6, #2563eb);
+                                            color: white;
+                                            padding: 20px;
+                                        }
+                                        .card-header h6 {
+                                            color: white;
+                                            font-weight: 600;
+                                            margin: 0;
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 10px;
+                                        }
+                                    </style>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
