@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+﻿{% extends 'base.html.twig' %}
 
 {% block title %}Admin Dashboard - Réclamations & Feedbacks{% endblock %}
 
@@ -2409,78 +2409,17 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('assets/js/core/popper.min.js') }}" defer></script>
-    <script src="{{ asset('assets/js/core/bootstrap.min.js') }}" defer></script>
-    <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}" defer></script>
-    <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}" defer></script>
-    <script src="{{ asset('assets/js/soft-ui-dashboard.min.js') }}" defer></script>
+    <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('assets/js/soft-ui-dashboard.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        // Initialize Flatpickr for date pickers
-        flatpickr('#startDate', {
-            dateFormat: 'Y-m-d',
-            onChange: updateChart
-        });
-        flatpickr('#endDate', {
-            dateFormat: 'Y-m-d',
-            onChange: updateChart
-        });
-
-        // Update chart based on date selection
-        function updateChart() {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-            if (startDate && endDate) {
-                window.location.href = `{{ path('admin_dashboard') }}?startDate=${startDate}&endDate=${endDate}`;
-            }
-        }
-
-        // Dropdown menu toggle
-        document.querySelectorAll('.dropdown-toggle').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('data-bs-target'));
-                if (target.classList.contains('show')) {
-                    target.classList.remove('show');
-                } else {
-                    document.querySelectorAll('.collapse.show').forEach(openMenu => {
-                        openMenu.classList.remove('show');
-                    });
-                    target.classList.add('show');
-                }
-            });
-        });
-
-        // Animation for KPI and chart cards
-        const kpiCards = document.querySelectorAll('.kpi-card');
-        const chartCards = document.querySelectorAll('.chart-card');
-
-        const animateElements = (elements) => {
-            elements.forEach((element, index) => {
-                setTimeout(() => {
-                    element.classList.add('animate');
-                }, index * 150);
-            });
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    if (entry.target.classList.contains('kpi-card')) {
-                        animateElements(kpiCards);
-                    } else if (entry.target.classList.contains('chart-card')) {
-                        animateElements(chartCards);
-                    }
-                }
-            });
-        }, { threshold: 0.2 });
-
-        kpiCards.forEach(card => observer.observe(card));
-        chartCards.forEach(card => observer.observe(card));
-
-        // Toggle sections functionality - CORRIGÉ
+        // Définir les fonctions de base first - très important
         function toggleSection(header) {
+            console.log("Toggle section called");
             const content = header.nextElementSibling;
             const icon = header.querySelector('.toggle-icon i');
             
@@ -2498,6 +2437,7 @@
         }
 
         function toggleAllSections() {
+            console.log("Toggle all sections called");
             const headers = document.querySelectorAll('.collapsible-header');
             const button = document.getElementById('toggleAllButton');
             let allExpanded = true;
@@ -2532,8 +2472,11 @@
             });
         }
 
-        // Initialize all sections as expanded by default
+        // Initialize Flatpickr for date pickers
         document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM loaded");
+            
+            // Initialize all sections as expanded by default
             const headers = document.querySelectorAll('.collapsible-header');
             headers.forEach(header => {
                 const content = header.nextElementSibling;
@@ -2542,6 +2485,67 @@
                 content.style.maxHeight = '3000px';
                 icon.classList.remove('fa-chevron-down');
                 icon.classList.add('fa-chevron-up');
+            });
+            
+            flatpickr('#startDate', {
+                dateFormat: 'Y-m-d',
+                onChange: updateChart
+            });
+            flatpickr('#endDate', {
+                dateFormat: 'Y-m-d',
+                onChange: updateChart
+            });
+            
+            // Animation for KPI and chart cards
+            const kpiCards = document.querySelectorAll('.kpi-card');
+            const chartCards = document.querySelectorAll('.chart-card');
+
+            const animateElements = (elements) => {
+                elements.forEach((element, index) => {
+                    setTimeout(() => {
+                        element.classList.add('animate');
+                    }, index * 150);
+                });
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('kpi-card')) {
+                            animateElements(kpiCards);
+                        } else if (entry.target.classList.contains('chart-card')) {
+                            animateElements(chartCards);
+                        }
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            kpiCards.forEach(card => observer.observe(card));
+            chartCards.forEach(card => observer.observe(card));
+        });
+        
+        // Update chart based on date selection
+        function updateChart() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            if (startDate && endDate) {
+                window.location.href = `{{ path('admin_dashboard') }}?startDate=${startDate}&endDate=${endDate}`;
+            }
+        }
+
+        // Dropdown menu toggle
+        document.querySelectorAll('.dropdown-toggle').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('data-bs-target'));
+                if (target.classList.contains('show')) {
+                    target.classList.remove('show');
+                } else {
+                    document.querySelectorAll('.collapse.show').forEach(openMenu => {
+                        openMenu.classList.remove('show');
+                    });
+                    target.classList.add('show');
+                }
             });
         });
 
@@ -2561,8 +2565,10 @@
         const packsByType = {{ packs_by_type|default([])|json_encode|raw }};
         const popularPacks = {{ popular_packs|default([])|json_encode|raw }};
         const avgServicesPerSponsor = {{ avg_services_per_sponsor|default(0)|json_encode|raw }};
-
-        // Debugging logs
+        const paymentsByType = {{ payments_by_type|default([])|json_encode|raw }};
+        const monthlyRevenue = {{ monthly_revenue|default([])|json_encode|raw }};
+        
+        // Console debug
         console.log('pourcentageTraitees:', pourcentageTraitees);
         console.log('pourcentageNonTraitees:', pourcentageNonTraitees);
         console.log('reclamationsParType:', reclamationsParType);
@@ -2578,6 +2584,8 @@
         console.log('packsByType:', packsByType);
         console.log('popularPacks:', popularPacks);
         console.log('avgServicesPerSponsor:', avgServicesPerSponsor);
+        console.log('paymentsByType:', paymentsByType);
+        console.log('monthlyRevenue:', monthlyRevenue);
 
         // Chart: Réclamations par Jour (Line Chart)
         const dateLabels = reclamationsByDate.map(item => item.date || 'Inconnu');
@@ -3366,7 +3374,6 @@
         }
 
         // Chart: Paiements par Type (Doughnut Chart)
-        const paymentsByType = {{ payments_by_type|default([])|json_encode|raw }};
         const paymentTypeLabels = paymentsByType.map(item => (item.type ? item.type.charAt(0).toUpperCase() + item.type.slice(1) : 'Inconnu'));
         const paymentTypeData = paymentsByType.map(item => parseFloat(item.total) || 0);
         const paymentTypeCount = paymentsByType.map(item => parseInt(item.count) || 0);
@@ -3863,12 +3870,12 @@
         // Initialisation des graphiques pour la section Paiements
         
         // Paiements par type (Doughnut chart)
-        const paymentTypeData = [
+        const alternativePaymentTypeData = [
             {% for type in payments_by_type %}
                 {{ type.total }},
             {% endfor %}
         ];
-        const paymentTypeLabels = [
+        const alternativePaymentTypeLabels = [
             {% for type in payments_by_type %}
                 '{{ type.type|capitalize }}',
             {% endfor %}
@@ -3878,9 +3885,9 @@
         new Chart(ctxPaymentType, {
             type: 'doughnut',
             data: {
-                labels: paymentTypeLabels.length > 0 ? paymentTypeLabels : ['Pack', 'Personnalisé'],
+                labels: alternativePaymentTypeLabels.length > 0 ? alternativePaymentTypeLabels : ['Pack', 'Personnalisé'],
                 datasets: [{
-                    data: paymentTypeData.length > 0 ? paymentTypeData : [70, 30],
+                    data: alternativePaymentTypeData.length > 0 ? alternativePaymentTypeData : [70, 30],
                     backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
                     borderColor: ['#FFF', '#FFF', '#FFF', '#FFF'],
                     borderWidth: 2
