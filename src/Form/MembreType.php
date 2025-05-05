@@ -97,22 +97,24 @@ class MembreType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('role', ChoiceType::class, [
-                'label' => 'Rôle',
-                'choices' => [
-                    'Membre' => 'MEMBRE',
-                    'Agent' => 'AGENT',
-                    'Admin' => 'ADMIN',
-                ],
-                'required' => true,
-                'attr' => [
-                    'class' => 'form-select',
-                ],
-            ])
-            ->add('isConfirmed', CheckboxType::class, [
-                'label' => 'Compte confirmé',
-                'required' => false,
-            ])
+          /*
+->add('role', ChoiceType::class, [
+    'label' => 'Rôle',
+    'choices' => [
+        'Membre' => 'MEMBRE',
+        'Agent' => 'AGENT',
+        'Admin' => 'ADMIN',
+    ],
+    'required' => true,
+    'attr' => [
+        'class' => 'form-select',
+    ],
+])
+->add('isConfirmed', CheckboxType::class, [
+    'label' => 'Compte confirmé',
+    'required' => false,
+])
+*/
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer',
                 'attr' => [

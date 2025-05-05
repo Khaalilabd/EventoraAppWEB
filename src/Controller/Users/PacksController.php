@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 #[Route('/user')]
 class PacksController extends AbstractController
@@ -91,25 +93,110 @@ class PacksController extends AbstractController
         ]);
     }
 
-    #[Route('/packs/{id}', name: 'user_pack_details', requirements: ['id' => '\d+'])]
-    public function details(int $id, PackRepository $packRepository, FavorisRepository $favorisRepository): Response
+    #[Route('/packs/{id}', name: 'user_pack_details', methods: ['GET'])]
+    public function details(int $id, PackRepository $packRepository, FavorisRepository $favorisRepository, HttpClientInterface $client, LoggerInterface $logger): Response
     {
         $pack = $packRepository->find($id);
-
         if (!$pack) {
             throw $this->createNotFoundException('Pack not found');
         }
 
-        // Check if the pack is favorited by the current user
         $isFavorited = false;
-        if ($this->getUser() instanceof Membre) {
-            $isFavorited = $favorisRepository->findOneByPackAndMembre($pack, $this->getUser()) !== null;
+        if ($this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            $favoris = $favorisRepository->findOneBy(['pack' => $pack, 'membre' => $this->getUser()]);
+            $isFavorited = $favoris !== null;
+        }
+
+        // Get exchange rates for EUR and USD
+        $cache = new FilesystemAdapter();
+        $exchangeRates = ['EUR' => null, 'USD' => null];
+
+        foreach (['EUR', 'USD'] as $currency) {
+            $cacheKey = "tnd_{$currency}_exchange_rate";
+            $cacheItem = $cache->getItem($cacheKey);
+
+            if ($cacheItem->isHit()) {
+                $exchangeRates[$currency] = $cacheItem->get();
+                $logger->debug("Exchange rate for {$currency} loaded from cache: " . $exchangeRates[$currency]);
+            } else {
+                try {
+                    $apiKey = $this->getParameter('currency_api_key');
+                    $logger->debug('Using API key for ' . $currency);
+                    $response = $client->request('GET', "https://api.currencyapi.com/v3/latest?apikey=$apiKey&base_currency=TND¤cies=$currency");
+                    $data = $response->toArray();
+                    $logger->debug("Currency API response for {$currency}: " . json_encode($data));
+                    if (isset($data['data'][$currency]['value'])) {
+                        $exchangeRates[$currency] = $data['data'][$currency]['value'];
+                        $cacheItem->set($exchangeRates[$currency]);
+                        $cacheItem->expiresAfter(3600); // Cache for 1 hour
+                        $cache->save($cacheItem);
+                        $logger->debug("Exchange rate for {$currency} saved to cache: " . $exchangeRates[$currency]);
+                    }
+                } catch (\Exception $e) {
+                    $logger->error("Failed to fetch exchange rate for {$currency}: " . $e->getMessage());
+                    $exchangeRates[$currency] = $currency === 'EUR' ? 0.298829 : 0.320513; // Fallback rates (TND to EUR/USD, Xe.com, May 4, 2025)
+                }
+            }
         }
 
         return $this->render('user/packs/pack_details.html.twig', [
             'pack' => $pack,
             'isFavorited' => $isFavorited,
+            'exchangeRates' => $exchangeRates,
         ]);
+    }
+
+    #[Route('/packs/{id}/convert', name: 'user_convert_currency', methods: ['POST'])]
+    public function convert(int $id, Request $request, PackRepository $packRepository, HttpClientInterface $client, LoggerInterface $logger): JsonResponse
+    {
+        $pack = $packRepository->find($id);
+        if (!$pack) {
+            return new JsonResponse(['error' => 'Pack not found'], 404);
+        }
+
+        $currency = $request->request->get('currency');
+        if (!in_array($currency, ['EUR', 'USD'])) {
+            return new JsonResponse(['error' => 'Invalid currency'], 400);
+        }
+
+        // Get exchange rate from cache or API
+        $cache = new FilesystemAdapter();
+        $cacheKey = "tnd_{$currency}_exchange_rate";
+        $cacheItem = $cache->getItem($cacheKey);
+        $exchangeRate = null;
+
+        if ($cacheItem->isHit()) {
+            $exchangeRate = $cacheItem->get();
+            $logger->debug("Exchange rate for {$currency} loaded from cache: " . $exchangeRate);
+        } else {
+            try {
+                $apiKey = $this->getParameter('currency_api_key');
+                $logger->debug('Using API key for ' . $currency);
+                $response = $client->request('GET', "https://api.currencyapi.com/v3/latest?apikey=$apiKey&base_currency=TND¤cies=$currency");
+                $data = $response->toArray();
+                $logger->debug("Currency API response for {$currency}: " . json_encode($data));
+                if (isset($data['data'][$currency]['value'])) {
+                    $exchangeRate = $data['data'][$currency]['value'];
+                    $cacheItem->set($exchangeRate);
+                    $cacheItem->expiresAfter(3600); // Cache for 1 hour
+                    $cache->save($cacheItem);
+                    $logger->debug("Exchange rate for {$currency} saved to cache: " . $exchangeRate);
+                }
+            } catch (\Exception $e) {
+                $logger->error("Failed to fetch exchange rate for {$currency}: " . $e->getMessage());
+                $exchangeRate = $currency === 'EUR' ? 0.298829 : 0.320513; // Fallback rates
+            }
+        }
+
+        if ($exchangeRate) {
+            $convertedPrice = $pack->getPrix() * $exchangeRate;
+            return new JsonResponse([
+                'convertedPrice' => number_format($convertedPrice, 2, '.', ''),
+                'currency' => $currency,
+            ]);
+        }
+
+        return new JsonResponse(['error' => 'Unable to fetch exchange rate'], 500);
     }
 
     #[Route('/packs/favorite/{id}', name: 'user_toggle_favorite', methods: ['POST'])]
@@ -173,4 +260,6 @@ class PacksController extends AbstractController
             'favorites' => $favorites,
         ]);
     }
+
+    
 }

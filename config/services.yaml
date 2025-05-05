@@ -11,6 +11,8 @@ parameters:
     stripe_key: '%env(STRIPE_KEY)%'
     stripe_secret: '%env(STRIPE_SECRET)%'
     brevo_transactional_api_key: '%env(BREVO_TRANSACTIONAL_API_KEY)%'
+    currency_api_key: '%env(CURRENCY_API_KEY)%'
+
     app.name: 'Eventora'
 
 services:

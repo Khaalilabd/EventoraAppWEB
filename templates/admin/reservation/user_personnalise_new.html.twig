@@ -1340,7 +1340,7 @@
                         // Toggle invalid class based on selection
                         $input = $(instance.input);
                         $input.toggleClass('is-invalid', selectedDates.length === 0)
-                        .next('.form-error').text(selectedDates.length === 0 ? 'The date is required.' : '');
+                              .next('.form-error').text(selectedDates.length === 0 ? 'The date is required.' : '');
                         
                         // Update calendar preview
                         updateCalendarPreview();
@@ -1584,7 +1584,7 @@
                     $clearServiceSearch.hide();
                     $('.form-check').show(); // Show all services
                 });
-                
+
                 // Service Details Modal
                 const $serviceDetailsModal = $('#service-details-modal');
                 const $serviceDetailsContent = $('#service-details-content');

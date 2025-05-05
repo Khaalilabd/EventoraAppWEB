@@ -1114,7 +1114,7 @@
                                 </a>
                                 <ul class="dropdown">
                                     {% if app.user %}
-                                        <li><a href="{{ path('app_settings') }}" class="active">Paramètres</a></li>
+                                        <li><a href="{{ path('app_settings') }}" class="active">Settings</a></li>
                                         <li><a href="{{ path('app_home') }}">Notifications</a></li>
                                         <li><a href="{{ path('app_user_history') }}">Historique</a></li>
                                         {% if is_granted('ROLE_ADMIN') %}
@@ -1133,7 +1133,7 @@
                 </div>
             </nav>
 
-            <div class="settings-wrapper">
+            <div class="Settings-wrapper">
                 <div class="settings-container animate-box" data-animate-effect="fadeIn">
                     <h1><span>{{ 'your_profile'|trans }}</span>{{ 'settings'|trans }}</h1>
 

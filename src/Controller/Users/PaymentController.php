@@ -84,7 +84,7 @@ class PaymentController extends AbstractController
         
         // Vider le panier après un paiement réussi
         $session->set('cartItems', []);
-        
+
         // Mais garder les informations de réservation pour affichage
         if ($reservationData) {
             $this->addFlash('success', 'Paiement réussi pour la réservation du ' . $reservationData['date']);
