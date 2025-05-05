@@ -99,8 +99,8 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Reservationpersonnalise::class, mappedBy: 'membre')]
     private Collection $reservationpersonnalises;
 
-    #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => true])]
-    private bool $isTwoFactorEnabled = true;
+    #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => false])]
+    private bool $isTwoFactorEnabled = false;
 
     #[ORM\Column(type: 'string', length: 6, nullable: true)]
     private ?string $twoFactorCode = null;

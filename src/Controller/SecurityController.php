@@ -7,11 +7,11 @@ use App\Entity\Reclamation;
 use App\Form\RegistrationFormType;
 use App\Form\LoginFormType;
 use App\Repository\ReclamationRepository;
-use App\Repository\MembreRepository; // Correct
-use App\Repository\GServiceRepository; // Correct
-use App\Repository\PackRepository; // Correct
-use App\Repository\SponsorRepository; // Correct
-use App\Repository\TypepackRepository; // Correct
+use App\Repository\MembreRepository;
+use App\Repository\GServiceRepository;
+use App\Repository\PackRepository;
+use App\Repository\SponsorRepository;
+use App\Repository\TypepackRepository;
 use App\Repository\FeedbackRepository;
 use App\Repository\ReservationpackRepository;
 use App\Repository\ReservationpersonnaliseRepository;
@@ -140,6 +140,7 @@ class SecurityController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
+        HttpClientInterface $httpClient,
         TwoFactorAuthService $twoFactorAuthService
     ): Response {
         $user = new Membre();
@@ -147,8 +148,11 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Vérifier si l'email existe déjà
-            $existingUser = $entityManager->getRepository(Membre::class)->findOneBy(['email' => $user->getEmail()]);
+            // Récupérer l'email saisi
+            $email = $user->getEmail();
+
+            // Vérifier si l'email existe déjà dans la base de données
+            $existingUser = $entityManager->getRepository(Membre::class)->findOneBy(['email' => $email]);
             if ($existingUser) {
                 $this->addFlash('error', 'Cette adresse email est déjà utilisée. Veuillez utiliser une autre adresse email ou vous connecter.');
                 return $this->render('security/register.html.twig', [
@@ -156,7 +160,35 @@ class SecurityController extends AbstractController
                 ]);
             }
 
-            // encode the plain password
+            // Appeler l'API Ninja pour vérifier la validité de l'email
+            try {
+                $response = $httpClient->request('GET', 'https://api.api-ninjas.com/v1/validateemail', [
+                    'query' => ['email' => $email],
+                    'headers' => [
+                        'X-Api-Key' => 'jdhXyNvADDDqUg9coiHcfQ==DyCXNx8yocrDHQSA',
+                    ],
+                ]);
+
+                $emailData = $response->toArray();
+
+                // Vérifier si l'email est valide selon l'API
+                if (!$emailData['is_valid']) {
+                    $this->addFlash('error', 'L\'adresse email n\'est pas valide selon l\'API Ninja.');
+                    return $this->render('security/register.html.twig', [
+                        'registrationForm' => $form->createView(),
+                    ]);
+                }
+
+            } catch (\Exception $e) {
+                // En cas d'erreur avec l'API, log l'erreur et continue ou échoue selon ton choix
+                $this->logger->error('Erreur lors de la vérification de l\'email via API Ninja : ' . $e->getMessage());
+                $this->addFlash('error', 'Erreur lors de la vérification de l\'email. Veuillez réessayer.');
+                return $this->render('security/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
+            }
+
+            // Si tout est OK, encoder le mot de passe et persister l'utilisateur
             $user->setMotDePasse(
                 $userPasswordHasher->hashPassword(
                     $user,
