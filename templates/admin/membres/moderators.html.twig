@@ -24,13 +24,16 @@
         {% endfor %}
 
         <div class="row mb-4">
-            <div class="col-12">
-                <a href="{{ path('admin_membres_new') }}" class="btn btn-primary">Ajouter un Modérateur</a>
+            <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+                <div class="piechart-section glass-effect p-4" style="border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08);">
+                    <h6 class="text-dark font-weight-bold mb-3" style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-chart-pie" style="color: #4a90e2;"></i> Répartition Modérateurs
+                    </h6>
+                    <canvas id="moderatorPieChart" width="250" height="250"></canvas>
+                </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
+            <div class="col-12 col-lg-8">
+                <a href="{{ path('admin_membres_new') }}" class="btn btn-primary mb-3">Ajouter un Modérateur</a>
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0">Modérateurs</h5>
@@ -85,4 +88,60 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('moderatorPieChart');
+            if (canvas) {
+                const ctxMod = canvas.getContext('2d');
+                new Chart(ctxMod, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Hommes', 'Femmes'],
+                        datasets: [{
+                            data: [
+                                {{ moderator_stats.Homme|default(0) }},
+                                {{ moderator_stats.Femme|default(0) }}
+                            ],
+                            backgroundColor: [
+                                '#4a90e2', // bleu
+                                '#e83e8c'  // rose
+                            ],
+                            borderWidth: 2,
+                            borderColor: 'rgba(255,255,255,0.8)',
+                            hoverOffset: 12,
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom',
+                                labels: {
+                                    color: '#2c3e50',
+                                    font: { size: 15, weight: 'bold' },
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(50,50,50,0.9)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: '#4a90e2',
+                                borderWidth: 1
+                            }
+                        },
+                        layout: {
+                            padding: 10
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 {% endblock %}
