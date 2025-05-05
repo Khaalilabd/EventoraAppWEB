@@ -22,7 +22,7 @@ class ServicesController extends AbstractController
     
         // Récupérer les paramètres de la requête pour la pagination, le tri et le filtrage
         $page = $request->query->getInt('page', 1);
-        $limit = 6; 
+        $limit = 4; 
         $searchTerm = $request->query->get('search', '');
         $sortBy = $request->query->get('sort_by', 'id'); // Par défaut, trier par ID
         $sortOrder = $request->query->get('sort_order', 'asc'); // Par défaut, ordre croissant
@@ -61,46 +61,102 @@ class ServicesController extends AbstractController
 
 
     #[Route('/{id}/edit', name: 'admin_service_edit', methods: ['GET', 'POST'])]
-public function edit(Request $request, GService $GService, EntityManagerInterface $entityManager): Response
-{
-    $this->denyAccessUnlessGranted('ROLE_ADMIN');
-    $form = $this->createForm(GServiceType::class, data: $GService);
-    $form->handleRequest($request);
+    public function edit(Request $request, GService $GService, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
+        // Stocker l'image actuelle avant de traiter le formulaire
+        $originalImage = $GService->getImage();
+        
+        $form = $this->createForm(GServiceType::class, data: $GService);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Gestion de l'upload d'image
+            $imageFile = $form->get('image')->getData();
+            
+            if ($imageFile) {
+                try {
+                    // Suppression de l'ancienne image si elle existe
+                    if ($originalImage) {
+                        $oldImagePath = $this->getParameter('kernel.project_dir') . '/public/' . $originalImage;
+                        if (file_exists($oldImagePath) && $originalImage !== 'service/default.jpg') {
+                            unlink($oldImagePath);
+                        }
+                    }
+                    
+                    // Génération d'un nom de fichier unique
+                    $newFilename = md5(uniqid()).'.'.$imageFile->guessExtension();
+                    
+                    // Déplacement du fichier dans le répertoire public/service
+                    $imageFile->move(
+                        $this->getParameter('services_images_directory'),
+                        $newFilename
+                    );
+                    
+                    // Enregistrer le chemin relatif dans l'entité
+                    $GService->setImage('service/' . $newFilename);
+                    
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'Une erreur s\'est produite lors de l\'upload de l\'image: ' . $e->getMessage());
+                    // En cas d'erreur, restaurer l'image originale
+                    $GService->setImage($originalImage);
+                }
+            } else {
+                // Si aucune nouvelle image n'est téléchargée, restaurer l'image originale
+                $GService->setImage($originalImage);
+            }
+            
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', 'Service mis à jour avec succès.');
+                
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erreur lors de la sauvegarde: ' . $e->getMessage());
+            }
+            
+            return $this->redirectToRoute('admin_services', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/service/edit.html.twig', [
+            'GService' => $GService,  // Passe GService à la vue
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    #[Route('/{id}/delete', name: 'admin_service_delete', methods: ['POST'])]
+    public function delete(Request $request, GService $gService, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        if ($this->isCsrfTokenValid('delete' . $gService->getId(), $request->request->get('_token'))) {
+            // Suppression de l'image associée si elle existe
+            $image = $gService->getImage();
+            if ($image) {
+                $imagePath = $this->getParameter('kernel.project_dir') . '/public/' . $image;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+            
+            $entityManager->remove($gService);
+            $entityManager->flush();
+            $this->addFlash('success', message: 'Service supprimée avec succès.');
+        }else {
+            $this->addFlash('error', 'Token CSRF invalide.');
+        }
+
+
         return $this->redirectToRoute('admin_services', [], Response::HTTP_SEE_OTHER);
     }
 
-    return $this->render('admin/service/edit.html.twig', [
-        'GService' => $GService,  // Passe GService à la vue
-        'form' => $form->createView(),
-    ]);
-}
 
-
-#[Route('/{id}/delete', name: 'admin_service_delete', methods: ['POST'])]
-public function delete(Request $request, GService $gService, EntityManagerInterface $entityManager): Response
-{
-    $this->denyAccessUnlessGranted('ROLE_ADMIN');
-    if ($this->isCsrfTokenValid('delete' . $gService->getId(), $request->request->get('_token'))) {
-        $entityManager->remove($gService);
-        $entityManager->flush();
-        $this->addFlash('success', message: 'Service supprimée avec succès.');
-    }else {
-        $this->addFlash('error', 'Token CSRF invalide.');
-    }
-
-
-    return $this->redirectToRoute('admin_services', [], Response::HTTP_SEE_OTHER);
-}
-
-
-#[Route("/admin/service", name:"admin_service_create", methods:['GET' , 'POST'])]
+    #[Route("/admin/service", name:"admin_service_create", methods:['GET' , 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         // Créer un nouveau service
         $GService = new GService();
+        $defaultImage = 'service/default.jpg';
 
         // Créer et gérer le formulaire
         $form = $this->createForm(GServiceType::class, $GService);
@@ -108,6 +164,32 @@ public function delete(Request $request, GService $gService, EntityManagerInterf
 
         // Si le formulaire est soumis et valide, on persiste l'entité
         if ($form->isSubmitted() && $form->isValid()) {
+            // Gestion de l'upload d'image
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                try {
+                    // Génération d'un nom de fichier unique
+                    $newFilename = md5(uniqid()).'.'.$imageFile->guessExtension();
+                    
+                    // Déplacement du fichier dans le répertoire public/service
+                    $imageFile->move(
+                        $this->getParameter('services_images_directory'),
+                        $newFilename
+                    );
+                    
+                    // Enregistrer le chemin relatif dans l'entité
+                    $GService->setImage('service/' . $newFilename);
+                    
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'Une erreur s\'est produite lors de l\'upload de l\'image: ' . $e->getMessage());
+                    // En cas d'erreur, utiliser l'image par défaut
+                    $GService->setImage($defaultImage);
+                }
+            } else {
+                // Si aucune image n'est fournie, utiliser l'image par défaut
+                $GService->setImage($defaultImage);
+            }
+
             $entityManager->persist($GService);
             $entityManager->flush();
 
@@ -125,13 +207,11 @@ public function delete(Request $request, GService $gService, EntityManagerInterf
     }
 
 
-    #[Route('/{id}', name: 'admin_service_show', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'admin_service_show', methods: ['GET'])]
     public function show(GService $GService): Response
     {
         return $this->render('admin/service/show.html.twig', [
             'GService' => $GService,
         ]);
-    } 
-
-
+    }
 }

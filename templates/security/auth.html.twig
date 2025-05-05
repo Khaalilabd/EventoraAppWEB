@@ -13,9 +13,9 @@
             {{ form_start(login_form) }}
                 <h1>Sign in</h1>
                 <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="{{ path('connect_google') }}" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="{{ path('connect_google') }}" class="social">
+                        <img src="{{ asset('images/google-icon.png') }}" alt="Google Login" class="social-icon">
+                    </a>
                 </div>
                 <span>or use your account</span>
                 <div class="flash-messages">
@@ -52,9 +52,7 @@
                 <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
                 <a href="{{ path('app_reset_password_request') }}" class="forgot-password">Forgot your password?</a>
                 <button type="submit" class="submit-btn">Sign In</button>
-                <a href="{{ path('app_register') }}" class="register-link" id="go-to-register">
-                    Créer un compte complet <i class="fas fa-arrow-right"></i>
-                </a>
+               
             {{ form_end(login_form) }}
         </div>
 
@@ -177,9 +175,16 @@
             justify-content: center;
             align-items: center;
             margin: 0 5px;
-            height: 40px;
-            width: 40px;
+            height: 35px; /* Taille réduite pour un petit cercle */
+            width: 35px;
             transition: all 0.3s;
+        }
+        
+        .social-icon {
+            width: 20px; /* Taille de l'image ajustée pour le petit cercle */
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
         }
         
         .social-container a:hover {
@@ -485,11 +490,6 @@
             
             .social-container {
                 margin: 10px 0;
-            }
-            
-            .social-container a {
-                height: 35px;
-                width: 35px;
             }
             
             .welcome-image {

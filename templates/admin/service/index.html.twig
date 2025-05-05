@@ -5,16 +5,17 @@
 {% block stylesheets %}
     {{ parent() }}
     <!-- Inclusion explicite de Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Importation des polices */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        /* Importation de la police Roboto */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
         /* Général */
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            overflow-x: hidden;
         }
 
         /* Conteneur principal */
@@ -24,383 +25,332 @@
             transition: margin-left 0.3s ease;
         }
 
-        /* Nouvelle carte de service */
-        .service-card {
+        /* Fiche spécialisée (mini cadre) */
+        .service-fiche {
             background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            border: none;
-            overflow: hidden;
-            height: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 12px;
+            height: 220px; /* Hauteur fixe pour uniformité */
             display: flex;
             flex-direction: column;
-        }
-        
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        
-        .service-card .card-header {
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
-            color: white;
-            border: none;
-            padding: 16px 20px;
-            border-radius: 12px 12px 0 0;
             position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
         }
-        
-        .service-card .card-header h5 {
+        .service-fiche:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+        .service-fiche .fiche-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-shrink: 0;
+        }
+        .service-fiche .fiche-header h6 {
             margin: 0;
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1f2937;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            padding-right: 40px;
-        }
-        
-        .service-card .card-body {
-            padding: 16px 20px;
             flex-grow: 1;
         }
-        
-        .service-card .badge {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            padding: 5px 10px;
-            border-radius: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        .service-fiche .badge {
+            color: #ffffff;
+            font-size: 0.65rem;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-left: 6px;
+            flex-shrink: 0;
         }
-        
         /* Couleurs spécifiques pour chaque type de partenaire */
         .badge-traiteur { background: #f97316; }
         .badge-photographe { background: #22c55e; }
         .badge-decoration { background: #ec4899; }
-        .badge-sono { background: #3b82f1; }
-        .badge-autres { background: #6366f1; }
-        
-        .service-info {
-            margin-bottom: 12px;
-        }
-        
-        .service-info .info-label {
+        .badge-sono { background: #3b82f6; }
+        .badge-autres { background: #6b7280; }
+        .service-fiche .fiche-body {
             font-size: 0.8rem;
-            color: #64748b;
-            margin-bottom: 2px;
-            font-weight: 500;
+            color: #6b7280;
+            flex-grow: 1;
+            overflow: hidden;
         }
-        
-        .service-info .info-value {
-            font-size: 0.9rem;
-            color: #334155;
-            font-weight: 400;
+        .service-fiche .fiche-body p {
+            margin: 0 0 3px;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        
-        .service-card .card-footer {
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
-            padding: 12px 20px;
+        .description-truncated {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+        .service-fiche .actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
             display: flex;
-            justify-content: flex-end;
-            gap: 8px;
+            flex-direction: column;
+            gap: 3px;
+            z-index: 10;
         }
-        
-        .service-card .action-btn {
-            width: 36px;
-            height: 36px;
+        .service-fiche .actions a {
+            color: #ffffff;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            color: white;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border: none;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            transition: transform 0.2s ease;
+            text-decoration: none;
         }
-        
-        .btn-view {
-            background: #06b6d4;
+        .service-fiche .actions a:hover {
+            transform: scale(1.1);
         }
-        
-        .btn-view:hover {
-            background: #0891b2;
-            transform: scale(1.05);
-        }
-        
-        .btn-edit {
-            background: #4f46e5;
-        }
-        
-        .btn-edit:hover {
-            background: #4338ca;
-            transform: scale(1.05);
-        }
-        
-        .btn-delete {
-            background: #ef4444;
-        }
-        
-        .btn-delete:hover {
-            background: #dc2626;
-            transform: scale(1.05);
-        }
+        .action-info { background: #06b6d4; }
+        .action-edit { background: #4f46e5; }
+        .action-delete { background: #ef4444; }
 
         /* Barre de recherche et actions */
-        .filter-header {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            margin-bottom: 24px;
+        .table-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .search-container {
-            flex-grow: 1;
-            max-width: 450px;
-        }
-        
-        .search-container .input-group {
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-        
-        .search-container .form-control {
-            border: 1px solid #e2e8f0;
-            padding: 12px 15px;
-            font-size: 0.9rem;
-            border-radius: 8px 0 0 8px;
-        }
-        
-        .search-container .input-group-text {
-            background: #4f46e5;
-            border: none;
-            color: white;
-            padding: 0 15px;
-        }
-        
-        .action-btns {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .primary-btn, .secondary-btn {
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .primary-btn {
-            background: #4f46e5;
-            color: white;
-            border: none;
-        }
-        
-        .primary-btn:hover {
-            background: #4338ca;
-            transform: translateY(-2px);
-        }
-
-        .secondary-btn {
-            background: #16a34a;
-            color: white;
-            border: none;
-        }
-        
-        .secondary-btn:hover {
-            background: #15803d;
-            transform: translateY(-2px);
-        }
-        
-        /* Filtres */
-        .filters-container {
-            background: white;
+            padding: 15px;
+            background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 24px;
-            overflow: hidden;
-        }
-        
-        .filters-header {
-            background: #f8fafc;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        .filters-header h6 {
-            margin: 0;
-            font-weight: 600;
-            color: #334155;
-            display: flex;
-            align-items: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
             gap: 10px;
         }
-        
-        .filters-content {
-            padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+        .search-bar .input-group {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            max-width: 350px;
+            background: #ffffff;
         }
-        
-        .filter-group {
-            flex: 1;
-            min-width: 250px;
-        }
-        
-        .filter-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #334155;
+        .search-bar .form-control {
+            border: none;
             font-size: 0.9rem;
-        }
-        
-        .filter-group .btn-group {
-            width: 100%;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .filter-group .btn {
-            flex: 1;
-            background: white;
-            color: #334155;
-            border: 1px solid #e2e8f0;
             padding: 10px;
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
         }
-        
-        .filter-group .btn.active {
-            background: #4f46e5;
-            color: white;
-            border-color: #4f46e5;
+        .search-bar .input-group-text {
+            background: transparent;
+            border: none;
+            color: #6b7280;
         }
-
-        /* Pagination */
-        .pagination-container {
-            margin-top: 30px;
+        .action-buttons {
             display: flex;
-            justify-content: center;
+            gap: 10px;
         }
-        
-        .pagination {
+        .add-btn, .export-btn {
+            padding: 10px 20px;
             border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            font-size: 0.9rem;
+            color: #ffffff;
+            transition: background-color 0.2s ease, transform 0.2s ease;
         }
-        
-        .page-item .page-link {
-            min-width: 40px;
+        .add-btn { background: #4f46e5; }
+        .add-btn:hover { background: #4338ca; transform: translateY(-2px); }
+        .export-btn { background: #16a34a; }
+        .export-btn:hover { background: #15803d; transform: translateY(-2px); }
+
+        /* Barre latérale de tri */
+        .filter-sidebar {
+            position: fixed;
+            top: 80px;
+            right: 0;
+            width: 300px;
+            height: calc(100vh - 80px);
+            background-color: #f8f9fa;
+            border-radius: 12px 0 0 12px;
+            box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .filter-sidebar.collapsed {
+            transform: translateX(100%);
+        }
+        .filter-toggle-btn {
+            background-color: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .filter-toggle-btn:hover { background-color: #4338ca; }
+        .filter-content { margin-top: 15px; }
+        .filter-toggle-icon {
+            position: fixed;
+            top: 100px;
+            right: 10px;
+            background-color: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
             height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #334155;
-            background: white;
-            border: 1px solid #e2e8f0;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+            z-index: 1001;
+            display: none;
         }
-        
-        .page-item.active .page-link {
-            background: #4f46e5;
-            color: white;
-            border-color: #4f46e5;
-            box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3);
+        .filter-toggle-icon:hover { background-color: #4338ca; }
+        .filter-toggle-icon.visible { display: flex; }
+        .btn-group .btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
-        
-        .page-item .page-link:hover:not(.page-item.active .page-link) {
-            background: #f8fafc;
-            color: #4f46e5;
+        .btn-group .btn i { font-size: 1rem; }
+        .btn-group .btn.active { background-color: #4f46e5; color: #fff; }
+        .btn-group .btn:hover { background-color: #e0f2fe; color: #1f2937; }
+
+        /* Contenu principal */
+        .service-content {
+            margin-right: 320px;
+            padding: 0 15px;
         }
 
-        /* Modal */
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 8px;
+        }
+        .pagination .page-item .page-link {
+            color: #4f46e5;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .pagination .page-item.active .page-link {
+            background: #4f46e5;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        .pagination .page-item .page-link:hover {
+            background: #e0f2fe;
+            color: #4338ca;
+            transform: translateY(-2px);
+        }
+        .pagination .page-item.disabled .page-link {
+            color: #d1d5db;
+            background: #f8f9fa;
+            box-shadow: none;
+        }
+
+        /* Modale */
         .modal-content {
             border-radius: 12px;
-            overflow: hidden;
-            border: none;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
-        
         .modal-header {
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
-            color: white;
-            padding: 20px;
-            border: none;
+            background: #1f2937;
+            color: #ffffff;
+            border-radius: 12px 12px 0 0;
+            padding: 15px 20px;
         }
-        
         .modal-body {
-            padding: 24px;
+            padding: 20px;
+            font-size: 0.9rem;
+            background: #ffffff;
         }
-        
+        .modal-body p {
+            margin: 8px 0;
+            color: #1f2937;
+        }
         .modal-footer {
-            padding: 16px 24px;
-            background: #f8fafc;
-            border-top: 1px solid #e2e8f0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 0 0 12px 12px;
         }
-        
-        .detail-item {
-            margin-bottom: 16px;
-        }
-        
-        .detail-item .detail-label {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 4px;
-        }
-        
-        .detail-item .detail-value {
-            font-size: 1rem;
-            color: #334155;
-            font-weight: 500;
+        .modal-footer .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
         }
 
         /* Responsive */
         @media (max-width: 992px) {
-            .service-container {
-                margin-left: 0;
+            .service-container { margin-left: 0; }
+            .service-content { margin-right: 0; }
+            .filter-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-radius: 12px;
+                margin-top: 20px;
             }
-            .filter-header {
-                flex-direction: column;
-                align-items: stretch;
+            .filter-sidebar.collapsed {
+                transform: translateX(0);
+                height: 50px;
+                overflow: hidden;
             }
-            .search-container {
+            .filter-sidebar.collapsed .filter-content { display: none; }
+            .filter-toggle-icon { display: none; }
+        }
+        @media (max-width: 768px) {
+            .service-fiche {
+                font-size: 0.75rem;
+                height: 200px;
+            }
+            .service-fiche .fiche-header h6 {
+                font-size: 0.85rem;
+            }
+            .service-fiche .fiche-body p {
+                font-size: 0.75rem;
+            }
+            .service-fiche .actions a {
+                width: 18px;
+                height: 18px;
+                font-size: 0.7rem;
+            }
+            .search-bar .input-group {
                 max-width: 100%;
             }
-        }
-        
-        @media (max-width: 768px) {
-            .filter-group {
-                min-width: 100%;
+            .table-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
             }
-            .action-btns {
-                width: 100%;
-                justify-content: stretch;
+            .action-buttons {
+                justify-content: center;
             }
-            .primary-btn, .secondary-btn {
-                flex: 1;
+            .pagination .page-link {
+                padding: 8px 12px;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -614,200 +564,189 @@
         </nav>
 
         <div class="container-fluid py-4">
-            <!-- Barre de recherche et boutons d'action -->
-            <div class="filter-header">
-                <div class="search-container">
+            <!-- En-tête avec recherche et actions -->
+            <div class="table-header">
+                <div class="search-bar">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Rechercher un service..." id="searchService">
-                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" placeholder="Rechercher par titre, partenaire..." id="searchService" aria-label="Rechercher des services">
                     </div>
                 </div>
-                <div class="action-btns">
-                    <a href="{{ path('admin_service_create') }}" class="primary-btn">
-                        <i class="fas fa-plus"></i>
-                        <span>Ajouter un service</span>
-                    </a>
-                    <a href="#" class="secondary-btn" onclick="exportToCSV()">
-                        <i class="fas fa-file-export"></i>
-                        <span>Exporter</span>
-                    </a>
+                <div class="action-buttons">
+                    <a href="{{ path('admin_service_create') }}" class="add-btn" aria-label="Ajouter un service"><i class="fas fa-plus me-1"></i> Ajouter</a>
+                    <a href="#" class="export-btn" onclick="exportToCSV()" aria-label="Exporter en CSV"><i class="fas fa-download me-1"></i> Exporter</a>
                 </div>
             </div>
 
-            <!-- Filtres -->
-            <div class="filters-container">
-                <div class="filters-header">
-                    <h6><i class="fas fa-filter"></i> Filtres et Tri</h6>
-                    <button class="btn btn-sm btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#filtersContent">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
-                <div class="collapse show" id="filtersContent">
-                    <div class="filters-content">
-                        <div class="filter-group">
-                            <label>Trier par Partenaire</label>
-                            <div class="btn-group">
-                                <a href="{{ path('admin_services', {'sort_by': 'sponsor.nom_partenaire', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up"></i> A-Z
-                                </a>
-                                <a href="{{ path('admin_services', {'sort_by': 'sponsor.nom_partenaire', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down"></i> Z-A
-                                </a>
-                            </div>
-                        </div>
-                        <div class="filter-group">
-                            <label>Trier par Prix</label>
-                            <div class="btn-group">
-                                <a href="{{ path('admin_services', {'sort_by': 'prix', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn {{ sort_by == 'prix' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up"></i> Croissant
-                                </a>
-                                <a href="{{ path('admin_services', {'sort_by': 'prix', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn {{ sort_by == 'prix' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down"></i> Décroissant
-                                </a>
-                            </div>
-                        </div>
-                        <div class="filter-group">
-                            <label>Trier par Titre</label>
-                            <div class="btn-group">
-                                <a href="{{ path('admin_services', {'sort_by': 'titre', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn {{ sort_by == 'titre' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up"></i> A-Z
-                                </a>
-                                <a href="{{ path('admin_services', {'sort_by': 'titre', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn {{ sort_by == 'titre' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down"></i> Z-A
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Liste des services -->
-            <div class="row g-4" id="serviceList">
-                {% if GServices|length > 0 %}
-                    {% for Gservice in GServices %}
-                        <div class="col-lg-4 col-md-6 service-item">
-                            <div class="service-card">
-                                <div class="card-header">
-                                    <h5>{{ Gservice.titre }}</h5>
-                                    <span class="badge badge-{{ Gservice.sponsor.type_partenaire|lower|replace({'é': 'e', ' ': '-'}) }}">{{ Gservice.sponsor.type_partenaire }}</span>
-                                </div>
-                                <div class="card-body">
-                                    <div class="service-info">
-                                        <div class="info-label">Partenaire</div>
-                                        <div class="info-value">{{ Gservice.sponsor.nom_partenaire }}</div>
+            <!-- Contenu principal : Les fiches de services -->
+            <div class="service-content">
+                <div class="row" id="serviceList">
+                    {% if GServices|length > 0 %}
+                        {% for Gservice in GServices %}
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                                <div class="service-fiche">
+                                    <div class="actions">
+                                        <a href="#" class="action-info" data-bs-toggle="modal" data-bs-target="#serviceModal-{{ Gservice.id }}" aria-label="Voir les détails du service"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="action-edit" aria-label="Modifier le service"><i class="fas fa-edit"></i></a>
+                                        <a href="#" class="action-delete" onclick="if(confirm('Voulez-vous vraiment supprimer ce service ?')) { document.getElementById('delete-form-{{ Gservice.id }}').submit(); } return false;" aria-label="Supprimer le service"><i class="fas fa-trash"></i><span class="sr-only">Supprimer</span></a>
+                                        <form id="delete-form-{{ Gservice.id }}" method="post" action="{{ path('admin_service_delete', {'id': Gservice.id}) }}" style="display: none;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Gservice.id) }}">
+                                        </form>
                                     </div>
-                                    <div class="service-info">
-                                        <div class="info-label">Type de service</div>
-                                        <div class="info-value">{{ Gservice.type_service }}</div>
+                                    <div class="fiche-header">
+                                        <h6>{{ Gservice.titre }}</h6>
+                                        <span class="badge badge-{{ Gservice.sponsor.type_partenaire|lower|replace({'é': 'e', ' ': '-'}) }}">{{ Gservice.sponsor.type_partenaire }}</span>
                                     </div>
-                                    <div class="service-info">
-                                        <div class="info-label">Prix</div>
-                                        <div class="info-value">{{ Gservice.prix }} €</div>
-                                    </div>
-                                    <div class="service-info">
-                                        <div class="info-label">Location</div>
-                                        <div class="info-value">{{ Gservice.Location }}</div>
+                                    <div class="fiche-body">
+                                        {% if Gservice.image %}
+                                        <div class="text-center mb-2">
+                                            <img src="{{ asset(Gservice.image) }}" alt="{{ Gservice.titre }}" class="img-fluid" style="max-height: 80px; max-width: 100%;">
+                                        </div>
+                                        {% endif %}
+                                        <p><strong>Partenaire :</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
+                                        <p><strong>Type :</strong> {{ Gservice.type_service }}</p>
+                                        <p><strong>Prix :</strong> {{ Gservice.prix }} €</p>
+                                        <p><strong>Location :</strong> {{ Gservice.Location }}</p>
+                                        <p><strong>Description :</strong> <span class="description-truncated">{{ Gservice.description }}</span></p>
                                     </div>
                                 </div>
-                                <div class="card-footer">
-                                    <button type="button" class="action-btn btn-view" data-bs-toggle="modal" data-bs-target="#serviceModal-{{ Gservice.id }}" title="Voir les détails">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="action-btn btn-edit" title="Modifier">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button type="button" class="action-btn btn-delete" onclick="if(confirm('Voulez-vous vraiment supprimer ce service ?')) { document.getElementById('delete-form-{{ Gservice.id }}').submit(); }" title="Supprimer">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                    <form id="delete-form-{{ Gservice.id }}" method="post" action="{{ path('admin_service_delete', {'id': Gservice.id}) }}" style="display: none;">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Gservice.id) }}">
-                                    </form>
-                                </div>
                             </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
+                        {% endfor %}
+                    {% else %}
                         <div class="col-12">
-                        <div class="alert alert-info text-center p-4 rounded-3">
-                            <i class="fas fa-info-circle fa-2x mb-3"></i>
-                            <p class="mb-0">Aucun service trouvé dans la base de données.</p>
+                            <div class="alert alert-info text-center" role="alert">
+                                Aucun service trouvé.
+                            </div>
                         </div>
+                    {% endif %}
                 </div>
+
+                <!-- Pagination -->
+                {% if total_pages > 1 %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ path('admin_services', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Précédent">
+                                    <span aria-hidden="true">«</span>
+                                </a>
+                            </li>
+                            {% for i in 1..total_pages %}
+                                <li class="page-item {{ current_page == i ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ path('admin_services', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ path('admin_services', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Suivant">
+                                    <span aria-hidden="true">»</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 {% endif %}
             </div>
 
-            <!-- Pagination -->
-            {% if total_pages > 1 %}
-                <div class="pagination-container">
-                    <ul class="pagination">
-                        <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
-                            <a class="page-link" href="{{ path('admin_services', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Précédent">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                        </li>
-                        {% for i in 1..total_pages %}
-                            <li class="page-item {{ current_page == i ? 'active' : '' }}">
-                                <a class="page-link" href="{{ path('admin_services', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}">{{ i }}</a>
-                            </li>
-                        {% endfor %}
-                        <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
-                            <a class="page-link" href="{{ path('admin_services', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Suivant">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-                    </ul>
+            <!-- Barre latérale de tri à droite -->
+            <div class="filter-sidebar" id="filterSidebar">
+                <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">Masquer</button>
+                <div class="filter-content">
+                    <h6><i class="fas fa-sort me-2"></i>Options de tri</h6>
+                    <form method="get" action="{{ path('admin_services') }}" class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">Trier par Partenaire</label>
+                            <div class="btn-group w-100">
+                                <a href="{{ path('admin_services', {'sort_by': 'sponsor.nom_partenaire', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par partenaire croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="{{ path('admin_services', {'sort_by': 'sponsor.nom_partenaire', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par partenaire décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Trier par Type de Service</label>
+                            <div class="btn-group w-100">
+                                <a href="{{ path('admin_services', {'sort_by': 'type_service', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'type_service' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par type de service croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="{{ path('admin_services', {'sort_by': 'type_service', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'type_service' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par type de service décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Trier par Titre</label>
+                            <div class="btn-group w-100">
+                                <a href="{{ path('admin_services', {'sort_by': 'titre', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'titre' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par titre croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="{{ path('admin_services', {'sort_by': 'titre', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'titre' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par titre décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Trier par Prix</label>
+                            <div class="btn-group w-100">
+                                <a href="{{ path('admin_services', {'sort_by': 'prix', 'sort_order': 'asc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'prix' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par prix croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="{{ path('admin_services', {'sort_by': 'prix', 'sort_order': 'desc', 'search': searchTerm, 'page': current_page}) }}"
+                                   class="btn btn-outline-primary {{ sort_by == 'prix' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par prix décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <a href="{{ path('admin_services') }}" class="btn btn-outline-secondary w-100" aria-label="Réinitialiser les tris"><i class="fas fa-undo me-1"></i> Réinitialiser</a>
+                        </div>
+                    </form>
                 </div>
-            {% endif %}
+            </div>
+
+            <!-- Bouton flottant pour réafficher le menu -->
+            <button class="filter-toggle-icon" id="filterToggleIcon" onclick="toggleFilterSidebar()">
+                <i class="fas fa-filter"></i>
+            </button>
         </div>
 
         <!-- Modales pour détails -->
         {% for Gservice in GServices %}
-            <div class="modal fade" id="serviceModal-{{ Gservice.id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+            <div class="modal fade" id="serviceModal-{{ Gservice.id }}" tabindex="-1" aria-labelledby="serviceModalLabel-{{ Gservice.id }}" aria-hidden="true">
+                <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">{{ Gservice.titre }}</h5>
+                            <h5 class="modal-title" id="serviceModalLabel-{{ Gservice.id }}">{{ Gservice.titre }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="detail-item">
-                                <div class="detail-label">ID</div>
-                                <div class="detail-value">{{ Gservice.id }}</div>
+                            {% if Gservice.image %}
+                            <div class="text-center mb-3">
+                                <img src="{{ asset(Gservice.image) }}" alt="{{ Gservice.titre }}" class="img-fluid" style="max-height: 200px;">
                             </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Partenaire</div>
-                                <div class="detail-value">{{ Gservice.sponsor.nom_partenaire }}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Type de Partenaire</div>
-                                <div class="detail-value">{{ Gservice.sponsor.type_partenaire }}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Titre</div>
-                                <div class="detail-value">{{ Gservice.titre }}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Description</div>
-                                <div class="detail-value">{{ Gservice.description }}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Location</div>
-                                <div class="detail-value">{{ Gservice.Location }}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Type de Service</div>
-                                <div class="detail-value">{{ Gservice.type_service }}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Prix</div>
-                                <div class="detail-value">{{ Gservice.prix }} €</div>
-                            </div>
+                            {% endif %}
+                            <p><strong>ID :</strong> {{ Gservice.id }}</p>
+                            <p><strong>Partenaire :</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
+                            <p><strong>Type de Partenaire :</strong> {{ Gservice.sponsor.type_partenaire }}</p>
+                            <p><strong>Titre :</strong> {{ Gservice.titre }}</p>
+                            <p><strong>Description :</strong> {{ Gservice.description }}</p>
+                            <p><strong>Location :</strong> {{ Gservice.Location }}</p>
+                            <p><strong>Type de Service :</strong> {{ Gservice.type_service }}</p>
+                            <p><strong>Prix :</strong> {{ Gservice.prix }} €</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -826,46 +765,46 @@
         // Recherche en temps réel
         document.getElementById('searchService').addEventListener('input', function(e) {
             const searchText = e.target.value.toLowerCase().trim();
-            const serviceItems = document.querySelectorAll('.service-item');
-            
-            serviceItems.forEach(item => {
-                const title = item.querySelector('.card-header h5').textContent.toLowerCase();
-                const partner = item.querySelector('.info-value').textContent.toLowerCase();
-                const serviceType = item.querySelectorAll('.info-value')[1].textContent.toLowerCase();
-                const location = item.querySelectorAll('.info-value')[3].textContent.toLowerCase();
-                
-                if (title.includes(searchText) || 
-                    partner.includes(searchText) || 
-                    serviceType.includes(searchText) || 
-                    location.includes(searchText)) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
+            const fiches = document.querySelectorAll('#serviceList .col-lg-3');
+            fiches.forEach(fiche => {
+                const titre = fiche.querySelector('.fiche-header h6').textContent.toLowerCase();
+                const partenaire = fiche.querySelector('.fiche-body p:nth-child(1)').textContent.toLowerCase();
+                const typeService = fiche.querySelector('.fiche-body p:nth-child(2)').textContent.toLowerCase();
+                const prix = fiche.querySelector('.fiche-body p:nth-child(3)').textContent.toLowerCase();
+                const location = fiche.querySelector('.fiche-body p:nth-child(4)').textContent.toLowerCase();
+                const description = fiche.querySelector('.fiche-body p:nth-child(5)').textContent.toLowerCase();
+                fiche.style.display = titre.includes(searchText) || partenaire.includes(searchText) || typeService.includes(searchText) || prix.includes(searchText) || location.includes(searchText) || description.includes(searchText) ? '' : 'none';
             });
         });
 
+        // Toggle pour la barre latérale de tri
+        function toggleFilterSidebar() {
+            const sidebar = document.getElementById('filterSidebar');
+            const btn = sidebar.querySelector('.filter-toggle-btn');
+            const icon = document.getElementById('filterToggleIcon');
+            sidebar.classList.toggle('collapsed');
+            btn.textContent = sidebar.classList.contains('collapsed') ? 'Afficher' : 'Masquer';
+            icon.classList.toggle('visible', sidebar.classList.contains('collapsed'));
+        }
+
         // Exportation en CSV
         function exportToCSV() {
-            const services = document.querySelectorAll('.service-item');
+            const fiches = document.querySelectorAll('#serviceList .col-lg-3');
             let csvContent = 'ID,Titre,Partenaire,Type de Service,Prix,Location,Description\n';
-            
-            services.forEach((service, index) => {
-                if (service.style.display !== 'none') {
-                    const title = service.querySelector('.card-header h5').textContent.replace(/,/g, ';');
-                    const partner = service.querySelector('.info-value').textContent.replace(/,/g, ';');
-                    const serviceType = service.querySelectorAll('.info-value')[1].textContent.replace(/,/g, ';');
-                    const price = service.querySelectorAll('.info-value')[2].textContent.replace(/,/g, ';');
-                    const location = service.querySelectorAll('.info-value')[3].textContent.replace(/,/g, ';');
-                    
-                    csvContent += `${index + 1},${title},${partner},${serviceType},${price},${location},""\n`;
-                }
+            fiches.forEach(fiche => {
+                const id = fiche.querySelector('.fiche-header h6').textContent.replace('Service #', '');
+                const titre = fiche.querySelector('.fiche-header h6').textContent.replace(/,/g, '');
+                const partenaire = fiche.querySelector('.fiche-body p:nth-child(1)').textContent.replace('Partenaire : ', '').replace(/,/g, '');
+                const typeService = fiche.querySelector('.fiche-body p:nth-child(2)').textContent.replace('Type : ', '').replace(/,/g, '');
+                const prix = fiche.querySelector('.fiche-body p:nth-child(3)').textContent.replace('Prix : ', '').replace(/,/g, '');
+                const location = fiche.querySelector('.fiche-body p:nth-child(4)').textContent.replace('Location : ', '').replace(/,/g, '');
+                const description = fiche.querySelector('.fiche-body p:nth-child(5)').textContent.replace('Description : ', '').replace(/,/g, '');
+                csvContent += `${id},${titre},${partenaire},${typeService},${prix},${location},${description}\n`;
             });
-            
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'services_export.csv';
+            link.download = 'services.csv';
             link.click();
         }
     </script>

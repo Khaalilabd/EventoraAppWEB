@@ -40,13 +40,6 @@
                     border-radius: 16px;
                     margin: 0 auto 32px;
                     max-width: 1200px;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
-                }
-
-                .services-intro:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
                 }
 
                 .intro-title {
@@ -55,18 +48,6 @@
                     color: #1a202c;
                     margin-bottom: 16px;
                     animation: fadeIn 1s ease-in-out;
-                    position: relative;
-                    display: inline-block;
-                }
-
-                .intro-title::after {
-                    content: '';
-                    display: block;
-                    width: 60px;
-                    height: 3px;
-                    background: #934D1A;
-                    margin: 10px auto 0;
-                    border-radius: 2px;
                 }
 
                 .intro-text {
@@ -92,9 +73,8 @@
                     perspective: 1400px;
                     border-radius: 20px;
                     overflow: hidden;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+                    transition: transform 0.4s ease, box-shadow 0.4s ease;
                 }
 
                 .card:hover {
@@ -125,14 +105,13 @@
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    background: linear-gradient(145deg, #ffffff, #f9f9f9);
+                    background: linear-gradient(145deg, #ffffff, #f7fafc);
                     border-radius: 20px;
                     padding: 28px;
                     display: flex;
                     flex-direction: column;
                     backface-visibility: hidden;
                     transform: rotateY(0deg);
-                    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7);
                 }
 
                 .front-content {
@@ -157,21 +136,15 @@
                     display: inline-flex;
                     align-items: center;
                     gap: 8px;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                }
-
-                .badge:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                    transition: transform 0.3s ease;
                 }
 
                 .badge.location {
-                    background: linear-gradient(135deg, #4a90e2, #357ABD);
+                    background-color: #4a90e2;
                 }
 
                 .badge.type-service {
-                    background: linear-gradient(135deg, #20c997, #0CA678);
+                    background-color: #20c997;
                 }
 
                 .title {
@@ -179,23 +152,13 @@
                     font-weight: 700;
                     color: #1a202c;
                     margin: 14px 0;
-                    transition: transform 0.3s ease;
-                }
-
-                .card:hover .title {
-                    transform: translateX(5px);
                 }
 
                 .card-footer {
                     font-size: 1.2rem;
-                    font-weight: 700;
-                    color: #934D1A;
+                    font-weight: 600;
+                    color: #2d3748;
                     margin-top: auto;
-                    transition: color 0.3s ease;
-                }
-
-                .card:hover .card-footer {
-                    color: #7A3E0F;
                 }
 
                 .img {
@@ -204,7 +167,6 @@
                     border-radius: 12px;
                     margin-bottom: 20px;
                     height: 200px;
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
                 }
 
                 .card:hover .service-img {
@@ -237,11 +199,10 @@
                     justify-content: center;
                     align-items: center;
                     z-index: 1000;
-                    background: rgba(0, 0, 0, 0.6);
+                    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
                     visibility: hidden;
                     opacity: 0;
-                    transition: opacity 0.4s ease, visibility 0.4s ease;
-                    backdrop-filter: blur(5px);
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
                 }
 
                 .details-container.active {
@@ -252,58 +213,42 @@
                 .details-content {
                     background: #ffffff;
                     border-radius: 16px;
-                    max-width: 800px;
+                    max-width: 800px; /* Increased width */
                     width: 90%;
                     padding: 32px;
-                    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-                    transform: scale(0.9) translateY(20px);
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                    transform: scale(0.8);
                     opacity: 0;
-                    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease;
+                    transition: transform 0.4s ease, opacity 0.4s ease;
                     position: relative;
-                    max-height: 85vh;
+                    max-height: 80vh;
                     overflow-y: auto;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
                 }
 
                 .details-container.active .details-content {
-                    transform: scale(1) translateY(0);
+                    transform: scale(1);
                     opacity: 1;
                 }
 
                 .details-content img {
                     width: 100%;
-                    height: 250px;
+                    height: 200px;
                     object-fit: cover;
                     border-radius: 12px;
-                    margin-bottom: 24px;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+                    margin-bottom: 20px;
                 }
 
                 .details-content h2 {
-                    font-size: 2.2rem;
+                    font-size: 2.2rem; /* Increased font size */
                     font-weight: 700;
                     color: #1a202c;
                     margin-bottom: 16px;
-                    position: relative;
-                    padding-bottom: 10px;
-                }
-
-                .details-content h2::after {
-                    content: '';
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    width: 60px;
-                    height: 3px;
-                    background: #934D1A;
-                    border-radius: 2px;
                 }
 
                 .details-content p {
-                    font-size: 1.2rem;
+                    font-size: 1.2rem; /* Increased font size */
                     color: #4a5568;
                     margin-bottom: 16px;
-                    line-height: 1.6;
                 }
 
                 .details-content .badges {
@@ -311,8 +256,8 @@
                 }
 
                 .details-content .badge {
-                    font-size: 1.1rem;
-                    padding: 10px 16px;
+                    font-size: 1.1rem; /* Increased font size */
+                    padding: 10px 16px; /* Slightly larger padding for readability */
                 }
 
                 .details-content .close-btn {
@@ -323,27 +268,22 @@
                     color: #fff;
                     border: none;
                     border-radius: 50%;
-                    width: 36px;
-                    height: 36px;
+                    width: 32px;
+                    height: 32px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     cursor: pointer;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);
-                    z-index: 10;
+                    transition: background 0.3s ease;
                 }
 
                 .details-content .close-btn:hover {
                     background: #e53e3e;
-                    transform: rotate(90deg);
-                    box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
                 }
 
                 /* Blur effect on main content */
                 #page.blur-active {
                     filter: blur(5px);
-                    transition: filter 0.5s ease;
                 }
 
                 /* Styles pour le bouton de panier flottant */
@@ -351,7 +291,7 @@
                     position: fixed;
                     bottom: 20px;
                     right: 20px;
-                    background: linear-gradient(135deg, #934D1A, #7A3E0F);
+                    background-color: #934D1A; /* Couleur cohérente avec le thème */
                     color: #ffffff;
                     width: 60px;
                     height: 60px;
@@ -359,57 +299,35 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    box-shadow: 0 4px 15px rgba(147, 77, 26, 0.3);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
                     cursor: pointer;
-                    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                    z-index: 1001;
-                    overflow: hidden;
-                }
-
-                .cart-button::after {
-                    content: '';
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
-                    opacity: 0;
-                    transition: opacity 0.3s ease;
+                    transition: transform 0.3s ease, background-color 0.3s ease;
+                    z-index: 1001; /* Au-dessus des autres éléments */
                 }
 
                 .cart-button:hover {
+                    background-color: #7a3e0f; /* Couleur légèrement plus foncée au survol */
                     transform: scale(1.1);
-                    box-shadow: 0 8px 20px rgba(147, 77, 26, 0.4);
-                }
-
-                .cart-button:hover::after {
-                    opacity: 1;
                 }
 
                 .cart-button i {
                     font-size: 24px;
-                    transition: transform 0.3s ease;
-                }
-
-                .cart-button:hover i {
-                    transform: scale(1.1);
                 }
 
                 .cart-count {
                     position: absolute;
                     top: -8px;
                     right: -8px;
-                    background: #ff6b6b;
+                    background-color: #ff6b6b; /* Couleur de badge cohérente avec le thème */
                     color: #ffffff;
                     font-size: 12px;
                     font-weight: 600;
-                    width: 22px;
-                    height: 22px;
+                    width: 20px;
+                    height: 20px;
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    box-shadow: 0 2px 5px rgba(255, 107, 107, 0.3);
-                    border: 2px solid white;
                 }
 
                 /* Assurer la responsivité pour le bouton de panier */
@@ -430,126 +348,144 @@
                     }
                 }
 
-                /* Navbar styles */
+                @media (max-width: 768px) {
+                    .card-container {
+                        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                        padding: 24px;
+                    }
+
+                    .card {
+                        height: 400px;
+                    }
+
+                    .title {
+                        font-size: 1.4rem;
+                    }
+
+                    .img {
+                        height: 180px;
+                    }
+
+                    .services-intro {
+                        padding: 32px 16px;
+                    }
+
+                    .intro-title {
+                        font-size: 2rem;
+                    }
+
+                    .intro-text {
+                        font-size: 1rem;
+                    }
+
+                    .details-content {
+                        max-width: 700px; /* Slightly smaller increase for medium screens */
+                        width: 95%;
+                        padding: 24px;
+                    }
+
+                    .details-content img {
+                        height: 150px;
+                    }
+
+                    .details-content h2 {
+                        font-size: 2rem; /* Adjusted for medium screens */
+                    }
+
+                    .details-content p {
+                        font-size: 1.1rem; /* Adjusted for medium screens */
+                    }
+
+                    .details-content .badge {
+                        font-size: 1rem; /* Adjusted for medium screens */
+                        padding: 8px 14px;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .card {
+                        height: 360px;
+                    }
+
+                    .badge {
+                        font-size: 0.8rem;
+                        padding: 6px 10px;
+                    }
+
+                    .img {
+                        height: 160px;
+                    }
+
+                    .details-content {
+                        max-width: 90%; /* Full width for small screens */
+                        padding: 16px;
+                    }
+
+                    .details-content img {
+                        height: 120px;
+                    }
+
+                    .details-content h2 {
+                        font-size: 1.8rem; /* Adjusted for small screens */
+                    }
+
+                    .details-content p {
+                        font-size: 1rem; /* Adjusted for small screens */
+                    }
+
+                    .details-content .badge {
+                        font-size: 0.9rem; /* Adjusted for small screens */
+                        padding: 6px 12px;
+                    }
+                }
+
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    padding-top: 70px; /* Ajusté pour une navbar plus compacte */
+                }
+
                 .fh5co-nav {
                     position: fixed;
                     top: 0;
                     width: 100%;
-                    background: #fff;
                     z-index: 1000;
+                    background: rgba(255, 255, 255, 0.9);
                     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
                 }
 
-                .fh5co-logo {
-                    float: left;
-                    padding: 15px 0;
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                    max-width: 1200px;
+                    margin: 0 auto;
                 }
 
                 .fh5co-logo a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
                     font-size: 24px;
-                    font-weight: bold;
                     color: #934D1A;
                     text-decoration: none;
-                }
-
-                .menu-toggle {
-                    display: none;
-                    float: right;
-                    padding: 15px;
-                    cursor: pointer;
-                }
-
-                .menu-toggle i {
-                    font-size: 24px;
-                    color: #1a202c;
-                }
-
-                .menu-1 ul {
-                    list-style: none;
-                    margin: 0;
-                    padding: 0;
-                    display: flex;
-                    float: right;
-                }
-
-                .menu-1 ul li {
-                    position: relative;
-                    padding: 15px;
-                }
-
-                .menu-1 ul li a {
-                    color: #1a202c;
-                    text-decoration: none;
-                    font-size: 16px;
-                    font-weight: 500;
-                    transition: color 0.3s ease;
-                }
-
-                .menu-1 ul li a:hover {
-                    color: #934D1A;
-                }
-
-                .menu-1 ul li.active > a {
-                    color: #934D1A;
-                    font-weight: bold;
-                }
-
-                .menu-1 ul li.has-dropdown > a::after {
-                    content: '\f078';
-                    font-family: 'Font Awesome 5 Free';
-                    font-weight: 900;
-                    margin-left: 5px;
-                    font-size: 12px;
-                }
-
-                .menu-1 ul li.has-dropdown .dropdown {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    left: 0;
-                    background: #fff;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                    min-width: 200px;
-                    z-index: 1000;
-                    border-radius: 4px;
-                    padding: 10px 0;
-                    opacity: 0;
-                    visibility: hidden;
-                    transform: translateY(10px);
-                    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-                }
-
-                .menu-1 ul li.has-dropdown:hover .dropdown,
-                .menu-1 ul li.has-dropdown.active .dropdown {
-                    display: block;
-                    opacity: 1;
-                    visibility: visible;
-                    transform: translateY(0);
-                }
-
-                .menu-1 ul li.has-dropdown .dropdown li {
-                    padding: 10px 20px;
-                }
-
-                .menu-1 ul li.has-dropdown .dropdown li a {
-                    color: #1a202c;
-                    font-size: 14px;
-                    display: block;
-                }
-
-                .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                    color: #934D1A;
                 }
 
                 .user-circle {
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 30px;
-                    height: 30px;
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
                     border-radius: 50%;
-                    background: #f8f9fa;
-                    margin-right: 10px;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 20px;
+                    vertical-align: middle;
+                    margin-right: 8px;
                 }
 
                 .user-circle img {
@@ -557,6 +493,119 @@
                     height: 100%;
                     object-fit: cover;
                     border-radius: 50%;
+                }
+
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
+
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                    transition: all 0.3s ease;
+                }
+
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 15px;
+                    position: relative;
+                }
+
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #934D1A;
+                }
+
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #934D1A !important;
+                    font-weight: 600;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 150px;
+                    z-index: 1001;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                    opacity: 0;
+                    visibility: hidden;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block;
+                    opacity: 1;
+                    visibility: visible;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #007bff;
+                }
+
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                    padding: 10px;
+                }
+
+                /* Styles pour le bouton Réserver */
+                .reserve-btn {
+                    background-color: #934D1A; /* Couleur cohérente avec le thème */
+                    color: #ffffff;
+                    padding: 12px 24px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease, transform 0.3s ease;
+                    margin-top: 16px;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                .reserve-btn:hover {
+                    background-color: #7a3e0f; /* Couleur plus foncée au survol */
+                    transform: scale(1.05);
+                }
+
+                .reserve-btn:focus {
+                    outline: 2px solid #934D1A;
+                    outline-offset: 2px;
                 }
 
                 /* Responsive adjustments for navbar */
@@ -586,18 +635,17 @@
                         transform: translateY(0);
                     }
 
-                    .menu-1 ul li {
+                    .fh5co-nav .menu-1 ul li {
                         margin: 10px 0;
                         text-align: center;
                     }
 
-                    .menu-1 ul li.has-dropdown > a::after {
-                        content: '\f078';
-                        float: right;
-                        margin-right: 20px;
+                    .user-circle {
+                        margin-right: 0;
+                        margin-bottom: 5px;
                     }
 
-                    .menu-1 ul li.has-dropdown .dropdown {
+                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
                         position: static;
                         display: none;
                         box-shadow: none;
@@ -605,445 +653,16 @@
                         padding: 10px 0;
                         opacity: 1;
                         visibility: visible;
-                        transform: none;
                         transition: none;
                     }
 
-                    .menu-1 ul li.has-dropdown.active .dropdown {
+                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                        display: none;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
                         display: block;
                     }
-
-                    .user-circle {
-                        margin-right: 0;
-                        margin-bottom: 5px;
-                    }
-                }
-
-                /* Styles pour le bouton Réserver */
-                .reserve-btn {
-                    background: linear-gradient(135deg, #934D1A, #7A3E0F);
-                    color: #ffffff;
-                    padding: 12px 24px;
-                    border: none;
-                    border-radius: 10px;
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    margin-top: 16px;
-                    width: 100%;
-                    text-align: center;
-                    box-shadow: 0 5px 15px rgba(147, 77, 26, 0.2);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 10px;
-                    position: relative;
-                    overflow: hidden;
-                }
-
-                .reserve-btn::before {
-                    content: '\f07a';
-                    font-family: 'Font Awesome 5 Free';
-                    font-weight: 900;
-                    margin-right: 10px;
-                    font-size: 1.1rem;
-                }
-
-                .reserve-btn::after {
-                    content: '';
-                    position: absolute;
-                    width: 30px;
-                    height: 100%;
-                    top: 0;
-                    left: -100px;
-                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-                    animation: shineEffect 3s infinite;
-                }
-
-                @keyframes shineEffect {
-                    0% { left: -100px; }
-                    20% { left: 100%; }
-                    100% { left: 100%; }
-                }
-
-                .reserve-btn:hover {
-                    background: linear-gradient(135deg, #7A3E0F, #934D1A);
-                    transform: translateY(-3px);
-                    box-shadow: 0 8px 20px rgba(147, 77, 26, 0.3);
-                }
-
-                .reserve-btn:focus {
-                    outline: none;
-                    box-shadow: 0 0 0 3px rgba(147, 77, 26, 0.3);
-                }
-
-                /* Animations */
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-
-                @keyframes float {
-                    0% { transform: translateY(0px); }
-                    50% { transform: translateY(-10px); }
-                    100% { transform: translateY(0px); }
-                }
-
-                /* Système de filtrage */
-                .filter-container {
-                    background: linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.95));
-                    border-radius: 16px;
-                    padding: 20px;
-                    margin: 0 auto 30px;
-                    max-width: 1200px;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-                    backdrop-filter: blur(10px);
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 15px;
-                    align-items: center;
-                    justify-content: space-between;
-                    transform: translateY(0);
-                    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                }
-
-                .filter-container:hover {
-                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-                }
-
-                .filter-section {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 10px;
-                    align-items: center;
-                }
-
-                .filter-title {
-                    font-size: 1rem;
-                    font-weight: 600;
-                    color: #1a202c;
-                    margin-right: 5px;
-                }
-
-                .filter-btn {
-                    padding: 8px 16px;
-                    border-radius: 25px;
-                    background: white;
-                    border: 1px solid #e2e8f0;
-                    color: #4a5568;
-                    font-size: 0.9rem;
-                    font-weight: 500;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
-
-                .filter-btn:hover {
-                    background: #f8f9fa;
-                    transform: translateY(-2px);
-                    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-                }
-
-                .filter-btn.active {
-                    background: #934D1A;
-                    color: white;
-                    border-color: #934D1A;
-                }
-
-                .search-box {
-                    position: relative;
-                    flex: 1;
-                    min-width: 200px;
-                    max-width: 300px;
-                }
-
-                .search-box input {
-                    width: 100%;
-                    padding: 10px 15px 10px 40px;
-                    border-radius: 25px;
-                    border: 1px solid #e2e8f0;
-                    font-size: 0.9rem;
-                    transition: all 0.3s ease;
-                }
-
-                .search-box input:focus {
-                    outline: none;
-                    border-color: #934D1A;
-                    box-shadow: 0 0 0 3px rgba(147, 77, 26, 0.2);
-                }
-
-                .search-box i {
-                    position: absolute;
-                    left: 15px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    color: #a0aec0;
-                }
-
-                /* Notifications élégantes */
-                .toast-container {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 9999;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                }
-
-                .toast {
-                    background: white;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-                    padding: 15px 20px;
-                    display: flex;
-                    align-items: center;
-                    gap: 15px;
-                    min-width: 300px;
-                    max-width: 400px;
-                    transform: translateX(120%);
-                    opacity: 0;
-                    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                }
-
-                .toast.active {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-
-                .toast-icon {
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    flex-shrink: 0;
-                }
-
-                .toast-success .toast-icon {
-                    background: #48bb78;
-                }
-
-                .toast-error .toast-icon {
-                    background: #f56565;
-                }
-
-                .toast-content {
-                    flex: 1;
-                }
-
-                .toast-title {
-                    font-weight: 600;
-                    color: #1a202c;
-                    font-size: 1rem;
-                    margin-bottom: 5px;
-                }
-
-                .toast-message {
-                    color: #4a5568;
-                    font-size: 0.9rem;
-                }
-
-                .toast-close {
-                    color: #a0aec0;
-                    cursor: pointer;
-                    transition: color 0.3s ease;
-                    background: none;
-                    border: none;
-                    font-size: 1.2rem;
-                    padding: 0;
-                    margin-left: 10px;
-                }
-
-                .toast-close:hover {
-                    color: #4a5568;
-                }
-
-                /* Style pour l'affichage du mode Wishlist */
-                .wishlist-badge {
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
-                    background: rgba(255, 255, 255, 0.8);
-                    border-radius: 50%;
-                    width: 36px;
-                    height: 36px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    z-index: 10;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                }
-
-                .wishlist-badge i {
-                    color: #a0aec0;
-                    font-size: 18px;
-                    transition: all 0.3s ease;
-                }
-
-                .wishlist-badge:hover {
-                    background: white;
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                }
-
-                .wishlist-badge:hover i {
-                    color: #f56565;
-                }
-
-                .wishlist-badge.active {
-                    background: white;
-                }
-
-                .wishlist-badge.active i {
-                    color: #f56565;
-                }
-
-                /* Améliorations des cartes de service */
-                .card {
-                    position: relative;
-                    width: 100%;
-                    height: 450px;
-                    perspective: 1400px;
-                    border-radius: 20px;
-                    overflow: hidden;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    background: #ffffff;
-                }
-
-                /* Indicateur de disponibilité */
-                .availability-badge {
-                    position: absolute;
-                    top: 15px;
-                    left: 15px;
-                    padding: 5px 10px;
-                    font-size: 0.8rem;
-                    font-weight: 600;
-                    color: white;
-                    border-radius: 20px;
-                    z-index: 5;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                }
-
-                .available {
-                    background: linear-gradient(135deg, #48bb78, #38a169);
-                }
-
-                .limited {
-                    background: linear-gradient(135deg, #ed8936, #dd6b20);
-                }
-
-                .sold-out {
-                    background: linear-gradient(135deg, #f56565, #e53e3e);
-                }
-
-                /* Styles pour les détails complémentaires */
-                .service-features {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 8px;
-                    margin-top: 15px;
-                }
-
-                .feature-tag {
-                    background: #f7fafc;
-                    border-radius: 15px;
-                    padding: 5px 10px;
-                    font-size: 0.8rem;
-                    color: #4a5568;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 5px;
-                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-                }
-
-                .feature-tag i {
-                    color: #934D1A;
-                    font-size: 0.9rem;
-                }
-
-                /* Styles pour les services complémentaires */
-                .related-services {
-                    margin-top: 20px;
-                }
-
-                .related-services-title {
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                    color: #1a202c;
-                    margin-bottom: 10px;
-                    position: relative;
-                    padding-left: 15px;
-                }
-
-                .related-services-title::before {
-                    content: '';
-                    position: absolute;
-                    left: 0;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    width: 5px;
-                    height: 20px;
-                    background: #934D1A;
-                    border-radius: 3px;
-                }
-
-                .related-services-list {
-                    display: flex;
-                    gap: 10px;
-                    overflow-x: auto;
-                    padding-bottom: 10px;
-                    scrollbar-width: thin;
-                    scrollbar-color: #a0aec0 #f7fafc;
-                }
-
-                .related-services-list::-webkit-scrollbar {
-                    height: 6px;
-                }
-
-                .related-services-list::-webkit-scrollbar-thumb {
-                    background: #a0aec0;
-                    border-radius: 10px;
-                }
-
-                .related-services-list::-webkit-scrollbar-track {
-                    background: #f7fafc;
-                    border-radius: 10px;
-                }
-
-                .related-service-item {
-                    background: #f9f9f9;
-                    border-radius: 10px;
-                    padding: 10px;
-                    min-width: 150px;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    border: 1px solid #edf2f7;
-                }
-
-                .related-service-item:hover {
-                    background: white;
-                    transform: translateY(-3px);
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-                }
-
-                .related-service-title {
-                    font-size: 0.9rem;
-                    font-weight: 600;
-                    color: #1a202c;
-                    margin-bottom: 5px;
-                }
-
-                .related-service-price {
-                    font-size: 0.8rem;
-                    color: #934D1A;
-                    font-weight: 600;
                 }
             </style>
         {% endblock %}
@@ -1057,215 +676,153 @@
     <body>
         <div class="fh5co-loader"></div>
         {% block body %}
-            <nav class="fh5co-nav" role="navigation">
-                <div class="container">
-                    <div class="fh5co-logo">
-                        <a href="{{ path('app_home') }}">Eventora</a>
-                    </div>
-                    <div class="menu-toggle" aria-label="Toggle menu" role="button" tabindex="0">
-                        <i class="icon-menu"></i>
-                    </div>
-                    <div class="menu-1">
-                        <ul>
-                            <li><a href="{{ path('app_home') }}">Home</a></li>
-                            <li class="has-dropdown">
-                                <a href="#" aria-haspopup="true" aria-expanded="false">Reservation</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
-                                </ul>
-                            </li>
-                            <li class="has-dropdown">
-                                <a href="#" aria-haspopup="true" aria-expanded="false">Packs</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
-                                    {% if not is_granted('ROLE_ADMIN') %}
-                                        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
-                            <li class="has-dropdown active">
-                                <a href="#" aria-haspopup="true" aria-expanded="false">Services</a>
-                                <ul class="dropdown">
-                                    <li class="active"><a href="{{ path('user_services') }}">Service</a></li>
-                                    <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
-                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
-                            <li class="has-dropdown">
-                                <a href="#" aria-haspopup="true" aria-expanded="false">
-                                    <span class="user-circle">
-                                        {% if app.user and app.user.image %}
-                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+          <nav class="fh5co-nav" role="navigation">
+                    <div class="container">
+                        <div class="fh5co-logo">
+                            <a href="{{ path('app_home') }}">Eventora</a>
+                        </div>
+                        <div class="menu-toggle">
+                            <i class="icon-menu"></i>
+                        </div>
+                        <div class="menu-1">
+                            <ul>
+                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">Reservation</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
+                                    </ul>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="{{ path('user_packs') }}">Packs</a>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="#">Services</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_services') }}">Service</a></li>
+                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">
+                                        <span class="user-circle">
+                                            {% if app.user and app.user.image %}
+                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <i class="icon-user"></i>
+                                            {% endif %}
+                                        </span>
+                                        Contact
+                                    </a>
+                                    <ul class="dropdown">
+                                        {% if app.user %}
+                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
+                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
                                         {% else %}
-                                            <i class="icon-user"></i>
+                                            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
                                         {% endif %}
-                                    </span>
-                                    Contact
-                                </a>
-                                <ul class="dropdown">
-                                    {% if app.user %}
-                                        <li><a href="{{ path('app_settings') }}">Settings</a></li>
-                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                        <li><a href="{{ path('app_user_history') }}">History</a></li>
-                                        {% if is_granted('ROLE_ADMIN') %}
-                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                        {% endif %}
-                                        <li><a href="{{ path('app_logout') }}">Log out</a></li>
-                                    {% else %}
-                                        <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
-                                        <li><a href="{{ path('app_auth') }}">Log in</a></li>
-                                        <li><a href="{{ path('app_auth') }}">Sign up</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
-                        </ul>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
+                </nav>
+        <div id="page">
+            <header id="fh5co-header" class="fh5co-cover" role="banner">
+                <div id="app" class="container">
+                    <card data-image="https://i.pinimg.com/474x/15/49/c6/1549c6e76659befe1795734071a36ea7.jpg">
+                        <h1 slot="header">Decoration</h1>
+                        <p slot="content">Notre service de décoration transforme vos espaces avec élégance et créativité. Que ce soit pour votre maison, bureau ou événement, nous concevons des ambiances uniques, adaptées à vos goûts et besoins. Faites confiance à notre expertise pour sublimer chaque détail !</p>
+                    </card>
+                    <card data-image="https://i.pinimg.com/736x/1e/92/c4/1e92c41b988484af5a080b0eba820538.jpg">
+                        <h1 slot="header">Lumiere</h1>
+                        <p slot="content">Notre service met la lumière au cœur de vos espaces. Avec des solutions d'éclairage sur mesure, nous créons des ambiances chaleureuses et modernes, jouant sur l'intensité, les couleurs et le design pour sublimer chaque pièce ou événement. Laissez vos espaces briller d'élégance !</p>
+                    </card>
+                    <card data-image="https://i.pinimg.com/474x/25/6e/75/256e75cd9f5e71cad09b060871e0e51b.jpg">
+                        <h1 slot="header">Sono</h1>
+                        <p slot="content">Notre service intègre le son pour sublimer vos espaces. Avec des systèmes audio soigneusement sélectionnés, nous créons des ambiances sonores immersives, harmonisées à votre style et vos événements. Du design discret à la qualité exceptionnelle, laissez le son magnifier chaque instant !</p>
+                    </card>
+                    <card data-image="https://i.pinimg.com/474x/af/99/37/af9937a06d9e315b1de6edf673bdba62.jpg">
+                        <h1 slot="header">Traiteur</h1>
+                        <p slot="content">Notre service de traiteur apporte une touche savoureuse à vos événements. Avec des menus raffinés et personnalisés, nous marions saveurs, élégance et créativité pour ravir vos convives. Du cocktail à la réception, chaque plat est une expérience culinaire qui sublime votre occasion !</p>
+                    </card>
+                    <card data-image="https://i.pinimg.com/474x/f0/58/e6/f058e6c75153040684804fec0528e588.jpg">
+                        <h1 slot="header">Fleuriste</h1>
+                        <p slot="content">Notre service de fleuriste embellit vos espaces et événements avec des créations florales uniques. Des bouquets élégants aux arrangements sur mesure, nous apportons couleur, fraîcheur et poésie à chaque occasion. Laissez nos fleurs sublimer vos moments avec charme et raffinement !</p>
+                    </card>
                 </div>
-            </nav>
-            <div id="page">
-                <header id="fh5co-header" class="fh5co-cover" role="banner">
-                    <div id="app" class="container">
-                        <card data-image="https://i.pinimg.com/474x/15/49/c6/1549c6e76659befe1795734071a36ea7.jpg">
-                            <h1 slot="header">Decoration</h1>
-                            <p slot="content">Notre service de décoration transforme vos espaces avec élégance et créativité. Que ce soit pour votre maison, bureau ou événement, nous concevons des ambiances uniques, adaptées à vos goûts et besoins. Faites confiance à notre expertise pour sublimer chaque détail !</p>
-                        </card>
-                        <card data-image="https://i.pinimg.com/736x/1e/92/c4/1e92c41b988484af5a080b0eba820538.jpg">
-                            <h1 slot="header">Lumiere</h1>
-                            <p slot="content">Notre service met la lumière au cœur de vos espaces. Avec des solutions d'éclairage sur mesure, nous créons des ambiances chaleureuses et modernes, jouant sur l'intensité, les couleurs et le design pour sublimer chaque pièce ou événement. Laissez vos espaces briller d'élégance !</p>
-                        </card>
-                        <card data-image="https://i.pinimg.com/474x/25/6e/75/256e75cd9f5e71cad09b060871e0e51b.jpg">
-                            <h1 slot="header">Sono</h1>
-                            <p slot="content">Notre service intègre le son pour sublimer vos espaces. Avec des systèmes audio soigneusement sélectionnés, nous créons des ambiances sonores immersives, harmonisées à votre style et vos événements. Du design discret à la qualité exceptionnelle, laissez le son magnifier chaque instant !</p>
-                        </card>
-                        <card data-image="https://i.pinimg.com/474x/af/99/37/af9937a06d9e315b1de6edf673bdba62.jpg">
-                            <h1 slot="header">Traiteur</h1>
-                            <p slot="content">Notre service de traiteur apporte une touche savoureuse à vos événements. Avec des menus raffinés et personnalisés, nous marions saveurs, élégance et créativité pour ravir vos convives. Du cocktail à la réception, chaque plat est une expérience culinaire qui sublime votre occasion !</p>
-                        </card>
-                        <card data-image="https://i.pinimg.com/474x/f0/58/e6/f058e6c75153040684804fec0528e588.jpg">
-                            <h1 slot="header">Fleuriste</h1>
-                            <p slot="content">Notre service de fleuriste embellit vos espaces et événements avec des créations florales uniques. Des bouquets élégants aux arrangements sur mesure, nous apportons couleur, fraîcheur et poésie à chaque occasion. Laissez nos fleurs sublimer vos moments avec charme et raffinement !</p>
-                        </card>
-                    </div>
-                </header>
-                <section id="services-section">
-                    <div class="services-intro" data-aos="fade-in">
-                        <h2 class="intro-title">Nos Services d'Exception</h2>
-                        <p class="intro-text">Découvrez nos prestations sur mesure pour sublimer vos espaces et événements avec élégance et créativité.</p>
-                    </div>
-                    
-                    <!-- Système de filtrage -->
-                    <div class="filter-container" data-aos="fade-up">
-                        <div class="filter-section">
-                            <span class="filter-title">Catégories :</span>
-                            <button class="filter-btn active" data-filter="all">Tous</button>
-                            <button class="filter-btn" data-filter="Decoration">Décoration</button>
-                            <button class="filter-btn" data-filter="Lumiere">Lumière</button>
-                            <button class="filter-btn" data-filter="Sono">Sono</button>
-                            <button class="filter-btn" data-filter="Traiteur">Traiteur</button>
-                            <button class="filter-btn" data-filter="Fleuriste">Fleuriste</button>
-                        </div>
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="searchInput" placeholder="Rechercher un service..." aria-label="Rechercher un service">
-                        </div>
-                    </div>
-                    
-                    <div class="card-container">
-                        {% for service in GServices %}
-                            <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" role="article" aria-labelledby="service-title-{{ service.id }}" data-service-id="{{ service.id }}" data-service-title="{{ service.titre }}" data-service-description="{{ service.description }}" data-service-location="{{ service.location }}" data-service-type="{{ service.type_service }}" data-service-price="{{ service.prix }}" data-service-image="{{ asset(service.image) }}" data-service-partenaire="{{ service.sponsor.nom_partenaire }}">
-                                <div class="wishlist-badge" role="button" aria-label="Ajouter aux favoris" data-id="{{ service.id }}">
-                                    <i class="far fa-heart"></i>
-                                </div>
-                                <div class="availability-badge available">Disponible</div>
-                                <div class="content">
-                                    <div class="front">
-                                        <div class="img">
+            </header>
+            <section id="services-section">
+                <div class="services-intro" data-aos="fade-in">
+                    <h2 class="intro-title">Nos Services d'Exception</h2>
+                    <p class="intro-text">Découvrez nos prestations sur mesure pour sublimer vos espaces et événements avec élégance et créativité.</p>
+                </div>
+                <div class="card-container">
+                    {% for service in GServices %}
+                        <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" role="article" aria-labelledby="service-title-{{ service.id }}" data-service-id="{{ service.id }}" data-service-title="{{ service.titre }}" data-service-description="{{ service.description }}" data-service-location="{{ service.location }}" data-service-type="{{ service.type_service }}" data-service-price="{{ service.prix }}" data-service-image="{% if service.image %}{{ asset(service.image) }}{% else %}{{ asset('service/default.jpg') }}{% endif %}" data-service-partenaire="{{ service.sponsor.nom_partenaire }}">
+                            <div class="content">
+                                <div class="front">
+                                    <div class="img">
+                                        {% if service.image %}
                                             <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img" loading="lazy">
-                                            <div class="circle" id="right"></div>
-                                            <div class="circle" id="bottom"></div>
+                                        {% else %}
+                                            <img src="{{ asset('service/default.jpg') }}" alt="Image par défaut" class="service-img" loading="lazy">
+                                        {% endif %}
+                                        <div class="circle" id="right"></div>
+                                        <div class="circle" id="bottom"></div>
+                                    </div>
+                                    <div class="front-content">
+                                        <div class="badges">
+                                            <small class="badge location"><i class="fas fa-map-marker-alt"></i> {{ service.location }}</small>
+                                            <small class="badge type-service"><i class="fas fa-concierge-bell"></i> {{ service.type_service }}</small>
                                         </div>
-                                        <div class="front-content">
-                                            <div class="badges">
-                                                <small class="badge location"><i class="fas fa-map-marker-alt"></i> {{ service.location }}</small>
-                                                <small class="badge type-service"><i class="fas fa-concierge-bell"></i> {{ service.type_service }}</small>
+                                        <div class="description">
+                                            <div class="title">
+                                                <p class="title" id="service-title-{{ service.id }}"><strong>{{ service.titre }}</strong></p>
                                             </div>
-                                            <div class="description">
-                                                <div class="title">
-                                                    <p class="title" id="service-title-{{ service.id }}"><strong>{{ service.titre }}</strong></p>
-                                                </div>
-                                                <p class="card-footer">{{ service.prix }}</p>
-                                            </div>
+                                            <p class="card-footer">{{ service.prix }}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        {% endfor %}
-                    </div>
-                    <div id="noResultsMessage" class="no-results" style="display: none; text-align: center; padding: 30px; background: #f9f9f9; border-radius: 10px; margin: 20px auto; max-width: 600px;">
-                        <i class="fas fa-search" style="font-size: 2rem; color: #a0aec0; margin-bottom: 15px;"></i>
-                        <h3>Aucun service ne correspond à votre recherche</h3>
-                        <p>Essayez d'autres termes de recherche ou filtres.</p>
-                    </div>
-                </section>
-                <!-- Bouton de panier flottant -->
-                <div class="cart-button" id="cartButton" role="button" aria-label="Ouvrir le panier" tabindex="0">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                </div>
-            </div>
-            <!-- Details Container -->
-            <div class="details-container" id="detailsContainer" role="dialog" aria-labelledby="details-title">
-                <div class="details-content">
-                    <button class="close-btn" aria-label="Fermer les détails"><i class="fas fa-times"></i></button>
-                    <img id="details-image" src="" alt="">
-                    <h2 id="details-title"></h2>
-                    <div class="badges">
-                        <small class="badge location" id="details-location"></small>
-                        <small class="badge type-service" id="details-type"></small>
-                    </div>
-                    <p><strong>Partenaire:</strong> <span id="details-partenaire"></span></p>
-                    <p class="service-description"><strong>Description: </strong><span id="details-description"></span></p>
-                    <div class="service-features">
-                        <span class="feature-tag"><i class="fas fa-clock"></i> Durée: 3-5 heures</span>
-                        <span class="feature-tag"><i class="fas fa-calendar-alt"></i> Disponibilité: 7j/7</span>
-                        <span class="feature-tag"><i class="fas fa-users"></i> Capacité: 10-200 pers.</span>
-                        <span class="feature-tag"><i class="fas fa-star"></i> Note: 4.8/5</span>
-                    </div>
-                    <p class="service-price"><strong>Prix:</strong> <span id="details-price"></span></p>
-                    
-                    <!-- Services complémentaires -->
-                    <div class="related-services">
-                        <h4 class="related-services-title">Services complémentaires</h4>
-                        <div class="related-services-list">
-                            <div class="related-service-item">
-                                <div class="related-service-title">Animation DJ</div>
-                                <div class="related-service-price">350€</div>
-                            </div>
-                            <div class="related-service-item">
-                                <div class="related-service-title">Éclairage Ambiance</div>
-                                <div class="related-service-price">200€</div>
-                            </div>
-                            <div class="related-service-item">
-                                <div class="related-service-title">Photo Booth</div>
-                                <div class="related-service-price">150€</div>
-                            </div>
-                            <div class="related-service-item">
-                                <div class="related-service-title">Décoration Fleurie</div>
-                                <div class="related-service-price">280€</div>
-                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- Bouton Réserver -->
-                    <button class="reserve-btn" id="reserveButton" aria-label="Réserver ce service">Ajouter au panier</button>
+                    {% endfor %}
                 </div>
+            </section>
+            <!-- Bouton de panier flottant -->
+            <div class="cart-button" id="cartButton" role="button" aria-label="Ouvrir le panier" tabindex="0">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
             </div>
-            
-            <!-- Conteneur de notifications -->
-            <div class="toast-container" id="toastContainer"></div>
+        </div>
+        <!-- Details Container -->
+        <div class="details-container" id="detailsContainer" role="dialog" aria-labelledby="details-title">
+            <div class="details-content">
+                <button class="close-btn" aria-label="Fermer les détails"><i class="fas fa-times"></i></button>
+                <img id="details-image" src="" alt="" onerror="this.src='{{ asset('service/default.jpg') }}'">
+                <h2 id="details-title"></h2>
+                <div class="badges">
+                    <small class="badge location" id="details-location"></small>
+                    <small class="badge type-service" id="details-type"></small>
+                </div>
+                <p><strong>Partenaire:</strong> <span id="details-partenaire"></span></p>
+                <p><strong>Description: </strong><span id="details-description"></span></p>
+                <p><strong>Prix:</strong> <span id="details-price"></span></p>
+                <!-- Bouton Réserver -->
+                <button class="reserve-btn" id="reserveButton" aria-label="Réserver ce service">Réserver</button>
+            </div>
+        </div>
         {% endblock %}
         {% block javascripts %}
             <!-- Charger d'abord jQuery -->
@@ -1298,14 +855,9 @@
                     const menuToggle = $('.menu-toggle');
                     const navMenu = $('.fh5co-nav .menu-1 ul');
                     if (menuToggle.length && navMenu.length) {
-                        menuToggle.on('click keydown', function(e) {
-                            if (e.type === 'click' || e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                navMenu.toggleClass('active');
-                                $(this).find('i').toggleClass('icon-menu icon-close');
-                                const isExpanded = navMenu.hasClass('active');
-                                menuToggle.attr('aria-expanded', isExpanded);
-                            }
+                        menuToggle.on('click', function() {
+                            navMenu.toggleClass('active');
+                            $(this).find('i').toggleClass('icon-menu icon-close');
                         });
 
                         // Close mobile menu when clicking outside
@@ -1313,7 +865,6 @@
                             if (!menuToggle.is(e.target) && !navMenu.is(e.target) && navMenu.has(e.target).length === 0 && navMenu.hasClass('active')) {
                                 navMenu.removeClass('active');
                                 menuToggle.find('i').removeClass('icon-close').addClass('icon-menu');
-                                menuToggle.attr('aria-expanded', 'false');
                             }
                         });
 
@@ -1322,60 +873,26 @@
                             if (e.key === 'Escape' && navMenu.hasClass('active')) {
                                 navMenu.removeClass('active');
                                 menuToggle.find('i').removeClass('icon-close').addClass('icon-menu');
-                                menuToggle.attr('aria-expanded', 'false');
                             }
                         });
                     }
 
-                    // Handle dropdowns
-                    const dropdownItems = $('.has-dropdown');
-                    if (dropdownItems.length) {
-                        dropdownItems.each(function() {
-                            const item = $(this);
-                            const link = item.children('a');
-                            const dropdown = item.children('.dropdown');
+                    // Handle dropdowns on mobile
+                    const dropdownToggles = $('.dropdown-toggle');
+                    if (dropdownToggles.length) {
+                        dropdownToggles.on('click', function(e) {
+                            if ($(window).width() <= 768) {
+                                e.preventDefault();
+                                const parentLi = $(this).parent();
+                                const isActive = parentLi.hasClass('active');
 
-                            // Desktop: Hover to show dropdown
-                            if ($(window).width() > 768) {
-                                item.on('mouseenter', function() {
-                                    dropdownItems.removeClass('active');
-                                    item.addClass('active');
-                                    link.attr('aria-expanded', 'true');
-                                }).on('mouseleave', function() {
-                                    item.removeClass('active');
-                                    link.attr('aria-expanded', 'false');
-                                });
-                            }
+                                // Close all other dropdowns
+                                $('.has-dropdown').removeClass('active');
 
-                            // Mobile: Click to toggle dropdown
-                            link.on('click keydown', function(e) {
-                                if ($(window).width() <= 768 && (e.type === 'click' || e.key === 'Enter' || e.key === ' ')) {
-                                    e.preventDefault();
-                                    const isActive = item.hasClass('active');
-                                    dropdownItems.removeClass('active');
-                                    if (!isActive) {
-                                        item.addClass('active');
-                                        link.attr('aria-expanded', 'true');
-                                    } else {
-                                        link.attr('aria-expanded', 'false');
-                                    }
+                                // Toggle current dropdown
+                                if (!isActive) {
+                                    parentLi.addClass('active');
                                 }
-                            });
-                        });
-
-                        // Close dropdowns when clicking outside
-                        $(document).on('click', function(e) {
-                            if (!dropdownItems.is(e.target) && dropdownItems.has(e.target).length === 0) {
-                                dropdownItems.removeClass('active');
-                                dropdownItems.find('a').attr('aria-expanded', 'false');
-                            }
-                        });
-
-                        // Close dropdowns with Escape key
-                        $(document).on('keydown', function(e) {
-                            if (e.key === 'Escape') {
-                                dropdownItems.removeClass('active');
-                                dropdownItems.find('a').attr('aria-expanded', 'false');
                             }
                         });
                     }
@@ -1383,8 +900,7 @@
                     // Set active state for Services in navbar dropdown
                     $('.fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a').each(function() {
                         if ($(this).attr('href') === '{{ path('user_services') }}') {
-                            $(this).parent().addClass('active');
-                            $(this).closest('.has-dropdown').addClass('current-menu');
+                            $(this).closest('.has-dropdown').addClass('active');
                         }
                     });
                 });
@@ -1407,153 +923,6 @@
                         const cartButton = document.getElementById('cartButton');
                         const cartCount = document.getElementById('cartCount');
                         const reserveButton = document.getElementById('reserveButton');
-                        const filterBtns = document.querySelectorAll('.filter-btn');
-                        const searchInput = document.getElementById('searchInput');
-                        const noResultsMessage = document.getElementById('noResultsMessage');
-                        const wishlistBadges = document.querySelectorAll('.wishlist-badge');
-                        const toastContainer = document.getElementById('toastContainer');
-                        
-                        // Fonction pour créer une notification toast
-                        function showToast(type, title, message, duration = 3000) {
-                            const toast = document.createElement('div');
-                            toast.className = `toast toast-${type}`;
-                            
-                            toast.innerHTML = `
-                                <div class="toast-icon">
-                                    <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}"></i>
-                                </div>
-                                <div class="toast-content">
-                                    <div class="toast-title">${title}</div>
-                                    <div class="toast-message">${message}</div>
-                                </div>
-                                <button class="toast-close" aria-label="Fermer la notification">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            `;
-                            
-                            toastContainer.appendChild(toast);
-                            
-                            // Animation
-                            setTimeout(() => {
-                                toast.classList.add('active');
-                            }, 10);
-                            
-                            // Fermeture après la durée
-                            const timeout = setTimeout(() => {
-                                closeToast(toast);
-                            }, duration);
-                            
-                            // Bouton de fermeture
-                            const closeButton = toast.querySelector('.toast-close');
-                            closeButton.addEventListener('click', () => {
-                                clearTimeout(timeout);
-                                closeToast(toast);
-                            });
-                        }
-                        
-                        function closeToast(toast) {
-                            toast.classList.remove('active');
-                            setTimeout(() => {
-                                toast.remove();
-                            }, 500);
-                        }
-                        
-                        // Système de filtrage
-                        filterBtns.forEach(btn => {
-                            btn.addEventListener('click', () => {
-                                // Supprimer la classe active de tous les boutons
-                                filterBtns.forEach(b => b.classList.remove('active'));
-                                
-                                // Ajouter la classe active au bouton cliqué
-                                btn.classList.add('active');
-                                
-                                const filterValue = btn.getAttribute('data-filter');
-                                filterServices(filterValue, searchInput.value);
-                            });
-                        });
-                        
-                        // Recherche de services
-                        searchInput.addEventListener('input', () => {
-                            const activeFilter = document.querySelector('.filter-btn.active');
-                            const filterValue = activeFilter ? activeFilter.getAttribute('data-filter') : 'all';
-                            filterServices(filterValue, searchInput.value);
-                        });
-                        
-                        // Fonction de filtrage combinant recherche et catégorie
-                        function filterServices(filter, searchTerm) {
-                            let visibleCount = 0;
-                            
-                            cards.forEach(card => {
-                                const serviceTitle = card.getAttribute('data-service-title').toLowerCase();
-                                const serviceType = card.getAttribute('data-service-type').toLowerCase();
-                                const serviceDescription = card.getAttribute('data-service-description').toLowerCase();
-                                
-                                // Vérifier si le service correspond au filtre de catégorie
-                                const matchesFilter = filter === 'all' || serviceType.includes(filter.toLowerCase());
-                                
-                                // Vérifier si le service correspond au terme de recherche
-                                const matchesSearch = searchTerm === '' || 
-                                    serviceTitle.includes(searchTerm.toLowerCase()) || 
-                                    serviceType.includes(searchTerm.toLowerCase()) || 
-                                    serviceDescription.includes(searchTerm.toLowerCase());
-                                
-                                // Afficher ou masquer la carte
-                                if (matchesFilter && matchesSearch) {
-                                    card.style.display = 'block';
-                                    visibleCount++;
-                                } else {
-                                    card.style.display = 'none';
-                                }
-                            });
-                            
-                            // Afficher un message si aucun résultat
-                            if (visibleCount === 0) {
-                                noResultsMessage.style.display = 'block';
-                            } else {
-                                noResultsMessage.style.display = 'none';
-                            }
-                        }
-                        
-                        // Gestion des favoris
-                        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-                        
-                        // Initialiser l'affichage des favoris
-                        wishlistBadges.forEach(badge => {
-                            const serviceId = badge.getAttribute('data-id');
-                            if (wishlist.includes(serviceId)) {
-                                badge.classList.add('active');
-                                badge.querySelector('i').classList.remove('far');
-                                badge.querySelector('i').classList.add('fas');
-                            }
-                            
-                            badge.addEventListener('click', (e) => {
-                                e.stopPropagation(); // Empêcher l'ouverture des détails du service
-                                
-                                const serviceId = badge.getAttribute('data-id');
-                                const isActive = badge.classList.contains('active');
-                                
-                                if (isActive) {
-                                    // Retirer des favoris
-                                    badge.classList.remove('active');
-                                    badge.querySelector('i').classList.remove('fas');
-                                    badge.querySelector('i').classList.add('far');
-                                    
-                                    wishlist = wishlist.filter(id => id !== serviceId);
-                                    showToast('success', 'Service retiré', 'Le service a été retiré de vos favoris');
-                                } else {
-                                    // Ajouter aux favoris
-                                    badge.classList.add('active');
-                                    badge.querySelector('i').classList.remove('far');
-                                    badge.querySelector('i').classList.add('fas');
-                                    
-                                    wishlist.push(serviceId);
-                                    showToast('success', 'Service ajouté', 'Le service a été ajouté à vos favoris');
-                                }
-                                
-                                // Sauvegarder dans localStorage
-                                localStorage.setItem('wishlist', JSON.stringify(wishlist));
-                            });
-                        });
             
                         // Panier : stocker les services ajoutés
                         let cartItems = [];
@@ -1592,7 +961,12 @@
                                 detailsDescription.textContent = card.dataset.serviceDescription;
                                 detailsPrice.textContent = card.dataset.servicePrice;
                                 detailsPartenaire.textContent = card.dataset.servicePartenaire;
-            
+                                
+                                // Gestion des erreurs d'image
+                                detailsImage.onerror = function() {
+                                    this.src = '{{ asset('service/default.jpg') }}';
+                                };
+
                                 // Stocker l'ID du service pour le bouton Réserver
                                 reserveButton.dataset.serviceId = card.dataset.serviceId;
             
@@ -1683,9 +1057,9 @@
                                 })
                                 .then(data => {
                                     if (data.success) {
-                                        showToast('success', 'Ajouté au panier', `Service "${detailsTitle.textContent}" ajouté au panier !`);
+                                        alert(`Service "${detailsTitle.textContent}" ajouté au panier !`);
                                     } else {
-                                        showToast('error', 'Erreur', data.message || 'Erreur lors de l\'ajout au panier.');
+                                        alert(data.message || 'Erreur lors de l\'ajout au panier.');
                                         // Revenir à l'état précédent du panier si l'ajout échoue
                                         cartItems = cartItems.filter(item => item.id !== serviceId);
                                         updateCartCount(cartItems.length);
@@ -1693,13 +1067,13 @@
                                 })
                                 .catch(error => {
                                     console.error('Erreur AJAX:', error);
-                                    showToast('error', 'Erreur de connexion', 'Erreur lors de la communication avec le serveur');
+                                    alert('Erreur lors de la communication avec le serveur: ' + error.message);
                                     // Revenir à l'état précédent du panier
                                     cartItems = cartItems.filter(item => item.id !== serviceId);
                                     updateCartCount(cartItems.length);
                                 });
                             } else {
-                                showToast('error', 'Déjà dans le panier', `Service "${detailsTitle.textContent}" est déjà dans le panier.`);
+                                alert(`Service "${detailsTitle.textContent}" est déjà dans le panier.`);
                             }
                         });
             
@@ -1745,17 +1119,6 @@
                                     e.preventDefault();
                                     card.click(); // Simuler un clic pour ouvrir les détails
                                 }
-                            });
-                        });
-            
-                        // Gestion des services complémentaires
-                        const relatedServiceItems = document.querySelectorAll('.related-service-item');
-                        relatedServiceItems.forEach(item => {
-                            item.addEventListener('click', () => {
-                                const title = item.querySelector('.related-service-title').textContent;
-                                const price = item.querySelector('.related-service-price').textContent;
-                                
-                                showToast('success', 'Service ajouté', `Service complémentaire "${title}" (${price}) ajouté au panier !`);
                             });
                         });
                     } catch (error) {

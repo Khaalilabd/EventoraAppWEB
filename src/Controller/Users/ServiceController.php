@@ -23,13 +23,11 @@ final class ServiceController extends AbstractController
     public function index(GServiceRepository $GServiceRepository): Response
     {
         $GServices = $GServiceRepository->findAll();
-        $imageDirectory = $this->getParameter('kernel.project_dir') . '/public/service/';
-        $imageFiles = glob($imageDirectory . '*.{jpg,png}', GLOB_BRACE);
-
-        if (!empty($imageFiles)) {
-            foreach ($GServices as $service) {
-                $randomImage = $imageFiles[array_rand($imageFiles)];
-                $service->setImage('service/' . basename($randomImage));
+        
+        // Vérifier que chaque service a une image ou assigner une image par défaut
+        foreach ($GServices as $service) {
+            if (!$service->getImage()) {
+                $service->setImage('service/default.jpg');
             }
         }
 
@@ -49,8 +47,10 @@ final class ServiceController extends AbstractController
                     'message' => sprintf('Service avec ID %d non trouvé.', $id)
                 ], 404);
             }
+
+            // Pour les images, utilise simplement le chemin relatif
             $imagePath = $service->getImage();
-            $imageUrl = $imagePath ? $this->getParameter('app.base_url') . '/' . ltrim($imagePath, '/') : null;
+            
             return new JsonResponse([
                 'success' => true,
                 'service' => [
@@ -59,7 +59,7 @@ final class ServiceController extends AbstractController
                     'prix' => $service->getPrix() ?? 'Non spécifié',
                     'location' => $service->getLocation() ?? 'Non spécifiée',
                     'type_service' => $service->getTypeService() ?? 'Non spécifié',
-                    'image' => $imageUrl,
+                    'image' => $imagePath ?? 'service/default.jpg',
                     'partenaire' => $service->getSponsor() ? $service->getSponsor()->getNomPartenaire() : 'Non spécifié',
                 ]
             ]);
