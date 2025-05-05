@@ -1,6 +1,3 @@
-# readme-guide
-Guide détaillé pour rédiger un bon README sur GitHub pour le module projet technologies web 2A.
-
 # Nom du Projet
 EventoraAppWEB
 
@@ -339,30 +336,31 @@ Des webhooks sont disponibles pour :
 
 EventoraAppWEB a été développé par une équipe de 5 étudiants passionnés par le développement web et la gestion d'événements :
 
-* **Ahmed Abdelkader** - Chef de Projet & Développeur Backend
-  * Responsable de l'architecture générale
-  * Développement des fonctionnalités core
-  * Intégration des API externes
+* **Khalil Abdelmoumen** - Gestion des réclamations et feedback
+  * Suivi et traitement des réclamations
+  * Implémentation du système de feedback
 
-* **Sophia Benali** - UX/UI Designer & Frontend Developer
-  * Conception de l'interface utilisateur
-  * Implémentation des maquettes
-  * Responsable de l'expérience utilisateur
+* **Hedia Snoussi** - Gestion des utilisateurs
+  * Authentification et sécurité
+  * Gestion des profils et rôles
+  * Interface d'administration des utilisateurs
 
-* **Karim Moussaoui** - Développeur Backend & DevOps
-  * Développement du système de paiement
-  * Configuration de l'infrastructure
-  * Déploiement et CI/CD
+* **Nadhem Hmida** - Gestion des services
+  * Catalogue de services et partenaires
+  * Tarification et disponibilité
+  * Intégration des services aux packs
+  * Intégration de paiement
 
-* **Yasmine Khelifi** - Développeuse Full-Stack
-  * Système de réservation
-  * Interface d'administration
-  * Documentation technique
+* **Farah Gharbi** - Gestion des packs
+  * Création et configuration des packs
+  * Association de services aux packs
+  * Système de recommendation
+  * gestion de la listes des favoris
 
-* **Mehdi Bouaziz** - Développeur Backend & QA
-  * Développement des API
-  * Tests et assurance qualité
-  * Sécurité et performance
+* **Rayen Trad** - Gestion des réservations
+  * Système de réservation standard et personnalisée
+  * Workflow de réservation
+  
 
 ## Contributions
 
@@ -372,11 +370,11 @@ Nous remercions tous ceux qui ont contribué à ce projet !
 
 Les personnes suivantes ont contribué à ce projet en ajoutant des fonctionnalités, en corrigeant des bugs ou en améliorant la documentation :
 
-- [Ahmed Abdelkader](https://github.com/ahmedabdelkader) - Architecture du projet et développement backend
-- [Sophia Benali](https://github.com/sophiabenali) - Design UX/UI et frontend development
-- [Karim Moussaoui](https://github.com/karimmoussaoui) - Intégration des paiements et DevOps
-- [Yasmine Khelifi](https://github.com/yasminekhelifi) - Système de réservation et administration
-- [Mehdi Bouaziz](https://github.com/mehdibouaziz) - API et tests
+- [Khalil Abdelmoumen](https://github.com/Khaalilabd/EventoraAppWEB/tree/Eventora) - Gestion des réclamations et feedback
+- [Hedia Snoussi](https://github.com/Khaalilabd/EventoraAppWEB/tree/UtilisateurV2) - Gestion des utilisateurs
+- [Nadhem Hmida](https://github.com/Khaalilabd/EventoraAppWEB/tree/Service) - Gestion des services
+- [Farah Gharbi](https://github.com/Khaalilabd/EventoraAppWEB/tree/GestionPack) - Gestion des packs
+- [Rayen Trad](https://github.com/Khaalilabd/EventoraAppWEB/tree/Reservation) - Gestion des réservations
 
 Si vous souhaitez contribuer, suivez les étapes ci-dessous pour faire un *fork*, créer une nouvelle branche et soumettre une *pull request*.
 
