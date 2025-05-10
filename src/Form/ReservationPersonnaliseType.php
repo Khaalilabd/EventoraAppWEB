@@ -115,8 +115,8 @@ class ReservationPersonnaliseType extends AbstractType
                     'Annulée' => 'Annulée',
                     'Terminée' => 'Terminée'
                 ],
-                'attr' => ['style' => 'display: none;'],
-                'label_attr' => ['style' => 'display: none;'],
+                'attr' => ['style' => $options['is_admin'] ? '' : 'display: none;'], // Show status for admins
+                'label_attr' => ['style' => $options['is_admin'] ? '' : 'display: none;'],
                 'translation_domain' => 'messages',
             ])
             ->add('services', EntityType::class, [
@@ -139,16 +139,25 @@ class ReservationPersonnaliseType extends AbstractType
                 'translation_domain' => 'messages',
             ])
         ;
+
+        // Optionally adjust constraints for admin users
+        if ($options['is_admin']) {
+            // Example: Relax constraints or add admin-specific fields
+            $fieldConfig['numtel']['constraints'] = []; // Remove phone number constraints for admins
+            $builder->add('numtel', TelType::class, $fieldConfig['numtel']); // Re-add numtel with updated config
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Reservationpersonnalise::class,
-            'user_data' => null, // Option to pass user data
+            'user_data' => null,
+            'is_admin' => false, // Define is_admin option with default value
             'translation_domain' => 'messages',
         ]);
 
         $resolver->setAllowedTypes('user_data', ['array', 'null']);
+        $resolver->setAllowedTypes('is_admin', 'bool'); // Restrict is_admin to boolean
     }
 }

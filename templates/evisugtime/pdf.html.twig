@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EviSugTime Report</title>
+</head>
+<body>
+    <h1>EviSugTime Analysis Report</h1>
+    {% if results.clusters is defined %}
+        {% for clusterId, reclamations in results.clusters %}
+            <h2>Cluster {{ clusterId }}</h2>
+            <ul>
+                {% for reclamation in reclamations %}
+                    <li>{{ reclamation.titre }}: {{ reclamation.description }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+        <p>No analysis results available.</p>
+    {% endif %}
+</body>
+</html>

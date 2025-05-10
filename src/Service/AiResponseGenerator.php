@@ -61,4 +61,46 @@ class AiResponseGenerator
             return "Cher(e) client(e), nous sommes désolés pour l'inconvénient causé. Veuillez nous fournir plus de détails pour que nous puissions vous aider.";
         }
     }
+
+    public function generate(string $summary): string
+    {
+        $prompt = "Vous êtes un assistant IA chargé d'analyser des réclamations clients et de proposer des suggestions pour améliorer les services. Basé sur le résumé suivant des réclamations : '{$summary}', proposez une suggestion concise et actionable en français pour résoudre les problèmes identifiés ou améliorer l'expérience client.";
+
+        try {
+            $response = $this->httpClient->request('POST', $this->apiEndpoint, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                ],
+                'query' => [
+                    'key' => $this->apiKey,
+                ],
+                'json' => [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt],
+                            ],
+                        ],
+                    ],
+                    'generationConfig' => [
+                        'maxOutputTokens' => 200,
+                        'temperature' => 0.7,
+                    ],
+                ],
+            ]);
+
+            $data = $response->toArray();
+            $generatedSuggestion = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+            if (!$generatedSuggestion) {
+                $this->logger->error('Aucune suggestion générée par l\'API Gemini.', ['response' => $data]);
+                return "Aucune suggestion disponible. Veuillez analyser les réclamations manuellement.";
+            }
+
+            return $generatedSuggestion;
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la génération de suggestion via l\'API Gemini : ' . $e->getMessage(), ['exception' => $e]);
+            return "Aucune suggestion disponible en raison d'une erreur technique.";
+        }
+    }
 }

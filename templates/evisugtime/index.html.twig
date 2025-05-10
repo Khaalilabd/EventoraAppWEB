@@ -1,0 +1,256 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}EviSugTime - Analyse des Réclamations{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-8 shadow-lg">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl font-extrabold tracking-tight">EviSugTime - Analyse des Réclamations</h1>
+            <p class="mt-2 text-lg opacity-90">Optimisez votre plateforme grâce à une analyse avancée des réclamations</p>
+            <div class="mt-6 flex items-center space-x-4">
+                <input type="text" id="searchInput" placeholder="Rechercher une réclamation..." class="w-full max-w-md px-4 py-2 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="filterType" class="px-4 py-2 rounded-lg text-gray-900 focus:outline-none">
+                    <option value="">Filtrer par type</option>
+                    {% for label in results.type_distribution.labels %}
+                        <option value="{{ label }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12">
+        {% if results.clusters is defined %}
+            <!-- Analytics Overview -->
+            <section class="mb-12" data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Vue d'Ensemble des Analyses</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Cluster Bar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg" data-aos="fade-right">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Réclamations par Cluster</h3>
+                        <canvas id="clusterChart" class="w-full h-64"></canvas>
+                    </div>
+                    <!-- Type Donut Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg" data-aos="fade-up">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Types de Réclamations</h3>
+                        <canvas id="typeChart" class="w-full h-64"></canvas>
+                    </div>
+                    <!-- Priority Line Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg" data-aos="fade-left">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Priorités des Réclamations</h3>
+                        {% if results.priority_distribution is defined and results.priority_distribution.data|length > 0 %}
+                            <canvas id="priorityChart" class="w-full h-64"></canvas>
+                        {% else %}
+                            <p class="text-gray-600 text-center">Aucune donnée de priorité disponible.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clusters Details -->
+            <section class="mb-12" data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Détails des Clusters</h2>
+                {% if results.clusters|length > 0 %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for clusterId, reclamations in results.clusters %}
+                            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                                <h3 class="text-xl font-semibold text-blue-900">Cluster {{ clusterId|number_format + 1 }}</h3>
+                                <ul class="mt-4 space-y-3">
+                                    {% for reclamation in reclamations %}
+                                        <li class="text-gray-600">
+                                            <span class="font-medium text-gray-800">{{ reclamation.titre }}</span>: {{ reclamation.description|slice(0, 100) }}{% if reclamation.description|length > 100 %}...{% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <p class="text-gray-700">Aucun cluster trouvé. Vérifiez les données des réclamations.</p>
+                    </div>
+                {% endif %}
+            </section>
+
+            <!-- Improvement Solutions -->
+            <section data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Solutions d'Amélioration</h2>
+                {% if results.suggestions|length > 0 %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for clusterId, suggestion in results.suggestions %}
+                            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                                <div class="flex items-start space-x-4">
+                                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                    <div>
+                                        <h3 class="text-xl font-semibold text-gray-800">Solution pour Cluster {{ clusterId|number_format + 1 }}</h3>
+                                        <p class="text-gray-600 mt-2">{{ suggestion|default('Aucune suggestion disponible') }}</p>
+                                        <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Mettre en œuvre</button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <p class="text-gray-700">Aucune suggestion d'amélioration disponible. Vérifiez l'API de suggestions.</p>
+                    </div>
+                {% endif %}
+            </section>
+        {% else %}
+            <div class="bg-white p-6 rounded-xl shadow-lg text-center" data-aos="fade-up">
+                <p class="text-gray-700 text-lg">Aucun résultat d'analyse disponible. Exécutez la commande : <code class="bg-gray-100 p-1 rounded">bin/console app:evisugtime:analyze</code></p>
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p>© {{ "now"|date("Y") }} EventoraApp. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        {% if results.clusters is defined %}
+            // Cluster Bar Chart
+            const clusterCtx = document.getElementById('clusterChart').getContext('2d');
+            new Chart(clusterCtx, {
+                type: 'bar',
+                data: {
+                    labels: {{ results.chart.labels|json_encode|raw }},
+                    datasets: [{
+                        label: 'Nombre de Réclamations',
+                        data: {{ results.chart.data|json_encode|raw }},
+                        backgroundColor: 'rgba(30, 64, 175, 0.6)',
+                        borderColor: 'rgba(30, 64, 175, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    },
+                    plugins: {
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 12 }
+                        }
+                    }
+                }
+            });
+
+            // Type Donut Chart
+            const typeCtx = document.getElementById('typeChart').getContext('2d');
+            new Chart(typeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: {{ results.type_distribution.labels|json_encode|raw }},
+                    datasets: [{
+                        data: {{ results.type_distribution.data|json_encode|raw }},
+                        backgroundColor: [
+                            'rgba(30, 64, 175, 0.6)',
+                            'rgba(220, 38, 38, 0.6)',
+                            'rgba(5, 150, 105, 0.6)',
+                            'rgba(147, 51, 234, 0.6)',
+                            'rgba(234, 179, 8, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(30, 64, 175, 1)',
+                            'rgba(220, 38, 38, 1)',
+                            'rgba(5, 150, 105, 1)',
+                            'rgba(147, 51, 234, 1)',
+                            'rgba(234, 179, 8, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 12 }
+                        }
+                    }
+                }
+            });
+
+            // Priority Line Chart
+            {% if results.priority_distribution is defined and results.priority_distribution.data|length > 0 %}
+                const priorityCtx = document.getElementById('priorityChart').getContext('2d');
+                new Chart(priorityCtx, {
+                    type: 'line',
+                    data: {
+                        labels: {{ results.priority_distribution.labels|json_encode|raw }},
+                        datasets: [{
+                            label: 'Nombre de Réclamations',
+                            data: {{ results.priority_distribution.data|json_encode|raw }},
+                            fill: false,
+                            borderColor: 'rgba(30, 64, 175, 1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: { beginAtZero: true }
+                        },
+                        plugins: {
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleFont: { size: 14 },
+                                bodyFont: { size: 12 }
+                            }
+                        }
+                    }
+                });
+            {% endif %}
+
+            // Search and Filter Functionality
+            const searchInput = document.getElementById('searchInput');
+            const filterType = document.getElementById('filterType');
+            const clusterCards = document.querySelectorAll('.grid > div');
+
+            function filterCards() {
+                const searchText = searchInput.value.toLowerCase();
+                const selectedType = filterType.value.toLowerCase();
+
+                clusterCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const items = card.querySelectorAll('li');
+                    let hasMatch = false;
+
+                    items.forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        const matchesSearch = searchText === '' || text.includes(searchText);
+                        const matchesType = selectedType === '' || text.includes(selectedType);
+                        if (matchesSearch && matchesType) {
+                            hasMatch = true;
+                        }
+                    });
+
+                    card.style.display = hasMatch ? 'block' : 'none';
+                });
+            }
+
+            searchInput.addEventListener('input', filterCards);
+            filterType.addEventListener('change', filterCards);
+        {% endif %}
+    </script>
+</div>
+{% endblock %}
