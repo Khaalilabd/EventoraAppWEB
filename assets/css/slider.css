@@ -1,0 +1,221 @@
+
+         /* Variables CSS pour une maintenance facile */
+:root {
+    --num-of-slides: 5;
+    --slide-width: calc(100% / var(--num-of-slides));
+    --primary-color: #ff0000;
+    --text-color: #fff;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --transition-duration: 0.8s;
+}
+
+/* Conteneur principal */
+.slider-container {
+    width:1918 ; /* Pleine largeur de l'écran */
+    margin: 0; /* Supprime les marges */
+    position: relative;
+    overflow: hidden;
+    border-radius: 0; /* Supprime les bordures arrondies pour un look pleine largeur */
+    box-shadow: 0 4px 12px var(--shadow-color);
+    height: 100vh; /* Hauteur ajustable */
+}
+
+/* Inputs radio cachés */
+input[type="radio"] {
+    display: none;
+}
+
+/* Wrapper du slider */
+.slider-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.slider-inner {
+    display: flex;
+    width: calc(100% * var(--num-of-slides));
+    height: 100%;
+    transition: transform var(--transition-duration) cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Chaque slide */
+.slide {
+    width: var(--slide-width);
+    height: 100%;
+    position: relative;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Boîte d'information */
+.info {
+    position: absolute;
+    padding: 1rem;
+    color: var(--text-color);
+    opacity: 0;
+    transition: opacity 1s ease-out 0.6s;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+}
+
+.info h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.info p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.info.top-left { top: 2rem; left: 2rem; }
+.info.top-right { top: 2rem; right: 2rem; }
+.info.bottom-left { bottom: 2rem; left: 2rem; }
+.info.bottom-right { bottom: 2rem; right: 2rem; }
+
+/* Contrôles précédent/suivant */
+.slider-prev-next-control {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    z-index: 10;
+}
+
+.slider-prev-next-control label {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    display: none;
+    position: relative;
+}
+
+.slider-prev-next-control label:hover {
+    background: #fff;
+    transform: scale(1.1);
+}
+
+.slider-prev-next-control label.prev::before,
+.slider-prev-next-control label.next::before {
+    font-family: 'FontAwesome';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.slider-prev-next-control label.prev::before { content: '\f104'; }
+.slider-prev-next-control label.next::before { content: '\f105'; }
+
+/* Contrôles des points */
+.slider-dot-control {
+    position: absolute;
+    bottom: 1rem;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+}
+
+.slider-dot-control label {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    margin: 0 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.slider-dot-control label:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Logique des slides */
+#slide1:checked ~ .slider-wrapper .slider-inner { transform: translateX(0); }
+#slide2:checked ~ .slider-wrapper .slider-inner { transform: translateX(calc(-1 * var(--slide-width))); }
+#slide3:checked ~ .slider-wrapper .slider-inner { transform: translateX(calc(-2 * var(--slide-width))); }
+#slide4:checked ~ .slider-wrapper .slider-inner { transform: translateX(calc(-3 * var(--slide-width))); }
+#slide5:checked ~ .slider-wrapper .slider-inner { transform: translateX(calc(-4 * var(--slide-width))); }
+
+/* Affichage des infos */
+#slide1:checked ~ .slider-wrapper .slide:nth-child(1) .info { opacity: 1; }
+#slide2:checked ~ .slider-wrapper .slide:nth-child(2) .info { opacity: 1; }
+#slide3:checked ~ .slider-wrapper .slide:nth-child(3) .info { opacity: 1; }
+#slide4:checked ~ .slider-wrapper .slide:nth-child(4) .info { opacity: 1; }
+#slide5:checked ~ .slider-wrapper .slide:nth-child(5) .info { opacity: 1; }
+
+/* Affichage des points actifs */
+#slide1:checked ~ .slider-dot-control label:nth-child(1) { background: var(--primary-color); }
+#slide2:checked ~ .slider-dot-control label:nth-child(2) { background: var(--primary-color); }
+#slide3:checked ~ .slider-dot-control label:nth-child(3) { background: var(--primary-color); }
+#slide4:checked ~ .slider-dot-control label:nth-child(4) { background: var(--primary-color); }
+#slide5:checked ~ .slider-dot-control label:nth-child(5) { background: var(--primary-color); }
+
+/* Affichage des boutons précédent/suivant */
+#slide1:checked ~ .slider-prev-next-control label.next:nth-child(7),
+#slide2:checked ~ .slider-prev-next-control label.next:nth-child(8),
+#slide3:checked ~ .slider-prev-next-control label.next:nth-child(9),
+#slide4:checked ~ .slider-prev-next-control label.next:nth-child(10),
+#slide5:checked ~ .slider-prev-next-control label.next:nth-child(6) {
+    display: block;
+}
+
+#slide1:checked ~ .slider-prev-next-control label.prev:nth-child(5),
+#slide2:checked ~ .slider-prev-next-control label.prev:nth-child(1),
+#slide3:checked ~ .slider-prev-next-control label.prev:nth-child(2),
+#slide4:checked ~ .slider-prev-next-control label.prev:nth-child(3),
+#slide5:checked ~ .slider-prev-next-control label.prev:nth-child(4) {
+    display: block;
+}
+
+/* Responsivité */
+@media (max-width: 850px) {
+    .slider-container {
+        height: 50vh;
+    }
+
+    .info {
+        padding: 0.8rem;
+    }
+
+    .info h3 {
+        font-size: 1.5rem;
+    }
+
+    .info p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 450px) {
+    .slider-container {
+        height: 40vh;
+    }
+
+    .info {
+        opacity: 0; /* Masquer les infos sur mobile */
+    }
+
+    .slider-prev-next-control label {
+        width: 40px;
+        height: 40px;
+    }
+}

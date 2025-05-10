@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html class="no-js">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title %}eventora{% endblock %}</title>
+        <title>{% block title %}Eventora{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
@@ -11,7 +12,10 @@
             <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
             <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
             <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+            <!-- Ajout de la police Poppins pour un look plus moderne -->
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <!-- Utilisation de Font Awesome 5 pour correspondre au premier code -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
             <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
             <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
@@ -21,242 +25,672 @@
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
             <link rel="stylesheet" href="{{ asset('css/sponsors_card.css') }}">
             <link rel="stylesheet" href="{{ asset('css/sponsor_header.css') }}">
-            <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
-
+            <link rel="stylesheet" href="{{ asset('css/modern-navbar.css') }}">
 
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
             <style>
-              
-                
-                /* Sponsor Cards */
-                .sponsor-card-container {
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 32px;
-                    justify-content: center;
-                    padding: 48px;
-                    max-width: 2600px;
-                    margin: 0 auto;
-                    position: relative;
-                    z-index: 2;
-                }
-                .sponsor-business-card {
-                    width: 600px;
-                    height: 360px;
-                    perspective: 2000px;
-                    position: relative;
-                    cursor: pointer;
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
-                }
-                .sponsor-business-card:hover {
-                    transform: translateY(-8px);
-                    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
-                }
-                .sponsor-card-inner {
-                    width: 100%;
-                    height: 100%;
-                    position: relative;
-                    border-radius: 12px;
-                    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-                }
-                .sponsor-business-card:hover .sponsor-card-inner {
-                    animation: rotateInPlace 0.6s ease-in-out forwards;
-                }
-                @keyframes rotateInPlace {
-                    0% { transform: rotateY(0deg); }
-                    100% { transform: rotateY(360deg); }
-                }
-                .sponsor-card-front,
-                .sponsor-card-back {
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 12px;
-                    padding: 40px;
-                    box-sizing: border-box;
+                /* Navigation fixe - Ce style peut être supprimé car il est maintenant dans modern-navbar.css */
+                #page {
+                    min-height: 100vh;
                     display: flex;
                     flex-direction: column;
-                    justify-content: center;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    transition: opacity 0.2s ease;
+                    padding-top: 70px; /* Ajusté pour une navbar plus compacte */
                 }
-                .sponsor-card-front {
-                    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-                    color: #1f2937;
-                    align-items: center;
+
+                /* Nouveau design avancé pour les partenaires */
+                :root {
+                    --primary-color: #934D1A;
+                    --primary-light: #c69c6d;
+                    --secondary-color: #343a40;
+                    --text-color: #495057;
+                    --light-color: #f8f9fa;
+                    --border-color: #dee2e6;
+                    --hover-color: #e9ecef;
+                    --shadow-color: rgba(0, 0, 0, 0.1);
+                    --success-color: #28a745;
+                    --info-color: #17a2b8;
+                    --warning-color: #ffc107;
+                    --danger-color: #dc3545;
+                }
+
+                /* Layout de la section */
+                .partners-dashboard {
+                    padding: 60px 0;
+                    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+                    position: relative;
+                    overflow: hidden;
+                    min-height: 100vh;
+                }
+
+                .partners-dashboard-container {
+                    max-width: 1400px;
+                    margin: 0 auto;
+                    padding: 0 20px;
+                }
+
+                /* En-tête décoratif */
+                .partners-dashboard-header {
                     text-align: center;
-                    border: 2px solid #e5e7eb;
-                    opacity: 1;
+                    margin-bottom: 40px;
+                    position: relative;
                 }
-                .sponsor-card-front::before {
+
+                .partners-dashboard-title {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 42px;
+                    font-weight: 700;
+                    background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    color: transparent;
+                    display: inline-block;
+                    margin-bottom: 15px;
+                    position: relative;
+                }
+
+                .partners-dashboard-title::after {
                     content: '';
                     position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-                    opacity: 0.3;
+                    width: 60px;
+                    height: 4px;
+                    background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+                    bottom: -8px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    border-radius: 2px;
                 }
-                .sponsor-card-back {
-                    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-                    color: #ffffff;
-                    align-items: flex-start;
-                    text-align: left;
-                    opacity: 0;
+
+                .partners-dashboard-subtitle {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 18px;
+                    color: var(--text-color);
+                    max-width: 700px;
+                    margin: 0 auto;
+                    line-height: 1.6;
                 }
-                .sponsor-business-card:hover .sponsor-card-front {
-                    opacity: 0;
+
+                /* Système de filtrage */
+                .partners-filter-section {
+                    background: white;
+                    border-radius: 16px;
+                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+                    padding: 25px 30px;
+                    margin-bottom: 40px;
+                    transition: all 0.3s ease;
+                    position: relative;
+                    z-index: 10;
                 }
-                .sponsor-business-card:hover .sponsor-card-back {
-                    opacity: 1;
-                }
-                .sponsor-card-front h3 {
-                    margin: 0;
-                    font-size: 2.6em;
-                    font-weight: 700;
-                    color: #111827;
-                    letter-spacing: 0.8px;
-                }
-                .sponsor-card-front p {
-                    margin: 10px 0 0;
-                    font-size: 1.8em;
-                    font-weight: 400;
-                    color: #4b5563;
-                }
-                .sponsor-card-back p {
-                    margin: 10px 0;
-                    font-size: 1.6em;
+
+                .partners-filter-title {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 22px;
+                    font-weight: 600;
+                    color: var(--secondary-color);
+                    margin-bottom: 20px;
                     display: flex;
                     align-items: center;
-                    gap: 20px;
-                    color: #f8fafc;
-                    width: 100%;
                 }
-                .sponsor-card-back i {
-                    font-size: 1.8em;
-                    color: #ffd700;
-                    width: 36px;
-                    text-align: center;
+
+                .partners-filter-title i {
+                    margin-right: 10px;
+                    color: var(--primary-color);
+                    font-size: 24px;
                 }
-                .sponsor-card-back a {
-                    color: #ffd700;
-                    text-decoration: none;
+
+                .partners-filter-options {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 15px;
+                    margin-bottom: 10px;
+                }
+
+                .partner-filter-btn {
+                    font-family: 'Poppins', sans-serif;
+                    background: var(--light-color);
+                    border: 1px solid var(--border-color);
+                    border-radius: 30px;
+                    padding: 10px 20px;
+                    font-size: 14px;
+                    color: var(--text-color);
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    outline: none;
+                }
+
+                .partner-filter-btn:hover {
+                    background: var(--hover-color);
+                    transform: translateY(-2px);
+                }
+
+                .partner-filter-btn.active {
+                    background: var(--primary-color);
+                    color: white;
+                    border-color: var(--primary-color);
                     font-weight: 500;
-                    transition: color 0.3s ease;
+                    box-shadow: 0 4px 12px rgba(147, 77, 26, 0.2);
                 }
-                .sponsor-card-back a:hover {
-                    color: #facc15;
+
+                .partner-filter-btn i {
+                    font-size: 14px;
+                }
+
+                .partners-search-bar {
+                    display: flex;
+                    gap: 10px;
+                    margin-top: 20px;
+                }
+
+                .partners-search-input {
+                    flex-grow: 1;
+                    border: 1px solid var(--border-color);
+                    border-radius: 8px;
+                    padding: 12px 20px;
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 14px;
+                    color: var(--secondary-color);
+                    outline: none;
+                    transition: all 0.3s ease;
+                }
+
+                .partners-search-input:focus {
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 3px rgba(147, 77, 26, 0.1);
+                }
+
+                .partners-search-btn {
+                    background: var(--primary-color);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    padding: 0 25px;
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .partners-search-btn:hover {
+                    background: linear-gradient(to right, var(--primary-color), #a86231);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(147, 77, 26, 0.2);
+                }
+
+                .partners-count {
+                    margin-top: 15px;
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 14px;
+                    color: var(--text-color);
+                }
+
+                .partners-count span {
+                    font-weight: 600;
+                    color: var(--primary-color);
+                }
+
+                /* Grid de cartes */
+                .partners-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                    gap: 30px;
+                    margin-bottom: 40px;
+                }
+
+                /* Carte partenaire */
+                .partner-card {
+                    background: white;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    position: relative;
+                    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    transform-style: preserve-3d;
+                    perspective: 1000px;
+                }
+
+                .partner-card:hover {
+                    transform: translateY(-10px) scale(1.02);
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                }
+
+                .partner-card-banner {
+                    height: 120px;
+                    background: linear-gradient(120deg, var(--primary-color), var(--primary-light));
+                    position: relative;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    overflow: hidden;
+                }
+
+                .partner-card-banner::before {
+                    content: '';
+                    position: absolute;
+                    width: 150%;
+                    height: 200%;
+                    background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
+                    transform: rotate(-45deg);
+                    top: -50%;
+                    left: -25%;
+                }
+
+                .partner-logo-container {
+                    width: 90px;
+                    height: 90px;
+                    background: white;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: absolute;
+                    top: 75px;
+                    left: 30px;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                    z-index: 2;
+                    border: 4px solid white;
+                    overflow: hidden;
+                }
+
+                .partner-logo {
+                    width: 60px;
+                    height: 60px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: var(--light-color);
+                    border-radius: 50%;
+                }
+
+                .partner-logo i {
+                    font-size: 28px;
+                    color: var(--primary-color);
+                }
+
+                .partner-type-badge {
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                    padding: 8px 15px;
+                    background: rgba(255, 255, 255, 0.9);
+                    border-radius: 30px;
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: var(--primary-color);
+                    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(5px);
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+                .partner-content {
+                    padding: 40px 30px 25px;
+                    flex-grow: 1;
+                    position: relative;
+                }
+
+                .partner-name {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 24px;
+                    font-weight: 600;
+                    color: var(--secondary-color);
+                    margin: 0 0 15px;
+                    padding-left: 70px;
+                }
+
+                .partner-info-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 18px;
+                    margin-top: 25px;
+                }
+
+                .partner-info-item {
+                    display: flex;
+                    align-items: flex-start;
+                }
+
+                .partner-info-icon {
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 8px;
+                    background: rgba(147, 77, 26, 0.1);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 15px;
+                    flex-shrink: 0;
+                    transition: all 0.3s ease;
+                }
+
+                .partner-card:hover .partner-info-icon {
+                    background: var(--primary-color);
+                }
+
+                .partner-info-icon i {
+                    font-size: 16px;
+                    color: var(--primary-color);
+                    transition: all 0.3s ease;
+                }
+
+                .partner-card:hover .partner-info-icon i {
+                    color: white;
+                }
+
+                .partner-info-content {
+                    flex-grow: 1;
+                }
+
+                .partner-info-label {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: var(--text-color);
+                    margin: 0 0 4px;
+                    opacity: 0.8;
+                }
+
+                .partner-info-value {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 15px;
+                    color: var(--secondary-color);
+                    margin: 0;
+                    word-break: break-word;
+                    font-weight: 500;
+                }
+
+                .partner-info-value a {
+                    color: var(--primary-color);
+                    text-decoration: none;
+                    transition: all 0.2s ease;
+                }
+
+                .partner-info-value a:hover {
+                    color: var(--primary-light);
                     text-decoration: underline;
                 }
-                .no-sponsor {
+
+                .partner-card-footer {
+                    padding: 20px 30px;
+                    border-top: 1px solid var(--border-color);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    background: var(--light-color);
+                }
+
+                .partner-action-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    padding: 10px 20px;
+                    background: var(--primary-color);
+                    color: white;
+                    border-radius: 30px;
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                    border: none;
+                    outline: none;
+                    cursor: pointer;
+                }
+
+                .partner-action-btn:hover {
+                    background: linear-gradient(to right, var(--primary-color), #a86231);
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 15px rgba(147, 77, 26, 0.25);
+                    color: white;
+                }
+
+                .partner-social-links {
+                    display: flex;
+                    gap: 10px;
+                }
+
+                .partner-social-link {
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50%;
+                    background: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.3s ease;
+                    color: var(--text-color);
+                    border: 1px solid var(--border-color);
+                    text-decoration: none;
+                }
+
+                .partner-social-link:hover {
+                    background: var(--primary-color);
+                    color: white;
+                    transform: translateY(-3px);
+                    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                }
+
+                /* Pagination ou load more */
+                .partners-pagination {
+                    display: flex;
+                    justify-content: center;
+                    margin-top: 40px;
+                }
+
+                .load-more-btn {
+                    padding: 12px 30px;
+                    background: white;
+                    border: 2px solid var(--primary-color);
+                    color: var(--primary-color);
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 16px;
+                    font-weight: 500;
+                    border-radius: 30px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .load-more-btn:hover {
+                    background: var(--primary-color);
+                    color: white;
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 15px rgba(147, 77, 26, 0.2);
+                }
+
+                /* Aucun partenaire */
+                .no-partners {
                     grid-column: 1 / -1;
+                    background: white;
+                    border-radius: 16px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+                    padding: 60px 40px;
                     text-align: center;
-                    font-size: 2.2em;
-                    color: #6b7280;
-                    font-family: 'Roboto', sans-serif;
-                    padding: 40px;
-                    width: 100%;
                 }
-                /* Responsive Design */
-                @media (max-width: 2560px) {
-                    .sponsor-card-container {
-                        grid-template-columns: repeat(3, 1fr);
+
+                .no-partners-icon {
+                    font-size: 80px;
+                    color: var(--border-color);
+                    margin-bottom: 20px;
+                }
+
+                .no-partners-title {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 28px;
+                    font-weight: 600;
+                    color: var(--secondary-color);
+                    margin-bottom: 15px;
+                }
+
+                .no-partners-text {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 16px;
+                    color: var(--text-color);
+                    max-width: 500px;
+                    margin: 0 auto;
+                    line-height: 1.6;
+                }
+
+                /* Badge pour partenaires premium */
+                .partner-premium-badge {
+                    position: absolute;
+                    top: 0;
+                    right: 30px;
+                    background: #ffc107;
+                    color: #212529;
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 12px;
+                    font-weight: 600;
+                    padding: 5px 15px;
+                    border-radius: 0 0 10px 10px;
+                    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+                    text-transform: uppercase;
+                    z-index: 5;
+                    letter-spacing: 0.5px;
+                }
+
+                .partner-premium-badge i {
+                    margin-right: 5px;
+                    color: #ff8f00;
+                }
+
+                /* État inactif/masqué */
+                .partner-card.hidden {
+                    display: none;
+                }
+
+                /* Animation du chargement/filtrage */
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
+                .fade-in {
+                    animation: fadeIn 0.4s ease forwards;
+                }
+
+                /* Responsive */
+                @media (max-width: 1200px) {
+                    .partners-grid {
+                        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+                        gap: 25px;
+                    }
+                    
+                    .partners-dashboard-title {
+                        font-size: 36px;
                     }
                 }
-                @media (max-width: 1920px) {
-                    .sponsor-card-container {
-                        grid-template-columns: repeat(2, 1fr);
+
+                @media (max-width: 992px) {
+                    .partners-dashboard {
+                        padding: 40px 0;
                     }
-                }
-                @media (max-width: 1280px) {
-                    .sponsor-card-container {
+                    
+                    .partners-filter-options {
+                        flex-wrap: wrap;
+                    }
+                    
+                    .partners-grid {
+                        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                        gap: 20px;
+                    }
+                    
+                    .partner-info-grid {
                         grid-template-columns: 1fr;
-                        padding: 24px;
-                    }
-                    .sponsor-business-card {
-                        width: 520px;
-                        height: 312px;
-                    }
-                    .sponsor-card-front h3 {
-                        font-size: 2.2em;
-                    }
-                    .sponsor-card-front p {
-                        font-size: 1.6em;
-                    }
-                    .sponsor-card-back p {
-                        font-size: 1.4em;
-                    }
-                    .sponsor-card-back i {
-                        font-size: 1.6em;
-                        width: 32px;
                     }
                 }
-                @media (max-width: 600px) {
-                    .sponsor-business-card {
-                        width: 100%;
-                        max-width: 440px;
-                        height: 264px;
-                    }
-                    .sponsor-card-front h3 {
-                        font-size: 1.8em;
-                    }
-                    .sponsor-card-front p {
-                        font-size: 1.4em;
-                    }
-                    .sponsor-card-back p {
-                        font-size: 1.2em;
-                    }
-                    .sponsor-card-back i {
-                        font-size: 1.4em;
-                        width: 28px;
-                    }
-                    #fh5co-header {
-                        height: 400px;
-                        min-height: 400px;
-                    }
-                    #title {
-                        font-size: 48px;
-                    }
-                }
+
                 @media (max-width: 768px) {
-                    .menu-toggle {
-                        display: block;
+                    .partners-dashboard-container {
+                        padding: 0 15px;
                     }
-                    .fh5co-nav .menu-1 ul {
-                        display: none;
+                    
+                    .partners-dashboard-title {
+                        font-size: 32px;
+                    }
+                    
+                    .partners-dashboard-subtitle {
+                        font-size: 16px;
+                    }
+                    
+                    .partners-filter-section {
+                        padding: 20px;
+                    }
+                    
+                    .partners-search-bar {
                         flex-direction: column;
-                        position: absolute;
-                        top: 60px;
-                        left: 0;
+                    }
+                    
+                    .partners-search-btn {
                         width: 100%;
-                        background-color: #fff;
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                        padding: 20px 0;
+                        justify-content: center;
+                        padding: 12px;
                     }
-                    .fh5co-nav .menu-1 ul.active {
-                        display: flex;
+                    
+                    .partner-card-banner {
+                        height: 100px;
                     }
-                    .fh5co-nav .menu-1 ul li {
-                        margin: 10px 0;
-                        text-align: center;
+                    
+                    .partner-logo-container {
+                        width: 80px;
+                        height: 80px;
+                        top: 60px;
                     }
-                    .user-circle {
-                        margin-right: 0;
-                        margin-bottom: 5px;
+                    
+                    .partner-content {
+                        padding: 30px 20px 20px;
                     }
-                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                        position: static;
-                        display: none;
-                        box-shadow: none;
-                        background-color: #f8f9fa;
+                    
+                    .partner-name {
+                        font-size: 20px;
+                        padding-left: 60px;
                     }
-                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none;
+                    
+                    .partner-card-footer {
+                        padding: 15px 20px;
+                        flex-direction: column;
+                        gap: 15px;
                     }
-                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block;
+                    
+                    .partner-action-btn {
+                        width: 100%;
+                    }
+                    
+                    .partner-social-links {
+                        width: 100%;
+                        justify-content: center;
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .partners-grid {
+                        grid-template-columns: 1fr;
+                    }
+                    
+                    .partners-dashboard-title {
+                        font-size: 28px;
+                    }
+                    
+                    .partners-filter-title {
+                        font-size: 20px;
+                    }
+                    
+                    .partner-filter-btn {
+                        padding: 8px 16px;
+                        font-size: 13px;
                     }
                 }
             </style>
@@ -268,72 +702,86 @@
     <body>
         <div class="fh5co-loader"></div>
         <div id="page">
-            <nav class="fh5co-nav" role="navigation">
-                <div class="container">
-                    <div class="menu-toggle">
-                        <i class="icon-menu"></i>
-                    </div>
-                    <div class="menu-1">
-                        <ul>
-                            <li ><a href="{{ path('app_home') }}">Home</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">Réservation</a>
+            <!-- Navigation bar with modern design -->
+                 <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Reservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
+                            </ul>
+                        </li>
+                                <li class="has-dropdown">
+                                <a href="#">Packs</a>
                                 <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
-                                </ul>
-                            </li>
-                            <li class="has-dropdown">
-                                <a href="{{ path('user_packs') }}">Packs</a>
-                            </li>
-                            <li class="has-dropdown">
-                                <a href="#">Services</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_services') }}">Service</a></li>
-                                    <li class="active"><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">
-                                    <span class="user-circle">
-                                        {% if app.user and app.user.image %}
-                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                        {% else %}
-                                            <i class="icon-user"></i>
-                                        {% endif %}
-                                    </span>
-                                    Contact
-                                </a>
-                                <ul class="dropdown">
-                                    {% if app.user %}
-                                        <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                        <li><a href="{{ path('app_home') }}">Historique</a></li>
-                                        {% if is_granted('ROLE_ADMIN') %}
-                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                        {% endif %}
-                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                    {% else %}
-                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
+                                    {% if not is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
                                     {% endif %}
                                 </ul>
                             </li>
-                        </ul>
-                    </div>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li class="active"><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Log out</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Sign up</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
-
+            </div>
+        </nav>
             <header id="fh5co-header" class="fh5co-cover" role="banner">
                 <div id="stars"></div>
                 <div id="stars2"></div>
                 <div id="stars3"></div>
                 <div id="title">
-                    <span>Nos</span><br>
-                    <span>Partenaires</span>
+                  <div class="partners-dashboard-container">
+                        <div class="partners-dashboard-header" data-aos="fade-up">
+                            <h1 class="partners-dashboard-title">Nos Partenaires</h1>
+                            <p class="partners-dashboard-subtitle">Découvrez notre réseau de partenaires professionnels qui contribuent à la réussite de vos événements.</p>
+                        </div>
+                    
                 </div>
             </header>
 
@@ -342,27 +790,185 @@
                     Debug: No sponsors found in the Sponsor variable. Check your Symfony controller and database query.
                 </p>
             {% else %}
-                <div class="sponsor-card-container">
-                    {% for sponsor in Sponsor %}
-                        <div class="sponsor-business-card" data-aos="zoom-in" data-aos-delay="{{ loop.index0 * 150 }}">
-                            <div class="sponsor-card-inner">
-                                <div class="sponsor-card-front">
-                                    <h3>{{ sponsor.nomPartenaire }}</h3>
-                                    <p>{{ sponsor.typePartenaire|default('Partenaire') }}</p>
-                                </div>
-                                <div class="sponsor-card-back">
-                                    <p><i class="fas fa-envelope"></i> {{ sponsor.emailPartenaire|default('Non spécifié') }}</p>
-                                    <p><i class="fas fa-phone"></i> {{ sponsor.telephonePartenaire|default('Non spécifié') }}</p>
-                                    <p><i class="fas fa-map-marker-alt"></i> {{ sponsor.adressePartenaire|default('Non spécifié') }}</p>
-                                    <p><a href="{{ sponsor.siteWeb|default('#') }}" target="_blank" class="website-link">
-                                        <i class="fas fa-globe"></i> {{ sponsor.siteWeb|default('Non spécifié') }}
-                                    </a></p>
-                                </div>
+                <div class="partners-dashboard">
+                    <div class="partners-dashboard-container">
+                       
+                        
+                        <div class="partners-filter-section" data-aos="fade-up" data-aos-delay="100">
+                            <h2 class="partners-filter-title">
+                                <i class="fas fa-filter"></i> Filtrer par catégorie
+                            </h2>
+                            
+                            <div class="partners-filter-options">
+                                <button class="partner-filter-btn active" data-filter="all">
+                                    <i class="fas fa-th-large"></i> Tous les partenaires
+                                </button>
+                                
+                                <!-- Génération dynamique des boutons de filtre basés sur les types de partenaires disponibles -->
+                                {% set uniqueTypes = {} %}
+                                {% for sponsor in Sponsor %}
+                                    {% if sponsor.typePartenaire is defined and sponsor.typePartenaire is not empty %}
+                                        {% set uniqueTypes = uniqueTypes|merge({(sponsor.typePartenaire): sponsor.typePartenaire}) %}
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% for type in uniqueTypes %}
+                                    <button class="partner-filter-btn" data-filter="{{ type|lower|replace({' ': '-'}) }}">
+                                        {% if type == 'Traiteur' %}
+                                            <i class="fas fa-utensils"></i>
+                                        {% elseif type == 'Décoration' %}
+                                            <i class="fas fa-paint-brush"></i>
+                                        {% elseif type == 'Photographie' %}
+                                            <i class="fas fa-camera"></i>
+                                        {% elseif type == 'Musique' %}
+                                            <i class="fas fa-music"></i>
+                                        {% elseif type == 'Salle' %}
+                                            <i class="fas fa-building"></i>
+                                        {% elseif type == 'Transport' %}
+                                            <i class="fas fa-car"></i>
+                                        {% elseif type == 'Sécurité' %}
+                                            <i class="fas fa-shield-alt"></i>
+                                        {% elseif type == 'Animation' %}
+                                            <i class="fas fa-microphone"></i>
+                                        {% else %}
+                                            <i class="fas fa-handshake"></i>
+                                        {% endif %}
+                                        {{ type }}
+                                    </button>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="partners-search-bar">
+                                <input type="text" id="partner-search" class="partners-search-input" placeholder="Rechercher un partenaire...">
+                                <button class="partners-search-btn">
+                                    <i class="fas fa-search"></i> Rechercher
+                                </button>
+                            </div>
+                            
+                            <div class="partners-count">
+                                Affichage de <span id="partners-visible-count">{{ Sponsor|length }}</span> sur <span>{{ Sponsor|length }}</span> partenaires
                             </div>
                         </div>
-                    {% else %}
-                        <p class="no-sponsor">Aucun partenaire trouvé.</p>
-                    {% endfor %}
+                        
+                        <div class="partners-grid">
+                            {% for sponsor in Sponsor %}
+                                <div class="partner-card fade-in" 
+                                     data-aos="fade-up" 
+                                     data-aos-delay="{{ loop.index0 * 100 }}"
+                                     data-type="{{ sponsor.typePartenaire|default('Partenaire')|lower|replace({' ': '-'}) }}">
+                                    
+                                    <div class="partner-card-banner">
+                                        <span class="partner-type-badge">{{ sponsor.typePartenaire|default('Partenaire') }}</span>
+                                    </div>
+                                    
+                                    <div class="partner-logo-container">
+                                        <div class="partner-logo">
+                                            {% if sponsor.typePartenaire == 'Traiteur' %}
+                                                <i class="fas fa-utensils"></i>
+                                            {% elseif sponsor.typePartenaire == 'Décoration' %}
+                                                <i class="fas fa-paint-brush"></i>
+                                            {% elseif sponsor.typePartenaire == 'Photographie' %}
+                                                <i class="fas fa-camera"></i>
+                                            {% elseif sponsor.typePartenaire == 'Musique' %}
+                                                <i class="fas fa-music"></i>
+                                            {% elseif sponsor.typePartenaire == 'Salle' %}
+                                                <i class="fas fa-building"></i>
+                                            {% elseif sponsor.typePartenaire == 'Transport' %}
+                                                <i class="fas fa-car"></i>
+                                            {% elseif sponsor.typePartenaire == 'Sécurité' %}
+                                                <i class="fas fa-shield-alt"></i>
+                                            {% elseif sponsor.typePartenaire == 'Animation' %}
+                                                <i class="fas fa-microphone"></i>
+                                            {% else %}
+                                                <i class="fas fa-handshake"></i>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="partner-content">
+                                        <h3 class="partner-name">{{ sponsor.nomPartenaire }}</h3>
+                                        
+                                        <div class="partner-info-grid">
+                                            <div class="partner-info-item">
+                                                <div class="partner-info-icon">
+                                                    <i class="fas fa-envelope"></i>
+                                                </div>
+                                                <div class="partner-info-content">
+                                                    <p class="partner-info-label">Email</p>
+                                                    <p class="partner-info-value">{{ sponsor.emailPartenaire|default('Non spécifié') }}</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="partner-info-item">
+                                                <div class="partner-info-icon">
+                                                    <i class="fas fa-phone"></i>
+                                                </div>
+                                                <div class="partner-info-content">
+                                                    <p class="partner-info-label">Téléphone</p>
+                                                    <p class="partner-info-value">{{ sponsor.telephonePartenaire|default('Non spécifié') }}</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="partner-info-item">
+                                                <div class="partner-info-icon">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                </div>
+                                                <div class="partner-info-content">
+                                                    <p class="partner-info-label">Adresse</p>
+                                                    <p class="partner-info-value">{{ sponsor.adressePartenaire|default('Non spécifié') }}</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="partner-info-item">
+                                                <div class="partner-info-icon">
+                                                    <i class="fas fa-globe"></i>
+                                                </div>
+                                                <div class="partner-info-content">
+                                                    <p class="partner-info-label">Site Web</p>
+                                                    <p class="partner-info-value">
+                                                        {% if sponsor.siteWeb is defined and sponsor.siteWeb is not empty %}
+                                                            <a href="{{ sponsor.siteWeb }}" target="_blank">{{ sponsor.siteWeb }}</a>
+                                                        {% else %}
+                                                            Non spécifié
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="partner-card-footer">
+                                        {% if sponsor.siteWeb is defined and sponsor.siteWeb is not empty %}
+                                            <a href="{{ sponsor.siteWeb }}" target="_blank" class="partner-action-btn">
+                                                <i class="fas fa-external-link-alt"></i> Visiter le site
+                                            </a>
+                                        {% else %}
+                                            <a href="mailto:{{ sponsor.emailPartenaire|default('#') }}" class="partner-action-btn">
+                                                <i class="fas fa-envelope"></i> Contacter
+                                            </a>
+                                        {% endif %}
+                                        
+                                        <div class="partner-social-links">
+                                            <a href="#" class="partner-social-link" title="Partager">
+                                                <i class="fas fa-share-alt"></i>
+                                            </a>
+                                            <a href="#" class="partner-social-link" title="Ajouter aux favoris">
+                                                <i class="far fa-heart"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="no-partners">
+                                    <div class="no-partners-icon">
+                                        <i class="fas fa-users-slash"></i>
+                                    </div>
+                                    <h3 class="no-partners-title">Aucun partenaire trouvé</h3>
+                                    <p class="no-partners-text">Nous n'avons pas encore de partenaires enregistrés. Revenez bientôt pour découvrir notre réseau de professionnels.</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             {% endif %}
 
@@ -375,7 +981,9 @@
                 <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
                 <script src="{{ asset('js/simplyCountdown.js') }}"></script>
                 <script src="{{ asset('js/main.js') }}"></script>
+                <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
                 <script>
+                    // Initialisation du compte à rebours
                     var eventDate = new Date('2025-12-31');
                     simplyCountdown('.simply-countdown-one', {
                         year: eventDate.getFullYear(),
@@ -384,19 +992,114 @@
                         enableUtc: false
                     });
 
-                    // Mobile menu toggle
-                    document.querySelector('.menu-toggle').addEventListener('click', function() {
-                        document.querySelector('.menu-1 ul').classList.toggle('active');
-                    });
+                    // Gestion de la navbar
+                    $(document).ready(function() {
+                        // Gestion du menu hamburger
+                        $('.menu-toggle').click(function() {
+                            $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                        });
 
-                    // Dropdown toggle for mobile
-                    document.querySelectorAll('.has-dropdown').forEach(function(dropdown) {
-                        dropdown.addEventListener('click', function(e) {
-                            if (window.innerWidth <= 768) {
+                        // Gestion des sous-menus sur mobile
+                        $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                            if ($(window).width() <= 768) {
                                 e.preventDefault();
-                                this.classList.toggle('active');
+                                var $parent = $(this).parent();
+                                $parent.toggleClass('active');
+                                $('.fh5co-nav .menu-1 ul li.has-dropdown').not($parent).removeClass('active');
                             }
                         });
+
+                        // Ferme le menu mobile lorsque l'utilisateur clique en dehors
+                        $(document).click(function(e) {
+                            if ($(window).width() <= 768) {
+                                var $menu = $('.fh5co-nav .menu-1 ul');
+                                var $toggle = $('.menu-toggle');
+                                if (!$menu.is(e.target) && $menu.has(e.target).length === 0 && !$toggle.is(e.target) && $toggle.has(e.target).length === 0) {
+                                    $menu.removeClass('active');
+                                    $('.fh5co-nav .menu-1 ul li.has-dropdown').removeClass('active');
+                                }
+                            }
+                        });
+                        
+                        // Système de filtrage des partenaires
+                        const filterButtons = document.querySelectorAll('.partner-filter-btn');
+                        const partnerCards = document.querySelectorAll('.partner-card');
+                        const partnerSearch = document.getElementById('partner-search');
+                        const partnerSearchBtn = document.querySelector('.partners-search-btn');
+                        const partnerVisibleCount = document.getElementById('partners-visible-count');
+                        
+                        // Fonction pour mettre à jour le compteur de partenaires visibles
+                        function updateVisibleCount() {
+                            const visiblePartners = document.querySelectorAll('.partner-card:not(.hidden)');
+                            if (partnerVisibleCount) {
+                                partnerVisibleCount.textContent = visiblePartners.length;
+                            }
+                        }
+                        
+                        // Fonction pour filtrer les partenaires
+                        function filterPartners() {
+                            const searchTerm = partnerSearch ? partnerSearch.value.toLowerCase() : '';
+                            const activeFilter = document.querySelector('.partner-filter-btn.active');
+                            const filterValue = activeFilter ? activeFilter.getAttribute('data-filter') : 'all';
+                            
+                            partnerCards.forEach(card => {
+                                const partnerName = card.querySelector('.partner-name').textContent.toLowerCase();
+                                const partnerType = card.getAttribute('data-type');
+                                const partnerEmail = card.querySelector('.partner-info-value').textContent.toLowerCase();
+                                
+                                const matchesSearch = partnerName.includes(searchTerm) || 
+                                                      partnerEmail.includes(searchTerm);
+                                                      
+                                const matchesFilter = filterValue === 'all' || partnerType === filterValue;
+                                
+                                if (matchesSearch && matchesFilter) {
+                                    card.classList.remove('hidden');
+                                } else {
+                                    card.classList.add('hidden');
+                                }
+                            });
+                            
+                            updateVisibleCount();
+                        }
+                        
+                        // Événements pour les boutons de filtre
+                        filterButtons.forEach(button => {
+                            button.addEventListener('click', function() {
+                                filterButtons.forEach(btn => btn.classList.remove('active'));
+                                this.classList.add('active');
+                                filterPartners();
+                            });
+                        });
+                        
+                        // Événement pour la recherche
+                        if (partnerSearch) {
+                            partnerSearch.addEventListener('input', filterPartners);
+                        }
+                        
+                        if (partnerSearchBtn) {
+                            partnerSearchBtn.addEventListener('click', filterPartners);
+                        }
+                        
+                        // Animation des cartes lors du défilement
+                        const animateCards = () => {
+                            const cards = document.querySelectorAll('.partner-card:not(.animated)');
+                            cards.forEach((card, index) => {
+                                setTimeout(() => {
+                                    card.classList.add('fade-in', 'animated');
+                                }, index * 100);
+                            });
+                        };
+                        
+                        // Initialisation des animations
+                        animateCards();
+                    });
+
+                    // Initialisation AOS
+                    AOS.init({
+                        duration: 600,
+                        easing: 'ease-out-cubic',
+                        once: true,
+                        disable: false
                     });
 
                     // Debug header visibility
@@ -419,7 +1122,7 @@
                         observer.observe(header);
 
                         // Log when new sponsors are added
-                        const sponsorContainer = document.querySelector('.sponsor-card-container');
+                        const sponsorContainer = document.querySelector('.partners-grid');
                         if (sponsorContainer) {
                             const mutationObserver = new MutationObserver((mutations) => {
                                 mutations.forEach(mutation => {
@@ -431,16 +1134,6 @@
                             });
                             mutationObserver.observe(sponsorContainer, { childList: true });
                         }
-                    });
-                </script>
-                <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-                <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-                <script>
-                    AOS.init({
-                        duration: 600,
-                        easing: 'ease-out-cubic',
-                        once: true,
-                        disable: false // Temporarily enable to test header visibility
                     });
                 </script>
             {% endblock %}

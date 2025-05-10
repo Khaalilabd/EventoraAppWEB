@@ -1,0 +1,88 @@
+{% extends 'admin/dashboard.html.twig' %}
+
+{% block title %}Liste des Modérateurs - Eventora{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modérateurs</li>
+                </ol>
+                <h6 class="font-weight-bolder mb-0">Liste des Modérateurs</h6>
+            </nav>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <a href="{{ path('admin_membres_new') }}" class="btn btn-primary">Ajouter un Modérateur</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Modérateurs</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom</th>
+                                        <th>Prénom</th>
+                                        <th>Email</th>
+                                        <th>CIN</th>
+                                        <th>Numéro de Téléphone</th>
+                                        <th>Adresse</th>
+                                        <th>Rôle</th>
+                                        <th>Confirmé</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for moderator in moderators %}
+                                        <tr>
+                                            <td>{{ moderator.id }}</td>
+                                            <td>{{ moderator.nom }}</td>
+                                            <td>{{ moderator.prenom }}</td>
+                                            <td>{{ moderator.email }}</td>
+                                            <td>{{ moderator.cin }}</td>
+                                            <td>{{ moderator.numTel }}</td>
+                                            <td>{{ moderator.adresse }}</td>
+                                            <td>{{ moderator.role }}</td>
+                                            <td>{{ moderator.isConfirmed ? 'Oui' : 'Non' }}</td>
+                                            <td>
+                                                <a href="{{ path('admin_membres_edit', {'id': moderator.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                                                <form method="post" action="{{ path('admin_membres_delete', {'id': moderator.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce modérateur ?');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ moderator.id) }}">
+                                                    <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="10" class="text-center">Aucun modérateur trouvé.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

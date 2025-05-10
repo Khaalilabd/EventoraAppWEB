@@ -1,490 +1,905 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Gestion des services{% endblock %}
+{% block title %}Gestion des Services{% endblock %}
 
-{% block body %}
-      <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
-        <div class="sidenav-header">
-            <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
-                <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
-            </a>
-        </div>
-        <hr class="horizontal dark mt-0">
-        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}" href="{{ path('admin_dashboard') }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-tachometer-alt text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
-                        <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-tachometer-alt text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Home</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reservationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-calendar-check text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Réservations</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'show' : '' }}" id="reservationsMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_pack' ? 'active' : '' }}" href="{{ path('admin_reservations_pack') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-box text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Réservations Pack</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_personnalise' ? 'active' : '' }}" href="{{ path('admin_reservations_personnalise') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-calendar-alt text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Réservations Personnalisées</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reclamationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-exclamation-triangle text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Réclamations</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'show' : '' }}" id="reclamationsMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reclamations' ? 'active' : '' }}" href="{{ path('admin_reclamations') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-exclamation-circle text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Réclamations</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="{{ path('admin_feedback') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-comment-dots text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Feedback</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-users text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Utilisateurs</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'show' : '' }}" id="usersMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-friends text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Membres</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_moderators' ? 'active' : '' }}" href="{{ path('admin_moderators') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-shield text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Modérateurs</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="{{ path('admin_admins') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-cog text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Admins</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-box text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Packs</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'show' : '' }}" id="packsMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-box-open text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Packs</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_typepacks' ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-tags text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Types de Packs</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-concierge-bell text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Services</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'show' : '' }}" id="servicesMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_services' ? 'active' : '' }}" href="{{ path('admin_services') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-tools text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Services</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="{{ path('admin_sponsors') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-handshake text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Partenaires</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_logout') }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-sign-out-alt text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Déconnexion</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </aside>
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- Inclusion explicite de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Sidebar Styling */
-        .sidenav {
-            background-color: #f8f9fa;
-            width: 250px;
-            height: 100vh;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+        /* Importation de la police Poppins */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        /* Général */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            overflow-x: hidden;
         }
-        .sidenav-header {
-            padding: 15px;
-        }
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            color: #333;
-        }
-        .navbar-brand:hover {
-            color: #ff6200;
-        }
-        .navbar-nav .nav-link {
-            padding: 12px 15px;
-            color: #555;
-            transition: all 0.3s ease;
-        }
-        .navbar-nav .nav-link:hover {
-            background-color: #ff6200;
-            color: #fff;
-        }
-        .navbar-nav .nav-link.active {
-            background-color: #ff6200;
-            color: #fff;
-        }
-        .navbar-nav .nav-link .icon {
-            width: 30px;
-            height: 30px;
-            background-color: #fff;
-            transition: background-color 0.3s ease;
-        }
-        .navbar-nav .nav-link:hover .icon,
-        .navbar-nav .nav-link.active .icon {
-            background-color: #ff6200;
-        }
-        .navbar-nav .nav-link .icon i {
-            font-size: 16px;
-        }
-        .navbar-nav .dropdown-toggle::after {
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-        .navbar-nav .dropdown-toggle[aria-expanded="true"]::after {
-            transform: rotate(180deg);
-        }
-        .collapse {
-            transition: all 0.3s ease;
-        }
-        .navbar-nav .collapse .nav-link {
-            padding-left: 40px;
-            font-size: 0.9em;
-        }
-        .navbar-nav .collapse .nav-link:hover {
-            background-color: #ff8c00;
-        }
-        hr.horizontal {
-            border: 0;
-            height: 1px;
-            background-color: #ddd;
-        }
-        /* Conteneur global */
-        .table-container {
-            max-width: 100%;
-            overflow-x: auto;
+
+        /* Conteneur principal */
+        .service-container {
+            margin-left: 270px;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: margin-left 0.3s ease;
         }
-        /* Style général du tableau */
-        .modern-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        /* En-têtes */
-        .modern-table thead {
-            background-color: #4a90e2;
-            color: #fff;
-        }
-        .modern-table th {
-            padding: 15px;
-            text-align: center;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        /* Corps du tableau */
-        .modern-table tbody tr {
-            transition: background-color 0.3s ease;
-        }
-        .modern-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        .modern-table tbody tr:hover {
-            background-color: #e9ecef;
-            transform: translateY(-2px);
-        }
-        /* Cellules */
-        .modern-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e9ecef;
-            color: #333;
-            font-size: 0.9rem;
-        }
-        /* Cellule des actions */
-        .action-cell {
+
+        /* Fiche spécialisée (mini cadre) */
+        .service-fiche {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            height: 250px;
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: none;
+            overflow: hidden;
+            z-index: 1;
         }
-        /* Boutons d'action */
-        .action-btn {
-            display: inline-flex;
+        .service-fiche::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            z-index: 2;
+            transition: height 0.3s ease;
+        }
+        .service-fiche:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15);
+        }
+        .service-fiche:hover::before {
+            height: 7px;
+        }
+        .service-fiche .fiche-header {
+            display: flex;
             align-items: center;
-            gap: 5px;
-            padding: 8px 12px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+            position: relative;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .service-fiche .fiche-header h6 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e40af;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+            letter-spacing: -0.02em;
+        }
+        .service-fiche .badge {
+            color: #ffffff;
+            font-size: 0.7rem;
+            padding: 5px 10px;
+            border-radius: 30px;
+            margin-left: 8px;
+            flex-shrink: 0;
+            text-transform: capitalize;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        /* Couleurs spécifiques pour chaque type de partenaire - palette bleue */
+        .badge-traiteur { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
+        .badge-photographe { background: linear-gradient(45deg, #60a5fa, #2563eb); }
+        .badge-decoration { background: linear-gradient(45deg, #93c5fd, #3b82f6); }
+        .badge-sono { background: linear-gradient(45deg, #2563eb, #1e40af); }
+        .badge-autres { background: linear-gradient(45deg, #6b7280, #4b5563); }
+        .badge-fleuriste { background: linear-gradient(45deg, #8b5cf6, #6d28d9); }
+        .badge-lumiere { background: linear-gradient(45deg, #ec4899, #be185d); }
+        
+        .service-fiche .fiche-body {
             font-size: 0.85rem;
-            border-radius: 6px;
-            text-decoration: none;
+            color: #4b5563;
+            flex-grow: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .service-fiche .fiche-body p {
+            margin: 0;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .service-fiche .fiche-body p i {
+            color: #3b82f6;
+            font-size: 0.9rem;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.1);
+            text-align: center;
+        }
+        .service-fiche .fiche-body p strong {
+            font-weight: 600;
+            color: #1f2937;
+            min-width: 80px;
+        }
+        .description-truncated {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            background: linear-gradient(180deg, #4b5563, transparent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0px 0px 1px rgba(75, 85, 99, 0.3);
+        }
+        .service-fiche .actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 10;
+            opacity: 0;
+            transform: translateX(10px);
             transition: all 0.3s ease;
         }
-        /* Bouton de détail */
-        .detail-btn {
-            background-color: transparent;
-            border: 1px solid #17a2b8;
-            color: #17a2b8;
+        .service-fiche:hover .actions {
+            opacity: 1;
+            transform: translateX(0);
         }
-        .detail-btn:hover {
-            background-color: #17a2b8;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        /* Bouton d'édition */
-        .edit-btn {
-            background-color: transparent;
-            border: 1px solid #4a90e2;
-            color: #4a90e2;
-        }
-        .edit-btn:hover {
-            background-color: #4a90e2;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        /* Bouton de suppression */
-        .delete-btn {
-            background-color: transparent;
-            border: 1px solid #dc3545;
-            color: #dc3545;
-        }
-        .delete-btn:hover {
-            background-color: #dc3545;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        /* Style des boutons de tri */
-        .sort-btn {
-            background: none;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
+        .service-fiche .actions a {
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            padding: 0;
-            color: inherit;
-            text-align: left;
-        }
-        .sort-btn:hover {
-            color: #d1e7ff;
-        }
-        .sort-icon {
-            margin-left: 5px;
-            font-size: 0.8em;
-        }
-        .sort-asc .sort-icon::after {
-            content: '↑';
-        }
-        .sort-desc .sort-icon::after {
-            content: '↓';
-        }
-        /* Style du champ de recherche */
-        .input-group {
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        .input-group-text {
-            background-color: #f8f9fa;
-            border: none;
-            color: #4a90e2;
-        }
-        #searchInput {
-            border: none;
-            padding: 10px;
+            border-radius: 8px;
             font-size: 0.9rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            opacity: 0.9;
         }
-        #searchInput:focus {
-            outline: none;
-            box-shadow: inset 0 0 5px rgba(74, 144, 226, 0.3);
+        .service-fiche .actions a:hover {
+            transform: scale(1.1);
+            opacity: 1;
         }
-        /* Nouveau style pour la pagination */
+        .action-info { background: linear-gradient(45deg, #0ea5e9, #0284c7); }
+        .action-edit { background: linear-gradient(45deg, #4f46e5, #4338ca); }
+        .action-delete { background: linear-gradient(45deg, #ef4444, #dc2626); }
+
+        /* Barre de recherche et actions */
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .search-bar .input-group {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            max-width: 350px;
+            background: #f1f5f9;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .search-bar .form-control {
+            border: none;
+            font-size: 0.9rem;
+            padding: 12px 15px;
+            background: transparent;
+        }
+        .search-bar .form-control:focus {
+            box-shadow: none;
+            background: #ffffff;
+        }
+        .search-bar .input-group-text {
+            background: transparent;
+            border: none;
+            color: #3b82f6;
+            padding-left: 15px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .add-btn, .export-btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #ffffff;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        .add-btn { 
+            background: linear-gradient(45deg, #3b82f6, #2563eb); 
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .add-btn:hover { 
+            background: linear-gradient(45deg, #2563eb, #1d4ed8); 
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+        .export-btn { 
+            background: linear-gradient(45deg, #10b981, #059669); 
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        .export-btn:hover { 
+            background: linear-gradient(45deg, #059669, #047857); 
+            transform: translateY(-3px); 
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Barre latérale de tri */
+        .filter-sidebar {
+            position: fixed;
+            top: 80px;
+            right: 0;
+            width: 300px;
+            height: calc(100vh - 80px);
+            background-color: #ffffff;
+            border-radius: 20px 0 0 20px;
+            box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .filter-sidebar.collapsed {
+            transform: translateX(100%);
+        }
+        .filter-toggle-btn {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .filter-toggle-btn:hover { 
+            background: linear-gradient(45deg, #2563eb, #1d4ed8);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+        .filter-content { margin-top: 20px; }
+        .filter-toggle-icon {
+            position: fixed;
+            top: 100px;
+            right: 15px;
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: none;
+        }
+        .filter-toggle-icon:hover { 
+            background: linear-gradient(45deg, #2563eb, #1d4ed8);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+        .filter-toggle-icon.visible { display: flex; }
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+        .btn-group {
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .btn-group .btn {
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            flex: 1;
+            border: none;
+            background: #f1f5f9;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-group .btn i { font-size: 0.8rem; }
+        .btn-group .btn.active { 
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: #fff; 
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .btn-group .btn:hover:not(.active) { 
+            background: #e0f2fe; 
+            color: #1e40af; 
+        }
+
+        /* Contenu principal */
+        .service-content {
+            margin-right: 320px;
+            padding: 0 15px;
+            transition: margin-right 0.3s ease;
+        }
+
+        /* Pagination */
         .pagination {
             display: flex;
             justify-content: center;
             margin-top: 30px;
             gap: 8px;
-            font-family: 'Arial', sans-serif;
         }
-        .pagination .page-item {
-            display: inline-flex;
-            align-items: center;
-        }
-        .pagination .page-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 40px;
-            height: 40px;
-            padding: 0;
-            background-color: #ffffff;
-            color: #4a90e2;
-            border: 2px solid #4a90e2;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            text-decoration: none;
+        .pagination .page-item .page-link {
+            color: #3b82f6;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .pagination .page-link:hover {
-            background-color: #4a90e2;
-            color: #ffffff;
-            border-color: #4a90e2;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         .pagination .page-item.active .page-link {
-            background-color: #ff6200;
-            border-color: #ff6200;
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
             color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .pagination .page-item .page-link:hover {
+            background: #e0f2fe;
+            color: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .pagination .page-item.disabled .page-link {
-            background-color: #f8f9fa;
-            border-color: #dee2e6;
-            color: #6c757d;
-            cursor: not-allowed;
+            color: #d1d5db;
+            background: #f8f9fa;
             box-shadow: none;
         }
-        .pagination .page-item.disabled .page-link:hover {
-            background-color: #f8f9fa;
-            color: #6c757d;
-            transform: none;
-            box-shadow: none;
+
+        /* Modale */
+        .modal-content {
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border: none;
         }
+        .modal-header {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: #ffffff;
+            border-bottom: none;
+            padding: 20px 25px;
+        }
+        .modal-header .modal-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .modal-header .btn-close {
+            color: #ffffff;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+        .modal-header .btn-close:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        .modal-body {
+            padding: 25px;
+            font-size: 0.95rem;
+            background: #ffffff;
+        }
+        .modal-body .row {
+            margin-bottom: 15px;
+        }
+        .modal-body h6 {
+            color: #4b5563;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        .modal-body p {
+            margin: 6px 0;
+            display: flex;
+            gap: 8px;
+        }
+        .modal-body p strong {
+            font-weight: 600;
+            color: #1f2937;
+            min-width: 120px;
+        }
+        .modal-body img {
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .modal-body img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .modal-footer {
+            padding: 15px 25px 20px;
+            background: #f9fafb;
+            border-top: none;
+        }
+        .modal-footer .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        .modal-footer .btn-secondary {
+            background: #f1f5f9;
+            color: #4b5563;
+            border: none;
+        }
+        .modal-footer .btn-secondary:hover {
+            background: #e2e8f0;
+            color: #1f2937;
+            transform: translateY(-2px);
+        }
+        .modal-footer .btn-primary {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            border: none;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .modal-footer .btn-primary:hover {
+            background: linear-gradient(45deg, #2563eb, #1d4ed8);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+
         /* Responsive */
-        @media (max-width: 768px) {
-            .modern-table th,
-            .modern-table td {
-                padding: 10px;
-                font-size: 0.8rem;
-            }
-            .action-cell {
-                flex-direction: column;
-                gap: 5px;
-            }
-            .action-btn {
+        @media (max-width: 992px) {
+            .service-container { margin-left: 0; }
+            .service-content { margin-right: 0; }
+            .filter-sidebar {
                 width: 100%;
-                text-align: center;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-radius: 16px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             }
-            .input-group {
-                max-width: 100%;
-                margin-bottom: 10px;
+            .filter-sidebar.collapsed {
+                transform: translateX(0);
+                height: 60px;
+                overflow: hidden;
             }
-            .pagination .page-link {
-                min-width: 35px;
-                height: 35px;
+            .filter-sidebar.collapsed .filter-content { display: none; }
+            .filter-toggle-icon { display: none; }
+        }
+        @media (max-width: 768px) {
+            .service-fiche {
+                font-size: 0.8rem;
+                height: 200px;
+            }
+            .service-fiche .fiche-header h6 {
                 font-size: 0.9rem;
             }
+            .service-fiche .fiche-body p {
+                font-size: 0.8rem;
+            }
+            .service-fiche .actions a {
+                width: 22px;
+                height: 22px;
+                font-size: 0.75rem;
+            }
+            .search-bar .input-group {
+                max-width: 100%;
+            }
+            .table-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            .action-buttons {
+                justify-content: space-between;
+            }
+            .pagination .page-link {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Styles pour le compteur de résultats de recherche */
+        .search-results-count {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 5px;
+            display: none;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* État de recherche active */
+        body.searching .service-fiche {
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        /* Animation plus fluide pour les filtres */
+        .filter-sidebar {
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), 
+                        height 0.4s cubic-bezier(0.19, 1, 0.22, 1),
+                        opacity 0.4s ease;
+        }
+        
+        /* Amélioration du style des boutons actifs */
+        .btn-group .btn.active {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Style pour la barre de recherche */
+        .search-bar {
+            position: relative;
+        }
+        
+        .search-bar .input-group {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            max-width: 350px;
+            background: #f1f5f9;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar .input-group:focus-within {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            background: #ffffff;
+        }
+
+        /* Loader de recherche */
+        .search-loader {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #ffffff;
+            color: #3b82f6;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            animation: fadeIn 0.3s ease;
+            z-index: 10;
+        }
+        
+        .search-loader i {
+            animation: spin 1s infinite linear;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Style pour la notification d'export */
+        .export-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            z-index: 9999;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        /* Styles pour l'effet de perspective sur les cartes */
+        .service-fiche {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            will-change: transform;
+        }
+        
+        /* Style pour le bouton de recherche */
+        .search-btn {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .search-btn:hover {
+            background: linear-gradient(45deg, #2563eb, #1d4ed8);
+            transform: translateX(2px);
+        }
+        
+        /* Loader de page */
+        .page-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .page-loader .spinner {
+            font-size: 2rem;
+            color: #3b82f6;
+            margin-bottom: 10px;
+        }
+        
+        .page-loader .text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1f2937;
+        }
+        
+        .service-content.loading {
+            position: relative;
+            min-height: 300px;
+        }
+        
+        .service-content.loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(249, 250, 251, 0.7);
+            backdrop-filter: blur(2px);
+            z-index: 50;
         }
     </style>
+{% endblock %}
 
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+{% block body %}
+   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+    <div class="sidenav-header">
+        <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
+            <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+        </a>
+    </div>
+    <hr class="horizontal dark mt-0">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}" href="{{ path('admin_dashboard') }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-tachometer-alt text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
+                    <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-tachometer-alt text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reservationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-calendar-check text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Reservations</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'show' : '' }}" id="reservationsMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_pack' ? 'active' : '' }}" href="{{ path('admin_reservations_pack') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-box text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Pack Reservations</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_personnalise' ? 'active' : '' }}" href="{{ path('admin_reservations_personnalise') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-calendar-alt text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Personalized Reservations</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#complaintsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-exclamation-triangle text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Complaints</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'show' : '' }}" id="complaintsMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reclamations' ? 'active' : '' }}" href="{{ path('admin_reclamations') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-exclamation-circle text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Complaints</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="{{ path('admin_feedback') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-comment-dots text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Feedback</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-users text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Users</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'show' : '' }}" id="usersMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-user-friends text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Members</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_agent_index' ? 'active' : '' }}" href="{{ path('app_agent_index') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-user-shield text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Agents</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-box text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Packs</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'show' : '' }}" id="packsMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-box-open text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Packs</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_typepacks' ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-tags text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Pack Types</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-concierge-bell text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Services</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'show' : '' }}" id="servicesMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_services' ? 'active' : '' }}" href="{{ path('admin_services') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-tools text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Services</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="{{ path('admin_sponsors') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-handshake text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Partners</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-sign-out-alt text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Log out</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>
+
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg service-container">
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
@@ -496,9 +911,9 @@
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                        <div class="input-group">
+                        <div class="input-group search-bar">
                             <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Rechercher...">
+                            <input type="text" class="form-control" placeholder="Rechercher..." id="searchService" aria-label="Rechercher des services">
                         </div>
                     </div>
                     <ul class="navbar-nav justify-content-end">
@@ -514,213 +929,649 @@
         </nav>
 
         <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-4 shadow-sm border-radius-xl">
-                        <div class="card-header p-3 d-flex justify-content-between align-items-center">
-                            <h6 class="font-weight-bolder mb-0">Liste des Services</h6>
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="input-group" style="max-width: 300px;">
-                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                    <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un service...">
+            <!-- En-tête avec recherche et actions -->
+            <div class="table-header">
+                <div class="search-bar">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" placeholder="Rechercher un service..." id="searchService" name="search" value="{{ searchTerm }}" aria-label="Rechercher des services">
+                        <!-- Les champs cachés pour maintenir l'état de tri dans le DOM -->
+                        <input type="hidden" id="sort_by" value="{{ sort_by }}">
+                        <input type="hidden" id="sort_order" value="{{ sort_order }}">
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a href="{{ path('admin_service_create') }}" class="add-btn" aria-label="Ajouter un service"><i class="fas fa-plus-circle me-1"></i> Ajouter un service</a>
+                    <a href="#" class="export-btn" onclick="exportToCSV()" aria-label="Exporter en CSV"><i class="fas fa-file-export me-1"></i> Exporter CSV</a>
+                </div>
+            </div>
+
+            <!-- Contenu principal : Les fiches de services -->
+            <div class="service-content">
+                <div class="row g-4" id="serviceList">
+                    {% if GServices|length > 0 %}
+                        {% for Gservice in GServices %}
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                <div class="service-fiche">
+                                    <div class="actions">
+                                        <a href="#" class="action-info" data-bs-toggle="modal" data-bs-target="#serviceModal-{{ Gservice.id }}" aria-label="Voir les détails du service" data-bs-toggle="tooltip" title="Voir détails"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="action-edit" aria-label="Modifier le service" data-bs-toggle="tooltip" title="Modifier"><i class="fas fa-edit"></i></a>
+                                        <a href="#" class="action-delete" onclick="if(confirm('Voulez-vous vraiment supprimer ce service ?')) { document.getElementById('delete-form-{{ Gservice.id }}').submit(); } return false;" aria-label="Supprimer le service" data-bs-toggle="tooltip" title="Supprimer"><i class="fas fa-trash-alt"></i></a>
+                                        <form id="delete-form-{{ Gservice.id }}" method="post" action="{{ path('admin_service_delete', {'id': Gservice.id}) }}" style="display: none;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Gservice.id) }}">
+                                        </form>
+                                    </div>
+                                    <div class="fiche-header">
+                                        <h6>{{ Gservice.titre }}</h6>
+                                        <span class="badge badge-{{ Gservice.sponsor.type_partenaire|lower|replace({'é': 'e', ' ': '-'}) }}">{{ Gservice.sponsor.type_partenaire }}</span>
+                                    </div>
+                                    <div class="fiche-body">
+                                        {% if Gservice.image %}
+                                        <div class="text-center mb-2">
+                                            <img src="{{ asset(Gservice.image) }}" alt="{{ Gservice.titre }}" class="img-fluid rounded-3 shadow-sm" style="max-height: 80px; object-fit: cover;">
+                                        </div>
+                                        {% endif %}
+                                        <p><i class="fas fa-building"></i> <strong>Partenaire:</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
+                                        <p><i class="fas fa-tag"></i> <strong>Type:</strong> {{ Gservice.type_service }}</p>
+                                        <p><i class="fas fa-euro-sign"></i> <strong>Prix:</strong> <span class="badge" style="background: linear-gradient(45deg, #10b981, #059669);">{{ Gservice.prix }}</span></p>
+                                        <p><i class="fas fa-map-marker-alt"></i> <strong>Lieu:</strong> {{ Gservice.Location }}</p>
+                                        <p><i class="fas fa-align-left"></i> <strong>Description:</strong> <span class="description-truncated">{{ Gservice.description }}</span></p>
+                                    </div>
                                 </div>
-                                <a href="{{ path('admin_service_create') }}" class="btn btn-sm btn-outline-success">
-                                    <i class="fas fa-plus"></i> Ajouter un service
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12">
+                            <div class="alert shadow-sm" role="alert" style="background: linear-gradient(45deg, #e0f2fe, #dbeafe); border-radius: 12px; border: none; color: #1e40af; padding: 20px; text-align: center;">
+                                <i class="fas fa-info-circle me-2"></i> Aucun service trouvé. 
+                                <a href="{{ path('admin_service_create') }}" class="alert-link">Ajouter un premier service</a>.
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Pagination -->
+                {% if total_pages > 1 %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ path('admin_services', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Précédent">
+                                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            {% for i in 1..total_pages %}
+                                <li class="page-item {{ current_page == i ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ path('admin_services', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ path('admin_services', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'search': searchTerm}) }}" aria-label="Suivant">
+                                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+
+            <!-- Barre latérale de tri à droite -->
+            <div class="filter-sidebar" id="filterSidebar">
+                <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">Masquer les filtres</button>
+                <div class="filter-content">
+                    <h5 class="mb-4 text-primary fw-bold"><i class="fas fa-sort me-2"></i>Options de tri</h5>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">Trier par Partenaire</label>
+                            <div class="btn-group w-100">
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('sponsor.nom_partenaire', 'asc')" 
+                                   class="btn {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par partenaire croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('sponsor.nom_partenaire', 'desc')" 
+                                   class="btn {{ sort_by == 'sponsor.nom_partenaire' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par partenaire décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
                                 </a>
                             </div>
                         </div>
-                        <div class="card-body p-3">
-                            {# Affichage des messages flash #}
-                            {% for message in app.flashes('success') %}
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
-                            {% for message in app.flashes('error') %}
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
-
-                            {% if GServices is defined and GServices is not empty %}
-                                <div class="table-responsive">
-                                    <div class="table-container">
-                                        <table class="modern-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="id">ID <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="id_partenaire">Nom Partenaire <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="titre">Titre <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="location">Location <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="type_service">Type Service <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="description">Description <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>
-                                                        <button class="sort-btn" data-sort="prix">Prix <span class="sort-icon">↕</span></button>
-                                                    </th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for Gservice in GServices %}
-                                                    <tr>
-                                                        <td data-label="id">{{ Gservice.id }}</td>
-                                                        <td data-label="id_partenaire">{{ Gservice.sponsor.nom_partenaire }}</td>
-                                                        <td data-label="titre">{{ Gservice.titre }}</td>
-                                                        <td data-label="location">{{ Gservice.Location }}</td>
-                                                        <td data-label="type_service">{{ Gservice.type_service }}</td>
-                                                        <td data-label="description" data-full-description="{{ Gservice.description }}">
-                                                            {{ Gservice.description|length > 50 ? Gservice.description|slice(0, 50) ~ '...' : Gservice.description }}
-                                                        </td>
-                                                        <td data-label="prix">{{ Gservice.prix }}</td>
-                                                        <td class="action-cell">
-                                                            <a href="{{ path('admin_service_show', {'id': Gservice.id}) }}" class="action-btn detail-btn">
-                                                                <i class="fas fa-eye"></i> Détail
-                                                            </a>
-                                                            <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="action-btn edit-btn">
-                                                                <i class="fas fa-edit"></i> Modifier
-                                                            </a>
-                                                            <form method="post" action="{{ path('admin_service_delete', {'id': Gservice.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce service ?');">
-                                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ Gservice.id) }}">
-                                                                <button class="action-btn delete-btn">
-                                                                    <i class="fas fa-trash"></i> Supprimer
-                                                                </button>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                {# Afficher la pagination uniquement si plus de 3 services #}
-                                {% if GServices.getTotalItemCount > 3 %}
-                                    <div class="pagination mt-4 d-flex justify-content-center">
-                                        {{ knp_pagination_render(GServices, null, {}, {
-                                            'align': 'center',
-                                            'size': 'medium',
-                                            'rounded': true
-                                        }) }}
-                                    </div>
-                                {% endif %}
-                            {% else %}
-                                <div class="text-center p-4">
-                                    <i class="fas fa-exclamation-circle text-muted" style="font-size: 2rem;"></i>
-                                    <p class="text-muted mt-2">Aucun service trouvé.</p>
-                                </div>
-                            {% endif %}
+                        <div class="col-12">
+                            <label class="form-label">Trier par Type de Service</label>
+                            <div class="btn-group w-100">
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('type_service', 'asc')" 
+                                   class="btn {{ sort_by == 'type_service' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par type de service croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('type_service', 'desc')" 
+                                   class="btn {{ sort_by == 'type_service' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par type de service décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Trier par Titre</label>
+                            <div class="btn-group w-100">
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('titre', 'asc')" 
+                                   class="btn {{ sort_by == 'titre' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par titre croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('titre', 'desc')" 
+                                   class="btn {{ sort_by == 'titre' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par titre décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Trier par Prix</label>
+                            <div class="btn-group w-100">
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('prix', 'asc')" 
+                                   class="btn {{ sort_by == 'prix' and sort_order == 'asc' ? 'active' : '' }}"
+                                   aria-label="Trier par prix croissant">
+                                    <i class="fas fa-arrow-up me-1"></i> Croissant
+                                </a>
+                                <a href="javascript:void(0)" onclick="sortAndSubmit('prix', 'desc')" 
+                                   class="btn {{ sort_by == 'prix' and sort_order == 'desc' ? 'active' : '' }}"
+                                   aria-label="Trier par prix décroissant">
+                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <a href="{{ path('admin_services') }}" class="btn btn-outline-secondary w-100" aria-label="Réinitialiser les tris" 
+                               style="border-radius: 10px; padding: 10px; font-weight: 500; transition: all 0.3s ease; border: 1px solid #cbd5e1;">
+                                <i class="fas fa-undo me-2"></i> Réinitialiser les filtres
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Bouton flottant pour réafficher le menu -->
+            <button class="filter-toggle-icon" id="filterToggleIcon" onclick="toggleFilterSidebar()">
+                <i class="fas fa-filter"></i>
+            </button>
         </div>
+
+        <!-- Modales pour détails -->
+        {% for Gservice in GServices %}
+            <div class="modal fade" id="serviceModal-{{ Gservice.id }}" tabindex="-1" aria-labelledby="serviceModalLabel-{{ Gservice.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="serviceModalLabel-{{ Gservice.id }}">
+                                <i class="fas fa-concierge-bell me-2"></i>{{ Gservice.titre }}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    {% if Gservice.image %}
+                                    <div class="text-center mb-4">
+                                        <img src="{{ asset(Gservice.image) }}" alt="{{ Gservice.titre }}" class="img-fluid rounded-3 shadow-sm">
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div>
+                                        <h6 class="d-flex align-items-center"><i class="fas fa-align-left me-2 text-primary"></i>Description</h6>
+                                        <div class="p-3 bg-light rounded-3">
+                                            <p class="mb-0">{{ Gservice.description }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="mb-4">
+                                        <h6 class="d-flex align-items-center"><i class="fas fa-info-circle me-2 text-primary"></i>Informations générales</h6>
+                                        <div class="info-grid">
+                                            <p><strong><i class="fas fa-hashtag text-primary me-1"></i> ID</strong> <span class="badge bg-light text-dark">{{ Gservice.id }}</span></p>
+                                            <p><strong><i class="fas fa-user-tie text-primary me-1"></i> Partenaire</strong> {{ Gservice.sponsor.nom_partenaire }}</p>
+                                            <p><strong><i class="fas fa-tag text-primary me-1"></i> Type de partenaire</strong> 
+                                                <span class="badge badge-{{ Gservice.sponsor.type_partenaire|lower|replace({'é': 'e', ' ': '-'}) }}">
+                                                    {{ Gservice.sponsor.type_partenaire }}
+                                                </span>
+                                            </p>
+                                            <p><strong><i class="fas fa-heading text-primary me-1"></i> Titre</strong> {{ Gservice.titre }}</p>
+                                            <p><strong><i class="fas fa-map-marker-alt text-primary me-1"></i> Lieu</strong> {{ Gservice.Location }}</p>
+                                            <p><strong><i class="fas fa-cogs text-primary me-1"></i> Type de service</strong> {{ Gservice.type_service }}</p>
+                                            <p><strong><i class="fas fa-euro-sign text-primary me-1"></i> Prix</strong> <span class="badge bg-success">{{ Gservice.prix }}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Fermer
+                            </button>
+                            <a href="{{ path('admin_service_edit', {'id': Gservice.id}) }}" class="btn btn-primary">
+                                <i class="fas fa-edit me-2"></i>Modifier
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </main>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('searchInput');
-            const table = document.querySelector('.modern-table');
-            const tbody = table ? table.querySelector('tbody') : null;
-            const rows = tbody ? tbody.querySelectorAll('tr') : [];
+        // Fonction pour gérer la pagination via AJAX
+        function handlePagination(e, pageLink) {
+            e.preventDefault();
+            
+            // Obtenir l'URL de la page cible
+            const url = pageLink.getAttribute('href');
+            if (!url) return;
+            
+            // Mettre à jour l'URL dans le navigateur sans recharger
+            window.history.pushState({path: url}, '', url);
+            
+            // Afficher une animation de chargement
+            const contentArea = document.querySelector('.service-content');
+            contentArea.classList.add('loading');
+            
+            // Créer un loader
+            let loader = document.getElementById('pageLoader');
+            if (!loader) {
+                loader = document.createElement('div');
+                loader.id = 'pageLoader';
+                loader.className = 'page-loader';
+                loader.innerHTML = '<div class="spinner"><i class="fas fa-circle-notch fa-spin"></i></div><div class="text">Chargement de la page...</div>';
+                document.querySelector('.service-content').appendChild(loader);
+            }
+            
+            // Faire la requête AJAX
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Remplacer le contenu principal
+                    const newServiceList = doc.getElementById('serviceList');
+                    if (newServiceList) {
+                        document.getElementById('serviceList').innerHTML = newServiceList.innerHTML;
+                        initializeCardAnimations();
+                    }
+                    
+                    // Mettre à jour la pagination
+                    const newPagination = doc.querySelector('.pagination');
+                    const currentPagination = document.querySelector('.pagination');
+                    if (newPagination && currentPagination) {
+                        currentPagination.innerHTML = newPagination.innerHTML;
+                        // Réattacher les gestionnaires d'événements pour les nouveaux liens
+                        attachPaginationHandlers();
+                    }
+                    
+                    // Extraire le numéro de page actuel de l'URL
+                    const urlParams = new URLSearchParams(new URL(url).search);
+                    const currentPage = urlParams.get('page') || '1';
+                    
+                    // Mettre à jour les valeurs de tri cachées, au cas où elles ont changé
+                    const sortBy = urlParams.get('sort_by');
+                    const sortOrder = urlParams.get('sort_order');
+                    if (sortBy) document.getElementById('sort_by').value = sortBy;
+                    if (sortOrder) document.getElementById('sort_order').value = sortOrder;
+                    
+                    // Supprimer l'animation de chargement
+                    contentArea.classList.remove('loading');
+                    if (loader) loader.remove();
+                    
+                    // Faire défiler la page vers le haut en douceur
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                })
+                .catch(error => {
+                    console.error('Erreur lors du changement de page:', error);
+                    contentArea.classList.remove('loading');
+                    if (loader) loader.remove();
+                    showNotification('<i class="fas fa-exclamation-circle me-2"></i> Erreur lors du changement de page', 'error');
+                });
+        }
 
-            // Recherche dynamique
-            if (searchInput && rows.length) {
-                searchInput.addEventListener('input', () => {
-                    const searchTerm = searchInput.value.toLowerCase();
+        // Attacher les gestionnaires d'événements à tous les liens de pagination
+        function attachPaginationHandlers() {
+            const paginationLinks = document.querySelectorAll('.pagination .page-link');
+            paginationLinks.forEach(link => {
+                link.removeEventListener('click', function(e) { handlePagination(e, this); });
+                link.addEventListener('click', function(e) { handlePagination(e, this); });
+            });
+        }
 
-                    rows.forEach(row => {
-                        const cells = row.querySelectorAll('td');
-                        let match = false;
-
-                        cells.forEach(cell => {
-                            if (cell.textContent.toLowerCase().includes(searchTerm)) {
-                                match = true;
-                            }
-                        });
-
-                        row.style.display = match ? '' : 'none';
+        // Animation d'entrée pour les cartes de service au chargement initial
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser les tooltips
+            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function(tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl, {
+                        delay: { show: 500, hide: 100 }
                     });
                 });
             }
-
-            // Tri du tableau
-            const headers = table ? table.querySelectorAll('.sort-btn') : [];
-            let currentSortColumn = null;
-            let isAsc = true;
-
-            headers.forEach(header => {
-                header.addEventListener('click', () => {
-                    const sortKey = header.getAttribute('data-sort');
-                    if (currentSortColumn === sortKey) {
-                        isAsc = !isAsc;
-                    } else {
-                        isAsc = true;
-                        headers.forEach(h => {
-                            h.classList.remove('sort-asc', 'sort-desc');
-                            h.querySelector('.sort-icon').innerHTML = '↕';
-                        });
+            
+            // Initialiser les animations des cartes au chargement
+            initializeCardAnimations();
+            
+            // Attacher les gestionnaires d'événements pour la pagination
+            attachPaginationHandlers();
+        });
+        
+        // Fonction pour récupérer les résultats de recherche via AJAX
+        function fetchSearchResults(searchText) {
+            // Construire l'URL avec les paramètres actuels
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('search', searchText);
+            urlParams.set('page', '1'); // Retour à la première page lors d'une recherche
+            
+            // Conserver les paramètres de tri depuis les éléments cachés
+            const sortBy = document.getElementById('sort_by').value || '{{ sort_by }}';
+            const sortOrder = document.getElementById('sort_order').value || '{{ sort_order }}';
+            urlParams.set('sort_by', sortBy);
+            urlParams.set('sort_order', sortOrder);
+            
+            // Mettre à jour l'URL dans le navigateur sans recharger la page
+            const newUrl = `{{ path('admin_services') }}?${urlParams.toString()}`;
+            window.history.pushState({path: newUrl}, '', newUrl);
+            
+            // Afficher une animation de chargement
+            const searchBar = document.querySelector('.search-bar');
+            let loader = document.getElementById('searchLoader');
+            if (!loader) {
+                loader = document.createElement('div');
+                loader.id = 'searchLoader';
+                loader.className = 'search-loader';
+                loader.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Recherche...';
+                searchBar.appendChild(loader);
+            }
+            
+            // Faire la requête AJAX
+            fetch(newUrl)
+                .then(response => response.text())
+                .then(html => {
+                    // Parser le HTML reçu
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Extraire la liste des services
+                    const newServiceList = doc.getElementById('serviceList');
+                    if (newServiceList) {
+                        // Remplacer le contenu
+                        document.getElementById('serviceList').innerHTML = newServiceList.innerHTML;
+                        
+                        // Initialiser les animations pour les nouvelles cartes
+                        initializeCardAnimations();
                     }
-                    currentSortColumn = sortKey;
+                    
+                    // Mettre à jour la pagination si présente
+                    const newPagination = doc.querySelector('.pagination');
+                    const currentPagination = document.querySelector('.pagination');
+                    if (newPagination && currentPagination) {
+                        currentPagination.innerHTML = newPagination.innerHTML;
+                    } else if (newPagination) {
+                        // Ajouter la pagination si elle n'existait pas
+                        const paginationContainer = document.createElement('nav');
+                        paginationContainer.setAttribute('aria-label', 'Page navigation');
+                        paginationContainer.className = 'mt-4';
+                        paginationContainer.innerHTML = newPagination.outerHTML;
+                        document.getElementById('serviceList').after(paginationContainer);
+                    }
+                    
+                    // Mettre à jour le compteur total des résultats
+                    updateSearchResultsCount(document.querySelectorAll('#serviceList .col-lg-3').length, searchText);
+                    
+                    // Supprimer l'animation de chargement
+                    if (loader) loader.remove();
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la recherche:', error);
+                    // Afficher une notification d'erreur
+                    showNotification('<i class="fas fa-exclamation-circle me-2"></i> Erreur lors de la recherche', 'error');
+                    
+                    // Supprimer l'animation de chargement
+                    if (loader) loader.remove();
+                });
+        }
 
-                    // Mettre à jour l'icône de tri
-                    header.classList.add(isAsc ? 'sort-asc' : 'sort-desc');
-                    header.classList.remove(isAsc ? 'sort-desc' : 'sort-asc');
-                    header.querySelector('.sort-icon').innerHTML = isAsc ? '↑' : '↓';
+        // Fonction pour trier et soumettre le formulaire
+        function sortAndSubmit(sortBy, sortOrder) {
+            // Mettre à jour les éléments cachés pour le tri
+            document.getElementById('sort_by').value = sortBy;
+            document.getElementById('sort_order').value = sortOrder;
+            
+            // Récupérer la valeur de recherche actuelle
+            const searchInput = document.getElementById('searchService');
+            const searchValue = searchInput ? searchInput.value.trim() : '';
+            
+            // Construire l'URL avec les paramètres de tri et de recherche
+            const urlParams = new URLSearchParams();
+            urlParams.set('sort_by', sortBy);
+            urlParams.set('sort_order', sortOrder);
+            urlParams.set('page', '1');
+            
+            // Ajouter le terme de recherche s'il existe
+            if (searchValue && searchValue !== '') {
+                urlParams.set('search', searchValue);
+                // Déclencher une recherche AJAX qui respectera les nouveaux paramètres de tri
+                fetchSearchResults(searchValue);
+            } else {
+                // Faire une requête AJAX avec juste les paramètres de tri
+                const url = `{{ path('admin_services') }}?${urlParams.toString()}`;
+                
+                // Mettre à jour l'URL dans le navigateur sans recharger la page
+                window.history.pushState({path: url}, '', url);
+                
+                // Afficher une animation de chargement
+                const searchBar = document.querySelector('.search-bar');
+                let loader = document.getElementById('searchLoader');
+                if (!loader) {
+                    loader = document.createElement('div');
+                    loader.id = 'searchLoader';
+                    loader.className = 'search-loader';
+                    loader.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Tri en cours...';
+                    searchBar.appendChild(loader);
+                }
+                
+                // Faire la requête AJAX
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        
+                        // Remplacer le contenu principal
+                        const newServiceList = doc.getElementById('serviceList');
+                        if (newServiceList) {
+                            document.getElementById('serviceList').innerHTML = newServiceList.innerHTML;
+                            initializeCardAnimations();
+                        }
+                        
+                        // Mettre à jour la pagination
+                        const newPagination = doc.querySelector('.pagination');
+                        const currentPagination = document.querySelector('.pagination');
+                        if (newPagination && currentPagination) {
+                            currentPagination.innerHTML = newPagination.innerHTML;
+                        }
+                        
+                        // Supprimer l'animation de chargement
+                        if (loader) loader.remove();
+                        
+                        // Afficher une notification de succès
+                        showNotification('<i class="fas fa-check-circle me-2"></i> Liste triée', 'info');
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du tri:', error);
+                        if (loader) loader.remove();
+                        showNotification('<i class="fas fa-exclamation-circle me-2"></i> Erreur lors du tri', 'error');
+                    });
+            }
+        }
 
-                    // Trier les lignes
-                    sortTable(sortKey, isAsc);
+        // Recherche en temps réel sur le front-end (filtrage visuel)
+        document.getElementById('searchService').addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase().trim();
+            
+            // Debounce pour éviter trop d'appels rapides
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(() => {
+                // Mise à jour dynamique de la recherche côté client
+                if (searchText.length >= 2) {
+                    // Au lieu de filtrer localement, faire une requête AJAX
+                    fetchSearchResults(searchText);
+                } else if (searchText.length === 0) {
+                    // Retourner à la page initiale sans paramètres de recherche
+                    window.location.href = '{{ path('admin_services') }}';
+                }
+            }, 500); // Légèrement plus lent pour éviter trop de requêtes
+        });
+        
+        // Initialiser les animations des cartes
+        function initializeCardAnimations() {
+            const cards = document.querySelectorAll('.service-fiche');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 50 + (index * 100)); // Décalage progressif pour effet en cascade
+                
+                // Effet 3D au survol
+                card.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateY = ((x - centerX) / centerX) * 5;
+                    const rotateX = ((centerY - y) / centerY) * 5;
+                    
+                    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(-8px)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
                 });
             });
+        }
 
-            function sortTable(column, asc) {
-                const rowsArray = Array.from(rows);
-                const isNumeric = ['id', 'prix'].includes(column);
-
-                rowsArray.sort((a, b) => {
-                    let aValue = column === 'description'
-                        ? (a.querySelector(`td[data-label="${column}"]`).getAttribute('data-full-description') || a.querySelector(`td[data-label="${column}"]`).textContent.trim())
-                        : a.querySelector(`td[data-label="${column}"]`).textContent.trim();
-                    let bValue = column === 'description'
-                        ? (b.querySelector(`td[data-label="${column}"]`).getAttribute('data-full-description') || b.querySelector(`td[data-label="${column}"]`).textContent.trim())
-                        : b.querySelector(`td[data-label="${column}"]`).textContent.trim();
-
-                    // Gestion des valeurs vides
-                    if (!aValue && !bValue) return 0;
-                    if (!aValue) return asc ? 1 : -1;
-                    if (!bValue) return asc ? -1 : 1;
-
-                    // Tri numérique pour id et prix
-                    if (isNumeric) {
-                        aValue = parseFloat(aValue) || 0;
-                        bValue = parseFloat(bValue) || 0;
-                        return asc ? aValue - bValue : bValue - aValue;
-                    }
-
-                    // Tri textuel pour les autres colonnes
-                    return asc
-                        ? aValue.localeCompare(bValue, undefined, { sensitivity: 'base' })
-                        : bValue.localeCompare(aValue, undefined, { sensitivity: 'base' });
-                });
-
-                // Réinsérer les lignes triées
-                if (tbody) {
-                    tbody.innerHTML = '';
-                    rowsArray.forEach(row => tbody.appendChild(row));
-                }
+        // Fonction pour mettre à jour le compteur de résultats
+        function updateSearchResultsCount(count, searchText) {
+            let searchResultsCounter = document.getElementById('searchResultsCount');
+            if (!searchResultsCounter) {
+                searchResultsCounter = document.createElement('div');
+                searchResultsCounter.id = 'searchResultsCount';
+                searchResultsCounter.className = 'search-results-count';
+                document.querySelector('.search-bar').appendChild(searchResultsCounter);
             }
-        });
+            
+            if (searchText) {
+                searchResultsCounter.textContent = `${count} résultat${count !== 1 ? 's' : ''} trouvé${count !== 1 ? 's' : ''}`;
+                searchResultsCounter.style.display = 'block';
+            } else {
+                searchResultsCounter.style.display = 'none';
+            }
+        }
+
+        // Toggle pour la barre latérale de tri
+        function toggleFilterSidebar() {
+            const sidebar = document.getElementById('filterSidebar');
+            const btn = sidebar.querySelector('.filter-toggle-btn');
+            const icon = document.getElementById('filterToggleIcon');
+            sidebar.classList.toggle('collapsed');
+            btn.textContent = sidebar.classList.contains('collapsed') ? 'Afficher les filtres' : 'Masquer les filtres';
+            icon.classList.toggle('visible', sidebar.classList.contains('collapsed'));
+        }
+
+        // Exportation en CSV
+        function exportToCSV() {
+            // Récupérer les données de tous les services visibles
+            const fiches = document.querySelectorAll('#serviceList .col-lg-3');
+            let csvContent = 'ID,Titre,Partenaire,Type de Service,Prix,Location,Description\n';
+            let exportCount = 0;
+            
+            fiches.forEach(fiche => {
+                // Toutes les fiches sont maintenant visibles car le filtrage est côté serveur
+                try {
+                    const titre = fiche.querySelector('.fiche-header h6').textContent.trim().replace(/,/g, ' ');
+                    const partenaire = fiche.querySelector('.fiche-body p:nth-child(1)').textContent.replace(/Partenaire:|\s+/g, ' ').trim().replace(/,/g, ' ');
+                    const typeService = fiche.querySelector('.fiche-body p:nth-child(2)').textContent.replace(/Type:|\s+/g, ' ').trim().replace(/,/g, ' ');
+                    const prix = fiche.querySelector('.fiche-body p:nth-child(3)').textContent.replace(/Prix:|\s+/g, ' ').trim().replace(/,/g, ' ');
+                    const lieu = fiche.querySelector('.fiche-body p:nth-child(4)').textContent.replace(/Lieu:|\s+/g, ' ').trim().replace(/,/g, ' ');
+                    const description = fiche.querySelector('.fiche-body p:nth-child(5) .description-truncated').textContent.replace(/Description:|\s+/g, ' ').trim().replace(/,/g, ' ');
+                    
+                    // Récupérer l'ID depuis le formulaire de suppression
+                    const deleteForm = fiche.querySelector('form[id^="delete-form-"]');
+                    const id = deleteForm ? deleteForm.id.replace('delete-form-', '') : 'N/A';
+                    
+                    csvContent += `${id},"${titre}","${partenaire}","${typeService}","${prix}","${lieu}","${description}"\n`;
+                    exportCount++;
+                } catch(e) {
+                    console.error("Erreur lors de l'export d'une ligne:", e);
+                }
+            });
+            
+            // Vérifier s'il y a des données à exporter
+            if (exportCount === 0) {
+                showNotification('<i class="fas fa-exclamation-circle me-2"></i> Aucune donnée à exporter', 'error');
+                return;
+            }
+            
+            // Créer et télécharger le fichier CSV
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            const date = new Date();
+            const dateStr = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            const searchTerm = document.getElementById('searchService').value.trim();
+            const filename = searchTerm ? 
+                `services_export_${searchTerm}_${dateStr}.csv` : 
+                `services_export_${dateStr}.csv`;
+            
+            link.download = filename;
+            link.click();
+            
+            // Afficher une notification de succès
+            showNotification(`<i class="fas fa-check-circle me-2"></i> Export CSV réussi (${exportCount} services)`, 'success');
+        }
+        
+        // Fonction pour afficher des notifications
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'export-notification';
+            
+            // Définir le style en fonction du type
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(45deg, #10b981, #059669)';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(45deg, #ef4444, #dc2626)';
+            } else if (type === 'info') {
+                notification.style.background = 'linear-gradient(45deg, #3b82f6, #2563eb)';
+            }
+            
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(10px)';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
     </script>
 {% endblock %}

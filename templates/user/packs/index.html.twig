@@ -3,521 +3,833 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title %}Eventora - Liste des Packs{% endblock %}</title>
+        <title>Eventora - Packs</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
-        {% block stylesheets %}
-            <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
-            <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
-            <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond:400,500,600,700|Cormorant+SC:400,500,600,700" rel="stylesheet">
-            <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
-            <!-- Animate.css -->
-            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
-            <!-- Icomoon Icon Fonts -->
-            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
-            <!-- Bootstrap -->
-            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-            <!-- Magnific Popup -->
-            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-            <!-- Owl Carousel -->
-            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
-            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
-            <!-- Swiper CSS -->
-            <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-            <!-- Theme style -->
-            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
-            <!-- Custom Styles -->
-            <style>
-                body {
-                    background-color: #f5f5f5;
-                    font-family: 'Work Sans', sans-serif;
-                    margin: 0; /* Ensure no default margin */
-                }
+        <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond:400,500,500i,600,600i,700,700i" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,600" rel="stylesheet">
+        <!-- Animate.css -->
+        <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+        <!-- Icomoon Icon Fonts -->
+        <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+         <link rel="stylesheet" href="{{ asset('css/modern-navbar.css') }}">    
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+        <!-- Magnific Popup -->
+        <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+        <!-- Owl Carousel -->
+        <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+        <!-- Swiper CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+        <!-- Font Awesome for icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
 
-                .page-wrap {
-                    width: 100%;
-                    min-height: 100vh;
-                    display: flex;
-                    flex-direction: column; /* Changed to stack slider and cards vertically */
-                    justify-content: center;
-                    align-items: center; /* Center content horizontally */
-                    background: linear-gradient(to bottom right, #2a1f30, #383d44);
-                    padding: 100px 20px 20px; /* Add top padding to avoid navbar overlap */
-                    box-sizing: border-box;
-                }
+        <style>
+            /* --- Fond de secours pour la page --- */
+            body {
+                background: #f2f2f2;
+                font-family: 'Work Sans', sans-serif;
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
 
-                #home-slider {
+            /* --- Styles pour la vidéo de fond --- */
+            .video-background {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1; /* Derrière tout le contenu */
+                overflow: hidden;
+            }
+
+            .video-background video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Couvre la zone sans déformation */
+                opacity: 0.6; /* Transparence pour lisibilité */
+            }
+
+            /* --- Conteneur principal sans fond --- */
+            .packs-content {
+                flex: 1;
+                padding: 70px 20px 40px;
+                box-sizing: border-box;
+                border-radius: 10px;
+                position: relative;
+                z-index: 1; /* Au-dessus de la vidéo */
+                max-width: 1400px; /* Limite la largeur pour lisibilité */
+                margin: 0 auto;
+            }
+
+            /* --- Ajustement pour le page layout --- */
+            #page {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                padding-top: 70px;
+            }
+
+            /* --- Les styles de la navbar ont été supprimés car ils sont déjà dans modern-navbar.css --- */
+
+            /* --- Styles existants inchangés --- */
+            .packs-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 30px;
+                max-width: 1200px;
+                margin: 0 auto 50px;
+            }
+
+            .recommended-section {
+                max-width: 1200px;
+                margin: 50px auto;
+            }
+
+            .recommended-section h2 {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: #ffffff; /* Texte blanc pour lisibilité sur fond vidéo */
+                text-align: center;
+                margin-bottom: 30px;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Ombre pour contraste */
+            }
+
+            #home-slider {
+                height: 80vh;
+                width: 100%;
+                max-width: 1200px;
+                position: relative;
+                margin-bottom: 40px;
+            }
+
+            .swiper-container {
+                height: 100%;
+                width: 100%;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            .swiper-slide {
+                display: flex;
+                background: #fff;
+                position: relative;
+            }
+
+            .swiper-image {
+                width: 50%;
+                height: 100%;
+                position: relative;
+            }
+
+            .swiper-image-inner {
+                background-size: cover;
+                background-position: center;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .swiper-image-left {
+                background-color: rgba(0, 0, 0, 0.4);
+                padding: 2rem;
+            }
+
+            .swiper-image-right {
+                background-color: #f8f9fa;
+                padding: 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .swiper-slide-active .swiper-image-left {
+                background-color: rgba(0, 0, 0, 0.3);
+            }
+
+            .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-left h1 {
+                font-family: 'Cormorant Garamond', serif;
+                font-weight: 700;
+                color: #fff;
+                font-size: 4.5rem;
+                margin: 0 0 1rem 0;
+                text-align: center;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+                position: relative;
+                z-index: 2;
+                opacity: 1;
+            }
+
+            .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-left h1 + p {
+                font-family: 'Work Sans', sans-serif;
+                font-size: 1.8rem;
+                color: #fff;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                margin: 0;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+                position: relative;
+                z-index: 2;
+                opacity:  #fff;
+            }
+
+            .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-right .pack-details {
+                color: #333;
+                max-width: 400px;
+            }
+
+            .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-right .pack-details p {
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.5rem;
+                margin: 0.5rem 0;
+                color: #555;
+                position: relative;
+                z-index: 2;
+                opacity: 1;
+            }
+
+            .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-right .pack-details p strong {
+                font-weight: 600;
+                color: #222;
+            }
+
+            .swiper-pagination-bullet {
+                width: 12px;
+                height: 12px;
+                background: #fff;
+                opacity: 0.5;
+                margin: 0 6px;
+            }
+
+            .swiper-pagination-bullet-active {
+                opacity: 1;
+                background: #f57c00;
+            }
+
+            .swiper-container-horizontal > .swiper-pagination-bullets {
+                bottom: 15px;
+            }
+
+            .swiper-slide .overlay-link {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 10;
+                text-decoration: none;
+                color: transparent;
+            }
+
+            .pack-card {
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)); /* Fond dégradé transparent */
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                padding: 20px;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .pack-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            }
+
+            .pack-card h3 {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 2rem;
+                font-weight: 700;
+                color: #ffffff; /* Texte blanc pour lisibilité */
+                margin-bottom: 10px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Ombre pour contraste */
+            }
+
+            .pack-card .pack-type {
+                font-family: 'Work Sans', sans-serif;
+                font-size: 1.2rem;
+                font-weight: 500;
+                color: #dddddd; /* Gris clair pour lisibilité */
+                text-transform: uppercase;
+                margin-bottom: 15px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            .pack-card .pack-image-wrapper {
+                width: 100%;
+                height: 150px;
+                overflow: hidden;
+                border-radius: 15px;
+                margin-bottom: 20px;
+                position: relative;
+            }
+
+            .pack-card .pack-image-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .pack-card .pack-image-wrapper::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+                border-radius: 15px;
+            }
+
+            .pack-card .pack-details-list {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .pack-card .pack-details-list p {
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.2rem;
+                color: #dddddd; /* Gris clair pour lisibilité */
+                margin: 10px 0;
+                line-height: 1.5;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            .pack-card .pack-details-list p strong {
+                font-weight: 700;
+                font-size: 1.3rem;
+                color: #ffffff; /* Blanc pour contraste */
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            .price-highlight {
+                color: #d9822b;
+                font-weight: 700;
+                font-size: 1.3rem;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            .pack-card .details-button {
+                display: inline-block;
+                padding: 10px 25px;
+                background: linear-gradient(135deg, #934D1A, #D9822B);
+                color: #fff;
+                text-decoration: none;
+                border-radius: 30px;
+                font-family: 'Work Sans', sans-serif;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: background 0.3s ease, transform 0.3s ease;
+                text-align: center;
+            }
+
+            .pack-card .details-button:hover {
+                background: linear-gradient(135deg, #7a3914, #b66b1d);
+                transform: scale(1.05);
+            }
+
+            .pack-card .favorite-button {
+                display: inline-block;
+                margin-top: 10px;
+                padding: 10px 25px;
+                background: linear-gradient(135deg, #934D1A, #D9822B);
+                color: #fff;
+                text-decoration: none;
+                border-radius: 30px;
+                font-family: 'Work Sans', sans-serif;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: background 0.3s ease, transform 0.3s ease;
+                text-align: center;
+                border: none;
+                cursor: pointer;
+            }
+
+            .pack-card .favorite-button:hover {
+                background: linear-gradient(135deg, #7a3914, #b66b1d);
+                transform: scale(1.05);
+            }
+
+            .pack-card .favorite-button.favorited {
+                background: linear-gradient(135deg, #d32f2f, #f57c00);
+            }
+
+            .pack-card .favorite-button.favorited:hover {
+                background: linear-gradient(135deg, #b71c1c, #d66d00);
+            }
+
+            .no-packs, .no-recommended {
+                text-align: center;
+                padding: 50px;
+            }
+
+            .no-packs p, .no-recommended p {
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.5rem;
+                color: #ffffff; /* Blanc pour lisibilité */
+                margin-bottom: 20px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            #fh5co-footer {
+                margin-top: auto;
+                background: rgba(0, 0, 0, 0.5); /* Fond semi-transparent pour le footer */
+                z-index: 1; /* Au-dessus de la vidéo */
+            }
+
+            /* Filter form styles */
+            .filter-section {
+                max-width: 1200px;
+                margin: 30px auto;
+                background: rgba(0, 0, 0, 0.5); /* Fond semi-transparent pour la section filtre */
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+
+            .filter-section h3 {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 1.8rem;
+                color: #ffffff; /* Blanc pour lisibilité */
+                margin-bottom: 20px;
+                text-align: center;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            .filter-form {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                align-items: flex-end;
+            }
+
+            .filter-group {
+                flex: 1;
+                min-width: 200px;
+            }
+
+            .filter-group label {
+                font-family: 'Work Sans', sans-serif;
+                font-size: 1rem;
+                color: #dddddd; /* Gris clair pour lisibilité */
+                display: block;
+                margin-bottom: 5px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            .filter-group select,
+            .filter-group input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-family: 'Roboto', sans-serif;
+                font-size: 1rem;
+                color: #333;
+                background: rgba(255, 255, 255, 0.9); /* Fond légèrement opaque pour les inputs */
+            }
+
+            .filter-group select:focus,
+            .filter-group input:focus {
+                border-color: #934D1A;
+                outline: none;
+            }
+
+            .price-range {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .price-range input {
+                flex: 1;
+            }
+
+            .price-range span {
+                font-family: 'Roboto', sans-serif;
+                font-size: 1rem;
+                color: #dddddd; /* Gris clair pour lisibilité */
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            .filter-buttons {
+                display: flex;
+                gap: 10px;
+            }
+
+            .filter-buttons button {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                font-family: 'Work Sans', sans-serif;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: background 0.3s ease;
+            }
+
+            .filter-buttons .apply-button {
+                background: linear-gradient(135deg, #934D1A, #D9822B);
+                color: #fff;
+            }
+
+            .filter-buttons .apply-button:hover {
+                background: linear-gradient(135deg, #7a3914, #b66b1d);
+            }
+
+            .filter-buttons .reset-button {
+                background: #e0e0e0;
+                color: #333;
+            }
+
+            .filter-buttons .reset-button:hover {
+                background: #d0d0d0;
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 1024px) {
+                .packs-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (max-width: 960px) {
+                .recommended-section #home-slider {
                     height: 80vh;
-                    max-height: 800px;
-                    width: 90vw;
-                    max-width: 1200px;
-                    position: relative;
-                    margin-bottom: 40px; /* Space between slider and cards */
+                    width: 95vw;
                 }
 
-                .swiper-container {
-                    height: 100%;
-                    width: 100%;
-                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                    border-radius: 10px;
-                    overflow: hidden;
+                .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-left h1 {
+                    font-size: 3.5rem;
                 }
 
-                .swiper-slide {
-                    display: flex;
-                    background: #fff;
-                    position: relative; /* For positioning the overlay link */
+                .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-left h1 + p {
+                    font-size: 1.4rem;
                 }
 
-                .swiper-image {
-                    width: 50%;
-                    height: 100%;
-                    position: relative;
+                .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-right .pack-details p {
+                    font-size: 1.3rem;
                 }
 
-                .swiper-image-inner {
-                    background-size: cover;
-                    background-position: center;
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    position: relative;
-                    overflow: hidden;
-                }
-
-                .swiper-image-left {
-                    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay for better text visibility */
-                    background-blend-mode: overlay;
-                    padding: 2rem;
-                    transition: background-color 0.5s ease;
-                }
-
+                .swiper-image-left,
                 .swiper-image-right {
-                    background-color: #f8f9fa; /* Light background for right side */
-                    padding: 2rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+                    padding: 1.5rem;
                 }
+            }
 
-                .swiper-slide-active .swiper-image-left {
-                    background-color: rgba(0, 0, 0, 0.5);
-                }
-
-                h1 {
-                    font-family: 'Cormorant Garamond', serif;
-                    font-weight: 700; /* Bolder label */
-                    color: #fff;
-
-                    font-size: 3.5rem; /* Increased size (was 3rem) */
-                    margin: 0 0 1rem 0;
-                    text-align: center; /* Center for better presentation */
-                    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Shadow for visibility */
-                    transform: translateY(20px);
-                    opacity: 0;
-                    transition: all 0.6s ease 0.3s;
-                }
-
-                h1 span.emphasis {
-                    font-style: italic;
-                    font-weight: 700;
-                }
-
-                h1 + p {
-                    font-family: 'Work Sans', sans-serif; /* More readable font */
-
-                    font-size: 1.2rem; /* Increased size (was 1rem) */
-                    color: #fff;
-                    text-transform: uppercase;
-                    letter-spacing: 1.5px;
-                    margin: 0;
-                    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-                    transform: translateY(20px);
-                    opacity: 0;
-                    transition: all 0.6s ease 0.4s;
-                }
-
-                .pack-details {
-                    color: #333; /* Dark text for contrast on light background */
-                    max-width: 400px;
-                }
-
-                .pack-details p {
-                    font-family: 'Roboto', sans-serif; /* Clear, modern font */
-
-                    font-size: 1.1rem;
-                    margin: 0.5rem 0;
-                    color: #555;
-                    transform: translateY(20px);
-                    opacity: 0;
-                    transition: all 0.6s ease;
-                }
-
-                .pack-details p strong {
-                    font-weight: 600;
-                    color: #222;
-                }
-
-                .swiper-slide-active h1,
-                .swiper-slide-active h1 + p,
-                .swiper-slide-active .pack-details p {
-                    transform: translateY(0);
-                    opacity: 1;
-                }
-
-                .pack-details p:nth-child(1) { transition-delay: 0.5s; }
-                .pack-details p:nth-child(2) { transition-delay: 0.6s; }
-                .pack-details p:nth-child(3) { transition-delay: 0.7s; }
-                .pack-details p:nth-child(4) { transition-delay: 0.8s; }
-
-                .swiper-pagination-bullet {
-                    width: 12px;
-                    height: 12px;
-                    background: #fff;
-                    opacity: 0.5;
-                    margin: 0 6px;
-                }
-
-                .swiper-pagination-bullet-active {
-                    opacity: 1;
-                    background: #007bff;
-                }
-
-                .swiper-container-horizontal > .swiper-pagination-bullets {
-                    bottom: 15px;
-                }
-
-                /* Overlay link for clickability */
-                .swiper-slide .overlay-link {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    z-index: 10; /* Ensure it’s above other content */
-                    text-decoration: none;
-                    color: transparent; /* Hide any text */
-                }
-
-                /* Card styles */
-                .packs-list {
-                    width: 90vw;
-                    max-width: 1200px;
-                    margin: 0 auto 40px;
+            @media (max-width: 768px) {
+                /* Les styles responsives pour la navbar sont déjà dans modern-navbar.css */
+                
+                .packs-grid {
+                    grid-template-columns: 1fr;
                 }
 
                 .pack-card {
-                    background: #fff;
-
-                    border-radius: 10px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                    overflow: hidden;
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
-                    height: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    text-decoration: none; /* Remove underline from <a> */
-                    color: inherit; /* Inherit text color */
+                    padding: 15px;
                 }
 
-                .packs-list .row {
-                    margin-bottom: -30px; /* Adjust for padding */
-                }
-
-                .packs-list .col-md-4 {
-                    margin-bottom: 30px; /* Space between cards */
-                }
-
-                .pack-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-                }
-
-                .pack-card img {
-                    width: 100%;
-                    height: 200px;
-                    object-fit: cover;
-                }
-
-                .pack-card-body {
-                    padding: 1.5rem;
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .pack-card-body h3 {
-                    font-family: 'Cormorant Garamond', serif;
+                .pack-card h3 {
                     font-size: 1.8rem;
-                    font-weight: 600;
-                    margin: 0 0 0.5rem;
-                    color: #333;
                 }
 
-                .pack-card-body .pack-type {
-                    font-family: 'Work Sans', sans-serif;
-                    font-size: 0.9rem;
-                    color: #777;
-                    text-transform: uppercase;
-                    margin-bottom: 1rem;
+                .pack-card .pack-image-wrapper {
+                    height: 120px;
                 }
 
-                .pack-card-body p {
-                    font-family: 'Roboto', sans-serif;
-                    font-size: 1rem;
-                    color: #555;
-                    margin: 0.3rem 0;
+                .filter-form {
+                    flex-direction: column;
+                    align-items: stretch;
                 }
 
-                .pack-card-body p strong {
-                    font-weight: 600;
-                    color: #222;
+                .filter-group {
+                    min-width: 100%;
                 }
 
-                @media screen and (max-width: 960px) {
-                    #home-slider {
-                        height: 90vh;
-                        width: 95vw;
-                    }
+                /* Ajustement pour la vidéo sur mobile */
+                .video-background video {
+                    object-fit: cover;
+                    height: 100vh;
+                }
+            }
 
-                    h1 {
-
-                        font-size: 2.8rem; /* Adjusted for smaller screens (was 2.2rem) */
-                    }
-
-                    h1 + p {
-                        font-size: 1rem; /* Adjusted for smaller screens (was 0.9rem) */
-                    }
-
-                    .pack-details p {
-                        font-size: 1rem;
-                    }
-
-                    .swiper-image-left,
-                    .swiper-image-right {
-                        padding: 1.5rem;
-                    }
-
-                    .pack-card img {
-                        height: 180px;
-                    }
-
-                    .pack-card-body h3 {
-                        font-size: 1.6rem;
-                    }
+            @media (max-width: 640px) {
+                .swiper-slide {
+                    flex-direction: column;
                 }
 
-                @media screen and (max-width: 640px) {
-                    .swiper-slide {
-                        flex-direction: column;
-                    }
-
-                    .swiper-image {
-                        width: 100%;
-                        height: 50%;
-                    }
-
-                    h1 {
-
-                        font-size: 2.2rem; /* Adjusted for smaller screens (was 1.8rem) */
-                        text-align: center;
-                    }
-
-                    h1 + p {
-
-                        font-size: 0.9rem; /* Adjusted for smaller screens (was 0.8rem) */
-                        text-align: center;
-                    }
-
-                    .pack-details {
-                        text-align: center;
-                    }
-
-                    .pack-details p {
-
-                        font-size: 0.9rem;
-                    }
-
-                    .swiper-image-left,
-                    .swiper-image-right {
-                        padding: 1rem;
-                    }
-
-                    .pack-card img {
-                        height: 150px;
-                    }
-
-                    .pack-card-body h3 {
-                        font-size: 1.4rem;
-                    }
-
-                    .pack-card-body p {
-                        font-size: 0.9rem;
-                    }
+                .swiper-image {
+                    width: 100%;
+                    height: 50%;
                 }
-            </style>
-        {% endblock %}
 
-        <!-- Modernizr JS -->
+                .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-left h1 {
+                    font-size: 2.8rem;
+                    text-align: center;
+                }
+
+                .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-left h1 + p {
+                    font-size: 1.2rem;
+                    text-align: center;
+                }
+
+                .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-right .pack-details {
+                    text-align: center;
+                }
+
+                .recommended-section #home-slider .swiper-container .swiper-slide .swiper-image-right .pack-details p {
+                    font-size: 1.1rem;
+                }
+
+                .swiper-image-left,
+                .swiper-image-right {
+                    padding: 1rem;
+                }
+            }
+        </style>
+
         <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
-        <!-- FOR IE9 below -->
         <!--[if lt IE 9]>
         <script src="{{ asset('js/respond.min.js') }}"></script>
         <![endif]-->
-
-        {% block javascripts_head %}{% endblock %}
     </head>
     <body>
         <div class="fh5co-loader"></div>
+
+        <!-- Vidéo de fond -->
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source src="{{ asset('images/pack.mp4') }}" type="video/mp4">
+                Votre navigateur ne prend pas en charge la balise vidéo.
+            </video>
+        </div>
+
         <div id="page">
+            <!-- Navbar -->
             <nav class="fh5co-nav" role="navigation">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xs-2">
-                            <div id="fh5co-logo"><a href="{{ path('app_home') }}">Eventora</a></div>
-                        </div>
-                        <div class="col-xs-10 text-right menu-1">
-                            <ul>
-                                <li><a href="{{ path('app_home') }}">Home</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#">Service</a></li>
-                                        <li><a href="#">Partenaire</a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Reclamation</a>
-                                    <ul class="dropdown">
-
-                                         <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                    </ul>
-                                </li>
-                               <li class="has-dropdown">
-                                    <a href="#">Réservation</a>
-                                      <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
-                                </ul>
-                                </li>
-                                <li class="has-dropdown active">
-                                    <a href="{{ path('user_packs') }}">Packs</a>
-                                </li>
-
-                                
-                                <li><a href="#">Talk with Evi</a></li>
-                                 <li class="has-dropdown">
-                                    <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                    <ul class="dropdown">
-                                        {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_home') }}">Historique</a></li>
-                                            {% if is_granted('ROLE_ADMIN') %}
-                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                            {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                        {% else %}
-                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </li>                                
-                            </ul>
-                            
->>>>>>> Eventora
-                        </div>
-                    </div>
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
                 </div>
-            </nav>
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Reservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
+                            </ul>
+                        </li>
+                                <li class="has-dropdown active">
+                                <a href="#">Packs</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
+                                    {% if not is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Log out</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Sign up</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
 
-            <div class="page-wrap">
-                <div id="home-slider">
-                    <div class="swiper-container">
-                        <div class="swiper-wrapper">
-                            {% if packs is not empty %}
-                                {% for pack in packs %}
-                                    <div class="swiper-slide">
-                                        <div class="swiper-image swiper-image-left" data-swiper-parallax-y="-20%">
-                                            <div class="swiper-image-inner" style="background-image: url({{ asset(pack.imagePath ?: 'images/default-pack.jpg') }});">
-                                                <h1>{{ pack.nomPack }}</h1>
-                                                <p>{{ pack.type }}</p>
+
+            <!-- Packs content -->
+            <div class="packs-content">
+                <!-- Recommended Packs Section with Swiper -->
+                {% if app.user and not is_granted('ROLE_ADMIN') %}
+                    <section class="recommended-section">
+                        <h2>Packs Recommandés</h2>
+                        <div id="home-slider">
+                            <div class="swiper-container">
+                                <div class="swiper-wrapper">
+                                    {% if recommendedPacks|length > 0 %}
+                                        {% for pack in recommendedPacks %}
+                                            <div class="swiper-slide">
+                                                <div class="swiper-image swiper-image-left">
+                                                    <div class="swiper-image-inner" style="background-image: url({{ asset(pack.imagePath ?: 'images/default-pack.jpg') }});">
+                                                        <h1>{{ pack.nomPack }}</h1>
+                                                        <p>{{ pack.typepack ? pack.typepack.type : pack.type ?: 'N/A' }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="swiper-image swiper-image-right">
+                                                    <div class="swiper-image-inner">
+                                                        <div class="pack-details">
+                                                            <p><strong>Description:</strong> {{ pack.description|length > 100 ? pack.description|slice(0, 100) ~ '...' : pack.description }}</p>
+                                                            <p><strong>Prix:</strong> {{ pack.prix }} dt</p>
+                                                            <p><strong>Lieu:</strong> {{ pack.location }}</p>
+                                                            <p><strong>Invités:</strong> {{ pack.nbrGuests }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <a href="{{ path('user_pack_details', {'id': pack.id}) }}" class="overlay-link"></a>
                                             </div>
-                                        </div>
-                                        <div class="swiper-image swiper-image-right" data-swiper-parallax-y="20%">
-                                            <div class="swiper-image-inner">
-                                                <div class="pack-details">
-                                                    <p><strong>Description:</strong> {{ pack.description }}</p>
-                                                    <p><strong>Prix:</strong> {{ pack.prix }} dt</p>
-
-                                                    <p><strong>Lieu:</strong> {{ pack.location }}</p>
-                                                    <p><strong>Invités:</strong> {{ pack.nbrGuests }}</p>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="swiper-slide">
+                                            <div class="swiper-image swiper-image-left">
+                                                <div class="swiper-image-inner" style="background-image: url({{ asset('images/default-pack.jpg') }});">
+                                                    <h1>Aucun Pack Recommandé</h1>
+                                                    <p>Information</p>
+                                                </div>
+                                            </div>
+                                            <div class="swiper-image swiper-image-right">
+                                                <div class="swiper-image-inner">
+                                                    <div class="pack-details">
+                                                        <p>Aucun pack recommandé disponible pour le moment.</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- Overlay link for clickability -->
-                                        <a href="{{ path('user_pack_details', {'id': pack.id}) }}" class="overlay-link"></a>
-                                    </div>
-                                {% endfor %}
-                            {% else %}
-                                <div class="swiper-slide">
-                                    <div class="swiper-image swiper-image-left" data-swiper-parallax-y="-20%">
-                                        <div class="swiper-image-inner" style="background-image: url({{ asset('images/default-pack.jpg') }});">
-                                            <h1>Aucun Pack</h1>
-                                            <p>Information</p>
-                                        </div>
-                                    </div>
-                                    <div class="swiper-image swiper-image-right" data-swiper-parallax-y="20%">
-                                        <div class="swiper-image-inner">
-                                            <div class="pack-details">
-                                                <p>Aucun pack disponible pour le moment.</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
+                                <div class="swiper-pagination"></div>
+                            </div>
                         </div>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                </div>
-
-                <!-- Packs List in Cards -->
-                {% if packs is not empty %}
-                    <div class="packs-list">
-                        <div class="row">
-                            {% for pack in packs %}
-                                <div class="col-md-4">
-                                    <a href="{{ path('user_pack_details', {'id': pack.id}) }}" class="pack-card">
-                                        <img src="{{ asset(pack.imagePath ?: 'images/default-pack.jpg') }}" alt="{{ pack.nomPack }}">
-                                        <div class="pack-card-body">
-                                            <h3>{{ pack.nomPack }}</h3>
-                                            <div class="pack-type">{{ pack.type }}</div>
-                                            <p><strong>Description:</strong> {{ pack.description }}</p>
-                                            <p><strong>Prix:</strong> {{ pack.prix }} €</p>
-                                            <p><strong>Lieu:</strong> {{ pack.location }}</p>
-                                            <p><strong>Invités:</strong> {{ pack.nbrGuests }}</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+                    </section>
                 {% endif %}
+
+                <!-- Filter Section -->
+                <section class="filter-section">
+                    <h3>Filtrer les Packs</h3>
+                    <form class="filter-form" method="get" action="{{ path('user_packs') }}">
+                        <div class="filter-group">
+                            <label for="type">Type</label>
+                            <select name="type" id="type">
+                                <option value="">Tous les types</option>
+                                {% for typepack in typepacks %}
+                                    <option value="{{ typepack.type }}" {{ type == typepack.type ? 'selected' : '' }}>{{ typepack.type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="location">Lieu</label>
+                            <select name="location" id="location">
+                                <option value="">Tous les lieux</option>
+                                {% for loc in ['HOTEL', 'MAISON_D_HOTE', 'ESPACE_VERT', 'SALLE_DE_FETE', 'AUTRE'] %}
+                                    <option value="{{ loc }}" {{ location == loc ? 'selected' : '' }}>{{ loc|replace({'_': ' '})|title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Prix (dt)</label>
+                            <div class="price-range">
+                                <input type="number" name="minPrice" id="minPrice" placeholder="Min" value="{{ minPrice }}" min="0" step="1">
+                                <span>-</span>
+                                <input type="number" name="maxPrice" id="maxPrice" placeholder="Max" value="{{ maxPrice }}" min="0" step="1">
+                            </div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button type="submit" class="apply-button">Appliquer</button>
+                            <button type="button" class="reset-button" onclick="window.location.href='{{ path('user_packs') }}'">Réinitialiser</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- All Packs Grid -->
+                <div class="packs-grid">
+                    {% if packs|length > 0 %}
+                        {% for pack in packs %}
+                            <div class="pack-card">
+                                <h3>{{ pack.nomPack }}</h3>
+                                <div class="pack-type">{{ pack.typepack ? pack.typepack.type : (pack.type ?: 'Non spécifié') }}</div>
+                                <div class="pack-image-wrapper">
+                                    <img src="{{ asset(pack.imagePath ?: 'images/default-pack.jpg') }}" alt="{{ pack.nomPack }}">
+                                </div>
+                                <div class="pack-details-list">
+                                    <p><strong>Lieu:</strong> {{ pack.location }}</p>
+                                    <p><strong>Invités:</strong> {{ pack.nbrGuests }}</p>
+                                    <p><strong>Prix:</strong> <span class="price-highlight">{{ pack.prix }} dt</span></p>
+                                </div>
+                                <a href="{{ path('user_pack_details', {'id': pack.id}) }}" class="details-button">Voir Détails</a>
+                                {% if not is_granted('ROLE_ADMIN') %}
+                                    {% if app.user %}
+                                        <button class="favorite-button {{ pack.id in favoritedPackIds ? 'favorited' : '' }}"
+                                                data-pack-id="{{ pack.id }}"
+                                                data-is-favorited="{{ pack.id in favoritedPackIds ? 'true' : 'false' }}"
+                                                data-csrf-token="{{ csrf_token('toggle-favorite') }}">
+                                            <i class="{{ pack.id in favoritedPackIds ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+                                            {{ pack.id in favoritedPackIds ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+                                        </button>
+                                    {% else %}
+                                        <a href="{{ path('app_auth') }}" class="favorite-button">Connexion pour ajouter aux favoris</a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-packs">
+                            <p>Aucun pack disponible pour le moment avec les filtres suivants :</p>
+                            <ul>
+                                <li>Type: {{ type ?: 'Aucun' }}</li>
+                                <li>Lieu: {{ location ?: 'Aucun' }}</li>
+                                <li>Prix min: {{ minPrice is not null ? minPrice ~ ' dt' : 'Aucun' }}</li>
+                                <li>Prix max: {{ maxPrice is not null ? maxPrice ~ ' dt' : 'Aucun' }}</li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
 
             <footer id="fh5co-footer" role="contentinfo">
@@ -538,44 +850,116 @@
             <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
         </div>
 
-        {% block javascripts %}
-            <script src="{{ asset('js/jquery.min.js') }}"></script>
-            <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
-            <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
-            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-            <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
-            <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-            <script src="{{ asset('js/simplyCountdown.js') }}"></script>
-            <script src="{{ asset('js/main.js') }}"></script>
+        <!-- Scripts -->
+        <script src="{{ asset('js/jquery.min.js') }}"></script>
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
+        <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
+        <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+        <script src="{{ asset('js/simplyCountdown.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-countto/1.2.0/jquery.countTo.min.js"></script>
+        <script src="{{ asset('js/main.js') }}"></script>
 
-            <script>
-                var eventDate = new Date('2025-12-31');
-                simplyCountdown('.simply-countdown-one', {
-                    year: eventDate.getFullYear(),
-                    month: eventDate.getMonth() + 1,
-                    day: eventDate.getDate(),
-                    enableUtc: false
+        <!-- Navbar, Swiper, and Favorite Button JavaScript -->
+        <script>
+            $(document).ready(function() {
+                console.log('jQuery chargé :', typeof $ !== 'undefined');
+                console.log('Éléments dropdown trouvés :', $('.fh5co-nav .menu-1 ul li.has-dropdown').length);
+                console.log('Favorite buttons trouvés :', $('.favorite-button').length);
+
+                // Initialisation de Swiper
+                if ($('.swiper-container').length) {
+                    var mySwiper = new Swiper(".swiper-container", {
+                        direction: "vertical",
+                        loop: true,
+                        pagination: {
+                            el: ".swiper-pagination",
+                            clickable: true,
+                        },
+                        grabCursor: true,
+                        speed: 800,
+                        autoplay: {
+                            delay: 6000,
+                            disableOnInteraction: false,
+                        },
+                        effect: "slide",
+                        mousewheel: false
+                    });
+                }
+
+                // Les gestionnaires de navbar ont été supprimés car ils sont déjà dans main.js
+
+                // Gestion des boutons favoris
+                $('.favorite-button').click(function(e) {
+                    console.log('Favorite button cliqué');
+                    const packId = $(this).data('pack-id');
+                    const isFavorited = $(this).data('is-favorited') === 'true';
+                    const csrfToken = $(this).data('csrf-token');
+
+                    if (!packId) {
+                        return;
+                    }
+
+                    console.log('Pack ID:', packId);
+                    console.log('Is Favorited:', isFavorited);
+                    console.log('CSRF Token:', csrfToken);
+                    console.log('AJAX URL:', '{{ path('user_toggle_favorite', {'id': 0}) }}'.replace('0', packId));
+
+                    const button = $(this);
+
+                    $.ajax({
+                        url: '{{ path('user_toggle_favorite', {'id': 0}) }}'.replace('0', packId),
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        data: {
+                            token: csrfToken
+                        },
+                        success: function(response) {
+                            console.log('AJAX Success:', response);
+                            if (response.isFavorited !== undefined) {
+                                button.data('is-favorited', response.isFavorited);
+                                button.toggleClass('favorited', response.isFavorited);
+                                button.html(
+                                    `<i class="${response.isFavorited ? 'fas fa-heart' : 'far fa-heart'}"></i> ` +
+                                    (response.isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris')
+                                );
+                            } else {
+                                console.error('Unexpected response:', response);
+                                alert('Une erreur est survenue.');
+                            }
+                        },
+                        error: function(xhr) {
+                            console.error('AJAX Error:', xhr.responseText);
+                            alert('Une erreur est survenue lors de la mise à jour des favoris.');
+                        }
+                    });
                 });
 
-                var mySwiper = new Swiper(".swiper-container", {
-                    direction: "vertical",
-                    loop: true,
-                    pagination: {
-                        el: ".swiper-pagination",
-                        clickable: true,
-                    },
-                    grabCursor: true,
-                    speed: 800,
-                    parallax: true,
-                    autoplay: {
-                        delay: 6000,
-                        disableOnInteraction: false,
-                    },
-                    effect: "slide",
-                    mousewheel: false
+                // Validation des inputs de prix
+                $('#minPrice, #maxPrice').on('input', function() {
+                    const minPrice = parseFloat($('#minPrice').val()) || 0;
+                    const maxPrice = parseFloat($('#maxPrice').val()) || Infinity;
+                    if (minPrice > maxPrice) {
+                        $(this).val('');
+                    }
                 });
-            </script>
-        {% endblock %}
+
+                // Vérification du chargement de la vidéo
+                const video = $('.video-background video')[0];
+                if (video) {
+                    video.addEventListener('error', function() {
+                        console.error('Erreur de chargement de la vidéo:', video.error);
+                        $('.video-background').css('display', 'none'); // Masquer si erreur
+                    });
+                    video.addEventListener('loadeddata', function() {
+                        console.log('Vidéo chargée avec succès');
+                    });
+                }
+            });
+        </script>
     </body>
 </html>

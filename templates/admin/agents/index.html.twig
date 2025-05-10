@@ -1,0 +1,589 @@
+{% extends 'admin/dashboard.html.twig' %}
+
+{% block title %}Liste des Agents - Eventora{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Card Styling */
+        .agent-card {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid #6f42c1; /* Bordure violette pour les agents */
+            width: 100%;
+        }
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        .agent-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            background-color: #e0e0e0; /* Placeholder pour l'avatar */
+        }
+        .agent-info {
+            flex-grow: 1;
+        }
+        .agent-info h6 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .agent-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 10px;
+            color: #fff;
+            background-color: #6f42c1; /* Violet pour les agents */
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+        .agent-label:hover {
+            animation: bounce 0.5s;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .agent-info .role {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .agent-info p {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .agent-info .badge {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 12px;
+            color: #fff;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+        .badge-confirmed {
+            background-color: #28a745;
+        }
+        .badge-not-confirmed {
+            background-color: #dc3545;
+        }
+        .agent-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .agent-actions a {
+            color: #007bff;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        .agent-actions a:hover {
+            color: #0056b3;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: fit-content;
+        }
+        .filter-section h6 {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Sort Buttons */
+        .btn-group .btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .btn-group .btn i { font-size: 1rem; }
+        .btn-group .btn.active { background-color: #007bff; color: #fff; }
+        .btn-group .btn:hover { background-color: #0056b3; color: #fff; }
+
+        /* Main Content */
+        .agent-content {
+            padding: 0 15px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination .page-item .page-link {
+            color: #007bff;
+            border: none;
+            margin: 0 5px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .pagination .page-link:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .pagination .page-item.disabled .page-link { color: #ccc; }
+
+        /* Adjust for Left Sidebar */
+        .agent-container { margin-left: 270px; }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .agent-container { margin-left: 0; }
+            .filter-section {
+                margin-top: 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            .agent-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .agent-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            .agent-actions {
+                margin-top: 10px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+        <div class="sidenav-header">
+            <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
+                <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+            </a>
+        </div>
+        <hr class="horizontal dark mt-0">
+        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}" href="{{ path('admin_dashboard') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-tachometer-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
+                        <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-tachometer-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reservationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-calendar-check text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Réservations</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'show' : '' }}" id="reservationsMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_pack' ? 'active' : '' }}" href="{{ path('admin_reservations_pack') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-box text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Réservations Pack</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_personnalise' ? 'active' : '' }}" href="{{ path('admin_reservations_personnalise') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-calendar-alt text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Réservations Personnalisées</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reclamationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-exclamation-triangle text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Réclamations</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'show' : '' }}" id="reclamationsMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reclamations' ? 'active' : '' }}" href="{{ path('admin_reclamations') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-exclamation-circle text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Réclamations</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="{{ path('admin_feedback') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-comment-dots text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Feedback</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-users text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Utilisateurs</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'app_agent' ? 'show' : '' }}" id="usersMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-user-friends text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Membres</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_agent' ? 'active' : '' }}" href="{{ path('app_agent_index') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-user-cog text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Agents</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-box text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Packs</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'show' : '' }}" id="packsMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-box-open text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Packs</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_typepacks' ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-tags text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Types de Packs</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-concierge-bell text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Services</span>
+                    </a>
+                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'show' : '' }}" id="servicesMenu">
+                        <ul class="navbar-nav ms-3">
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_services' ? 'active' : '' }}" href="{{ path('admin_services') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-tools text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Services</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="{{ path('admin_sponsors') }}">
+                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-handshake text-dark"></i>
+                                    </div>
+                                    <span class="nav-link-text ms-1">Partenaires</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_logout') }}">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-sign-out-alt text-dark"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Déconnexion</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg agent-container">
+        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
+            <div class="container-fluid py-1 px-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Agents</li>
+                    </ol>
+                    <h6 class="font-weight-bolder mb-0">
+                        Liste des Agents
+                        <a href="{{ path('app_agent_new') }}" class="btn btn-sm btn-success ms-2">Ajouter un Agent</a>
+                    </h6>
+                </nav>
+                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                        <div class="input-group">
+                            <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" placeholder="Rechercher..." id="searchAgent">
+                        </div>
+                    </div>
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item d-flex align-items-center">
+                            <a href="#" class="nav-link text-body font-weight-bold px-0">
+                                <i class="fa fa-user me-sm-1"></i>
+                                <span class="d-sm-inline d-none">{{ app.user.email ?? 'Utilisateur' }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid py-4">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+
+            <div class="agent-content">
+                <div class="row">
+                    <!-- Liste des agents -->
+                    <div class="col-lg-9 col-md-12" id="agentList">
+                        {% if agents|length > 0 %}
+                            {% for agent in agents %}
+                                <div class="mb-4 agent-card-container">
+                                    <div class="agent-card">
+                                        <!-- Avatar -->
+                                        <div class="agent-avatar">
+                                            <!-- Placeholder pour l'avatar, remplacez par une image si disponible -->
+                                            <!-- <img src="{{ asset('path/to/avatar.jpg') }}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%;"> -->
+                                        </div>
+                                        <!-- Informations -->
+                                        <div class="agent-info">
+                                            <h6>{{ agent.nom }} {{ agent.prenom }} <span class="agent-label">Agent</span></h6>
+                                            <div class="role">Agent #{{ agent.id }} - Rôle: {{ agent.role }}</div>
+                                            <p><strong>Email :</strong> {{ agent.email }}</p>
+                                            <p>
+                                                <strong>Statut :</strong>
+                                                <span class="badge badge-{{ agent.isConfirmed ? 'confirmed' : 'not-confirmed' }}">
+                                                    {{ agent.isConfirmed ? 'Confirmé' : 'Non Confirmé' }}
+                                                </span>
+                                                <i class="fas fa-{{ agent.isConfirmed ? 'unlock' : 'lock' }} toggle-confirmed ms-2" data-agent-id="{{ agent.id }}" data-csrf-token="{{ csrf_token('toggle' ~ agent.id) }}"></i>
+                                            </p>
+                                        </div>
+                                        <!-- Actions -->
+                                        <div class="agent-actions">
+                                            <a href="{{ path('app_agent_show', {'id': agent.id}) }}" title="Détails"><i class="fas fa-eye"></i></a>
+                                            <a href="{{ path('app_agent_edit', {'id': agent.id}) }}" title="Modifier"><i class="fas fa-edit"></i></a>
+                                            <a href="#" onclick="if(confirm('Voulez-vous vraiment supprimer cet agent ?')) { document.getElementById('delete-form-{{ agent.id }}').submit(); } return false;" title="Supprimer"><i class="fas fa-trash-alt"></i></a>
+                                            <form id="delete-form-{{ agent.id }}" method="post" action="{{ path('app_agent_delete', {'id': agent.id}) }}" style="display: none;">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ agent.id) }}">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-12">
+                                <div class="alert alert-info text-center" role="alert">
+                                    Aucun agent trouvé.
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if total_pages > 1 %}
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ path('app_agent_index', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Previous">
+                                            <span aria-hidden="true">«</span>
+                                        </a>
+                                    </li>
+                                    {% for i in 1..total_pages %}
+                                        <li class="page-item {{ current_page == i ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ path('app_agent_index', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}">{{ i }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ path('app_agent_index', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Next">
+                                            <span aria-hidden="true">»</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    </div>
+
+                    <!-- Menu de tri -->
+                    <div class="col-lg-3 col-md-12">
+                        <div class="filter-section">
+                            <h6 class="text-dark font-weight-bold"><i class="fas fa-filter me-2"></i>Options de Tri et Filtrage</h6>
+                            <form method="get" action="{{ path('app_agent_index') }}" class="row g-3 align-items-center">
+                                <div class="col-12">
+                                    <label for="status_filter" class="form-label text-sm font-weight-bold">Filtrer par Statut</label>
+                                    <select name="status_filter" id="status_filter" class="form-select" onchange="this.form.submit()">
+                                        {% for value, label in statuses %}
+                                            <option value="{{ value }}" {{ status_filter == value ? 'selected' : '' }}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Nom</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'nom', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'nom' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'nom', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'nom' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Email</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'email', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'email' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'email', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'email' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Confirmation</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'isConfirmed', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'isConfirmed' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('app_agent_index', {'sort_by': 'isConfirmed', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'isConfirmed' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex align-items-end">
+                                    <a href="{{ path('app_agent_index') }}" class="btn btn-outline-secondary w-100">
+                                        <i class="fas fa-undo me-1"></i> Réinitialiser
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Real-time search
+        document.getElementById('searchAgent').addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.agent-card-container');
+            cards.forEach(card => {
+                const nom = card.querySelector('.agent-info h6').textContent.toLowerCase();
+                const email = card.querySelector('.agent-info p:nth-child(2)').textContent.toLowerCase();
+                card.style.display = nom.includes(searchText) || email.includes(searchText) ? '' : 'none';
+            });
+        });
+
+        // Toggle isConfirmed status
+        document.querySelectorAll('.toggle-confirmed').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const agentId = this.getAttribute('data-agent-id');
+                const csrfToken = this.getAttribute('data-csrf-token');
+                const badge = this.parentElement.querySelector('.badge');
+                const isConfirmed = this.classList.contains('fa-unlock');
+
+                fetch(`{{ path('app_agent_toggle_confirmed', {'id': '__ID__'}) }}`.replace('__ID__', agentId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.classList.toggle('fa-lock', !isConfirmed);
+                        this.classList.toggle('fa-unlock', isConfirmed);
+                        badge.textContent = data.isConfirmed ? 'Confirmé' : 'Non Confirmé';
+                        badge.className = `badge badge-${data.isConfirmed ? 'confirmed' : 'not-confirmed'}`;
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Une erreur est survenue lors de la mise à jour du statut.');
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -5,7 +5,13 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Eventora - {{ pack.nomPack }}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
+        <!-- Open Graph meta tags for better social media sharing -->
+        <meta property="og:title" content="{{ pack.nomPack }} - Eventora">
+        <meta property="og:description" content="{{ pack.description|u.truncate(200, '...') }}">
+        <meta property="og:image" content="{{ absolute_url(asset(pack.imagePath ?: 'images/default-pack.jpg')) }}">
+        <meta property="og:url" content="{{ absolute_url(path('user_pack_details', {'id': pack.id})) }}">
+        <meta property="og:type" content="website">
+
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
         <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
@@ -16,6 +22,8 @@
         <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
         <!-- Icomoon Icon Fonts -->
         <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+        <!-- Modern Navbar -->
+        <link rel="stylesheet" href="{{ asset('css/modern-navbar.css') }}">
         <!-- Bootstrap -->
         <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
         <!-- Magnific Popup -->
@@ -23,18 +31,38 @@
         <!-- Owl Carousel -->
         <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+        <!-- Font Awesome for icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
 
         <style>
-            /* Background gradient for the entire page, matching the packs list page */
+            /* Background for the entire page, matching the packs list page */
             body {
-                background: linear-gradient(to bottom right, #2a1f30, #383d44);
+                background: #f2f2f2;
                 font-family: 'Work Sans', sans-serif;
                 margin: 0;
                 min-height: 100vh;
                 display: flex;
                 flex-direction: column;
+            }
+
+            /* Styles pour la vidéo de fond */
+            .video-background {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1; /* Derrière tout le contenu */
+                overflow: hidden;
+            }
+
+            .video-background video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Couvre la zone sans déformation */
+                opacity: 0.6; /* Transparence pour lisibilité */
             }
 
             /* Main content wrapper */
@@ -43,60 +71,66 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                padding: 100px 20px 40px; /* Top padding to avoid navbar overlap */
+                padding: 70px 20px 40px; /* Adjusted for navbar height */
                 box-sizing: border-box;
             }
 
             /* Pack details container */
             .pack-details-container {
-                max-width: 900px;
-                margin: 0 auto;
-                padding: 30px;
-                background: #fff;
-                border-radius: 15px;
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                width: 100%;
+                max-width: 1000px;
+                margin: 40px auto;
+                padding: 50px;
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)); /* Fond dégradé transparent */
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
 
             .pack-details-container:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
             }
 
             /* Header styling */
             .pack-details-container h1 {
                 font-family: 'Cormorant Garamond', serif;
-                font-size: 2.8rem;
+                font-size: 3.5rem;
                 font-weight: 700;
-                color: #2a1f30; /* Darker color to match the theme */
-                margin-bottom: 0.5rem;
+                color: #ffffff; /* Blanc pour lisibilité */
                 text-align: center;
-                letter-spacing: 1px;
+                margin-bottom: 10px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Ombre pour contraste */
             }
 
             /* Pack type */
             .pack-details-container .pack-type {
                 font-family: 'Work Sans', sans-serif;
-                font-size: 1.1rem;
-                color: #777;
+                font-size: 1.6rem;
+                font-weight: 500;
+                color: #dddddd; /* Gris clair pour lisibilité */
                 text-transform: uppercase;
-                letter-spacing: 1.5px;
-                text-align: center;
-                margin-bottom: 1.5rem;
+                margin-bottom: 30px;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             /* Image styling with subtle overlay */
             .pack-image-wrapper {
+                width: 100%;
+                height: 300px;
+                overflow: hidden;
+                border-radius: 15px;
+                margin-bottom: 40px;
                 position: relative;
-                margin-bottom: 2rem;
             }
 
-            .pack-details-container img {
+            .pack-image-wrapper img {
                 width: 100%;
-                max-height: 450px;
+                height: 100%;
                 object-fit: cover;
-                border-radius: 10px;
-                display: block;
             }
 
             .pack-image-wrapper::after {
@@ -107,43 +141,176 @@
                 width: 100%;
                 height: 100%;
                 background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
-                border-radius: 10px;
+                border-radius: 15px;
             }
 
             /* Details list */
             .pack-details-list {
-                display: grid;
-                grid-template-columns: 1fr 1fr; /* Two-column layout */
-                gap: 1.5rem;
-                margin-bottom: 2rem;
+                width: 90%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                margin-top: 30px;
+                margin-bottom: 40px;
+                padding: 0 20px;
             }
 
             .pack-details-list p {
+                width: 48%;
                 font-family: 'Roboto', sans-serif;
-                font-size: 1.1rem;
-                color: #555;
-                margin: 0;
-                padding: 0.5rem 0;
-                display: flex;
-                align-items: center;
+                font-size: 1.5rem;
+                color: #dddddd; /* Gris clair pour lisibilité */
+                margin: 15px 0;
+                line-height: 1.7;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             .pack-details-list p strong {
-                font-weight: 600;
-                color: #222;
-                margin-right: 0.5rem;
-                flex-shrink: 0;
+                font-weight: 700;
+                font-size: 1.6rem;
+                color: #ffffff; /* Blanc pour contraste */
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
-            /* Back button */
-            .back-button {
+            /* Converted price styling */
+            .converted-price-container {
                 display: inline-block;
-                margin-top: 2rem;
-                padding: 12px 30px;
-                background: linear-gradient(135deg, #007bff, #0056b3);
+                margin-left: 10px;
+                padding: 8px 15px;
+                background: linear-gradient(135deg, #4caf50, #81c784);
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                color: #ffffff;
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.4rem;
+                font-weight: 600;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+                opacity: 0;
+                transform: translateY(10px);
+                transition: opacity 0.3s ease, transform 0.3s ease;
+            }
+
+            .converted-price-container.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .converted-price-container.error {
+                background: linear-gradient(135deg, #d32f2f, #f57c00);
+            }
+
+            /* Currency toggle switch */
+            .currency-toggle {
+                position: relative;
+                display: inline-block;
+                margin: 1rem 0.5rem 0 0;
+            }
+
+            .currency-toggle input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .currency-toggle-label {
+                display: flex;
+                align-items: center;
+                width: 120px;
+                height: 40px;
+                background: linear-gradient(135deg, #4caf50, #81c784);
+                border-radius: 20px;
+                position: relative;
+                cursor: pointer;
+                transition: background 0.3s ease;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .currency-toggle-label:hover {
+                background: linear-gradient(135deg, #388e3c, #66bb6a);
+            }
+
+            .currency-toggle-label::before {
+                content: '';
+                position: absolute;
+                width: 50%;
+                height: 80%;
+                background: #ffffff;
+                border-radius: 16px;
+                top: 10%;
+                left: 5%;
+                transition: transform 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            }
+
+            .currency-toggle input:checked + .currency-toggle-label::before {
+                transform: translateX(90%);
+            }
+
+            .currency-toggle .currency-icon {
+                position: absolute;
+                font-size: 1.2rem;
+                color: #ffffff;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+                transition: opacity 0.3s ease;
+            }
+
+            .currency-toggle .eur-icon {
+                left: 15px;
+                opacity: 1;
+            }
+
+            .currency-toggle .usd-icon {
+                right: 15px;
+                opacity: 0.5;
+            }
+
+            .currency-toggle input:checked + .currency-toggle-label .eur-icon {
+                opacity: 0.5;
+            }
+
+            .currency-toggle input:checked + .currency-toggle-label .usd-icon {
+                opacity: 1;
+            }
+
+            /* Services list */
+            .pack-details-list .services {
+                width: 100%;
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.4rem;
+                color: #dddddd; /* Gris clair pour lisibilité */
+                margin: 15px 0;
+                line-height: 1.6;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            .pack-details-list .services strong {
+                font-weight: 700;
+                font-size: 1.5rem;
+                color: #ffffff; /* Blanc pour contraste */
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            .pack-details-list .services ul {
+                margin: 10px 0 0 20px;
+                padding: 0;
+                list-style-type: disc;
+            }
+
+            .pack-details-list .services ul li {
+                margin-bottom: 8px;
+                color: #dddddd; /* Gris clair pour lisibilité */
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+
+            /* Buttons */
+            .back-button, .reserve-button, .favorite-button {
+                display: inline-block;
+                margin: 1rem 0.5rem 0 0;
+                padding: 14px 35px;
+                background: linear-gradient(135deg, #934D1A, #D9822B);
                 color: #fff;
                 text-decoration: none;
-                border-radius: 25px;
+                border-radius: 30px;
                 font-family: 'Work Sans', sans-serif;
                 font-weight: 500;
                 text-transform: uppercase;
@@ -152,63 +319,143 @@
                 text-align: center;
             }
 
-            .back-button:hover {
-                background: linear-gradient(135deg, #0056b3, #003d82);
+            .back-button:hover, .reserve-button:hover, .favorite-button:hover {
+                background: linear-gradient(135deg, #7a3914, #b66b1d);
                 transform: scale(1.05);
+            }
+
+            .favorite-button.favorited {
+                background: linear-gradient(135deg, #d32f2f, #f57c00);
+            }
+
+            .favorite-button.favorited:hover {
+                background: linear-gradient(135deg, #b71c1c, #d66d00);
+            }
+
+            /* Social media buttons */
+            .social-share-buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .social-share-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 12px 18px;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 50px;
+                font-family: 'Work Sans', sans-serif;
+                font-weight: 600;
+                font-size: 1rem;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+                background: linear-gradient(135deg, #6e8efb, #a777e3);
+                transition: all 0.4s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .social-share-button::before {
+                content: "";
+                position: absolute;
+                width: 120%;
+                height: 0;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(45deg);
+                background: rgba(255, 255, 255, 0.3);
+                transition: all 0.5s ease;
+            }
+
+            .social-share-button:hover::before {
+                height: 500%;
+            }
+
+            .social-share-button:hover {
+                transform: translateY(-3px) scale(1.05);
+            }
+
+            .social-share-button i {
+                margin-right: 8px;
+                font-size: 1.2rem;
+            }
+
+            .facebook-share {
+                background: linear-gradient(135deg, #1877f2, #3b5998);
+            }
+
+            .twitter-share {
+                background: linear-gradient(135deg, #1da1f2, #0d8ddb);
+            }
+
+            .whatsapp-share {
+                background: linear-gradient(135deg, #25d366, #128c7e);
+            }
+
+            .linkedin-share {
+                background: #0077b5;
+            }
+
+            /* Price highlight */
+            .price-highlight {
+                color: #d9822b;
+                font-weight: 700;
+                font-size: 1.5rem;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             /* Ensure footer sticks to bottom */
             #fh5co-footer {
                 margin-top: auto;
+                background: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
             }
 
-            /* Responsive adjustments */
-            @media screen and (max-width: 960px) {
+            /* Layout styles for page */
+            #page {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                padding-top: 70px;
+            }
+
+            /* Responsive adjustments for content on mobile */
+            @media (max-width: 768px) {
+                /* Ajustement pour la vidéo sur mobile */
+                .video-background video {
+                    object-fit: cover;
+                    height: 100vh;
+                }
+
+                /* Ajustements pour le détail des packs sur mobile */
                 .pack-details-container {
-                    max-width: 700px;
-                    padding: 25px;
+                    padding: 30px 20px;
                 }
 
                 .pack-details-container h1 {
                     font-size: 2.5rem;
                 }
 
-                .pack-details-container img {
-                    max-height: 400px;
-                }
-
-                .pack-details-list {
-                    grid-template-columns: 1fr; /* Single column on smaller screens */
-                    gap: 1rem;
-                }
-            }
-
-            @media screen and (max-width: 640px) {
-                .pack-details-container {
-                    margin: 80px 15px 20px;
-                    padding: 20px;
-                }
-
-                .pack-details-container h1 {
-                    font-size: 2rem;
-                }
-
-                .pack-details-container img {
-                    max-height: 300px;
-                }
-
                 .pack-details-list p {
-                    font-size: 1rem;
+                    width: 100%;
+                    font-size: 1.3rem;
                 }
 
-                .back-button {
-                    padding: 10px 25px;
-                    font-size: 0.9rem;
+                .currency-toggle-label {
+                    width: 100px;
+                    height: 35px;
+                }
+
+                .converted-price-container {
+                    font-size: 1.2rem;
+                    padding: 6px 12px;
                 }
             }
         </style>
 
-        <!-- Modernizr JS -->
         <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
         <!-- FOR IE9 below -->
         <!--[if lt IE 9]>
@@ -217,63 +464,145 @@
     </head>
     <body>
         <div class="fh5co-loader"></div>
+
+        <!-- Vidéo de fond -->
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source src="{{ asset('images/pack.mp4') }}" type="video/mp4">
+                Votre navigateur ne prend pas en charge la balise vidéo.
+            </video>
+        </div>
+
         <div id="page">
+            <!-- Navbar -->
             <nav class="fh5co-nav" role="navigation">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-xs-2">
-                            <div id="fh5co-logo"><a href="{{ path('app_home') }}">Eventora<strong></strong></a></div>
-                        </div>
-                        <div class="col-xs-10 text-right menu-1">
-                            <ul>
-                                <li><a href="{{ path('app_home') }}">Home</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#">Service</a></li>
-                                        <li><a href="#">Partenaire</a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Reclamation</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#">Reclamation</a></li>
-                                        <li><a href="#">Feedback</a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Reservations</a>
-                                    <ul class="dropdown">
-                                        <li><a href="#">Reservation personalisé</a></li>
-                                        <li><a href="#">Reservation</a></li>
-                                    </ul>
-                                </li>
-                                <li class="active">
-                                    <a href="{{ path('user_packs') }}">Packs</a>
-                                </li>
-                                <li><a href="#">Talk with Evi</a></li>
-                                <li><a href="#">Contact</a></li>
-                            </ul>
-                        </div>
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
+                    </div>
+                    <div class="menu-toggle">
+                        <i class="icon-menu"></i>
+                    </div>
+                    <div class="menu-1">
+                        <ul>
+                            <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Reservation</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="{{ path('user_packs') }}">Packs</a>
+                            </li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_services') }}">Service</a></li>
+                                    <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        {% else %}
+                                            <i class="icon-user"></i>
+                                        {% endif %}
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
+                                        <li><a href="{{ path('app_logout') }}">Log out</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Sign up</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </nav>
 
-            <!-- Re-added pack details content -->
+            <!-- Pack details content -->
             <div class="pack-content">
                 <div class="pack-details-container">
                     <h1>{{ pack.nomPack }}</h1>
-                    <div class="pack-type">{{ pack.type }}</div>
+                    <div class="pack-type">{{ pack.typepack ? pack.typepack.type : (pack.type ?: 'Non spécifié') }}</div>
                     <div class="pack-image-wrapper">
                         <img src="{{ asset(pack.imagePath ?: 'images/default-pack.jpg') }}" alt="{{ pack.nomPack }}">
                     </div>
                     <div class="pack-details-list">
                         <p><strong>Description:</strong> {{ pack.description }}</p>
-                        <p><strong>Prix:</strong> {{ pack.prix }} €</p>
+                        <p>
+                            <strong>Prix:</strong> <span class="price-highlight">{{ pack.prix }} TND</span>
+                            <span class="converted-price-container"></span>
+                        </p>
                         <p><strong>Lieu:</strong> {{ pack.location }}</p>
                         <p><strong>Invités:</strong> {{ pack.nbrGuests }}</p>
+                        <div class="services">
+                            <strong>Services:</strong>
+                            {% if pack.services|length > 0 %}
+                                <ul>
+                                    {% for service in pack.services %}
+                                        <li>{{ service.titre }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>Aucun service inclus.</p>
+                            {% endif %}
+                        </div>
                     </div>
-                    <a href="{{ path('user_packs') }}" class="back-button">Back to Packs</a>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 2rem;">
+                        <a href="{{ path('user_packs') }}" class="back-button">Retour aux Packs</a>
+                        {% if not is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('user_reservation_pack_new', {'packId': pack.id}) }}" class="reserve-button">Réserver</a>
+                        {% endif %}
+                        {% if app.user and not is_granted('ROLE_ADMIN') %}
+                            <button id="favorite-button" class="favorite-button {{ isFavorited ? 'favorited' : '' }}" data-pack-id="{{ pack.id }}" data-is-favorited="{{ isFavorited ? 'true' : 'false' }}" data-csrf-token="{{ csrf_token('toggle-favorite') }}">
+                                <i class="{{ isFavorited ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+                                {{ isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris' }}
+                            </button>
+                        {% elseif not is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_auth') }}" class="favorite-button">Connexion pour ajouter aux favoris</a>
+                        {% endif %}
+                        <div class="currency-toggle">
+                            <input type="checkbox" id="currency-toggle" data-pack-id="{{ pack.id }}">
+                            <label for="currency-toggle" class="currency-toggle-label">
+                                <span class="currency-icon eur-icon">Euro</span>
+                                <span class="currency-icon usd-icon">Dollar</span>
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Social media share buttons -->
+                    <div class="social-share-buttons">
+                        <a href="#" class="social-share-button facebook-share" onclick="shareOnFacebook()">
+                            <i class="fab fa-facebook-f"></i> Partager sur Facebook
+                        </a>
+                        <a href="#" class="social-share-button twitter-share" onclick="shareOnTwitter()">
+                            <i class="fab fa-twitter"></i> Partager sur Twitter
+                        </a>
+                        <a href="#" class="social-share-button whatsapp-share" onclick="shareOnWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> Partager sur WhatsApp
+                        </a>
+                        <a href="#" class="social-share-button linkedin-share" onclick="shareOnLinkedIn()">
+                            <i class="fab fa-linkedin-in"></i> Partager sur LinkedIn
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -282,8 +611,8 @@
                     <div class="row copyright">
                         <div class="col-md-12 text-center">
                             <p>
-                                <small class="block">© 2025 Eventora. All Rights Reserved.</small>
-                                <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                                <small class="block">© 2025 Eventora. Tous droits réservés.</small>
+                                <small class="block">Conçu par <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
                             </p>
                         </div>
                     </div>
@@ -295,22 +624,153 @@
             <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
         </div>
 
-        <!-- Charger d'abord jQuery -->
+        <!-- Scripts -->
         <script src="{{ asset('js/jquery.min.js') }}"></script>
-
-        <!-- Ensuite, Waypoints.js -->
         <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
-
-        <!-- Ensuite Stellar.js -->
         <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
-
-        <!-- Ensuite les autres scripts -->
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
         <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
         <script src="{{ asset('js/simplyCountdown.js') }}"></script>
+        <!-- Add countTo script -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-countto/1.2.0/jquery.countTo.min.js"></script>
         <script src="{{ asset('js/main.js') }}"></script>
 
-        <!-- Removed the simplyCountdown script since it's not needed -->
+        <!-- Navbar, Favorite Button, and Currency Conversion JavaScript -->
+        <script>
+            $(document).ready(function() {
+                // Debug logs
+                console.log('jQuery chargé :', typeof $ !== 'undefined');
+                console.log('Bouton favori trouvé :', $('#favorite-button').length);
+                console.log('Toggle conversion trouvé :', $('#currency-toggle').length);
+
+                // Logique du bouton favori
+                const favoriteButton = $('#favorite-button');
+                if (favoriteButton.length) {
+                    favoriteButton.click(function() {
+                        console.log('Bouton favori cliqué');
+                        const packId = $(this).data('pack-id');
+                        const isFavorited = $(this).data('is-favorited');
+                        const csrfToken = $(this).data('csrf-token');
+
+                        console.log('Pack ID:', packId);
+                        console.log('Est favori:', isFavorited);
+                        console.log('CSRF Token:', csrfToken);
+                        console.log('URL AJAX:', '{{ path('user_toggle_favorite', {'id': 0}) }}'.replace('0', packId));
+
+                        $.ajax({
+                            url: '{{ path('user_toggle_favorite', {'id': 0}) }}'.replace('0', packId),
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            data: {
+                                token: csrfToken
+                            },
+                            success: function(response) {
+                                console.log('Succès AJAX:', response);
+                                if (response.isFavorited !== undefined) {
+                                    favoriteButton.data('is-favorited', response.isFavorited);
+                                    favoriteButton.toggleClass('favorited', response.isFavorited);
+                                    favoriteButton.html(
+                                        `<i class="${response.isFavorited ? 'fas fa-heart' : 'far fa-heart'}"></i> ` +
+                                        (response.isFavorited ? 'Retirer des favoris' : 'Ajouter aux favoris')
+                                    );
+                                } else {
+                                    console.error('Réponse inattendue:', response);
+                                    alert('Une erreur est survenue.');
+                                }
+                            },
+                            error: function(xhr) {
+                                console.error('Erreur AJAX:', xhr.responseText);
+                                alert('Une erreur est survenue lors de la mise à jour des favoris.');
+                            }
+                        });
+                    });
+                }
+
+                // Logique du toggle de conversion
+                const currencyToggle = $('#currency-toggle');
+                const convertedPriceContainer = $('.converted-price-container');
+                if (currencyToggle.length) {
+                    currencyToggle.change(function() {
+                        console.log('Toggle conversion changé');
+                        const packId = $(this).data('pack-id');
+                        const currency = this.checked ? 'USD' : 'EUR';
+
+                        console.log('Pack ID:', packId);
+                        console.log('Devise:', currency);
+                        console.log('URL AJAX:', '{{ path('user_convert_currency', {'id': 0}) }}'.replace('0', packId));
+
+                        convertedPriceContainer.removeClass('visible error');
+
+                        $.ajax({
+                            url: '{{ path('user_convert_currency', {'id': 0}) }}'.replace('0', packId),
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            data: {
+                                currency: currency
+                            },
+                            success: function(response) {
+                                console.log('Succès AJAX:', response);
+                                if (response.convertedPrice && response.currency) {
+                                    convertedPriceContainer.text(`${response.currency === 'EUR' ? '€' : '$'}${response.convertedPrice}`);
+                                    convertedPriceContainer.addClass('visible');
+                                } else {
+                                    console.error('Réponse inattendue:', response);
+                                    convertedPriceContainer.text('Erreur de conversion');
+                                    convertedPriceContainer.addClass('visible error');
+                                }
+                            },
+                            error: function(xhr) {
+                                console.error('Erreur AJAX:', xhr.responseText);
+                                convertedPriceContainer.text('Erreur de conversion');
+                                convertedPriceContainer.addClass('visible error');
+                            }
+                        });
+                    });
+                }
+
+                // Vérification du chargement de la vidéo
+                const video = $('.video-background video')[0];
+                if (video) {
+                    video.addEventListener('error', function() {
+                        console.error('Erreur de chargement de la vidéo:', video.error);
+                        $('.video-background').css('display', 'none'); // Masquer si erreur
+                    });
+                    video.addEventListener('loadeddata', function() {
+                        console.log('Vidéo chargée avec succès');
+                    });
+                }
+            });
+
+            // Fonctions de partage sur les réseaux sociaux
+            function shareOnFacebook() {
+                const url = encodeURIComponent(window.location.href);
+                const title = encodeURIComponent('{{ pack.nomPack }} sur Eventora');
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&title=${title}`, '_blank');
+            }
+
+            function shareOnTwitter() {
+                const url = encodeURIComponent(window.location.href);
+                const text = encodeURIComponent('Découvrez {{ pack.nomPack }} sur Eventora ! {{ pack.description|u.truncate(100, '...') }}');
+                window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+            }
+
+            function shareOnWhatsApp() {
+                const url = encodeURIComponent(window.location.href);
+                const text = encodeURIComponent('Découvrez {{ pack.nomPack }} sur Eventora : {{ pack.description|u.truncate(100, '...') }}');
+                window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
+            }
+
+            function shareOnLinkedIn() {
+                const url = encodeURIComponent(window.location.href);
+                const title = encodeURIComponent('{{ pack.nomPack }} sur Eventora');
+                const summary = encodeURIComponent('{{ pack.description|u.truncate(200, '...') }}');
+                window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=${summary}`, '_blank');
+            }
+        </script>
     </body>
 </html>

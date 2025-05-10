@@ -1,49 +1,114 @@
 {% extends 'admin/dashboard.html.twig' %}
 
-{% block title %}Réclamations{% endblock %}
+{% block title %}Liste des Réclamations - Eventora{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <style>
         /* Card Styling */
-        .reclamation-card {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: none;
+        .reclamations-container {
+            border: 2px solid #dc3545; /* Bordure rouge pour les réclamations */
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            min-height: 300px;
-            width: 100%;
-        }
-        .reclamation-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        }
-        .card-body {
-            position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background: #fff;
             padding: 20px;
-            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .reclamations-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
         }
         .card-header {
-            background: linear-gradient(90deg, #343a40, #495057);
-            color: #fff;
-            padding: 15px;
-            border-radius: 12px 12px 0 0;
-            font-size: 1.1rem;
-        }
-        .card-footer {
-            position: relative;
-            z-index: 1;
-            padding: 15px;
             background: #f8f9fa;
-            border-radius: 0 0 12px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            border-radius: 12px 12px 0 0;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .badge {
+        .reclamation-label {
+            display: inline-block;
             font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 10px;
+            color: #fff;
+            background-color: #dc3545; /* Rouge pour les réclamations */
+            animation: pulse 2s infinite;
+        }
+        .reclamation-label:hover {
+            animation: bounce 0.5s;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Interactive Card Styling */
+        .reclamation-card {
+            position: relative;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #fff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .reclamation-card:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+        .reclamation-card.expanded {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .card-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .card-summary .summary-info {
+            flex: 1;
+        }
+        .card-summary h6 {
+            margin: 0;
+            font-size: 1rem;
+            color: #333;
+        }
+        .card-summary p {
+            margin: 5px 0 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-top: 0;
+        }
+        .reclamation-card.expanded .card-details {
+            max-height: 300px; /* Ajustez selon vos besoins */
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+            margin-top: 15px;
+        }
+        .card-details p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        /* Status Badges */
+        .badge {
+            font-size: 0.85rem;
             padding: 5px 10px;
             border-radius: 12px;
             color: #fff;
@@ -64,77 +129,101 @@
         .badge-rejetée {
             background-color: #dc3545;
         }
-        .btn-sm {
-            margin-right: 5px;
-            padding: 8px 12px;
-            font-size: 0.9rem;
-        }
-        .description-truncated {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
 
-        /* Barre latérale de tri complètement à droite */
-        .filter-sidebar {
-            position: fixed;
-            top: 80px;
-            right: 0;
-            width: 300px;
-            height: calc(100vh - 80px);
-            background-color: #f8f9fa;
-            border-radius: 12px 0 0 12px;
-            box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        .filter-sidebar.collapsed {
-            transform: translateX(100%);
-        }
-        .filter-toggle-btn {
-            background-color: #ff6200;
-            color: #fff;
+        /* Buttons */
+        .btn-add {
+            background: linear-gradient(90deg, #dc3545, #c82333); /* Dégradé rouge */
             border: none;
             border-radius: 8px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        .filter-toggle-btn:hover { background-color: #e65a00; }
-        .filter-content { margin-top: 15px; }
-
-        /* Bouton pour réafficher le menu */
-        .filter-toggle-icon {
-            position: fixed;
-            top: 100px;
-            right: 10px;
-            background-color: #ff6200;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
             color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
-            z-index: 1001;
-            display: none;
         }
-        .filter-toggle-icon:hover { background-color: #e65a00; }
-        .filter-toggle-icon.visible { display: flex; }
+        .btn-add:hover {
+            background: linear-gradient(90deg, #c82333, #dc3545);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+            color: #fff;
+        }
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            margin-right: 5px;
+            transition: all 0.3s ease;
+        }
+        .btn-view {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .btn-view:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+        .btn-edit {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .btn-edit:hover {
+            background-color: #e0a800;
+            color: #212529;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+            color: #fff;
+        }
 
-        /* Ajustement des boutons Croissant/Décroissant */
-        .btn-group .btn {
+        /* Search Bar */
+        .search-bar {
+            position: relative;
+            max-width: 300px;
+        }
+        .search-bar input {
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 0.95rem;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .search-bar input:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 8px rgba(220, 53, 69, 0.3);
+            outline: none;
+        }
+
+        /* Filter Section (comme dans Membres) */
+        .filter-section {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: fit-content;
+        }
+        .filter-section h6 {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .filter-section .form-select {
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .filter-section .form-select:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 8px rgba(220, 53, 69, 0.3);
+            outline: none;
+        }
+        .filter-section .btn-group .btn {
             padding: 8px 15px;
             font-size: 0.9rem;
             display: flex;
@@ -142,13 +231,32 @@
             justify-content: center;
             gap: 5px;
         }
-        .btn-group .btn i { font-size: 1rem; }
-        .btn-group .btn.active { background-color: #ff6200; color: #fff; }
-        .btn-group .btn:hover { background-color: #ff8c00; color: #fff; }
+        .filter-section .btn-group .btn i {
+            font-size: 1rem;
+        }
+        .filter-section .btn-group .btn.active {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .filter-section .btn-group .btn:hover {
+            background-color: #c82333;
+            color: #fff;
+        }
+        .filter-section .btn-reset {
+            background-color: #6c757d;
+            color: #fff;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .filter-section .btn-reset:hover {
+            background-color: #5a6268;
+            color: #fff;
+        }
 
         /* Contenu principal */
         .reclamation-content {
-            margin-right: 320px;
             padding: 0 15px;
         }
 
@@ -159,7 +267,7 @@
             margin-top: 20px;
         }
         .pagination .page-item .page-link {
-            color: #ff6200;
+            color: #dc3545;
             border: none;
             margin: 0 5px;
             padding: 8px 12px;
@@ -167,249 +275,248 @@
             transition: all 0.3s ease;
         }
         .pagination .page-item.active .page-link {
-            background-color: #ff6200;
+            background-color: #dc3545;
             color: #fff;
         }
         .pagination .page-link:hover {
-            background-color: #ff8c00;
+            background-color: #c82333;
             color: #fff;
         }
-        .pagination .page-item.disabled .page-link { color: #ccc; }
+        .pagination .page-item.disabled .page-link {
+            color: #ccc;
+        }
 
         /* Ajustement pour la sidebar principale à gauche */
-        .reclamation-container { margin-left: 270px; }
+        .reclamation-container {
+            margin-left: 270px;
+        }
 
         /* Responsive Design */
         @media (max-width: 992px) {
-            .reclamation-container { margin-left: 0; }
-            .reclamation-content { margin-right: 0; }
-            .filter-sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                top: 0;
-                border-radius: 12px;
+            .reclamation-container {
+                margin-left: 0;
+            }
+            .filter-section {
                 margin-top: 20px;
             }
-            .filter-sidebar.collapsed {
-                transform: translateX(0);
-                height: 50px;
-                overflow: hidden;
-            }
-            .filter-sidebar.collapsed .filter-content { display: none; }
-            .filter-toggle-icon { display: none; }
         }
         @media (max-width: 768px) {
-            .reclamation-card { min-height: 250px; }
-            .card-body { padding: 15px; font-size: 0.9rem; }
-            .card-header { font-size: 1rem; }
-            .btn-sm { padding: 6pxpx 10px; font-size: 0.8rem; }
+            .reclamation-card {
+                padding: 10px;
+            }
+            .card-summary h6 {
+                font-size: 0.9rem;
+            }
+            .card-summary p,
+            .card-details p {
+                font-size: 0.85rem;
+            }
+            .search-bar {
+                max-width: 100%;
+                margin-bottom: 15px;
+            }
+            .btn-add {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
         }
     </style>
 {% endblock %}
 
 {% block body %}
-     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
-        <div class="sidenav-header">
-            <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
-                <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
-            </a>
-        </div>
-        <hr class="horizontal dark mt-0">
-        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}" href="{{ path('admin_dashboard') }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-tachometer-alt text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
-                        <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-tachometer-alt text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Home</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reservationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-calendar-check text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Réservations</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'show' : '' }}" id="reservationsMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_pack' ? 'active' : '' }}" href="{{ path('admin_reservations_pack') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-box text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Réservations Pack</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_personnalise' ? 'active' : '' }}" href="{{ path('admin_reservations_personnalise') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-calendar-alt text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Réservations Personnalisées</span>
-                                </a>
-                            </li>
-                        </ul>
+   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+    <div class="sidenav-header">
+        <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
+            <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+        </a>
+    </div>
+    <hr class="horizontal dark mt-0">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}" href="{{ path('admin_dashboard') }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-tachometer-alt text-dark"></i>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reclamationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-exclamation-triangle text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Réclamations</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'show' : '' }}" id="reclamationsMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reclamations' ? 'active' : '' }}" href="{{ path('admin_reclamations') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-exclamation-circle text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Réclamations</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="{{ path('admin_feedback') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-comment-dots text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Feedback</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <span class="nav-link-text ms-1">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
+                    <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-tachometer-alt text-dark"></i>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-users text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Utilisateurs</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'show' : '' }}" id="usersMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-friends text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Membres</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_moderators' ? 'active' : '' }}" href="{{ path('admin_moderators') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-shield text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Modérateurs</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="{{ path('admin_admins') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-cog text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Admins</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <span class="nav-link-text ms-1">Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reservationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-calendar-check text-dark"></i>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-box text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Packs</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'show' : '' }}" id="packsMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-box-open text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Packs</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_typepacks' ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-tags text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Types de Packs</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <span class="nav-link-text ms-1">Reservations</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'show' : '' }}" id="reservationsMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_pack' ? 'active' : '' }}" href="{{ path('admin_reservations_pack') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-box text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Pack Reservations</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_personnalise' ? 'active' : '' }}" href="{{ path('admin_reservations_personnalise') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-calendar-alt text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Personalized Reservations</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#complaintsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-exclamation-triangle text-dark"></i>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-concierge-bell text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Services</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'show' : '' }}" id="servicesMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_services' ? 'active' : '' }}" href="{{ path('admin_services') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-tools text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Services</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="{{ path('admin_sponsors') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-handshake text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Partenaires</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <span class="nav-link-text ms-1">Complaints</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'show' : '' }}" id="complaintsMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reclamations' ? 'active' : '' }}" href="{{ path('admin_reclamations') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-exclamation-circle text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Complaints</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="{{ path('admin_feedback') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-comment-dots text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Feedback</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-users text-dark"></i>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_logout') }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-sign-out-alt text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Déconnexion</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </aside>
+                    <span class="nav-link-text ms-1">Users</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'show' : '' }}" id="usersMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-user-friends text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Members</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_agent_index' ? 'active' : '' }}" href="{{ path('app_agent_index') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-user-shield text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Agents</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-box text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Packs</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'show' : '' }}" id="packsMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-box-open text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Packs</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_typepacks' ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-tags text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Pack Types</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-concierge-bell text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Services</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'show' : '' }}" id="servicesMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_services' ? 'active' : '' }}" href="{{ path('admin_services') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-tools text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Services</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="{{ path('admin_sponsors') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-handshake text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Partners</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-sign-out-alt text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Log out</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>
+
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg reclamation-container">
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Pages</a></li>
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{{ path('admin_dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Réclamations</li>
                     </ol>
                     <h6 class="font-weight-bolder mb-0">
                         Liste des Réclamations
-                        <a href="{{ path('admin_reclamations_new') }}" class="btn btn-sm btn-success ms-2">Ajouter une Réclamation</a>
+                        <a href="{{ path('admin_reclamations_new') }}" class="btn btn-add ms-2">Ajouter une Réclamation</a>
                     </h6>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                        <div class="input-group">
-                            <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                        <div class="search-bar">
                             <input type="text" class="form-control" placeholder="Rechercher..." id="searchReclamation">
                         </div>
                     </div>
@@ -426,129 +533,124 @@
         </nav>
 
         <div class="container-fluid py-4">
-            <!-- Contenu principal : Les cartes de réclamations -->
+            <!-- Contenu principal -->
             <div class="reclamation-content">
-                <!-- Liste des réclamations -->
-                <div class="row" id="reclamationList">
-                    {% if reclamations|length > 0 %}
-                        {% for reclamation in reclamations %}
-                            <div class="col-lg-6 col-md-6 col-sm-12 mb-4 reclamation-card-container">
-                                <div class="card reclamation-card h-100">
-                                    <div class="card-header">
-                                        <h6 class="mb-0">Réclamation #{{ reclamation.id }}</h6>
+                <div class="row">
+                    <!-- Liste de cartes interactives -->
+                    <div class="col-lg-9 col-md-12" id="reclamationList">
+                        <div class="reclamations-container">
+                            <div class="card-header">
+                                <h5 class="mb-0">Réclamations</h5>
+                                <span class="reclamation-label">Réclamations</span>
+                            </div>
+                            <div class="card-body p-4">
+                                {% if reclamations|length > 0 %}
+                                    {% for reclamation in reclamations %}
+                                        <div class="reclamation-card" onclick="toggleCard(this)">
+                                            <div class="card-summary">
+                                                <div class="summary-info">
+                                                    <h6>Réclamation #{{ reclamation.id }} - {{ reclamation.titre }}</h6>
+                                                    <p>Statut : <span class="badge badge-{{ reclamation.statut|lower|replace({'en_attente': 'en_attente', 'en_cours': 'en_cours', 'resolue': 'resolue', 'rejetée': 'rejetée'}) }}">{{ reclamation.statut }}</span> | Date : {{ reclamation.date|date('Y-m-d') }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="card-details">
+                                                <p><strong>Description :</strong> {{ reclamation.description }}</p>
+                                                <p><strong>Type :</strong> {{ reclamation.Type }}</p>
+                                                <p><strong>Utilisateur :</strong> {{ reclamation.membre.email }}</p>
+                                                <div class="mt-3">
+                                                    <a href="{{ path('admin_reclamations_show_qr', {'id': reclamation.id}) }}" class="btn btn-action btn-view">Détails</a>
+                                                    {% if reclamation.statut in ['En_Attente', 'En_Cours'] %}
+                                                        <a href="{{ path('admin_reclamations_traiter', {'id': reclamation.id}) }}" class="btn btn-action btn-edit">Traiter</a>
+                                                    {% endif %}
+                                                    <a href="#" class="btn btn-action btn-delete" onclick="if(confirm('Voulez-vous vraiment supprimer cette réclamation ?')) { document.getElementById('delete-form-{{ reclamation.id }}').submit(); } return false;">Supprimer</a>
+                                                    <form id="delete-form-{{ reclamation.id }}" method="post" action="{{ path('admin_reclamations_delete', {'id': reclamation.id}) }}" style="display: none;">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="alert alert-info text-center" role="alert">
+                                        Aucune réclamation trouvée.
                                     </div>
-                                    <div class="card-body">
-                                        <p class="text-sm mb-2"><strong>Titre :</strong> {{ reclamation.titre }}</p>
-                                        <p class="text-sm mb-2"><strong>Description :</strong> <span class="description-truncated">{{ reclamation.description }}</span></p>
-                                        <p class="text-sm mb-2"><strong>Type :</strong> {{ reclamation.Type }}</p>
-                                        <p class="text-sm mb-2">
-                                            <strong>Statut :</strong>
-                                            <span class="badge badge-{{ reclamation.statut|lower|replace({'en_attente': 'en_attente', 'en_cours': 'en_cours', 'resolue': 'resolue', 'rejetée': 'rejetée'}) }}">
-                                                {{ reclamation.statut }}
-                                            </span>
-                                        </p>
-                                        <p class="text-sm mb-2"><strong>Date :</strong> {{ reclamation.date|date('Y-m-d') }}</p>
-                                        <p class="text-sm mb-2"><strong>Utilisateur :</strong> {{ reclamation.membre.email }}</p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a href="{{ path('admin_reclamations_show_qr', {'id': reclamation.id}) }}" class="btn btn-sm btn-info">Détails</a>
-                                        {% if reclamation.statut in ['En_Attente', 'En_Cours'] %}
-                                            <a href="{{ path('admin_reclamations_traiter', {'id': reclamation.id}) }}" class="btn btn-sm btn-primary">Traiter</a>
-                                        {% endif %}
-                                        <a href="#" class="btn btn-sm btn-danger" onclick="if(confirm('Voulez-vous vraiment supprimer cette réclamation ?')) { document.getElementById('delete-form-{{ reclamation.id }}').submit(); } return false;">Supprimer</a>
-                                        <form id="delete-form-{{ reclamation.id }}" method="post" action="{{ path('admin_reclamations_delete', {'id': reclamation.id}) }}" style="display: none;">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
-                                        </form>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% if total_pages > 1 %}
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ path('admin_reclamations', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Previous">
+                                            <span aria-hidden="true">«</span>
+                                        </a>
+                                    </li>
+                                    {% for i in 1..total_pages %}
+                                        <li class="page-item {{ current_page == i ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ path('admin_reclamations', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}">{{ i }}</a>
+                                        </li>
+                                    {% endfor %}
+                                    <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ path('admin_reclamations', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Next">
+                                            <span aria-hidden="true">»</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    </div>
+
+                    <!-- Menu de tri à droite -->
+                    <div class="col-lg-3 col-md-12">
+                        <div class="filter-section">
+                            <h6 class="text-dark font-weight-bold"><i class="fas fa-filter me-2"></i>Options de Tri</h6>
+                            <form method="get" action="{{ path('admin_reclamations') }}" class="row g-3 align-items-center">
+                                <div class="col-12">
+                                    <label for="status_filter" class="form-label text-sm font-weight-bold">Filtrer par Statut</label>
+                                    <select name="status_filter" id="status_filter" class="form-select" onchange="this.form.submit()">
+                                        {% for value, label in statuses %}
+                                            <option value="{{ value }}" {{ status_filter == value ? 'selected' : '' }}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Date</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('admin_reclamations', {'sort_by': 'date', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'date' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('admin_reclamations', {'sort_by': 'date', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'date' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="col-12">
-                            <div class="alert alert-info text-center" role="alert">
-                                Aucune réclamation trouvée.
-                            </div>
+                                <div class="col-12">
+                                    <label class="form-label text-sm font-weight-bold">Trier par Type</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ path('admin_reclamations', {'sort_by': 'Type', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'Type' and sort_order == 'asc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-up me-1"></i> Croissant
+                                        </a>
+                                        <a href="{{ path('admin_reclamations', {'sort_by': 'Type', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
+                                           class="btn btn-outline-primary {{ sort_by == 'Type' and sort_order == 'desc' ? 'active' : '' }}">
+                                            <i class="fas fa-arrow-down me-1"></i> Décroissant
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex align-items-end">
+                                    <a href="{{ path('admin_reclamations') }}" class="btn btn-outline-secondary w-100">
+                                        <i class="fas fa-undo me-1"></i> Réinitialiser
+                                    </a>
+                                </div>
+                            </form>
                         </div>
-                    {% endif %}
-                </div>
-
-                <!-- Pagination -->
-                {% if total_pages > 1 %}
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ path('admin_reclamations', {'page': current_page - 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Previous">
-                                    <span aria-hidden="true">«</span>
-                                </a>
-                            </li>
-                            {% for i in 1..total_pages %}
-                                <li class="page-item {{ current_page == i ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ path('admin_reclamations', {'page': i, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}">{{ i }}</a>
-                                </li>
-                            {% endfor %}
-                            <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ path('admin_reclamations', {'page': current_page + 1, 'sort_by': sort_by, 'sort_order': sort_order, 'status_filter': status_filter, 'search': searchTerm}) }}" aria-label="Next">
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                {% endif %}
-            </div>
-
-            <!-- Barre latérale de tri à droite -->
-            <div class="filter-sidebar" id="filterSidebar">
-                <button class="filter-toggle-btn" onclick="toggleFilterSidebar()">Masquer</button>
-                <div class="filter-content">
-                    <h6 class="mb-3 text-dark font-weight-bold"><i class="fas fa-filter me-2"></i>Options de Tri et Filtrage</h6>
-                    <form method="get" action="{{ path('admin_reclamations') }}" class="row g-3 align-items-center">
-                        <div class="col-12">
-                            <label for="status_filter" class="form-label text-sm font-weight-bold">Filtrer par Statut</label>
-                            <select name="status_filter" id="status_filter" class="form-select" onchange="this.form.submit()">
-                                {% for value, label in statuses %}
-                                    <option value="{{ value }}" {{ status_filter == value ? 'selected' : '' }}>{{ label }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Date</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('admin_reclamations', {'sort_by': 'date', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'date' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('admin_reclamations', {'sort_by': 'date', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'date' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label text-sm font-weight-bold">Trier par Type</label>
-                            <div class="btn-group w-100" role="group">
-                                <a href="{{ path('admin_reclamations', {'sort_by': 'Type', 'sort_order': 'asc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'Type' and sort_order == 'asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up me-1"></i> Croissant
-                                </a>
-                                <a href="{{ path('admin_reclamations', {'sort_by': 'Type', 'sort_order': 'desc', 'status_filter': status_filter, 'search': searchTerm, 'page': current_page}) }}"
-                                   class="btn btn-outline-primary {{ sort_by == 'Type' and sort_order == 'desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down me-1"></i> Décroissant
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-12 d-flex align-items-end">
-                            <a href="{{ path('admin_reclamations') }}" class="btn btn-outline-secondary w-100">
-                                <i class="fas fa-undo me-1"></i> Réinitialiser
-                            </a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-
-            <!-- Bouton flottant pour réafficher le menu -->
-            <button class="filter-toggle-icon" id="filterToggleIcon" onclick="toggleFilterSidebar()">
-                <i class="fas fa-filter"></i>
-            </button>
         </div>
     </main>
 {% endblock %}
@@ -559,22 +661,17 @@
         // Recherche en temps réel
         document.getElementById('searchReclamation').addEventListener('input', function(e) {
             const searchText = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.reclamation-card-container');
+            const cards = document.querySelectorAll('.reclamation-card');
             cards.forEach(card => {
-                const title = card.querySelector('.card-body p:nth-child(1)').textContent.toLowerCase();
-                const description = card.querySelector('.card-body p:nth-child(2)').textContent.toLowerCase();
+                const title = card.querySelector('.card-summary h6').textContent.toLowerCase();
+                const description = card.querySelector('.card-details p:nth-child(1)').textContent.toLowerCase();
                 card.style.display = title.includes(searchText) || description.includes(searchText) ? '' : 'none';
             });
         });
 
-        // Toggle pour la barre latérale de tri
-        function toggleFilterSidebar() {
-            const sidebar = document.getElementById('filterSidebar');
-            const btn = sidebar.querySelector('.filter-toggle-btn');
-            const icon = document.getElementById('filterToggleIcon');
-            sidebar.classList.toggle('collapsed');
-            btn.textContent = sidebar.classList.contains('collapsed') ? 'Afficher' : 'Masquer';
-            icon.classList.toggle('visible', sidebar.classList.contains('collapsed'));
+        // Toggle pour l'expansion des cartes
+        function toggleCard(card) {
+            card.classList.toggle('expanded');
         }
     </script>
 {% endblock %}

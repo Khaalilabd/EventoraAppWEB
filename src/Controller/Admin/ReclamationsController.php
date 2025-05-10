@@ -8,22 +8,35 @@ use App\Form\ReclamationType;
 use App\Form\ReclamationRepType;
 use App\Repository\ReclamationRepository;
 use App\Service\AiResponseGenerator;
+use App\Service\BrevoEmailSender;
 use Doctrine\ORM\EntityManagerInterface;
-use Dompdf\Dompdf;
+use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
+use Twig\Environment;
 
 #[Route('/admin/reclamations')]
 class ReclamationsController extends AbstractController
 {
     private $entityManager;
+    private $logger;
+    private $twig;
+    private $emailSender;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger,
+        Environment $twig,
+        BrevoEmailSender $emailSender
+    ) {
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
+        $this->twig = $twig;
+        $this->emailSender = $emailSender;
     }
 
     #[Route('/', name: 'admin_reclamations', methods: ['GET'])]
@@ -40,7 +53,6 @@ class ReclamationsController extends AbstractController
             ->leftJoin('r.membre', 'm')
             ->orderBy("r.$sortBy", $sortOrder);
 
-        // Gestion des filtres par statut
         if ($statusFilter === 'non_traitees') {
             $queryBuilder->andWhere('r.statut IN (:statuses)')
                 ->setParameter('statuses', ['En_Attente', 'En_Cours']);
@@ -123,7 +135,6 @@ class ReclamationsController extends AbstractController
         $reclamationRep = new ReclamationRep();
         $reclamationRep->setReclamation($reclamation);
 
-        // Générer une suggestion de réponse initiale
         $suggestedResponse = $aiResponseGenerator->generateResponse(
             $reclamation->getTitre(),
             $reclamation->getDescription(),
@@ -168,20 +179,15 @@ class ReclamationsController extends AbstractController
     }
 
     #[Route('/{id}/export-pdf', name: 'admin_reclamations_export_pdf', methods: ['GET'])]
-    public function exportPdf(Reclamation $reclamation): Response
+    public function exportPdf(Reclamation $reclamation, Pdf $knpSnappyPdf): Response
     {
         try {
             $html = $this->renderView('admin/reclamations/pdf.html.twig', [
                 'reclamation' => $reclamation,
             ]);
 
-            $dompdf = new Dompdf();
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'portrait');
-            $dompdf->render();
-
             return new Response(
-                $dompdf->output(),
+                $knpSnappyPdf->getOutputFromHtml($html),
                 200,
                 [
                     'Content-Type' => 'application/pdf',
@@ -197,19 +203,87 @@ class ReclamationsController extends AbstractController
     public function delete(Request $request, Reclamation $reclamation): Response
     {
         if ($this->isCsrfTokenValid('delete' . $reclamation->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($reclamation);
-            $this->entityManager->flush();
+            try {
+                $membre = $reclamation->getMembre();
+                $reclamationId = $reclamation->getId();
 
-            if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(['success' => true, 'message' => 'Réclamation supprimée avec succès.']);
+                // Supprimer la réclamation
+                $this->entityManager->remove($reclamation);
+                $this->entityManager->flush();
+
+                // Envoyer un email à l'utilisateur
+                $membreHtml = $this->twig->render('admin/reclamations/email_delete_membre.html.twig', [
+                    'reclamation' => $reclamation,
+                    'membre' => $membre,
+                ]);
+                $emailSentMembre = $this->emailSender->sendEmail(
+                    $membre->getEmail(),
+                    $membre->getNom() . ' ' . $membre->getPrenom(),
+                    'Suppression de votre réclamation - Eventora',
+                    $membreHtml
+                );
+                $this->logger->info('Envoi email membre après suppression', [
+                    'email' => $membre->getEmail(),
+                    'success' => $emailSentMembre,
+                    'reclamation_id' => $reclamationId,
+                ]);
+
+                if (!$emailSentMembre) {
+                    $this->logger->warning('Échec de l\'envoi de l\'email au membre après suppression', [
+                        'email' => $membre->getEmail(),
+                        'reclamation_id' => $reclamationId,
+                    ]);
+                    $this->addFlash('warning', 'Réclamation supprimée, mais l\'email de confirmation à l\'utilisateur n\'a pas pu être envoyé.');
+                }
+
+                // Envoyer un email à l'admin connecté
+                $admin = $this->getUser();
+                if ($admin) {
+                    $adminHtml = $this->twig->render('admin/reclamations/email_delete_admin.html.twig', [
+                        'reclamation' => $reclamation,
+                        'membre' => $membre,
+                        'admin' => $admin,
+                    ]);
+                    $emailSentAdmin = $this->emailSender->sendEmail(
+                        $admin->getEmail(),
+                        $admin->getNom() . ' ' . $admin->getPrenom(),
+                        'Suppression d\'une réclamation - Eventora',
+                        $adminHtml
+                    );
+                    $this->logger->info('Envoi email admin après suppression', [
+                        'email' => $admin->getEmail(),
+                        'success' => $emailSentAdmin,
+                        'reclamation_id' => $reclamationId,
+                    ]);
+
+                    if (!$emailSentAdmin) {
+                        $this->logger->warning('Échec de l\'envoi de l\'email à l\'admin après suppression', [
+                            'email' => $admin->getEmail(),
+                            'reclamation_id' => $reclamationId,
+                        ]);
+                        $this->addFlash('warning', 'Réclamation supprimée, mais l\'email de confirmation à l\'admin n\'a pas pu être envoyé.');
+                    }
+                }
+
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse(['success' => true, 'message' => 'Réclamation supprimée avec succès.']);
+                }
+
+                $this->addFlash('success', 'Réclamation supprimée avec succès.');
+            } catch (\Exception $e) {
+                $this->logger->error('Erreur lors de la suppression de la réclamation', [
+                    'reclamation_id' => $reclamation->getId(),
+                    'exception' => $e->getMessage(),
+                ]);
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse(['success' => false, 'message' => 'Erreur lors de la suppression : ' . $e->getMessage()], 500);
+                }
+                $this->addFlash('error', 'Erreur lors de la suppression : ' . $e->getMessage());
             }
-
-            $this->addFlash('success', 'Réclamation supprimée avec succès.');
         } else {
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse(['success' => false, 'message' => 'Token CSRF invalide.'], 400);
             }
-
             $this->addFlash('error', 'Token CSRF invalide.');
         }
 

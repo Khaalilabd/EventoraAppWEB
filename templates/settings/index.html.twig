@@ -1,672 +1,1622 @@
-{% extends 'home/home.html.twig' %}
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        {% block title %}{{ 'settings'|trans }} - Eventora{% endblock %}
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
-{% block title %}{{ 'settings'|trans }} - Eventora{% endblock %}
+        {% block stylesheets %}
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+            <!-- Animate.css -->
+            <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+            <!-- Icomoon Icon Fonts -->
+            <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
+            <!-- Bootstrap -->
+            <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+            <!-- Magnific Popup -->
+            <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+            <!-- Owl Carousel -->
+            <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+            <!-- Theme style -->
+            <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <!-- Font Awesome -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <!-- Custom styles for navbar and settings -->
+            <style>
+                :root {
+                    --primary-color: #934D1A; /* Marron/brun au lieu de l'indigo */
+                    --primary-light: #CAB69A; /* Beige clair */
+                    --primary-dark: #723A15; /* Marron/brun foncé */
+                    --secondary-color: #AF9D81; /* Beige/brun secondaire */
+                    --accent-color: #007bff; /* Bleu d'accent */
+                    --success-color: #28a745; /* Vert */
+                    --error-color: #dc3545; /* Rouge */
+                    --dark-bg: #211A15; /* Fond sombre adapté */
+                    --light-bg: #F9F5F0; /* Fond clair beige */
+                    --card-bg: rgba(255, 255, 255, 0.05); /* Fond de carte */
+                    --text-dark: #333333; /* Texte foncé */
+                    --text-light: #F9F5F0; /* Texte clair */
+                    --text-muted: #9CA3AF; /* Texte discret */
+                    --border-color: rgba(255, 255, 255, 0.1); /* Bordure */
+                    --shadow-color: rgba(0, 0, 0, 0.25); /* Ombre */
+                    --glass-bg: rgba(33, 26, 21, 0.7); /* Fond avec effet glass adapté */
+                    --glass-border: rgba(255, 255, 255, 0.05); /* Bordure glass */
+                }
 
-{% block stylesheets %}
-    <style>
-        :root {
-            --primary-color: #934D1A;
-            --secondary-color: #BE6C2A;
-            --text-color: #1f2937;
-            --bg-color: #f9fafb;
-            --sidebar-bg: #ffffff;
-            --border-color: #e5e7eb;
-            --error-color: #dc2626;
-            --success-color: #16a34a;
-        }
+                /* Reset */
+                * {
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                }
 
-        .settings-wrapper {
-            display: flex;
-            min-height: 100vh;
-            background-color: var(--bg-color);
-            font-family: 'Inter', sans-serif;
-        }
+                body {
+                    font-family: 'Poppins', sans-serif;
+                    min-height: 100vh;
+                    position: relative;
+                    overflow-x: hidden;
+                    background: none;
+                    color: var(--text-light);
+                    line-height: 1.6;
+                }
 
-        /* Sidebar */
-        .sidebar {
-            width: 300px;
-            background-color: var(--sidebar-bg);
-            padding: 2.5rem 2rem;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            overflow-y: auto;
-            transition: width 0.3s ease;
-        }
+                /* Video Background with gradient overlay */
+                #background-video {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    z-index: -2;
+                    filter: brightness(0.5) saturate(1.2);
+                }
 
-        .sidebar h2 {
-            font-size: 1.75rem;
-            color: var(--text-color);
-            margin-bottom: 2.5rem;
-            font-weight: 600;
-        }
+                body::before {
+                    content: '';
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(135deg, rgba(33, 26, 21, 0.9), rgba(147, 77, 26, 0.3));
+                    z-index: -1;
+                    backdrop-filter: blur(10px);
+                }
 
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
+                /* Message d'erreur pour la vidéo */
+                #video-error {
+                    display: none;
+                    position: fixed;
+                    top: 10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(239, 68, 68, 0.9);
+                    color: #fff;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    z-index: 1001;
+                    font-family: 'Poppins', sans-serif;
+                    text-align: center;
+                    font-weight: 500;
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+                }
 
-        .sidebar li {
-            margin-bottom: 1.25rem;
-            position: relative;
-            opacity: 0;
-            transform: translateX(-20px);
-            animation: slideIn 0.5s ease forwards;
-            animation-delay: calc(var(--index) * 0.1s);
-        }
+                /* Navigation fixe */
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    padding-top: 70px;
+                }
 
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background: rgba(255, 255, 255, 0.9);
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
 
-        .sidebar li a {
-            display: block;
-            padding: 1rem 1.25rem;
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 1.1rem;
-            border-radius: 6px;
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-        }
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 12px 24px;
+                    max-width: 1400px;
+                    margin: 0 auto;
+                }
 
-        .sidebar li a:hover {
-            background-color: #BE6C2A;
-            color: #ffffff;
-            transform: translateX(5px);
-        }
+                .fh5co-logo a {
+                    font-family: 'Montserrat', sans-serif;
+                    font-weight: 700;
+                    font-size: 24px;
+                    color: #934D1A;
+                    text-decoration: none;
+                    letter-spacing: -0.5px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
 
-        .sidebar li.active a {
-            background-color: #934D1A;
-            color: #ffffff;
-            font-weight: 500;
-        }
+                .fh5co-logo a:before {
+                    content: '';
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    background: #934D1A;
+                    border-radius: 50%;
+                    box-shadow: 0 0 12px rgba(147, 77, 26, 0.5);
+                }
 
-        .language-menu .language-toggle {
-            cursor: pointer;
-        }
+                .user-circle {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: var(--primary-dark);
+                    color: var(--text-light);
+                    font-size: 18px;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                    border: 2px solid var(--primary-light);
+                    overflow: hidden;
+                    transition: all 0.3s ease;
+                }
 
-        .language-submenu {
-            display: none;
-            padding-left: 1.5rem;
-            margin-top: 0.5rem;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
 
-        .language-submenu.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
 
-        .language-submenu a {
-            font-size: 1rem;
-            padding: 0.75rem 1.25rem;
-        }
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
 
-        .help-item.hidden {
-            display: none;
-        }
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 12px;
+                    position: relative;
+                }
 
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 2.5rem;
-            max-width: 900px;
-            margin-left: 340px;
-            margin-right: 2rem;
-        }
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                    padding: 8px 12px;
+                    border-radius: 6px;
+                    letter-spacing: 0.5px;
+                }
 
-        .main-content h1 {
-            font-size: 2.25rem;
-            color: var(--text-color);
-            margin-bottom: 2.5rem;
-            font-weight: 700;
-        }
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #934D1A;
+                    background: rgba(255, 255, 255, 0.2);
+                }
 
-        .alert-success,
-        .alert-error {
-            padding: 1.25rem;
-            margin-bottom: 1.25rem;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #934D1A !important;
+                    background: rgba(147, 77, 26, 0.1);
+                    font-weight: 600;
+                }
 
-        .alert-success {
-            background-color: var(--success-color);
-            color: #ffffff;
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
 
-        .alert-error {
-            background-color: var(--error-color);
-            color: #ffffff;
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background: #fff;
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 180px;
+                    z-index: 1001;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: all 0.3s ease;
+                    border-radius: 12px;
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    transform: translateY(10px);
+                }
 
-        /* Settings Sections */
-        .settings-section {
-            background-color: #ffffff;
-            padding: 2rem;
-            border-radius: 8px;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s ease forwards;
-            animation-delay: calc(var(--index) * 0.2s);
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block !important;
+                    opacity: 1;
+                    visibility: visible;
+                    transform: translateY(0);
+                }
 
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
 
-        .settings-section h3 {
-            font-size: 1.5rem;
-            color: var(--text-color);
-            margin-bottom: 1.25rem;
-            font-weight: 600;
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                    font-weight: 400;
+                    letter-spacing: normal;
+                    border-radius: 0;
+                }
 
-        .settings-section:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #934D1A;
+                    background: rgba(147, 77, 26, 0.1);
+                }
 
-        .settings-section.highlight {
-            animation: highlightSection 1s ease-out;
-        }
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                    padding: 10px;
+                }
 
-        @keyframes highlightSection {
-            0% {
-                background-color: #934D1A;
-            }
-            100% {
-                background-color: #ffffff;
-            }
-        }
+                /* Main content wrapper */
+                .settings-wrapper {
+                    flex: 1;
+                    padding: 40px 24px;
+                    box-sizing: border-box;
+                    position: relative;
+                    z-index: 2;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    width: 100%;
+                }
 
-        /* Profile Picture */
-        .profile-picture {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
+                /* Settings container */
+                .settings-container {
+                    width: 100%;
+                    margin: 20px auto 60px;
+                    padding: 40px;
+                    background: var(--glass-bg);
+                    border-radius: 24px;
+                    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+                    position: relative;
+                    z-index: 2;
+                    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+                    border: 1px solid var(--glass-border);
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                }
 
-        .profile-picture img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 1.25rem;
-            border: 3px solid var(--border-color);
-            transition: transform 0.3s ease;
-        }
+                .settings-container:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+                }
+                
+                /* Headings */
+                .settings-container h1 {
+                    font-family: 'Montserrat', sans-serif;
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    color: var(--text-light);
+                    text-align: center;
+                    margin-bottom: 30px;
+                    position: relative;
+                    display: inline-block;
+                    width: 100%;
+                    letter-spacing: -0.5px;
+                }
 
-        .profile-picture img:hover {
-            transform: scale(1.1);
-        }
+                .settings-container h1 span {
+                    font-family: 'Poppins', sans-serif;
+                    color: var(--primary-light);
+                    font-size: 16px;
+                    display: block;
+                    margin-bottom: 8px;
+                    font-weight: 500;
+                    text-transform: uppercase;
+                    letter-spacing: 3px;
+                    opacity: 0.8;
+                }
 
-        .file-upload-wrapper {
-            position: relative;
-            display: inline-block;
-        }
+                .settings-container h3 {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 1.5rem;
+                    font-weight: 600;
+                    color: var(--text-light);
+                    margin-bottom: 25px;
+                    letter-spacing: -0.5px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
 
-        .custom-file-upload {
-            display: inline-block;
-            padding: 0.75rem 1.25rem;
-            background-color: #934D1A;
-            color: #ffffff;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            text-align: center;
-            border: 1px solid #BE6C2A;
-        }
+                .settings-container h3:before {
+                    content: '';
+                    display: block;
+                    width: 3px;
+                    height: 22px;
+                    background: var(--primary-light);
+                    border-radius: 3px;
+                }
 
-        .custom-file-upload:hover {
-            background-color: #BE6C2A;
-            border-color: #BE6C2A;
-            transform: translateY(-2px);
-        }
+                /* Alerts */
+                .alert-success,
+                .alert-error {
+                    padding: 16px 20px;
+                    margin-bottom: 24px;
+                    border-radius: 12px;
+                    font-size: 15px;
+                    font-weight: 500;
+                    text-align: center;
+                    font-family: 'Poppins', sans-serif;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    animation: slideInDown 0.5s ease forwards;
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    backdrop-filter: blur(10px);
+                }
 
-        .file-upload-wrapper input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
+                @keyframes slideInDown {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
 
-        /* Form Styling */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
+                .alert-success {
+                    background: rgba(40, 167, 69, 0.15);
+                    color: #4cd964;
+                    border-left: 4px solid #28a745;
+                }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
+                .alert-success:before {
+                    content: '\f058';
+                    font-family: 'Font Awesome 6 Free';
+                    font-weight: 900;
+                    font-size: 18px;
+                }
 
-        .form-group label {
-            font-size: 1rem;
-            color: var(--text-color);
-            margin-bottom: 0.75rem;
-            font-weight: 500;
-        }
+                .alert-error {
+                    background: rgba(220, 53, 69, 0.15);
+                    color: #ff3b30;
+                    border-left: 4px solid #dc3545;
+                }
 
-        .form-group input,
-        .form-group select {
-            padding: 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
+                .alert-error:before {
+                    content: '\f057';
+                    font-family: 'Font Awesome 6 Free';
+                    font-weight: 900;
+                    font-size: 18px;
+                }
 
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #934D1A;
-            box-shadow: 0 0 0 3px #BE6C2A;
-        }
+                /* Settings sections */
+                .settings-section {
+                    margin-bottom: 40px;
+                    padding: 30px;
+                    background: rgba(255, 255, 255, 0.03);
+                    border-radius: 16px;
+                    opacity: 0;
+                    animation: fadeInUp 0.6s ease forwards;
+                    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+                    border: 1px solid var(--glass-border);
+                    backdrop-filter: blur(5px);
+                    -webkit-backdrop-filter: blur(5px);
+                    position: relative;
+                    overflow: hidden;
+                }
 
-        .form-error {
-            color: var(--error-color);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
+                .settings-section:before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 2px;
+                    background: linear-gradient(90deg, var(--primary-light), rgba(255, 255, 255, 0.1));
+                }
 
-        .form-group button[type="submit"] {
-            padding: 1rem 2rem;
-            background-color: #934D1A;
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
 
-        .form-group button[type="submit"]:hover {
-            background-color: #BE6C2A;
-            transform: translateY(-2px);
-        }
+                .settings-section.highlight {
+                    animation: highlightSection 1s ease-out;
+                }
 
-        /* Password Toggle Icon */
-        .password-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+                @keyframes highlightSection {
+                    0% {
+                        background: rgba(147, 77, 26, 0.2);
+                        box-shadow: 0 0 30px rgba(147, 77, 26, 0.4);
+                    }
+                    100% {
+                        background: rgba(255, 255, 255, 0.03);
+                        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+                    }
+                }
 
-        .password-container input {
-            width: 100%;
-            padding-right: 3rem; /* Space for the icon */
-        }
+                /* Profile picture */
+                .profile-picture {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-bottom: 30px;
+                    position: relative;
+                }
 
-        .password-toggle-icon {
-            position: absolute;
-            right: 1rem;
-            cursor: pointer;
-            color: var(--text-color);
-            font-size: 1.2rem;
-            transition: color 0.3s ease;
-        }
+                .profile-picture img {
+                    width: 140px;
+                    height: 140px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    margin-bottom: 24px;
+                    border: 3px solid var(--primary-light);
+                    transition: all 0.3s ease;
+                    box-shadow: 0 0 20px rgba(147, 77, 26, 0.4);
+                    background: rgba(255, 255, 255, 0.1);
+                }
 
-        .password-toggle-icon:hover {
-            color: #934D1A;
-        }
+                .profile-picture img:hover {
+                    transform: scale(1.05);
+                    border-color: var(--accent-color);
+                    box-shadow: 0 0 30px rgba(147, 77, 26, 0.6);
+                }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .settings-wrapper {
-                flex-direction: column;
-            }
+                .file-upload-wrapper {
+                    position: relative;
+                    display: inline-block;
+                }
 
-            .sidebar {
-                width: 100%;
-                position: static;
-                height: auto;
-                box-shadow: none;
-                border-bottom: 1px solid var(--border-color);
-            }
+                .custom-file-upload {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    padding: 12px 24px;
+                    background: var(--primary-color);
+                    color: white;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(147, 77, 26, 0.3);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                }
 
-            .main-content {
-                margin-left: 0;
-                padding: 1.5rem;
-            }
+                .custom-file-upload:before {
+                    content: '\f030';
+                    font-family: 'Font Awesome 6 Free';
+                    font-weight: 900;
+                }
 
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-    <!-- Include Font Awesome for eye icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-{% endblock %}
+                .custom-file-upload:hover {
+                    background: var(--primary-dark);
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(147, 77, 26, 0.4);
+                }
 
-{% block body %}
-    <div class="settings-wrapper">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h2>{{ 'settings'|trans }}</h2>
-            <ul>
-                {% set menu_items = [
-                    'Back To Home',
-                    'Account Information',
-                    'Change Password',
-                    'Langages',
-                    'Help'
-                ] %}
-                {% for item in menu_items %}
-                    <li style="--index: {{ loop.index }}"
-                        {% if item == 'Change Password' %}class="active"{% endif %}
-                        {% if item == 'Langages' %}class="language-menu"{% endif %}
-                        {% if item == 'Help' %}class="help-item"{% endif %}>
-                        {% if item == 'Home' %}
-                            <a href="{{ path('app_home') }}">{{ item|trans }}</a>
-                        {% elseif item == 'Langages' %}
-                            <a href="#" class="language-toggle">{{ 'languages'|trans }}</a>
-                            <div class="language-submenu">
-                                <a href="{{ path('app_change_language', {locale: 'fr'}) }}">{{ 'french'|trans }}</a>
-                                <a href="{{ path('app_change_language', {locale: 'en'}) }}">{{ 'english'|trans }}</a>
-                            </div>
-                        {% elseif item == 'Change Password' %}
-                            <a href="#change-password" class="scroll-link">{{ item|trans }}</a>
-                        {% elseif item == 'Account Information' %}
-                            <a href="#account-information" class="scroll-link">{{ item|trans }}</a>
-                        {% else %}
-                            <a href="#">{{ item|trans }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+                .file-upload-wrapper input[type="file"] {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0;
+                    cursor: pointer;
+                }
 
-        <!-- Main Content -->
-        <div class="main-content">
-            {# Translated Title #}
-            <h1>{{ 'Account Information'|trans }}:</h1>
+                /* Form styling */
+                .form-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 24px;
+                }
 
-            {% for flash_message in app.flashes('success') %}
-                <div class="alert-success">
-                    {{ flash_message|trans }}
-                </div>
-            {% endfor %}
-            {% for flash_message in app.flashes('error') %}
-                <div class="alert-error">
-                    {{ flash_message|trans }}
-                </div>
-            {% endfor %}
+                .form-group {
+                    margin-bottom: 24px;
+                    position: relative;
+                }
 
-            <!-- Section 1: Basic Information -->
-            <div class="settings-section" id="account-information" style="--index: 1">
-                <h3>{{ 'your_account'|trans }}</h3>
-                <div class="profile-picture">
-                    {% if app.user.image %}
-                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="{{ 'profile_picture'|trans }}">
-                    {% else %}
-                        <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="{{ 'default_profile_picture'|trans }}">
-                    {% endif %}
-                    {{ form_start(imageForm, {'attr': {'id': 'imageForm', 'enctype': 'multipart/form-data'}}) }}
-                    <div class="file-upload-wrapper">
-                        <label for="imageForm_image" class="custom-file-upload">
-                            {{ 'edit_profile_picture'|trans }}
-                        </label>
-                        {{ form_widget(imageForm.image, {'attr': {'id': 'imageForm_image', 'accept': 'image/*'}}) }}
-                    </div>
-                    {{ form_widget(imageForm.submit, {'attr': {'style': 'display: none;'}}) }}
-                    {{ form_end(imageForm) }}
-                </div>
+                .form-group label {
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 14px;
+                    color: var(--text-muted);
+                    margin-bottom: 8px;
+                    font-weight: 500;
+                    display: block;
+                    transition: all 0.3s ease;
+                }
 
-                {{ form_start(form, {'attr': {'is_edit': true}}) }}
-                <div class="form-grid">
-                    <div class="form-group">
-                        {{ form_label(form.nom, null, {'label': 'first_name'|trans}) }}
-                        {{ form_widget(form.nom) }}
-                        {% if form.nom.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.nom.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.prenom, null, {'label': 'last_name'|trans}) }}
-                        {{ form_widget(form.prenom) }}
-                        {% if form.prenom.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.prenom.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.dateOfBirth, null, {'label': 'date_of_birth'|trans}) }}
-                        {{ form_widget(form.dateOfBirth) }}
-                        {% if form.dateOfBirth.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.dateOfBirth.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.gender, null, {'label': 'gender'|trans}) }}
-                        {{ form_widget(form.gender) }}
-                        {% if form.gender.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.gender.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.email, null, {'label': 'email'|trans}) }}
-                        {{ form_widget(form.email) }}
-                        {% if form.email.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.email.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.cin, null, {'label': 'cin'|trans}) }}
-                        {{ form_widget(form.cin) }}
-                        {% if form.cin.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.cin.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.numTel, null, {'label': 'phone_number'|trans}) }}
-                        {{ form_widget(form.numTel) }}
-                        {% if form.numTel.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.numTel.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.adresse, null, {'label': 'address'|trans}) }}
-                        {{ form_widget(form.adresse) }}
-                        {% if form.adresse.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.adresse.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label>{{ 'account_confirmed'|trans }}</label>
-                        <p>{{ app.user.isConfirmed ? 'Oui' : 'Non' }}</p>
-                    </div>
-                </div>
-            </div>
+                .form-group label:hover {
+                    color: var(--primary-light);
+                }
 
-            <!-- Section 2: Security and Access -->
-            <div class="settings-section" id="change-password" style="--index: 2">
-                <h3>{{ 'Change password'|trans }}</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        {{ form_label(form.username, null, {'label': 'username'|trans}) }}
-                        {{ form_widget(form.username) }}
-                        {% if form.username.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.username.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.motDePasse, null, {'label': 'password'|trans}) }}
-                        <div class="password-container">
-                            {{ form_widget(form.motDePasse, {'attr': {'class': 'password-input'}}) }}
-                            <i class="fas fa-eye password-toggle-icon" id="password-toggle"></i>
-                        </div>
-                        {% if form.motDePasse.vars.errors|length > 0 %}
-                            <div class="form-error">{{ form.motDePasse.vars.errors[0].message|trans }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+                .form-group input,
+                .form-group select {
+                    width: 100%;
+                    padding: 12px 16px;
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 8px;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 15px;
+                    background: rgba(255, 255, 255, 0.05);
+                    color: var(--text-light);
+                    transition: all 0.3s ease;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                }
 
-            <div class="form-group">
-                {{ form_widget(form.save, {'label': 'save_changes'|trans}) }}
-            </div>
+                .form-group input:focus,
+                .form-group select:focus {
+                    outline: none;
+                    background: rgba(255, 255, 255, 0.08);
+                    border-color: var(--primary-light);
+                    box-shadow: 0 0 0 3px rgba(147, 77, 26, 0.2);
+                }
 
-            {{ form_end(form) }}
-        </div>
-    </div>
-{% endblock %}
+                .form-group input::placeholder {
+                    color: var(--text-muted);
+                    opacity: 0.7;
+                }
 
-{% block javascripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Adjust sidebar height dynamically (not needed with fixed position, but kept for consistency)
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
-            if (sidebar && mainContent) {
-                const adjustSidebarHeight = () => {
-                    const mainHeight = mainContent.offsetHeight;
-                    sidebar.style.minHeight = `${mainHeight}px`;
-                };
-                adjustSidebarHeight();
-                window.addEventListener('resize', adjustSidebarHeight);
-            }
+                .form-error {
+                    color: #F87171;
+                    font-size: 13px;
+                    margin-top: 6px;
+                    font-family: 'Poppins', sans-serif;
+                    display: block;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
 
-            // Auto-submit profile picture form on file selection
-            const imageInput = document.getElementById('imageForm_image');
-            if (imageInput) {
-                imageInput.addEventListener('change', function() {
-                    if (this.files && this.files.length > 0) {
-                        const imageForm = document.getElementById('imageForm');
-                        if (imageForm) {
-                            imageForm.submit();
+                .form-error:before {
+                    content: '\f071';
+                    font-family: 'Font Awesome 6 Free';
+                    font-weight: 900;
+                    font-size: 11px;
+                }
+
+                .form-group button[type="submit"] {
+                    padding: 14px 28px;
+                    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+                    border: none;
+                    border-radius: 8px;
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: white;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(147, 77, 26, 0.3);
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-top: 10px;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .form-group button[type="submit"]:before {
+                    content: '\f0c7';
+                    font-family: 'Font Awesome 6 Free';
+                    font-weight: 900;
+                }
+
+                .form-group button[type="submit"]:hover {
+                    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(147, 77, 26, 0.5);
+                }
+
+                .form-group button[type="submit"]:after {
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: -100%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                    transition: 0.5s;
+                }
+
+                .form-group button[type="submit"]:hover:after {
+                    left: 100%;
+                }
+
+                /* Password toggle icon */
+                .password-container {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .password-container input {
+                    width: 100%;
+                    padding-right: 40px;
+                }
+
+                .password-toggle-icon {
+                    position: absolute;
+                    right: 12px;
+                    cursor: pointer;
+                    color: var(--text-muted);
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    background: transparent;
+                    border: none;
+                    padding: 5px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .password-toggle-icon:hover {
+                    color: var(--primary-light);
+                }
+
+                /* Navigation links */
+                .settings-nav {
+                    display: flex;
+                    justify-content: center;
+                    gap: 16px;
+                    margin-bottom: 40px;
+                    flex-wrap: wrap;
+                    padding: 0 12px;
+                }
+
+                .settings-nav a {
+                    padding: 12px 20px;
+                    background: rgba(255, 255, 255, 0.05);
+                    color: var(--text-light);
+                    text-decoration: none;
+                    border-radius: 8px;
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 14px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                    border: 1px solid var(--glass-border);
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    min-width: 120px;
+                    justify-content: center;
+                }
+
+                .settings-nav a:before {
+                    font-family: 'Font Awesome 6 Free';
+                    font-weight: 900;
+                }
+
+                .settings-nav a[href$="home"]:before {
+                    content: '\f015';
+                }
+
+                .settings-nav a[href$="account-information"]:before {
+                    content: '\f007';
+                }
+
+                .settings-nav a[href$="change-password"]:before {
+                    content: '\f023';
+                }
+
+                .language-toggle:before {
+                    content: '\f0ac';
+                }
+
+                .settings-nav a:hover {
+                    background: rgba(147, 77, 26, 0.1);
+                    transform: translateY(-3px);
+                    box-shadow: 0 6px 15px rgba(147, 77, 26, 0.2);
+                }
+
+                .settings-nav a.active {
+                    background: var(--primary-color);
+                    color: white;
+                    font-weight: 600;
+                    box-shadow: 0 6px 15px rgba(147, 77, 26, 0.3);
+                }
+
+                /* Language submenu */
+                .language-submenu {
+                    display: none;
+                    position: absolute;
+                    background: rgba(17, 24, 39, 0.95);
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                    z-index: 100;
+                    margin-top: 5px;
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    border: 1px solid var(--glass-border);
+                    min-width: 150px;
+                }
+
+                .language-submenu.active {
+                    display: block;
+                    animation: fadeIn 0.3s ease forwards;
+                }
+
+                .language-submenu a {
+                    font-size: 14px;
+                    padding: 12px 16px;
+                    background: transparent;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: var(--text-light);
+                    border-radius: 0;
+                    border: none;
+                    box-shadow: none;
+                    margin: 0;
+                    width: 100%;
+                    justify-content: flex-start;
+                }
+
+                .language-submenu a:hover {
+                    background: rgba(147, 77, 26, 0.1);
+                    transform: none;
+                    box-shadow: none;
+                }
+
+                .language-submenu a:before {
+                    display: inline-block;
+                    width: 20px;
+                    height: 15px;
+                    background-size: cover;
+                    background-position: center;
+                    content: '';
+                }
+
+                .language-submenu a[href*="locale=fr"]:before {
+                    background-image: url('https://flagcdn.com/w20/fr.png');
+                }
+
+                .language-submenu a[href*="locale=en"]:before {
+                    background-image: url('https://flagcdn.com/w20/gb.png');
+                }
+
+                /* Footer */
+                #fh5co-footer {
+                    margin-top: auto;
+                    background: rgba(17, 24, 39, 0.7);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    border-top: 1px solid var(--glass-border);
+                    padding: 20px 0;
+                }
+
+                #fh5co-footer p {
+                    color: var(--text-muted);
+                    font-size: 14px;
+                }
+
+                /* Animations */
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+
+                @keyframes pulse {
+                    0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7); }
+                    70% { box-shadow: 0 0 0 10px rgba(79, 70, 229, 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+                }
+
+                /* Responsive adjustments */
+                @media (max-width: 1200px) {
+                    .settings-container {
+                        padding: 30px;
+                    }
+                    
+                    .form-grid {
+                        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+                        gap: 20px;
+                    }
+                }
+
+                @media (max-width: 992px) {
+                    .settings-container {
+                        padding: 25px;
+                    }
+                    
+                    .settings-nav {
+                        gap: 10px;
+                    }
+                    
+                    .settings-nav a {
+                        padding: 10px 15px;
+                        font-size: 13px;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .menu-toggle {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 8px;
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid var(--glass-border);
+                    }
+
+                    .fh5co-nav .menu-1 ul {
+                        display: none;
+                        flex-direction: column;
+                        position: absolute;
+                        top: 70px;
+                        left: 0;
+                        width: 100%;
+                        background: rgba(17, 24, 39, 0.95);
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                        padding: 20px 0;
+                        backdrop-filter: blur(10px);
+                        -webkit-backdrop-filter: blur(10px);
+                        border-bottom: 1px solid var(--glass-border);
+                        z-index: 999;
+                    }
+
+                    .fh5co-nav .menu-1 ul.active {
+                        display: flex;
+                        animation: slideDown 0.3s ease forwards;
+                    }
+
+                    @keyframes slideDown {
+                        from {
+                            opacity: 0;
+                            transform: translateY(-10px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
                         }
                     }
-                });
-            }
 
-            // Ensure file input click is not prevented
-            const fileLabel = document.querySelector('.custom-file-upload');
-            if (fileLabel) {
-                fileLabel.addEventListener('click', function(e) {
-                    const fileInput = document.getElementById('imageForm_image');
-                    if (fileInput) {
-                        fileInput.click();
+                    .fh5co-nav .menu-1 ul li {
+                        margin: 8px 15px;
+                        text-align: center;
                     }
-                });
-            }
 
-            // Toggle language submenu and manage "Help" visibility
-            const languageToggle = document.querySelector('.language-toggle');
-            const languageSubmenu = document.querySelector('.language-submenu');
-            const helpItem = document.querySelector('.help-item');
-
-            if (languageToggle && languageSubmenu && helpItem) {
-                languageToggle.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const isActive = languageSubmenu.classList.toggle('active');
-                    if (isActive) {
-                        helpItem.classList.add('hidden');
-                    } else {
-                        helpItem.classList.remove('hidden');
+                    .fh5co-nav .menu-1 ul li a {
+                        padding: 10px;
+                        display: block;
+                        width: 100%;
                     }
-                });
 
-                document.addEventListener('click', function(e) {
-                    if (!languageToggle.contains(e.target) && !languageSubmenu.contains(e.target)) {
-                        languageSubmenu.classList.remove('active');
-                        helpItem.classList.remove('hidden');
+                    .user-circle {
+                        margin: 0 auto 10px;
                     }
-                });
-            }
 
-            // Log language link clicks
-            const englishLink = document.querySelector('a[href*="/change-language/en"]');
-            if (englishLink) {
-                englishLink.addEventListener('click', function(e) {
-                    console.log('English link clicked, redirecting to: ' + this.href);
-                });
-            }
+                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                        position: static;
+                        width: 90%;
+                        margin: 10px auto;
+                        box-shadow: none;
+                        background: rgba(255, 255, 255, 0.05);
+                        border-radius: 8px;
+                    }
 
-            const frenchLink = document.querySelector('a[href*="/change-language/fr"]');
-            if (frenchLink) {
-                frenchLink.addEventListener('click', function(e) {
-                    console.log('French link clicked, redirecting to: ' + this.href);
-                });
-            }
+                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                        display: none !important;
+                        transform: none;
+                    }
 
-            // Section hover animations
-            const sections = document.querySelectorAll('.settings-section');
-            sections.forEach(section => {
-                section.addEventListener('mouseenter', function() {
-                    this.style.transition = 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out';
-                });
-                section.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) scale(1)';
-                });
-            });
+                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                        display: block !important;
+                        animation: fadeIn 0.3s ease forwards;
+                    }
 
-            // Password toggle functionality
-            const passwordInput = document.querySelector('.password-input');
-            const passwordToggle = document.querySelector('#password-toggle');
-            if (passwordInput && passwordToggle) {
-                passwordToggle.addEventListener('click', function() {
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-                    this.classList.toggle('fa-eye');
-                    this.classList.toggle('fa-eye-slash');
-                });
-            }
+                    .settings-wrapper {
+                        padding: 30px 15px;
+                    }
 
-            // Smooth scroll for section links and manage active state
-            const scrollLinks = document.querySelectorAll('.scroll-link');
-            scrollLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
+                    .settings-container {
+                        padding: 20px;
+                        margin: 10px auto 30px;
+                    }
 
-                    // Remove active class from all sidebar items
-                    document.querySelectorAll('.sidebar li').forEach(item => {
-                        item.classList.remove('active');
+                    .settings-container h1 {
+                        font-size: 2rem;
+                    }
+
+                    .settings-container h3 {
+                        font-size: 1.3rem;
+                    }
+
+                    .form-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .settings-nav {
+                        flex-wrap: wrap;
+                        gap: 8px;
+                    }
+
+                    .settings-nav a {
+                        width: calc(50% - 8px);
+                        margin-bottom: 8px;
+                        font-size: 12px;
+                        padding: 10px;
+                    }
+
+                    .language-submenu {
+                        width: calc(50% - 8px);
+                    }
+
+                    .profile-picture img {
+                        width: 120px;
+                        height: 120px;
+                    }
+
+                    .settings-section {
+                        padding: 20px;
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .settings-container h1 {
+                        font-size: 1.8rem;
+                    }
+
+                    .settings-container h1 span {
+                        font-size: 14px;
+                        letter-spacing: 2px;
+                    }
+
+                    .settings-container h3 {
+                        font-size: 1.2rem;
+                    }
+
+                    .profile-picture img {
+                        width: 100px;
+                        height: 100px;
+                    }
+
+                    .custom-file-upload {
+                        padding: 10px 16px;
+                        font-size: 13px;
+                    }
+
+                    .form-group label {
+                        font-size: 13px;
+                    }
+
+                    .form-group input,
+                    .form-group select {
+                        padding: 10px 12px;
+                        font-size: 14px;
+                    }
+
+                    .settings-nav a {
+                        padding: 8px;
+                        font-size: 11px;
+                        min-width: 0;
+                    }
+
+                    .settings-nav a:before {
+                        font-size: 14px;
+                    }
+
+                    .fh5co-nav .container {
+                        padding: 10px 15px;
+                    }
+
+                    .fh5co-logo a {
+                        font-size: 20px;
+                    }
+                }
+            </style>
+            <!-- Include Font Awesome for icons -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        {% endblock %}
+
+        <!-- Modernizr JS -->
+        <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
+        <!--[if lt IE 9]>
+        <script src="{{ asset('js/respond.min.js') }}"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="fh5co-loader"></div>
+
+        <!-- Message d'erreur pour la vidéo -->
+        <div id="video-error"></div>
+
+        <!-- Vidéo de fond -->
+        <video id="background-video" autoplay loop muted playsinline>
+            <source src="{{ asset('images/settings.mp4') }}" type="video/mp4">
+            Votre navigateur ne prend pas en charge la balise vidéo.
+        </video>
+
+        <div id="page">
+            <nav class="fh5co-nav" role="navigation">
+                <div class="container">
+                    <div class="fh5co-logo">
+                        <a href="{{ path('app_home') }}">Eventora</a>
+                    </div>
+                    <div class="menu-toggle">
+                        <i class="icon-menu"></i>
+                    </div>
+                    <div class="menu-1">
+                        <ul>
+                            <li><a href="{{ path('app_home') }}">Home</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Réservation</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
+                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('user_packs') }}">Packs</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">Services</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_services') }}">Service</a></li>
+                                    <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                            <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                            <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                            <li class="has-dropdown">
+                                <a href="#">
+                                    <span class="user-circle">
+                                        {% if app.user and app.user.image %}
+                                            <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                        {% else %}
+                                            <i class="icon-user"></i>
+                                        {% endif %}
+                                    </span>
+                                    Contact
+                                </a>
+                                <ul class="dropdown">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('app_settings') }}" class="active">Settings</a></li>
+                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                        <li><a href="{{ path('app_user_history') }}">Historique</a></li>
+                                        {% if is_granted('ROLE_ADMIN') %}
+                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                        {% endif %}
+                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+                                    {% else %}
+                                        <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
+                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="Settings-wrapper">
+                <div class="settings-container animate-box" data-animate-effect="fadeIn">
+                    <h1><span>{{ 'your_profile'|trans }}</span>{{ 'settings'|trans }}</h1>
+
+                    <!-- Navigation links -->
+                    <div class="settings-nav">
+                        <a href="{{ path('app_home') }}">{{ 'back_to_home'|trans }}</a>
+                        <a href="#account-information" class="scroll-link active">{{ 'account_information'|trans }}</a>
+                        <a href="#change-password" class="scroll-link">{{ 'change_password'|trans }}</a>
+                        <a href="#" class="language-toggle">{{ 'languages'|trans }}</a>
+                        <div class="language-submenu">
+                            <a href="{{ path('app_change_language', {locale: 'fr'}) }}">{{ 'french'|trans }}</a>
+                            <a href="{{ path('app_change_language', {locale: 'en'}) }}">{{ 'english'|trans }}</a>
+                        </div>
+                    </div>
+
+                    <!-- Flash messages -->
+                    {% for flash_message in app.flashes('success') %}
+                        <div class="alert-success">
+                            {{ flash_message|trans }}
+                        </div>
+                    {% endfor %}
+                    {% for flash_message in app.flashes('error') %}
+                        <div class="alert-error">
+                            {{ flash_message|trans }}
+                        </div>
+                    {% endfor %}
+
+                    <!-- Section 1: Basic Information -->
+                    <div class="settings-section animate-box" id="account-information" data-animate-effect="fadeIn">
+                        <h3>{{ 'your_account'|trans }}</h3>
+                        <div class="profile-picture">
+                            {% if app.user.image %}
+                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="{{ 'profile_picture'|trans }}">
+                            {% else %}
+                                <img src="{{ asset('Uploads/images/default-user.png') }}" alt="{{ 'default_profile_picture'|trans }}">
+                            {% endif %}
+                            {{ form_start(imageForm, {'attr': {'id': 'imageForm', 'enctype': 'multipart/form-data'}}) }}
+                            <div class="file-upload-wrapper">
+                                <label for="imageForm_image" class="custom-file-upload">
+                                    {{ 'edit_profile_picture'|trans }}
+                                </label>
+                                {{ form_widget(imageForm.image, {'attr': {'id': 'imageForm_image', 'accept': 'image/*'}}) }}
+                            </div>
+                            {{ form_widget(imageForm.submit, {'attr': {'style': 'display: none;'}}) }}
+                            {{ form_end(imageForm) }}
+                        </div>
+
+                        {{ form_start(form, {'attr': {'is_edit': true}}) }}
+                        <div class="form-grid">
+                            <div class="form-group">
+                                {{ form_label(form.nom, null, {'label': 'first_name'|trans}) }}
+                                {{ form_widget(form.nom) }}
+                                {% if form.nom.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.nom.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.prenom, null, {'label': 'last_name'|trans}) }}
+                                {{ form_widget(form.prenom) }}
+                                {% if form.prenom.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.prenom.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.dateOfBirth, null, {'label': 'date_of_birth'|trans}) }}
+                                {{ form_widget(form.dateOfBirth) }}
+                                {% if form.dateOfBirth.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.dateOfBirth.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.gender, null, {'label': 'gender'|trans}) }}
+                                {{ form_widget(form.gender) }}
+                                {% if form.gender.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.gender.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.email, null, {'label': 'email'|trans}) }}
+                                {{ form_widget(form.email) }}
+                                {% if form.email.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.email.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.cin, null, {'label': 'cin'|trans}) }}
+                                {{ form_widget(form.cin) }}
+                                {% if form.cin.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.cin.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.numTel, null, {'label': 'phone_number'|trans}) }}
+                                {{ form_widget(form.numTel) }}
+                                {% if form.numTel.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.numTel.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.adresse, null, {'label': 'address'|trans}) }}
+                                {{ form_widget(form.adresse) }}
+                                {% if form.adresse.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.adresse.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label>{{ 'account_confirmed'|trans }}</label>
+                                <p style="color: #ffffff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">{{ app.user.isConfirmed ? 'Oui' : 'Non' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Security and Access -->
+                    <div class="settings-section animate-box" id="change-password" data-animate-effect="fadeIn">
+                        <h3>{{ 'change_password'|trans }}</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                {{ form_label(form.username, null, {'label': 'username'|trans}) }}
+                                {{ form_widget(form.username) }}
+                                {% if form.username.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.username.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.motDePasse, null, {'label': 'password'|trans}) }}
+                                <div class="password-container">
+                                    {{ form_widget(form.motDePasse, {'attr': {'class': 'password-input'}}) }}
+                                    <i class="fas fa-eye password-toggle-icon" id="password-toggle"></i>
+                                </div>
+                                {% if form.motDePasse.vars.errors|length > 0 %}
+                                    <div class="form-error">{{ form.motDePasse.vars.errors[0].message|trans }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_widget(form.save, {'label': 'save_changes'|trans}) }}
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+            <footer id="fh5co-footer" role="contentinfo">
+                <div class="container">
+                    <div class="row copyright">
+                        <div class="col-md-12 text-center">
+                            <p>
+                                <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                                <small class="block" target="_blank">Designed by Nadhem Hmida</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <div class="gototop js-top">
+            <a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
+        </div>
+
+        {% block javascripts %}
+            <script src="{{ asset('js/jquery.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.waypoints.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
+            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.countTo.js') }}"></script>
+            <script src="{{ asset('js/main.js') }}"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Auto-submit profile picture form on file selection
+                    const imageInput = document.getElementById('imageForm_image');
+                    if (imageInput) {
+                        imageInput.addEventListener('change', function() {
+                            if (this.files && this.files.length > 0) {
+                                // Show loading animation
+                                const profileImg = document.querySelector('.profile-picture img');
+                                if (profileImg) {
+                                    profileImg.style.opacity = '0.5';
+                                    profileImg.style.filter = 'blur(2px)';
+                                }
+                                
+                                // Create and show a loading spinner
+                                const spinner = document.createElement('div');
+                                spinner.className = 'loading-spinner';
+                                spinner.style.cssText = `
+                                    position: absolute;
+                                    top: 50px;
+                                    left: 50%;
+                                    transform: translateX(-50%);
+                                    width: 40px;
+                                    height: 40px;
+                                    border: 3px solid rgba(255,255,255,0.2);
+                                    border-radius: 50%;
+                                    border-top-color: var(--primary-light);
+                                    animation: spin 1s infinite linear;
+                                    z-index: 10;
+                                `;
+                                
+                                const style = document.createElement('style');
+                                style.textContent = `
+                                    @keyframes spin {
+                                        0% { transform: translateX(-50%) rotate(0deg); }
+                                        100% { transform: translateX(-50%) rotate(360deg); }
+                                    }
+                                `;
+                                document.head.appendChild(style);
+                                
+                                const profilePictureDiv = document.querySelector('.profile-picture');
+                                if (profilePictureDiv) {
+                                    profilePictureDiv.appendChild(spinner);
+                                }
+                                
+                                // Submit the form
+                                document.getElementById('imageForm').submit();
+                            }
+                        });
+                    }
+
+                    // Toggle language submenu with improved positioning
+                    const languageToggle = document.querySelector('.language-toggle');
+                    const languageSubmenu = document.querySelector('.language-submenu');
+                    if (languageToggle && languageSubmenu) {
+                        languageToggle.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            if (languageSubmenu.classList.contains('active')) {
+                                languageSubmenu.classList.remove('active');
+                            } else {
+                                // Position the submenu correctly
+                                const rect = this.getBoundingClientRect();
+                                languageSubmenu.style.top = (rect.bottom + window.scrollY) + 'px';
+                                languageSubmenu.style.left = rect.left + 'px';
+                                languageSubmenu.classList.add('active');
+                            }
+                        });
+
+                        // Close language submenu when clicking elsewhere
+                        document.addEventListener('click', function(e) {
+                            if (!languageToggle.contains(e.target) && !languageSubmenu.contains(e.target)) {
+                                languageSubmenu.classList.remove('active');
+                            }
+                        });
+                    }
+
+                    // Smooth scroll for section links with modern animation
+                    const scrollLinks = document.querySelectorAll('.scroll-link');
+                    scrollLinks.forEach(function(link) {
+                        link.addEventListener('click', function(e) {
+                            e.preventDefault();
+
+                            // Remove active class from all nav links
+                            scrollLinks.forEach(l => l.classList.remove('active'));
+                            this.classList.add('active');
+
+                            // Smooth scroll to target section
+                            const targetId = this.getAttribute('href').substring(1);
+                            const targetSection = document.getElementById(targetId);
+                            if (targetSection) {
+                                const offset = 80; // Adjust based on your navbar height
+                                const sectionPosition = targetSection.getBoundingClientRect().top + window.scrollY - offset;
+                                
+                                window.scrollTo({
+                                    top: sectionPosition,
+                                    behavior: 'smooth'
+                                });
+
+                                // Add highlight animation
+                                targetSection.classList.add('highlight');
+                                setTimeout(() => {
+                                    targetSection.classList.remove('highlight');
+                                }, 1000);
+                            }
+                        });
                     });
 
-                    // Add active class to the clicked item's parent li
-                    const parentLi = this.parentElement;
-                    if (parentLi) {
-                        parentLi.classList.add('active');
+                    // Set active state for scroll links based on scroll position
+                    function updateActiveNavLink() {
+                        const scrollPosition = window.scrollY;
+                        
+                        // Get all sections that can be navigated to
+                        const sections = document.querySelectorAll('.settings-section');
+                        
+                        sections.forEach(section => {
+                            const sectionTop = section.offsetTop - 100;
+                            const sectionBottom = sectionTop + section.offsetHeight;
+                            
+                            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                                const id = section.getAttribute('id');
+                                
+                                // Remove active class from all links
+                                scrollLinks.forEach(link => link.classList.remove('active'));
+                                
+                                // Add active class to corresponding link
+                                const correspondingLink = document.querySelector(`.scroll-link[href="#${id}"]`);
+                                if (correspondingLink) {
+                                    correspondingLink.classList.add('active');
+                                }
+                            }
+                        });
+                    }
+                    
+                    // Listen for scroll events to update the active link
+                    window.addEventListener('scroll', updateActiveNavLink);
+                    
+                    // Call once on page load
+                    updateActiveNavLink();
+
+                    // Password toggle functionality with animation
+                    const passwordInput = document.querySelector('.password-input');
+                    const passwordToggle = document.getElementById('password-toggle');
+                    if (passwordInput && passwordToggle) {
+                        passwordToggle.addEventListener('click', function() {
+                            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                            passwordInput.setAttribute('type', type);
+                            
+                            // Change icon and add animation
+                            if (type === 'text') {
+                                this.classList.remove('fa-eye');
+                                this.classList.add('fa-eye-slash');
+                                this.style.animation = 'pulse 0.5s';
+                            } else {
+                                this.classList.remove('fa-eye-slash');
+                                this.classList.add('fa-eye');
+                                this.style.animation = 'none';
+                            }
+                        });
                     }
 
-                    // Smooth scroll to the target section
-                    const targetId = this.getAttribute('href').substring(1); // Remove '#'
-                    const targetSection = document.getElementById(targetId);
-                    if (targetSection) {
-                        const offset = 100; // Adjust based on any fixed header height
-                        const sectionPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - offset;
-                        window.scrollTo({
-                            top: sectionPosition,
-                            behavior: 'smooth'
+                    // Mobile menu toggle with animation
+                    const menuToggle = document.querySelector('.menu-toggle');
+                    const mobileMenu = document.querySelector('.fh5co-nav .menu-1 ul');
+                    if (menuToggle && mobileMenu) {
+                        menuToggle.addEventListener('click', function() {
+                            if (mobileMenu.classList.contains('active')) {
+                                mobileMenu.classList.remove('active');
+                                mobileMenu.style.animation = 'slideUp 0.3s forwards';
+                                setTimeout(() => {
+                                    mobileMenu.style.display = 'none';
+                                }, 300);
+                            } else {
+                                mobileMenu.style.display = 'flex';
+                                mobileMenu.classList.add('active');
+                            }
                         });
-                        // Add highlight animation
-                        targetSection.classList.add('highlight');
-                        setTimeout(() => {
-                            targetSection.classList.remove('highlight');
-                        }, 1000);
+                        
+                        // Add animation styles
+                        const style = document.createElement('style');
+                        style.textContent = `
+                            @keyframes slideUp {
+                                from { opacity: 1; transform: translateY(0); }
+                                to { opacity: 0; transform: translateY(-10px); }
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
+                    
+                    // Mobile dropdown toggle
+                    const dropdownToggleLinks = document.querySelectorAll('.fh5co-nav .menu-1 ul li.has-dropdown > a');
+                    dropdownToggleLinks.forEach(link => {
+                        link.addEventListener('click', function(e) {
+                            if (window.innerWidth <= 768) {
+                                e.preventDefault();
+                                const parentLi = this.parentElement;
+                                parentLi.classList.toggle('active');
+                                
+                                // Close all other dropdowns
+                                document.querySelectorAll('.fh5co-nav .menu-1 ul li.has-dropdown').forEach(li => {
+                                    if (li !== parentLi) {
+                                        li.classList.remove('active');
+                                    }
+                                });
+                            }
+                        });
+                    });
+
+                    // Add subtle animations to form elements on focus
+                    const formInputs = document.querySelectorAll('.form-group input, .form-group select');
+                    formInputs.forEach(input => {
+                        input.addEventListener('focus', function() {
+                            this.parentElement.querySelector('label')?.classList.add('highlight-label');
+                        });
+                        
+                        input.addEventListener('blur', function() {
+                            this.parentElement.querySelector('label')?.classList.remove('highlight-label');
+                        });
+                    });
+                    
+                    // Add styles for label highlight
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        .highlight-label {
+                            color: var(--primary-light) !important;
+                            transform: translateY(-2px);
+                            transition: all 0.3s ease;
+                        }
+                    `;
+                    document.head.appendChild(style);
+
+                    // Video background error handling with better UX
+                    const video = document.getElementById('background-video');
+                    const videoErrorDiv = document.getElementById('video-error');
+                    if (video && videoErrorDiv) {
+                        video.addEventListener('error', function(e) {
+                            const errorMessages = {
+                                1: 'La lecture de la vidéo a été interrompue',
+                                2: 'Erreur de réseau lors du chargement de la vidéo',
+                                3: 'Format vidéo non supporté ou corrompu',
+                                4: 'La vidéo est introuvable'
+                            };
+                            const errorCode = e.target.error?.code || 0;
+                            const errorMessage = errorMessages[errorCode] || 'Problème de chargement de la vidéo';
+                            
+                            console.error('Erreur vidéo:', {
+                                code: errorCode,
+                                message: e.target.error?.message,
+                                src: video.src
+                            });
+                            
+                            // Display user-friendly error with icon
+                            videoErrorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${errorMessage}`;
+                            videoErrorDiv.style.display = 'block';
+                            
+                            // Apply fallback background
+                            document.body.style.background = 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)';
+                            video.style.display = 'none';
+                            
+                            // Auto-hide error after 5 seconds
+                            setTimeout(() => {
+                                videoErrorDiv.style.opacity = '0';
+                                setTimeout(() => {
+                                    videoErrorDiv.style.display = 'none';
+                                    videoErrorDiv.style.opacity = '1';
+                                }, 500);
+                            }, 5000);
+                        });
+                        
+                        video.addEventListener('loadeddata', function() {
+                            console.log('Vidéo chargée avec succès:', video.src);
+                            videoErrorDiv.style.display = 'none';
+                            document.body.style.background = 'none';
+                        });
+                    }
+                    
+                    // Add modern loading indicator to submit button
+                    const submitButton = document.querySelector('.form-group button[type="submit"]');
+                    if (submitButton) {
+                        submitButton.addEventListener('click', function() {
+                            // Check form validity before showing loader
+                            const form = this.closest('form');
+                            if (form && form.checkValidity()) {
+                                // Add loading state
+                                this.classList.add('loading');
+                                this.disabled = true;
+                                
+                                // Store original text
+                                this.dataset.originalText = this.textContent;
+                                this.textContent = 'Sauvegarde en cours...';
+                                
+                                // Add loading animation
+                                this.style.background = 'linear-gradient(270deg, var(--primary-color), var(--primary-dark))';
+                                this.style.backgroundSize = '200% 200%';
+                                
+                                // Add loading animation style
+                                const style = document.createElement('style');
+                                style.textContent = `
+                                    @keyframes gradientMove {
+                                        0% { background-position: 0% 50%; }
+                                        50% { background-position: 100% 50%; }
+                                        100% { background-position: 0% 50%; }
+                                    }
+                                    .loading {
+                                        animation: gradientMove 2s ease infinite !important;
+                                    }
+                                `;
+                                document.head.appendChild(style);
+                            }
+                        });
                     }
                 });
-            });
-        });
-    </script>
-{% endblock %}
+            </script>
+        {% endblock %}
+    </body>
+</html>

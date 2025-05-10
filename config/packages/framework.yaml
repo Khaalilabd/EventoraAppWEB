@@ -3,6 +3,8 @@ framework:
     annotations: false
     http_method_override: false
     handle_all_throwables: true
+    csrf_protection:
+        enabled: true
 
     # Configuration des traductions
     default_locale: 'fr'
@@ -25,4 +27,7 @@ when@test:
     framework:
         test: true
         session:
-            storage_factory_id: session.storage.factory.mock_file
+            handler_id: session.handler.native_file
+            storage_id: session.storage.native
+            cookie_secure: auto
+            cookie_samesite: lax

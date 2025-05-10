@@ -17,12 +17,12 @@ class ReclamationType extends AbstractType
     {
         $builder
             ->add('titre', TextType::class, [
-                'label' => 'Titre de la réclamation',
+                'label' => 'Complaint Title',
                 'required' => false,
                 'attr' => ['class' => 'form-control'],
                 'constraints' => [
-                    new Assert\NotBlank(['message' => 'Le titre ne peut pas être vide.']),
-                    new Assert\Length(['max' => 255, 'maxMessage' => 'Le titre ne peut pas dépasser 255 caractères.']),
+                    new Assert\NotBlank(['message' => 'The title cannot be empty.']),
+                    new Assert\Length(['max' => 255, 'maxMessage' => 'The title cannot exceed 255 characters.']),
                 ],
             ])
             ->add('description', TextareaType::class, [
@@ -30,11 +30,11 @@ class ReclamationType extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'form-control', 'rows' => '5'],
                 'constraints' => [
-                    new Assert\NotBlank(['message' => 'La description ne peut pas être vide.']),
+                    new Assert\NotBlank(['message' => 'The description cannot be empty.']),
                 ],
             ])
             ->add('Type', ChoiceType::class, [
-                'label' => 'Type de réclamation',
+                'label' => 'Complaint Type',
                 'choices' => [
                     'Packs' => Reclamation::TYPE_PACKS,
                     'Service' => Reclamation::TYPE_SERVICE,
@@ -42,11 +42,11 @@ class ReclamationType extends AbstractType
                     'Plainte entre un Agent de contrôle' => Reclamation::TYPE_PLAINTE_AGENT,
                     'Autre' => Reclamation::TYPE_AUTRE,
                 ],
-                'placeholder' => 'Choisissez un type',
+                'placeholder' => 'Choose a type',
                 'required' => false,
                 'attr' => ['class' => 'form-control'],
                 'constraints' => [
-                    new Assert\NotBlank(['message' => 'Veuillez sélectionner un type de réclamation.']),
+                    new Assert\NotBlank(['message' => 'Please select a complaint type.']),
                 ],
             ]);
     }

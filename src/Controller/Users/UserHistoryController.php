@@ -10,13 +10,20 @@ use App\Repository\ReclamationRepository;
 use App\Repository\FeedbackRepository;
 use App\Repository\ReservationpackRepository;
 use App\Repository\ReservationpersonnaliseRepository;
+use App\Service\BrevoEmailSender;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\Reclamation;
 use App\Entity\Feedback;
 use App\Entity\Reservationpack;
 use App\Entity\Reservationpersonnalise;
+use App\Entity\Membre;
 use Knp\Component\Pager\PaginatorInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Snappy\Pdf;
+use Psr\Log\LoggerInterface;
+use Twig\Environment;
 
+#[Route('/user')]
 class UserHistoryController extends AbstractController
 {
     private $security;
@@ -25,6 +32,11 @@ class UserHistoryController extends AbstractController
     private $reservationpackRepository;
     private $reservationpersonnaliseRepository;
     private $paginator;
+    private $entityManager;
+    private $knpSnappyPdf;
+    private $logger;
+    private $twig;
+    private $emailSender;
 
     public function __construct(
         Security $security,
@@ -32,7 +44,12 @@ class UserHistoryController extends AbstractController
         FeedbackRepository $feedbackRepository,
         ReservationpackRepository $reservationpackRepository,
         ReservationpersonnaliseRepository $reservationpersonnaliseRepository,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
+        EntityManagerInterface $entityManager,
+        Pdf $knpSnappyPdf,
+        LoggerInterface $logger,
+        Environment $twig,
+        BrevoEmailSender $emailSender
     ) {
         $this->security = $security;
         $this->reclamationRepository = $reclamationRepository;
@@ -40,9 +57,14 @@ class UserHistoryController extends AbstractController
         $this->reservationpackRepository = $reservationpackRepository;
         $this->reservationpersonnaliseRepository = $reservationpersonnaliseRepository;
         $this->paginator = $paginator;
+        $this->entityManager = $entityManager;
+        $this->knpSnappyPdf = $knpSnappyPdf;
+        $this->logger = $logger;
+        $this->twig = $twig;
+        $this->emailSender = $emailSender;
     }
 
-    #[Route('/user/history', name: 'app_user_history', methods: ['GET'])]
+    #[Route('/history', name: 'app_user_history', methods: ['GET'])]
     public function index(Request $request): Response
     {
         $user = $this->security->getUser();
@@ -80,7 +102,7 @@ class UserHistoryController extends AbstractController
         ]);
     }
 
-    #[Route('/user/reclamation/{id}', name: 'app_reclamation_show', methods: ['GET'])]
+    #[Route('/reclamation/{id}', name: 'app_reclamation_show', methods: ['GET'])]
     public function showReclamation(Reclamation $reclamation, Request $request): Response
     {
         $user = $this->security->getUser();
@@ -113,7 +135,33 @@ class UserHistoryController extends AbstractController
         ]);
     }
 
-    #[Route('/user/history/feedbacks', name: 'app_user_history_feedbacks', methods: ['GET'])]
+    #[Route('/reclamation/{id}/export-pdf', name: 'app_user_reclamation_export_pdf', methods: ['GET'])]
+    public function exportReclamationPdf(Reclamation $reclamation): Response
+    {
+        $user = $this->security->getUser();
+        if (!$user || $user !== $reclamation->getMembre()) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à exporter cette réclamation.');
+        }
+
+        try {
+            $html = $this->renderView('admin/reclamations/pdf.html.twig', [
+                'reclamation' => $reclamation,
+            ]);
+
+            return new Response(
+                $this->knpSnappyPdf->getOutputFromHtml($html),
+                200,
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => sprintf('attachment; filename="reclamation_%d.pdf"', $reclamation->getId()),
+                ]
+            );
+        } catch (\Exception $e) {
+            throw new \RuntimeException('Échec de la génération du PDF : ' . $e->getMessage());
+        }
+    }
+
+    #[Route('/history/feedbacks', name: 'app_user_history_feedbacks', methods: ['GET'])]
     public function feedbacks(Request $request): Response
     {
         $user = $this->security->getUser();
@@ -151,7 +199,7 @@ class UserHistoryController extends AbstractController
         ]);
     }
 
-    #[Route('/user/feedback/{id}', name: 'app_feedback_show', methods: ['GET'])]
+    #[Route('/feedback/{id}', name: 'app_feedback_show', methods: ['GET'])]
     public function showFeedback(Feedback $feedback, Request $request): Response
     {
         $user = $this->security->getUser();
@@ -184,7 +232,7 @@ class UserHistoryController extends AbstractController
         ]);
     }
 
-    #[Route('/user/feedback/image/{id}', name: 'app_feedback_image', methods: ['GET'])]
+    #[Route('/feedback/image/{id}', name: 'app_feedback_image', methods: ['GET'])]
     public function getFeedbackImage(Feedback $feedback): Response
     {
         $user = $this->security->getUser();
@@ -208,7 +256,7 @@ class UserHistoryController extends AbstractController
         return $response;
     }
 
-    #[Route('/user/history/reservations/{type?}', name: 'app_user_history_reservations', methods: ['GET'])]
+    #[Route('/history/reservations/{type?}', name: 'app_user_history_reservations', methods: ['GET'])]
     public function reservations(Request $request, ?string $type = null): Response
     {
         $user = $this->security->getUser();
@@ -308,7 +356,7 @@ class UserHistoryController extends AbstractController
         ]);
     }
 
-    #[Route('/user/reservation/{id}/{type}', name: 'app_reservation_show', methods: ['GET'])]
+    #[Route('/reservation/{id}/{type}', name: 'app_reservation_show', methods: ['GET'])]
     public function showReservation(int $id, string $type, Request $request): Response
     {
         $user = $this->security->getUser();
@@ -433,5 +481,179 @@ class UserHistoryController extends AbstractController
             'reservation_type' => $type,
             'section' => 'reservations',
         ]);
+    }
+
+    #[Route('/reclamation/delete/{id}', name: 'app_reclamation_delete', methods: ['POST'])]
+    public function deleteReclamation(Request $request, Reclamation $reclamation): Response
+    {
+        $user = $this->security->getUser();
+        if (!$user || $user !== $reclamation->getMembre()) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à supprimer cette réclamation.');
+        }
+
+        // CSRF token validation
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete'.$reclamation->getId(), $token)) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+            return $this->redirectToRoute('app_user_history');
+        }
+
+        try {
+            $reclamationId = $reclamation->getId();
+
+            // Supprimer la réclamation
+            $this->entityManager->remove($reclamation);
+            $this->entityManager->flush();
+
+            // Envoyer un email à l'utilisateur
+            $membreHtml = $this->twig->render('admin/reclamations/email_user_delete_membre.html.twig', [
+                'reclamation' => $reclamation,
+                'membre' => $user,
+            ]);
+            $emailSentMembre = $this->emailSender->sendEmail(
+                $user->getEmail(),
+                $user->getNom() . ' ' . $user->getPrenom(),
+                'Confirmation de suppression de votre réclamation - Eventora',
+                $membreHtml
+            );
+            $this->logger->info('Envoi email membre après suppression utilisateur', [
+                'email' => $user->getEmail(),
+                'success' => $emailSentMembre,
+                'reclamation_id' => $reclamationId,
+            ]);
+
+            if (!$emailSentMembre) {
+                $this->logger->warning('Échec de l\'envoi de l\'email au membre après suppression utilisateur', [
+                    'email' => $user->getEmail(),
+                    'reclamation_id' => $reclamationId,
+                ]);
+                $this->addFlash('warning', 'Réclamation supprimée, mais l\'email de confirmation n\'a pas pu être envoyé.');
+            }
+
+            // Envoyer un email à tous les admins
+            $admins = $this->entityManager->getRepository(Membre::class)->findByRole('ADMIN');
+            $this->logger->info('Admins trouvés pour envoi email après suppression utilisateur', [
+                'admin_emails' => array_map(fn($admin) => $admin->getEmail(), $admins),
+                'reclamation_id' => $reclamationId,
+            ]);
+            $emailSentAdmins = true;
+            foreach ($admins as $admin) {
+                try {
+                    $adminHtml = $this->twig->render('admin/reclamations/email_user_delete_admin.html.twig', [
+                        'reclamation' => $reclamation,
+                        'membre' => $user,
+                        'admin' => $admin,
+                    ]);
+                    $emailSent = $this->emailSender->sendEmail(
+                        $admin->getEmail(),
+                        $admin->getNom() . ' ' . $admin->getPrenom(),
+                        'Suppression d\'une réclamation par un utilisateur - Eventora',
+                        $adminHtml
+                    );
+                    $this->logger->info('Envoi email admin après suppression utilisateur', [
+                        'email' => $admin->getEmail(),
+                        'success' => $emailSent,
+                        'reclamation_id' => $reclamationId,
+                    ]);
+                    if (!$emailSent) {
+                        $emailSentAdmins = false;
+                        $this->logger->warning('Échec de l\'envoi de l\'email à l\'admin après suppression utilisateur', [
+                            'email' => $admin->getEmail(),
+                            'reclamation_id' => $reclamationId,
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    $this->logger->error('Erreur lors de l\'envoi de l\'email à l\'admin après suppression utilisateur', [
+                        'email' => $admin->getEmail(),
+                        'reclamation_id' => $reclamationId,
+                        'exception' => $e->getMessage(),
+                    ]);
+                    $emailSentAdmins = false;
+                }
+            }
+
+            if (!$emailSentAdmins) {
+                $this->addFlash('warning', 'Réclamation supprimée, mais certains emails aux administrateurs n\'ont pas pu être envoyés.');
+            }
+
+            $this->addFlash('success', 'La réclamation a été supprimée avec succès.');
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la suppression de la réclamation utilisateur', [
+                'reclamation_id' => $reclamation->getId(),
+                'exception' => $e->getMessage(),
+            ]);
+            $this->addFlash('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_user_history');
+    }
+
+    #[Route('/feedback/delete/{id}', name: 'app_feedback_delete', methods: ['POST'])]
+    public function deleteFeedback(Request $request, Feedback $feedback): Response
+    {
+        $user = $this->security->getUser();
+        if (!$user || $user !== $feedback->getMembre()) {
+            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à supprimer ce feedback.');
+        }
+
+        // CSRF token validation
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete'.$feedback->getID(), $token)) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+            return $this->redirectToRoute('app_user_history_feedbacks');
+        }
+
+        // Delete the feedback
+        $this->entityManager->remove($feedback);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Le feedback a été supprimé avec succès.');
+
+        return $this->redirectToRoute('app_user_history_feedbacks');
+    }
+
+    #[Route('/reservation/delete/{type}/{id}', name: 'app_reservation_delete', methods: ['POST'])]
+    public function deleteReservation(Request $request, string $type, int $id): Response
+    {
+        $user = $this->security->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
+
+        if (!$user instanceof \App\Entity\Membre) {
+            throw $this->createAccessDeniedException('Utilisateur invalide.');
+        }
+
+        // Find the reservation based on type
+        $reservation = null;
+        if ($type === 'pack') {
+            $reservation = $this->reservationpackRepository->find($id);
+            if (!$reservation || $reservation->getMembre()->getId() !== $user->getId()) {
+                throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à supprimer cette réservation.');
+            }
+        } elseif ($type === 'personnalise') {
+            $reservation = $this->reservationpersonnaliseRepository->find($id);
+            if (!$reservation || $reservation->getMembre()->getId() !== $user->getId()) {
+                throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à supprimer cette réservation.');
+            }
+        } else {
+            throw $this->createNotFoundException('Type de réservation invalide.');
+        }
+
+        // CSRF token validation
+        $token = $request->request->get('_token');
+        $tokenId = $type === 'pack' ? $reservation->getIDReservationPack() : $reservation->getIDReservationPersonalise();
+        if (!$this->isCsrfTokenValid('delete'.$tokenId, $token)) {
+            $this->addFlash('error', 'Token CSRF invalide.');
+            return $this->redirectToRoute('app_user_history_reservations');
+        }
+
+        // Delete the reservation
+        $this->entityManager->remove($reservation);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'La réservation a été supprimée avec succès.');
+
+        return $this->redirectToRoute('app_user_history_reservations');
     }
 }

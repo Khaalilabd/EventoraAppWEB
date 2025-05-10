@@ -3,259 +3,548 @@
 {% block title %}Authentification{% endblock %}
 
 {% block body %}
-    <!-- Vidéo en arrière-plan de la page entière -->
     <video autoplay loop muted playsinline class="background-video">
-        <source src="{{ asset('images/video2.mp4') }}" type="video/mp4">
+        <source src="{{ asset('images/fireworks loop.mp4') }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
-    <div class="flash-messages">
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-        {% endfor %}
-        {% for message in app.flashes('error') %}
-            <div class="alert alert-danger">
-                {{ message }}
-            </div>
-        {% endfor %}
-    </div>
-
     <div class="container" id="container">
-        <div class="form-container sign-up-container">
-            <form action="{{ path('app_register') }}" method="post" enctype="multipart/form-data">
-                <h1>Create Account</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-                <span>or use your email for registration</span>
-                <div class="form-columns">
-                    <div class="form-column">
-                        {{ form_row(registration_form.nom) }}
-                        {{ form_row(registration_form.prenom) }}
-                        {{ form_row(registration_form.email) }}
-                    </div>
-                    <div class="form-column">
-                        {{ form_row(registration_form.cin) }}
-                        {{ form_row(registration_form.numTel) }}
-                        {{ form_row(registration_form.adresse) }}
-                    </div>
-                </div>
-                <div class="password-container">
-                    {{ form_row(registration_form.motDePasse) }}
-                    <button type="button" id="generate-password" class="btn-generate-password">Générer un mot de passe</button>
-                </div>
-                {{ form_row(registration_form.image, {'attr': {'accept': 'image/*'}}) }}
-                <button type="submit">Sign Up</button>
-            </form>
-        </div>
-
         <div class="form-container sign-in-container">
             {{ form_start(login_form) }}
                 <h1>Sign in</h1>
                 <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="{{ path('connect_google') }}" class="social">
+                        <img src="{{ asset('images/google-icon.png') }}" alt="Google Login" class="social-icon">
+                    </a>
                 </div>
                 <span>or use your account</span>
-                {% if error %}
-                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                {% endif %}
-                {{ form_row(login_form.email) }}
-                {{ form_row(login_form.password) }}
+                <div class="flash-messages">
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(login_form.email) }}
+                    {{ form_widget(login_form.email) }}
+                </div>
+                <div class="form-group password-group">
+                    {{ form_label(login_form.motDePasse) }}
+                    <div class="password-container">
+                        {{ form_widget(login_form.motDePasse, {'attr': {'class': 'password-input'}}) }}
+                        <span class="toggle-password">
+                            <i class="fas fa-eye" id="toggleIcon"></i>
+                        </span>
+                    </div>
+                </div>
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
-                <a href="#">Forgot your password?</a>
-                <button type="submit">Sign In</button>
-                <a href="{{ path('app_register') }}" class="ghost" id="signUp">Sign Up</a>
+                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+                <a href="{{ path('app_reset_password_request') }}" class="forgot-password">Forgot your password?</a>
+                <button type="submit" class="submit-btn">Sign In</button>
+               
             {{ form_end(login_form) }}
         </div>
 
         <div class="overlay-container">
             <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h1>Welcome Back!</h1>
-                    <p>To keep connected with us please login with your personal info</p>
-                    <button class="ghost" id="signIn">Sign In</button>
-                </div>
                 <div class="overlay-panel overlay-right">
-                    <img src="{{ asset('images/partybackground.png') }}" alt="Background" class="welcome-image">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <a href="{{ path('app_register') }}" class="ghost" id="signUp">Sign Up</a>
+                    <img src="https://i.pinimg.com/736x/4f/02/9c/4f029c9bfa1290dc2a401046d528ac43.jpg" alt="Background" class="welcome-image">
                 </div>
             </div>
         </div>
     </div>
 
-  
-
     <style>
-        /* Fond blanc pour le body comme secours */
         body {
-            background-color: #fff; /* Fond blanc si la vidéo ne se charge pas */
-            margin: 0; /* Supprime les marges par défaut */
+            background-color: #f6f5f7;
+            margin: 0;
             padding: 0;
-            height: 100vh; /* S’assure que le body prend toute la hauteur */
-            overflow-x: hidden; /* Empêche le défilement horizontal */
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        /* Style pour la vidéo en arrière-plan */
+        
         .background-video {
-            position: fixed; /* Position fixe pour couvrir toute la page */
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%; /* Couvre toute la largeur */
-            height: 100%; /* Couvre toute la hauteur */
-            object-fit: cover; /* S’assure que la vidéo remplit l’espace sans déformation */
-            z-index: -1; /* Place la vidéo derrière tous les autres éléments */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
         }
-        .flash-messages {
-            margin: 20px auto;
-            max-width: 600px;
-            position: relative; /* S’assure que les messages sont au-dessus de la vidéo */
-            z-index: 1; /* Place les messages au-dessus de la vidéo */
+        
+        .container {
+            position: relative;
+            width: 850px;
+            max-width: 95%;
+            min-height: 680px;
+            height: auto;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+            overflow: hidden;
+            margin: 20px 0;
         }
-        .alert {
-            padding: 15px;
+        
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            left: 0;
+            z-index: 2;
+        }
+        
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 100;
+        }
+        
+        .overlay {
+            background: #d0a877;
+            background: linear-gradient(to right, #d0a877, #bb8f5e);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 0 0;
+            color: #fff;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+        }
+        
+        .overlay-panel {
+            position: absolute;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 30px;
+            height: 100%;
+            width: 50%;
+            text-align: center;
+            right: 0;
+        }
+        
+        .overlay-panel h1 {
             margin-bottom: 20px;
-            border-radius: 5px;
+            font-weight: bold;
+            font-size: 28px;
+        }
+        
+        .overlay-panel p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 24px;
+        }
+        
+        .social-container {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .social-container a {
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            height: 35px; /* Taille réduite pour un petit cercle */
+            width: 35px;
+            transition: all 0.3s;
+        }
+        
+        .social-icon {
+            width: 20px; /* Taille de l'image ajustée pour le petit cercle */
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .social-container a:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+        
+        form {
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 0 30px 20px;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
             text-align: center;
         }
+        
+        form h1 {
+            font-weight: bold;
+            margin: 0 0 10px;
+            font-size: 24px;
+            color: #333;
+        }
+        
+        form span {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            width: 100%;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 3px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 12px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 14px;
+            height: 40px;
+            transition: background-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            background-color: #e8e8e8;
+            outline: none;
+        }
+        
+        .password-group {
+            margin-bottom: 10px;
+        }
+        
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .password-input {
+            padding-right: 40px !important;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            z-index: 5;
+        }
+        
+        .toggle-password:hover {
+            color: #333;
+        }
+        
+        .button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        
+        button.submit-btn {
+            border-radius: 30px;
+            border: none;
+            background-color: #d0a877;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 35px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: transform 0.3s ease, background-color 0.3s;
+            cursor: pointer;
+            width: auto;
+        }
+        
+        button.submit-btn:hover {
+            background-color: #bb8f5e;
+            transform: scale(1.05);
+        }
+        
+        button.submit-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .ghost {
+            background-color: transparent;
+            border: 2px solid white;
+            margin-bottom: 20px;
+            padding: 10px 30px;
+            border-radius: 30px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .ghost:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .flash-messages {
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .alert {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 13px;
+        }
+        
         .alert-success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
+        
         .alert-danger {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-        .container {
-            width: 800px; /* Largeur fixe pour le conteneur */
-            min-height: 600px; /* Hauteur minimale */
-            margin: 0 auto; /* Centre le conteneur */
-            position: relative; /* Nécessaire pour l’effet de bascule */
-            background-color: rgba(255, 255, 255, 0.9); /* Fond blanc semi-transparent pour la lisibilité */
-            z-index: 1; /* S’assure que le conteneur est au-dessus de la vidéo */
-            border-radius: 10px; /* Coins arrondis pour un meilleur contraste */
-        }
-        .form-container.sign-in-container,
-        .form-container.sign-up-container {
-            width: 50%; /* Prend 50% de la largeur du conteneur (400px) */
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .form-container.sign-up-container {
-            left: 100%; /* Position initiale pour l’effet de bascule */
-        }
-        .overlay-container {
-            width: 50%; /* Prend 50% de la largeur du conteneur (400px) */
-            height: 100%;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-        .overlay-container .overlay {
-            background: none !important;
-            position: static; /* Empêche l’overlay de participer à l’animation */
-        }
-        .overlay-container .overlay .overlay-panel.overlay-right {
-            width: 400px; /* Largeur fixe correspondant à l’image */
-            height: 600px; /* Hauteur fixe correspondant à l’image */
-            background-color: #000; /* Fond noir pour les espaces vides autour de l’image */
-            margin: 0;
-            padding: 0;
-            position: static; /* Empêche l’image de bouger */
-        }
-        .overlay-panel.overlay-right .welcome-image {
-            width: 400px; /* Largeur fixe de l’image */
-            height: 600px; /* Hauteur fixe de l’image */
-            display: block;
-            object-fit: cover; /* S’assure que l’image remplit la zone sans déformation */
-        }
-        .form-container.sign-in-container .ghost {
-            display: block; /* S’assure que le bouton prend toute la largeur */
-            margin-top: 10px; /* Espace au-dessus du bouton */
-            padding: 10px 20px;
-            background-color: #ff4b5c; /* Fond rose comme le bouton Sign In */
-            color: #fff; /* Texte blanc */
+        
+        .forgot-password {
+            color: #d0a877;
             text-decoration: none;
-            border-radius: 25px; /* Coins arrondis */
-            text-align: center;
-            font-weight: bold;
-            border: none; /* Pas de bordure */
-            transition: background-color 0.3s;
+            margin: 10px 0;
+            font-size: 13px;
+            transition: color 0.3s;
         }
-        .form-container.sign-in-container .ghost:hover {
-            background-color: #e04352; /* Fond rose plus foncé au survol */
+        
+        .forgot-password:hover {
+            color: #bb8f5e;
+            text-decoration: underline;
         }
-        .overlay-panel.overlay-left .ghost {
-            padding: 10px 20px;
-            background-color: #ff4b5c; /* Fond rose pour le bouton Sign In dans overlay-left */
-            color: #fff;
+        
+        .register-link {
+            color: #d0a877;
             text-decoration: none;
-            border-radius: 25px;
-            text-align: center;
-            font-weight: bold;
-            border: none;
-            transition: background-color 0.3s;
+            margin: 15px 0 0;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .overlay-panel.overlay-left .ghost:hover {
-            background-color: #e04352; /* Fond rose plus foncé au survol */
+        
+        .register-link i {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
         }
-        /* Supprimer les styles spécifiques à l’ancienne position sur l’image */
-        .overlay-panel.overlay-right .ghost {
-            display: none; /* Masquer les styles précédents qui ne s’appliquent plus */
+        
+        .register-link:hover {
+            color: #bb8f5e;
         }
-        /* Ajustement pour l’effet de bascule, uniquement pour les formulaires */
-        .container.right-panel-active .form-container.sign-in-container {
-            transform: translateX(100%);
+        
+        .register-link:hover i {
+            transform: translateX(5px);
         }
-        .container.right-panel-active .form-container.sign-up-container {
-            transform: translateX(-100%);
+        
+        .g-recaptcha {
+            margin: 10px 0;
+            transform: scale(0.9);
+            transform-origin: left center;
         }
-        /* S’assurer que l’overlay ne bouge pas */
-        .container.right-panel-active .overlay-container,
-        .container.right-panel-active .overlay-panel.overlay-right {
-            transform: none !important; /* Empêche tout mouvement */
+        
+        .welcome-image {
+            width: 100%;
+            height: 60%;
+            object-fit: cover;
+            margin-top: 20px;
         }
-        footer {
-            position: relative;
-            z-index: 1; /* S’assure que le footer est au-dessus de la vidéo */
-            background-color: rgba(255, 255, 255, 0.9); /* Fond blanc semi-transparent pour la lisibilité */
-            padding: 10px;
-            text-align: center;
+        
+        /* Animation pour la transition vers la page d'inscription */
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 850px) {
+            .container {
+                width: 90%;
+                min-height: 600px;
+            }
+            
+            form {
+                padding: 0 15px 20px;
+            }
+            
+            button {
+                padding: 10px 25px;
+            }
+            
+            .welcome-image {
+                height: 50%;
+            }
+            
+            .overlay-panel h1 {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+            
+            .overlay-panel p {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+        }
+        
+        @media (min-height: 750px) {
+            .container {
+                min-height: 700px;
+            }
+        }
+        
+        @media (max-height: 680px) {
+            .container {
+                min-height: 600px;
+                margin: 10px 0;
+            }
+            
+            form h1 {
+                font-size: 22px;
+                margin-bottom: 8px;
+            }
+            
+            .form-group {
+                margin-bottom: 8px;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                height: 36px;
+                padding: 8px 10px;
+            }
+            
+            .social-container {
+                margin: 10px 0;
+            }
+            
+            .welcome-image {
+                height: 40%;
+            }
         }
     </style>
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
-        // Script pour générer un mot de passe aléatoire
-        document.getElementById('generate-password').addEventListener('click', function() {
-            const passwordField = document.querySelector('input[name="membre[motDePasse]"]');
-            const generatedPassword = Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 10);
-            passwordField.value = generatedPassword;
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleIcon = document.getElementById('toggleIcon');
+            const goToRegisterBtn = document.getElementById('go-to-register');
+            const signUpButton = document.getElementById('signUp');
+            const container = document.getElementById('container');
+
+            // Password toggle functionality
+            document.querySelector('.toggle-password').addEventListener('click', function() {
+                const passwordInput = document.querySelector('.password-input');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            });
+
+            // Animation for redirecting to registration page
+            function handleRedirect(e, href) {
+                e.preventDefault();
+                container.style.animation = 'fadeOut 0.5s forwards';
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 500);
+            }
+
+            // Handle "Créer un compte" link click
+            if (goToRegisterBtn) {
+                goToRegisterBtn.addEventListener('click', function(e) {
+                    handleRedirect(e, this.getAttribute('href'));
+                });
+            }
+
+            // Handle "Sign Up" button click
+            if (signUpButton) {
+                signUpButton.addEventListener('click', function(e) {
+                    handleRedirect(e, this.getAttribute('href'));
+                });
+            }
         });
-
-        // Script pour le basculement entre Sign In et Sign Up
-        const signUpButton = document.getElementById('signUp');
-        const signInButton = document.getElementById('signIn');
-        const container = document.getElementById('container');
-
-        if (signUpButton && signInButton && container) {
-            signUpButton.addEventListener('click', () => {
-                container.classList.add('right-panel-active');
-            });
-
-            signInButton.addEventListener('click', () => {
-                container.classList.remove('right-panel-active');
-            });
-        }
     </script>
 {% endblock %}

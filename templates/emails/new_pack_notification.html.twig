@@ -1,0 +1,43 @@
+<div style="font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f9f9f9; padding: 40px; border-radius: 10px; color: #333; max-width: 600px; margin: auto;">
+    <h1 style="color: #D72638; font-size: 28px; margin-bottom: 20px;">
+        Bonjour {{ member ? member.prenom ~ ' ' ~ member.nom : '' }} !
+    </h1>
+
+    <p style="font-size: 18px; margin-bottom: 10px;">
+        Nous sommes ravis de vous annoncer l'ajout d'un nouveau pack :
+    </p>
+
+    <h2 style="color: #2D2D2D; font-size: 24px; margin: 10px 0;">{{ pack.nomPack }}</h2>
+
+    <p style="font-size: 16px; margin: 10px 0;">{{ pack.description }}</p>
+
+    <p style="font-size: 16px; margin: 20px 0 5px;"><strong>Type :</strong> {{ pack.type }}</p>
+
+    <p style="font-size: 16px; margin: 5px 0 15px;">
+        <strong>Services :</strong>
+        {% if pack.services is not empty %}
+            <ul style="list-style-type: disc; padding-left: 20px; margin-top: 10px;">
+                {% for service in pack.services %}
+                    <li>{{ service.titre }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            Aucun service
+        {% endif %}
+    </p>
+
+    <div style="margin-top: 30px; text-align: center;">
+        {% if pack.id is not null %}
+            <a href="{{ path('user_pack_details', { id: pack.id }) }}" style="background-color: #D72638; color: white; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-weight: bold; display: inline-block;">
+                Découvrez-le sur notre plateforme !
+            </a>
+        {% else %}
+            <em>Découvrez-le sur notre plateforme bientôt !</em>
+        {% endif %}
+    </div>
+
+    <p style="margin-top: 40px; font-size: 14px; text-align: center; color: #777;">
+        Cordialement,<br>
+        <strong>L'équipe {{ app_name }}</strong>
+    </p>
+</div>

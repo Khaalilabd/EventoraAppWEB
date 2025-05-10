@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title %}Soumettre un Feedback - Eventora{% endblock %}</title>
+        <title>{% block title %}Submit Feedback - Eventora{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
@@ -18,6 +18,7 @@
             <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
             <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/modern-navbar.css') }}">    
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
             <style>
                 body {
@@ -36,123 +37,9 @@
                     flex-direction: column;
                     padding-top: 70px;
                 }
-                .fh5co-nav {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    z-index: 1000;
-                    background: rgba(255, 255, 255, 0.9);
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
-                }
-                .fh5co-nav .container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px 15px;
-                    max-width: 1200px;
-                    margin: 0 auto;
-                }
-                .fh5co-logo a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-weight: 700;
-                    font-size: 24px;
-                    color: #934D1A;
-                    text-decoration: none;
-                }
-                .user-circle {
-                    display: inline-block;
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
-                    text-align: center;
-                    border-radius: 50%;
-                    background-color: #f0f0f0;
-                    color: #333;
-                    font-size: 20px;
-                    vertical-align: middle;
-                    margin-right: 8px;
-                }
-                .user-circle img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 50%;
-                }
-                .fh5co-nav .menu-1 {
-                    display: block;
-                }
-                .fh5co-nav .menu-1 ul {
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    margin: 0;
-                    padding: 0;
-                    list-style: none;
-                }
-                .fh5co-nav .menu-1 ul li {
-                    margin: 0 15px;
-                    position: relative;
-                }
-                .fh5co-nav .menu-1 ul li a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-size: 16px;
-                    color: #333;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    transition: color 0.3s ease;
-                }
-                .fh5co-nav .menu-1 ul li a:hover {
-                    color: #934D1A;
-                }
-                .fh5co-nav .menu-1 ul li.active a {
-                    color: #934D1A !important;
-                    font-weight: 600;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown {
-                    position: relative;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    right: 0;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    list-style: none;
-                    padding: 10px 0;
-                    min-width: 150px;
-                    z-index: 1001;
-                    visibility: hidden;
-                    opacity: 0;
-                    transition: opacity 0.2s ease, visibility 0.2s ease;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block !important;
-                    visibility: visible;
-                    opacity: 1;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                    margin: 0;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                    padding: 10px 20px;
-                    display: block;
-                    font-size: 14px;
-                    text-transform: none;
-                    color: #333;
-                }
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                    color: #007bff;
-                }
-                .menu-toggle {
-                    display: none;
-                    font-size: 24px;
-                    cursor: pointer;
-                    color: #333;
-                    padding: 10px;
-                }
+                
+                /* Les styles de navbar ont été supprimés car déjà dans modern-navbar.css */
+                
                 .event-wrap {
                     background: rgba(255, 255, 255, 0.95);
                     padding: 30px;
@@ -345,44 +232,88 @@
                     from { opacity: 0; }
                     to { opacity: 1; }
                 }
+
+                /* Animation du bouton de soumission */
+                .event-wrap .btn-primary.loading {
+                    background: linear-gradient(90deg, #8B4513, #D2B48C, #8B4513);
+                    background-size: 200% 100%;
+                    animation: gradientAnimation 2s infinite linear;
+                    pointer-events: none;
+                }
+                
+                @keyframes gradientAnimation {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                
+                /* Animation du succès */
+                .success-animation {
+                    animation: successPulse 0.5s ease;
+                }
+                
+                @keyframes successPulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.03); box-shadow: 0 15px 40px rgba(147, 77, 26, 0.3); }
+                    100% { transform: scale(1); }
+                }
+
+                /* Pop-up de succès */
+                .success-popup {
+                    display: none;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #FAF0E6; /* Very light beige */
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    z-index: 10000;
+                    text-align: center;
+                    max-width: 350px;
+                    width: 90%;
+                    border: 1px solid #D2B48C; /* Light beige border */
+                }
+                .success-popup h5 {
+                    font-size: 20px;
+                    color: #8B4513; /* Brown */
+                    margin-bottom: 15px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                }
+                .success-popup h5::before {
+                    content: '✔';
+                    font-size: 24px;
+                    color: #28a745; /* Green checkmark */
+                }
+                .success-popup p {
+                    color: #5C4033; /* Darker brown */
+                    font-size: 14px;
+                    margin: 15px 0;
+                }
+                .success-popup .btn-primary {
+                    padding: 8px 16px;
+                    font-size: 14px;
+                }
+
+                /* Overlay pour la pop-up */
+                .popup-overlay {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 9999;
+                }
+
                 @media (max-width: 768px) {
-                    .menu-toggle {
-                        display: block;
-                    }
-                    .fh5co-nav .menu-1 ul {
-                        display: none;
-                        flex-direction: column;
-                        position: absolute;
-                        top: 60px;
-                        left: 0;
-                        width: 100%;
-                        background-color: #fff;
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                        padding: 20px 0;
-                    }
-                    .fh5co-nav .menu-1 ul.active {
-                        display: flex;
-                    }
-                    .fh5co-nav .menu-1 ul li {
-                        margin: 10px 0;
-                        text-align: center;
-                    }
-                    .user-circle {
-                        margin-right: 0;
-                        margin-bottom: 5px;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                        position: static;
-                        display: none;
-                        box-shadow: none;
-                        background-color: #f8f9fa;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none !important;
-                    }
-                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block !important;
-                    }
+                    /* Les styles responsive pour .menu-toggle, .fh5co-nav .menu-1 ul, etc. ont été supprimés */
+                    
                     .event-wrap {
                         max-width: 90%;
                         padding: 20px;
@@ -393,78 +324,100 @@
                     #fh5co-event {
                         padding-top: 30px;
                     }
+                    .success-popup {
+                        max-width: 90%;
+                    }
+                }
+                
+                /* Animation pour l'effet underline */
+                @keyframes slideInFromLeft {
+                    from { width: 0; }
+                    to { width: 100%; }
+                }
+                
+                /* Spécifique pour le lien Notifications */
+                .normal-link, 
+                .normal-link:hover, 
+                .normal-link:focus, 
+                .normal-link:active {
+                    color: #333 !important;
+                }
+                .normal-link::after {
+                    width: 0 !important;
                 }
             </style>
         {% endblock %}
     </head>
     <body>
         <div id="page">
-            <nav class="fh5co-nav" role="navigation">
-                <div class="container">
-                    <div class="fh5co-logo">
-                        <a href="{{ path('app_home') }}">Eventora</a>
-                    </div>
-                    <div class="menu-toggle">
-                        <i class="fas fa-bars"></i>
-                    </div>
-                    <div class="menu-1">
-                        <ul>
-                            <li><a href="{{ path('app_home') }}">Home</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">Réservation</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="{{ path('user_packs') }}">Packs</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">Services</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ path('user_services') }}">Service</a></li>
-                                    <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                            <li class="active"><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                            <li><a href="#">Talk with Evi</a></li>
-                            <li class="has-dropdown">
-                                <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                <ul class="dropdown">
-                                    {% if app.user %}
-                                        <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                        <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                        <li><a href="{{ path('app_user_history') }}">Historique</a></li>
-                                        {% if is_granted('ROLE_ADMIN') %}
-                                            <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                        {% endif %}
-                                        <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                    {% else %}
-                                        <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                        <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+   <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
                 </div>
-            </nav>
-
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li ><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Reservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="{{ path('user_packs') }}">Packs</a>
+                        </li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                        <li class="active"><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Log out</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Sign up</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
             <div id="fh5co-event">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
                             <span>Votre Avis Compte</span>
-                            <h2>Soumettre un Feedback</h2>
+                            <h2>Submit Feedback</h2>
                         </div>
                     </div>
                     <div class="row">
@@ -534,6 +487,14 @@
                 </div>
             </div>
 
+            <!-- Pop-up de succès -->
+            <div id="successPopup" class="success-popup">
+                <h5>Feedback Soumis !</h5>
+                <p>Votre feedback a été soumis avec succès. Merci de partager votre expérience !</p>
+                <button type="button" class="btn btn-primary" id="closeSuccessPopup">Voir l'historique</button>
+            </div>
+            <div id="popupOverlay" class="popup-overlay"></div>
+
             <footer id="fh5co-footer" role="contentinfo">
                 <div class="container">
                     <div class="row copyright">
@@ -546,52 +507,19 @@
                 </div>
             </footer>
         </div>
-
         {% block javascripts %}
             <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
             <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/main.js') }}"></script>
             <script>
                 if (typeof jQuery === 'undefined') {
                     console.error("jQuery n'est pas chargé. Problème avec le CDN ou le réseau.");
                 } else {
                     console.log("jQuery est chargé avec succès");
                     jQuery(document).ready(function($) {
-                        $('.menu-toggle').click(function() {
-                            console.log("Clic sur menu-toggle détecté");
-                            $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                        });
+                        // Le code pour la navbar (menu hamburger et dropdowns) a été retiré car il est déjà dans main.js
 
-                        $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                            if ($(window).width() <= 768) {
-                                console.log("Clic sur dropdown détecté");
-                                e.preventDefault();
-                                $(this).parent().toggleClass('active');
-                            }
-                        });
-
-                        $('.fh5co-nav .menu-1 ul li.has-dropdown').hover(
-                            function() {
-                                console.log("Survol détecté sur un élément has-dropdown");
-                                $(this).find('.dropdown').css({
-                                    'display': 'block',
-                                    'position': 'absolute',
-                                    'top': '100%',
-                                    'right': '0',
-                                    'visibility': 'visible',
-                                    'opacity': '1',
-                                    'z-index': '1001'
-                                });
-                            },
-                            function() {
-                                console.log("Fin du survol");
-                                $(this).find('.dropdown').css({
-                                    'display': 'none',
-                                    'visibility': 'hidden',
-                                    'opacity': '0'
-                                });
-                            }
-                        );
-
+                        // System de notation par étoiles
                         const select = $('.star-rating');
                         const stars = $('.star');
                         let selectedValue = parseInt(select.val()) || 0;
@@ -629,10 +557,15 @@
                             updateStars(selectedValue);
                         }
 
+                        // Soumission du formulaire via AJAX
                         $('#feedback-form').on('submit', function(event) {
                             event.preventDefault();
                             const form = this;
                             const formData = new FormData(form);
+                            const $submitButton = $(this).find('.btn-primary');
+                            
+                            // Ajouter une classe de chargement au bouton
+                            $submitButton.prop('disabled', true).text('Sending...').addClass('loading');
 
                             $('.form-control').removeClass('is-invalid');
                             $('.text-danger').empty();
@@ -656,11 +589,26 @@
                                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
                                 success: function(data) {
                                     console.log('Réponse AJAX reçue', data);
+                                    // Restaurer le bouton
+                                    $submitButton.prop('disabled', false).text('Submit Feedback').removeClass('loading');
+                                    
                                     if (data.success) {
-                                        alert('Feedback soumis avec succès !');
-                                        form.reset();
-                                        stars.removeClass('filled');
-                                        selectedValue = 0;
+                                        // Afficher la pop-up de succès
+                                        $('#successPopup p').text(data.message);
+                                        $('#successPopup').fadeIn(300);
+                                        $('#popupOverlay').fadeIn(300);
+
+                                        // Stocker l'URL de redirection
+                                        $('#closeSuccessPopup').data('redirect-url', data.redirectUrl);
+
+                                        // Réinitialiser le formulaire avec une animation
+                                        $('.event-wrap').addClass('success-animation');
+                                        setTimeout(function() {
+                                            form.reset();
+                                            stars.removeClass('filled');
+                                            selectedValue = 0;
+                                            $('.event-wrap').removeClass('success-animation');
+                                        }, 500);
                                     } else {
                                         if (data.errors) {
                                             for (const field in data.errors) {
@@ -678,6 +626,9 @@
                                     }
                                 },
                                 error: function(xhr, status, error) {
+                                    // Restaurer le bouton
+                                    $submitButton.prop('disabled', false).text('Submit Feedback').removeClass('loading');
+                                    
                                     console.error('Erreur AJAX :', {
                                         status: status,
                                         error: error,
@@ -703,6 +654,34 @@
                                     }
                                 }
                             });
+                        });
+
+                        // Animation pour fermer la pop-up et rediriger
+                        $('#closeSuccessPopup').on('click', function() {
+                            $('#successPopup').fadeOut(300);
+                            $('#popupOverlay').fadeOut(300);
+
+                            // Rediriger vers l'historique des feedbacks
+                            var redirectUrl = $(this).data('redirect-url');
+                            if (redirectUrl) {
+                                setTimeout(function() {
+                                    window.location.href = redirectUrl;
+                                }, 300);
+                            }
+                        });
+
+                        // Animation pour fermer la pop-up en cliquant sur l'overlay
+                        $('#popupOverlay').on('click', function() {
+                            $('#successPopup').fadeOut(300);
+                            $('#popupOverlay').fadeOut(300);
+
+                            // Rediriger vers l'historique des feedbacks
+                            var redirectUrl = $('#closeSuccessPopup').data('redirect-url');
+                            if (redirectUrl) {
+                                setTimeout(function() {
+                                    window.location.href = redirectUrl;
+                                }, 300);
+                            }
                         });
                     });
                 }

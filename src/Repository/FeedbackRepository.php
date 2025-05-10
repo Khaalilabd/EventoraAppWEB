@@ -17,6 +17,38 @@ class FeedbackRepository extends ServiceEntityRepository
     }
 
     /**
+     * Trouve des feedbacks aléatoires sans conditions spécifiques.
+     *
+     * @param int $limit Nombre maximum de feedbacks à retourner
+     * @return array
+     */
+    public function findRandomFeedbacks(int $limit): array
+    {
+        // Récupérer tous les IDs des feedbacks
+        $ids = $this->createQueryBuilder('f')
+            ->select('f.ID')
+            ->getQuery()
+            ->getScalarResult();
+
+        // S'assurer qu'il y a des feedbacks
+        if (empty($ids)) {
+            return [];
+        }
+
+        // Mélanger les IDs et prendre les $limit premiers
+        $ids = array_column($ids, 'ID');
+        shuffle($ids);
+        $randomIds = array_slice($ids, 0, min($limit, count($ids)));
+
+        // Récupérer les feedbacks correspondant aux IDs sélectionnés
+        return $this->createQueryBuilder('f')
+            ->where('f.ID IN (:ids)')
+            ->setParameter('ids', $randomIds)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Trouve les feedbacks avec pagination, tri et filtres.
      *
      * @param int $page
@@ -55,7 +87,7 @@ class FeedbackRepository extends ServiceEntityRepository
                 $queryBuilder->orderBy('f.date', $sortOrder);
                 break;
             case 'recommend':
-                $queryBuilder->orderBy('f.recommend', $sortOrder);
+                $queryBuilder->orderBy('f.Recommend', $sortOrder);
                 break;
         }
 
@@ -73,7 +105,7 @@ class FeedbackRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('f')
             ->leftJoin('f.membre', 'm')
-            ->select('COUNT(f.id)');
+            ->select('COUNT(f.ID)');
 
         if ($userFilter) {
             $queryBuilder->andWhere('m.email = :email')
@@ -86,5 +118,44 @@ class FeedbackRepository extends ServiceEntityRepository
         }
 
         return (int) $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+    public function calculateNps(\DateTime $startDate, \DateTime $endDate): float
+    {
+        $promoters = $this->createQueryBuilder('f')
+        ->select('COUNT(f.ID) as count')
+        ->where('f.Recommend = :recommend')
+        ->andWhere('f.date BETWEEN :startDate AND :endDate')
+        ->setParameter('recommend', 'Oui')
+        ->setParameter('startDate', $startDate->format('Y-m-d'))
+        ->setParameter('endDate', $endDate->format('Y-m-d'))
+        ->getQuery()
+        ->getSingleScalarResult();
+
+        // Compter les détracteurs (Recommend = 'Non')
+        $detractors = $this->createQueryBuilder('f')
+            ->select('COUNT(f.ID) as count')
+            ->where('f.Recommend = :recommend')
+            ->andWhere('f.date BETWEEN :startDate AND :endDate')
+            ->setParameter('recommend', 'Non')
+            ->setParameter('startDate', $startDate->format('Y-m-d'))
+            ->setParameter('endDate', $endDate->format('Y-m-d'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Compter le total de feedbacks dans la plage de dates
+        $total = $this->createQueryBuilder('f')
+            ->select('COUNT(f.ID) as count')
+            ->where('f.date BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate->format('Y-m-d'))
+            ->setParameter('endDate', $endDate->format('Y-m-d'))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        // Calculer les pourcentages
+        $promotersPercentage = $total > 0 ? ($promoters / $total) * 100 : 0;
+        $detractorsPercentage = $total > 0 ? ($detractors / $total) * 100 : 0;
+
+        // Calculer le NPS
+        return $promotersPercentage - $detractorsPercentage;
     }
 }

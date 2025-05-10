@@ -20,21 +20,39 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Nom')]
+    #[Assert\NotBlank(message: "Le nom ne doit pas être vide.")]
+    #[Assert\Length(min: 2, minMessage: "Le nom doit contenir au moins {{ limit }} caractères.")]
     private string $nom = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Prénom')]
+    #[Assert\NotBlank(message: "Le prénom ne doit pas être vide.")]
+    #[Assert\Length(min: 2, minMessage: "Le prénom doit contenir au moins {{ limit }} caractères.")]
     private string $prenom = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Email', unique: true)]
+    #[Assert\NotBlank(message: "L'email ne doit pas être vide.")]
+    #[Assert\Email(message: "L'adresse email '{{ value }}' n'est pas un email valide.")]
     private string $email = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'CIN')]
+    #[Assert\NotBlank(message: "Le numéro de CIN ne doit pas être vide.")]
+    #[Assert\Regex(
+        pattern: '/^[0-9]{8}$/',
+        message: "Le numéro de CIN doit être composé de 8 chiffres exactement."
+    )]
     private string $cin = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'NumTel')]
+    #[Assert\NotBlank(message: "Le numéro de téléphone ne doit pas être vide.")]
+    #[Assert\Regex(
+        pattern: '/^[24579][0-9]{7}$/',
+        message: "Veuillez entrer un numéro de téléphone tunisien valide (8 chiffres, commençant par 2, 4, 5, 7 ou 9)."
+    )]
     private string $numTel = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'Adresse')]
+    #[Assert\NotBlank(message: "L'adresse ne doit pas être vide.")]
+    #[Assert\Length(min: 5, minMessage: "L'adresse complète doit contenir au moins {{ limit }} caractères.")]
     private string $adresse = '';
 
     #[ORM\Column(type: 'string', nullable: false, name: 'motDePasse')]
@@ -56,10 +74,12 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $isConfirmed = false;
 
     #[ORM\Column(type: 'date', nullable: true)]
+    #[Assert\Type(\DateTimeInterface::class, message: "La date de naissance doit être au format date valide.")]
+    #[Assert\Past(message: "La date de naissance doit être dans le passé.")]
     private ?\DateTimeInterface $dateOfBirth = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Assert\Choice(choices: ['Homme', 'Femme'], message: 'Veuillez choisir un genre valide (Homme ou Femme).')]
+    #[Assert\Choice(choices: ['Homme', 'Femme'], message: "Veuillez sélectionner votre genre : Homme ou Femme.")]
     private ?string $gender = null;
 
     #[ORM\Column(type: 'string', length: 180, nullable: true, unique: true)]
@@ -77,17 +97,28 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Reservationpersonnalise::class, mappedBy: 'membre')]
     private Collection $reservationpersonnalises;
 
+    #[ORM\OneToMany(mappedBy: 'membre', targetEntity: PaymentHistory::class)]
+    private Collection $paymentHistories;
+
     public function __construct()
     {
         $this->feedbacks = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
         $this->reservationpacks = new ArrayCollection();
         $this->reservationpersonnalises = new ArrayCollection();
+        $this->paymentHistories = new ArrayCollection();
     }
 
     public function getRoles(): array
     {
-        return ['ROLE_' . strtoupper($this->role)];
+        $role = $this->role;
+        if (empty($role)) {
+            return ['ROLE_USER'];
+        }
+        if (!str_starts_with($role, 'ROLE_')) {
+            $role = 'ROLE_' . strtoupper($role);
+        }
+        return [$role];
     }
 
     public function getPassword(): ?string
@@ -107,12 +138,6 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
     }
 
     public function getNom(): string
@@ -375,6 +400,36 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
                 $reservationpersonnalise->setMembre(null);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaymentHistory>
+     */
+    public function getPaymentHistories(): Collection
+    {
+        return $this->paymentHistories;
+    }
+
+    public function addPaymentHistory(PaymentHistory $paymentHistory): self
+    {
+        if (!$this->paymentHistories->contains($paymentHistory)) {
+            $this->paymentHistories->add($paymentHistory);
+            $paymentHistory->setMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentHistory(PaymentHistory $paymentHistory): self
+    {
+        if ($this->paymentHistories->removeElement($paymentHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($paymentHistory->getMembre() === $this) {
+                $paymentHistory->setMembre(null);
+            }
+        }
+
         return $this;
     }
 }

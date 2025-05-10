@@ -3,206 +3,207 @@
 {% block title %}Gestion des Packs{% endblock %}
 
 {% block body %}
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
-        <div class="sidenav-header">
-            <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
-                <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
-            </a>
-        </div>
-        <hr class="horizontal dark mt-0">
-        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}" href="{{ path('admin_dashboard') }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-tachometer-alt text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
-                        <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-tachometer-alt text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Home</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reservationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-calendar-check text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Réservations</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'show' : '' }}" id="reservationsMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_pack' ? 'active' : '' }}" href="{{ path('admin_reservations_pack') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-box text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Réservations Pack</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_personnalise' ? 'active' : '' }}" href="{{ path('admin_reservations_personnalise') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-calendar-alt text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Réservations Personnalisées</span>
-                                </a>
-                            </li>
-                        </ul>
+{# Note: For large datasets, consider adding database indexes on pack.nomPack and pack.description to improve search performance. Example migration: CREATE INDEX idx_pack_nomPack ON pack (nomPack); CREATE INDEX idx_pack_description ON pack (description(255)); #}
+
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-light" id="sidenav-main">
+    <div class="sidenav-header">
+        <a class="navbar-brand m-0" href="{{ path('admin_dashboard') }}">
+            <img src="{{ asset('assets/img/EVENTORA.png') }}" class="navbar-brand-img" style="max-height: 40px;" alt="main_logo">
+        </a>
+    </div>
+    <hr class="horizontal dark mt-0">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}" href="{{ path('admin_dashboard') }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-tachometer-alt text-dark"></i>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reclamationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-exclamation-triangle text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Réclamations</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'show' : '' }}" id="reclamationsMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reclamations' ? 'active' : '' }}" href="{{ path('admin_reclamations') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-exclamation-circle text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Réclamations</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="{{ path('admin_feedback') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-comment-dots text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Feedback</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <span class="nav-link-text ms-1">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home_page' ? 'active' : '' }}" href="{{ path('app_home_page') }}">
+                    <div class="icon icon-home icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-tachometer-alt text-dark"></i>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-users text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Utilisateurs</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'show' : '' }}" id="usersMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-friends text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Membres</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_moderators' ? 'active' : '' }}" href="{{ path('admin_moderators') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-shield text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Modérateurs</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="{{ path('admin_admins') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-user-cog text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Admins</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <span class="nav-link-text ms-1">Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#reservationsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-calendar-check text-dark"></i>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-box text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Packs</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'show' : '' }}" id="packsMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-box-open text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Packs</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_typepacks' ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-tags text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Types de Packs</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <span class="nav-link-text ms-1">Reservations</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reservations' ? 'show' : '' }}" id="reservationsMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_pack' ? 'active' : '' }}" href="{{ path('admin_reservations_pack') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-box text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Pack Reservations</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_reservations_personnalise' ? 'active' : '' }}" href="{{ path('admin_reservations_personnalise') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-calendar-alt text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Personalized Reservations</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#complaintsMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-exclamation-triangle text-dark"></i>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-concierge-bell text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Services</span>
-                    </a>
-                    <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'show' : '' }}" id="servicesMenu">
-                        <ul class="navbar-nav ms-3">
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_services' ? 'active' : '' }}" href="{{ path('admin_services') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-tools text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Services</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="{{ path('admin_sponsors') }}">
-                                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                                        <i class="fas fa-handshake text-dark"></i>
-                                    </div>
-                                    <span class="nav-link-text ms-1">Partenaires</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <span class="nav-link-text ms-1">Complaints</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_reclamations' or app.request.attributes.get('_route') starts with 'admin_feedback' ? 'show' : '' }}" id="complaintsMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_reclamations' ? 'active' : '' }}" href="{{ path('admin_reclamations') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-exclamation-circle text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Complaints</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_feedback' ? 'active' : '' }}" href="{{ path('admin_feedback') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-comment-dots text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Feedback</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#usersMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-users text-dark"></i>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_logout') }}">
-                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-sign-out-alt text-dark"></i>
-                        </div>
-                        <span class="nav-link-text ms-1">Déconnexion</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </aside>
+                    <span class="nav-link-text ms-1">Users</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_membres' or app.request.attributes.get('_route') starts with 'admin_moderators' or app.request.attributes.get('_route') starts with 'admin_admins' ? 'show' : '' }}" id="usersMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_membres' ? 'active' : '' }}" href="{{ path('admin_membres') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-user-friends text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Members</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_agent_index' ? 'active' : '' }}" href="{{ path('app_agent_index') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-user-shield text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Agents</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#packsMenu" aria-expanded="{{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-box text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Packs</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') in ['admin_packs', 'admin_typepacks'] ? 'show' : '' }}" id="packsMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_packs' ? 'active' : '' }}" href="{{ path('admin_packs') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-box-open text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Packs</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'admin_typepacks' ? 'active' : '' }}" href="{{ path('admin_typepacks') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-tags text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Pack Types</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="#" data-bs-toggle="collapse" data-bs-target="#servicesMenu" aria-expanded="{{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'true' : 'false' }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-concierge-bell text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Services</span>
+                </a>
+                <div class="collapse {{ app.request.attributes.get('_route') starts with 'admin_services' or app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'show' : '' }}" id="servicesMenu">
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_services' ? 'active' : '' }}" href="{{ path('admin_services') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-tools text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Services</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_sponsors' ? 'active' : '' }}" href="{{ path('admin_sponsors') }}">
+                                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-handshake text-dark"></i>
+                                </div>
+                                <span class="nav-link-text ms-1">Partners</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-sign-out-alt text-dark"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Log out</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>
+
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg" style="margin-left: 250px;">
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur">
         <div class="container-fluid py-1 px-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Pages</a></li>
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="#">Panneau Admin</a></li>
                     <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Packs</li>
                 </ol>
                 <h6 class="font-weight-bolder mb-0">Gestion des Packs</h6>
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                    <div class="input-group">
-                        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                        <input type="text" class="form-control" placeholder="Rechercher...">
-                    </div>
+                    <form method="get" action="{{ path('admin_packs') }}" class="d-flex align-items-center">
+                        
+                        <input type="hidden" name="sort" value="{{ sort|default('nomPack') }}">
+                        <input type="hidden" name="order" value="{{ order|default('ASC') }}">
+                        <input type="hidden" name="page" value="{{ current_page|default(1) }}">
+                        <input type="hidden" name="type" value="{{ type|default('') }}">
+                        <input type="hidden" name="location" value="{{ location|default('') }}">
+                        <input type="hidden" name="minPrice" value="{{ minPrice is not null ? minPrice : '' }}">
+                        <input type="hidden" name="maxPrice" value="{{ maxPrice is not null ? maxPrice : '' }}">
+                    </form>
                 </div>
                 <ul class="navbar-nav justify-content-end">
                     <li class="nav-item d-flex align-items-center">
@@ -221,34 +222,161 @@
             <div class="col-12">
                 <div class="card mb-4 shadow-lg border-radius-xl">
                     <div class="card-header p-4 d-flex justify-content-between align-items-center bg-gradient-primary text-white">
-                        <h6 class="font-weight-bolder mb-0">Liste des Packs</h6>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-box-open fa-2x me-3"></i>
+                            <div>
+                                <h5 class="font-weight-bolder mb-0">Liste des Packs</h5>
+                                <p class="mb-0 opacity-8 text-sm">Gérez et visualisez tous les packs d'événements</p>
+                            </div>
+                        </div>
                         <a href="{{ path('admin_packs_create') }}" class="custom-btn-ajouter">
                             <i class="fas fa-plus me-2"></i> Ajouter un pack
                         </a>
                     </div>
                     <div class="card-body p-4">
-                        {% for message in app.flashes('success') %}
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div class="alerts-container">
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        <span>{{ message }}</span>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                            {% for message in app.flashes('error') %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-exclamation-circle me-2"></i>
+                                        <span>{{ message }}</span>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                            {% for message in app.flashes('info') %}
+                                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <span>{{ message }}</span>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Combined Filter and Sort Form (Always Visible) -->
+                        <form method="get" action="{{ path('admin_packs') }}" id="filterSortForm">
+                            <div class="filters-container">
+                                <div class="filter-controls mb-4">
+                                    <div class="filter-header">
+                                        <i class="fas fa-filter me-2"></i>
+                                        <h6 class="mb-0">Filtres</h6>
+                                    </div>
+                                    <div class="filter-body">
+                                        <div class="filter-group">
+                                            <label for="typeFilter" class="form-label">Type:</label>
+                                            <select id="typeFilter" name="type" class="form-select">
+                                                <option value="" {{ type is not defined or type is empty ? 'selected' : '' }}>Tous</option>
+                                                {% for typepack in typepacks %}
+                                                    <option value="{{ typepack.type }}" {{ type is defined and type == typepack.type ? 'selected' : '' }}>{{ typepack.type }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="filter-group">
+                                            <label for="locationFilter" class="form-label">Lieu:</label>
+                                            <select id="locationFilter" name="location" class="form-select">
+                                                <option value="" {{ location is not defined or location is empty ? 'selected' : '' }}>Tous</option>
+                                                <option value="HOTEL" {{ location is defined and location == 'HOTEL' ? 'selected' : '' }}>Hôtel</option>
+                                                <option value="MAISON_D_HOTE" {{ location is defined and location == 'MAISON_D_HOTE' ? 'selected' : '' }}>Maison d'hôte</option>
+                                                <option value="ESPACE_VERT" {{ location is defined and location == 'ESPACE_VERT' ? 'selected' : '' }}>Espace vert</option>
+                                                <option value="SALLE_DE_FETE" {{ location is defined and location == 'SALLE_DE_FETE' ? 'selected' : '' }}>Salle de fête</option>
+                                                <option value="AUTRE" {{ location is defined and location == 'AUTRE' ? 'selected' : '' }}>Autre</option>
+                                            </select>
+                                        </div>
+                                        <div class="filter-group">
+                                            <label for="price-range" class="form-label">Prix (dt):</label>
+                                            <div class="price-range">
+                                                <input type="number" name="minPrice" id="minPrice" placeholder="Min" value="{{ minPrice is not null ? minPrice : '' }}" min="0" step="0.01" class="form-control">
+                                                <span>-</span>
+                                                <input type="number" name="maxPrice" id="maxPrice" placeholder="Max" value="{{ maxPrice is not null ? maxPrice : '' }}" min="0" step="0.01" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sorting Controls (Always Visible) -->
+                                <div class="sort-controls mb-4">
+                                    <div class="sort-header">
+                                        <i class="fas fa-sort me-2"></i>
+                                        <h6 class="mb-0">Tri</h6>
+                                    </div>
+                                    <div class="sort-body">
+                                        <div class="sort-buttons">
+                                            <button type="button" class="sort-btn {{ sort == 'nomPack' ? 'active' : '' }}" data-sort="nomPack">
+                                                <i class="fas fa-font me-1"></i> Nom
+                                                {% if sort == 'nomPack' %}
+                                                    <span class="sort-icon">{{ order == 'ASC' ? '↑' : '↓' }}</span>
+                                                {% endif %}
+                                            </button>
+                                            <button type="button" class="sort-btn {{ sort == 'prix' ? 'active' : '' }}" data-sort="prix">
+                                                <i class="fas fa-tag me-1"></i> Prix
+                                                {% if sort == 'prix' %}
+                                                    <span class="sort-icon">{{ order == 'ASC' ? '↑' : '↓' }}</span>
+                                                {% endif %}
+                                            </button>
+                                            <button type="button" class="sort-btn {{ sort == 'nbrGuests' ? 'active' : '' }}" data-sort="nbrGuests">
+                                                <i class="fas fa-users me-1"></i> Invités
+                                                {% if sort == 'nbrGuests' %}
+                                                    <span class="sort-icon">{{ order == 'ASC' ? '↑' : '↓' }}</span>
+                                                {% endif %}
+                                            </button>
+                                            <a href="{{ path('admin_packs', { sort: 'nomPack', order: 'ASC', page: 1, type: '', location: '', minPrice: '', maxPrice: '' }) }}"
+                                               class="sort-btn sort-reset-btn">
+                                                <i class="fas fa-undo me-1"></i> Réinitialiser
+                                            </a>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input order-toggle" type="checkbox" id="orderToggle" {{ order == 'DESC' ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="orderToggle">
+                                                <span class="order-label">{{ order == 'DESC' ? 'Descendant' : 'Ascendant' }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        {% endfor %}
-                        {% for message in app.flashes('error') %}
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+                            <!-- Hidden Inputs for Sort and Order -->
+                            <input type="hidden" name="sort" id="sortField" value="{{ sort|default('nomPack') }}">
+                            <input type="hidden" name="order" id="orderField" value="{{ order|default('ASC') }}">
+                            <input type="hidden" name="page" id="pageField" value="1">
+
+                            <!-- Apply Filters Button (Always Visible) -->
+                            <div class="text-center mb-4">
+                                <button type="submit" class="apply-filters-btn">
+                                    <i class="fas fa-filter me-2"></i> Appliquer les filtres
+                                </button>
                             </div>
-                        {% endfor %}
-                        {% for message in app.flashes('info') %}
-                            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </form>
+
+                        <!-- View Mode Switcher -->
+                        <div class="view-mode-container mb-4">
+                            <div class="view-toggle-wrapper">
+                                <span class="view-mode-label">Mode d'affichage:</span>
+                                <div class="view-toggle-buttons">
+                                    <button id="cardsViewBtn" class="view-toggle-btn active" data-view="cards">
+                                        <i class="fas fa-th-large"></i> Cartes
+                                    </button>
+                                    <button id="tableViewBtn" class="view-toggle-btn" data-view="table">
+                                        <i class="fas fa-table"></i> Tableau
+                                    </button>
+                                </div>
                             </div>
-                        {% endfor %}
+                        </div>
 
                         {% if packs is defined and packs is not empty %}
-                            <div class="packs-container">
-                                <div class="row">
+                            <!-- Cards View -->
+                            <div class="packs-container" id="cardsView">
+                                <div class="row" id="packList">
                                     {% for pack in packs %}
                                         <div class="col-lg-4 col-md-6 col-sm-12 mb-4 pack-card-wrapper">
                                             <div class="card pack-card h-100 shadow-lg border-radius-xl pack-card-clickable"
@@ -259,12 +387,17 @@
                                                  data-guests="{{ pack.nbrGuests|default('0') }}"
                                                  data-price="{{ pack.prix|default('N/A') }}"
                                                  data-image="{{ pack.imagePath ? asset(pack.imagePath) : '' }}"
-                                                 data-services="{{ pack.services is not empty ? pack.services|map(service => service.titre)|join(',') : '' }}">
-                                                <div class="card-header p-4 text-white text-center">
-                                                    <h5 class="mb-0 pack-title">{{ pack.nomPack|default('Non défini') }}</h5>
+                                                 data-services="{% if pack.services is not empty %}{{ pack.services|map(service => service.titre)|join(',') }}{% else %}Aucun service{% endif %}">
+                                                <div class="card-status-indicator"></div>
+                                                <div class="card-header p-4 text-white">
+                                                    <div class="header-content">
+                                                        <h5 class="mb-0 pack-title">{{ pack.nomPack|default('Non défini') }}</h5>
+                                                        <div class="pack-type-badge">{{ pack.typepack and pack.typepack.type ? pack.typepack.type : 'N/A' }}</div>
+                                                    </div>
+                                                    <span class="price-badge">{{ pack.prix|default('N/A') }} dt</span>
                                                 </div>
                                                 <div class="card-body p-4">
-                                                    <div class="text-center mb-4 position-relative">
+                                                    <div class="text-center mb-4 pack-image-container">
                                                         {% if pack.imagePath %}
                                                             <img src="{{ asset(pack.imagePath) }}" alt="{{ pack.nomPack|default('Pack') }}" class="pack-image" />
                                                         {% else %}
@@ -272,26 +405,47 @@
                                                                 <i class="fas fa-image text-muted"></i>
                                                             </div>
                                                         {% endif %}
-                                                        <span class="price-badge">{{ pack.prix|default('N/A') }} €</span>
                                                     </div>
                                                     <div class="pack-details">
-                                                        <p class="pack-info"><strong>Description:</strong> <span class="pack-description">{{ pack.description|default('Aucune description')|length > 50 ? pack.description|slice(0, 50) ~ '...' : pack.description|default('Aucune description') }}</span></p>
-                                                        <p class="pack-info"><strong>Lieu:</strong> {{ pack.location|default('Non défini') }}</p>
-                                                        <p class="pack-info"><strong>Type:</strong> {{ pack.typepack ? pack.typepack.type : 'N/A' }}</p>
-                                                        <p class="pack-info"><strong>Invités:</strong> {{ pack.nbrGuests|default('0') }}</p>
-                                                        <p class="pack-info"><strong>Services:</strong></p>
-                                                        {% if pack.services is not empty %}
-                                                            <ul class="pack-services">
-                                                                {% for service in pack.services|slice(0, 2) %}
-                                                                    <li>{{ service.titre }}</li>
-                                                                {% endfor %}
-                                                                {% if pack.services|length > 2 %}
-                                                                    <li>+{{ pack.services|length - 2 }} autres</li>
+                                                        <div class="pack-info">
+                                                            <i class="fas fa-info-circle info-icon"></i>
+                                                            <div>
+                                                                <strong>Description:</strong> 
+                                                                <span class="pack-description">{{ pack.description|default('Aucune description')|length > 50 ? pack.description|slice(0, 50) ~ '...' : pack.description|default('Aucune description') }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pack-info">
+                                                            <i class="fas fa-map-marker-alt info-icon"></i>
+                                                            <div>
+                                                                <strong>Lieu:</strong> 
+                                                                <span class="location-badge">{{ pack.location|default('Non défini') }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pack-info">
+                                                            <i class="fas fa-users info-icon"></i>
+                                                            <div>
+                                                                <strong>Invités:</strong> 
+                                                                <span class="guests-counter">{{ pack.nbrGuests|default('0') }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pack-info">
+                                                            <i class="fas fa-concierge-bell info-icon"></i>
+                                                            <div>
+                                                                <strong>Services:</strong>
+                                                                {% if pack.services is not empty %}
+                                                                    <div class="services-tags">
+                                                                        {% for service in pack.services|slice(0, 2) %}
+                                                                            <span class="service-tag">{{ service.titre|default('Service inconnu') }}</span>
+                                                                        {% endfor %}
+                                                                        {% if pack.services|length > 2 %}
+                                                                            <span class="more-services">+{{ pack.services|length - 2 }}</span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                {% else %}
+                                                                    <span class="text-muted">Aucun service</span>
                                                                 {% endif %}
-                                                            </ul>
-                                                        {% else %}
-                                                            <span class="text-muted">Aucun service</span>
-                                                        {% endif %}
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="card-footer p-3 d-flex justify-content-between align-items-center">
@@ -310,32 +464,151 @@
                                     {% endfor %}
                                 </div>
                             </div>
+                            
+                            <!-- Table View (Hidden by default) -->
+                            <div class="table-view-container" id="tableView" style="display: none;">
+                                <div class="table-responsive">
+                                    <table class="table align-items-center table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Image</th>
+                                                <th>Nom du Pack</th>
+                                                <th>Type</th>
+                                                <th>Lieu</th>
+                                                <th>Invités</th>
+                                                <th>Prix</th>
+                                                <th>Services</th>
+                                                <th class="text-end">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for pack in packs %}
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <div class="table-image-container">
+                                                            {% if pack.imagePath %}
+                                                                <img src="{{ asset(pack.imagePath) }}" alt="{{ pack.nomPack|default('Pack') }}" class="table-pack-image" />
+                                                            {% else %}
+                                                                <div class="table-image-placeholder">
+                                                                    <i class="fas fa-image text-muted"></i>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="td-content">
+                                                            <h6 class="mb-0">{{ pack.nomPack|default('Non défini') }}</h6>
+                                                            <small class="text-muted d-block text-truncate" style="max-width: 200px;">
+                                                                {{ pack.description|default('Aucune description')|length > 50 ? pack.description|slice(0, 50) ~ '...' : pack.description|default('Aucune description') }}
+                                                            </small>
+                                                        </div>
+                                                    </td>
+                                                    <td><span class="table-type-badge">{{ pack.typepack and pack.typepack.type ? pack.typepack.type : 'N/A' }}</span></td>
+                                                    <td><span class="table-location-badge">{{ pack.location|default('Non défini') }}</span></td>
+                                                    <td><span class="table-guests-badge">{{ pack.nbrGuests|default('0') }}</span></td>
+                                                    <td><span class="table-price-badge">{{ pack.prix|default('N/A') }} dt</span></td>
+                                                    <td>
+                                                        {% if pack.services is not empty %}
+                                                            <div class="table-services-tags">
+                                                                {% for service in pack.services|slice(0, 2) %}
+                                                                    <span class="table-service-tag">{{ service.titre|default('Service inconnu') }}</span>
+                                                                {% endfor %}
+                                                                {% if pack.services|length > 2 %}
+                                                                    <span class="table-more-services">+{{ pack.services|length - 2 }}</span>
+                                                                {% endif %}
+                                                            </div>
+                                                        {% else %}
+                                                            <span class="text-muted">Aucun</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <div class="table-actions">
+                                                            <a href="{{ path('admin_packs_edit', {'id': pack.id}) }}" class="table-action-btn table-edit-btn" title="Modifier">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                            <form method="post" action="{{ path('admin_packs_delete', {'id': pack.id}) }}" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer ce pack ?');">
+                                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pack.id) }}">
+                                                                <button type="submit" class="table-action-btn table-delete-btn" title="Supprimer">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                            <button class="table-action-btn table-view-btn" title="Voir les détails" 
+                                                                data-name="{{ pack.nomPack|default('Non défini') }}"
+                                                                data-description="{{ pack.description|default('Aucune description') }}"
+                                                                data-location="{{ pack.location|default('Non défini') }}"
+                                                                data-type="{{ pack.typepack ? pack.typepack.type : 'N/A' }}"
+                                                                data-guests="{{ pack.nbrGuests|default('0') }}"
+                                                                data-price="{{ pack.prix|default('N/A') }}"
+                                                                data-image="{{ pack.imagePath ? asset(pack.imagePath) : '' }}"
+                                                                data-services="{% if pack.services is not empty %}{{ pack.services|map(service => service.titre)|join(',') }}{% else %}Aucun service{% endif %}">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 
-                            {% if total_pages > 1 %}
-                                <nav aria-label="Page navigation">
+                           {% if total_pages > 1 %}
+                                <nav aria-label="Page navigation" class="pagination-container">
                                     <ul class="pagination">
                                         <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
-                                            <a class="page-link" href="{{ path('admin_packs', {'page': current_page - 1}) }}" aria-label="Previous">
-                                                <span aria-hidden="true">«</span>
+                                            <a class="page-link" href="{{ path('admin_packs', { page: current_page - 1, sort: sort|default('nomPack'), order: order|default('ASC'), type: type|default(''), location: location|default(''), minPrice: minPrice is not null ? minPrice : '', maxPrice: maxPrice is not null ? maxPrice : '' }) }}" aria-label="Previous">
+                                                <i class="fas fa-chevron-left"></i>
                                             </a>
                                         </li>
                                         {% for i in 1..total_pages %}
-                                            <li class="page-item {{ current_page == i ? 'active' : '' }}">
-                                                <a class="page-link" href="{{ path('admin_packs', {'page': i}) }}">{{ i }}</a>
-                                            </li>
+                                            {% if total_pages <= 5 or i == 1 or i == total_pages or (i >= current_page - 1 and i <= current_page + 1) %}
+                                                <li class="page-item {{ current_page == i ? 'active' : '' }}">
+                                                    <a class="page-link" href="{{ path('admin_packs', { page: i, sort: sort|default('nomPack'), order: order|default('ASC'), type: type|default(''), location: location|default(''), minPrice: minPrice is not null ? minPrice : '', maxPrice: maxPrice is not null ? maxPrice : '' }) }}">{{ i }}</a>
+                                                </li>
+                                            {% elseif (i == current_page - 2 or i == current_page + 2) %}
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">...</span>
+                                                </li>
+                                            {% endif %}
                                         {% endfor %}
                                         <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
-                                            <a class="page-link" href="{{ path('admin_packs', {'page': current_page + 1}) }}" aria-label="Next">
-                                                <span aria-hidden="true">»</span>
+                                            <a class="page-link" href="{{ path('admin_packs', { page: current_page + 1, sort: sort|default('nomPack'), order: order|default('ASC'), type: type|default(''), location: location|default(''), minPrice: minPrice is not null ? minPrice : '', maxPrice: maxPrice is not null ? maxPrice : '' }) }}" aria-label="Next">
+                                                <i class="fas fa-chevron-right"></i>
                                             </a>
                                         </li>
                                     </ul>
                                 </nav>
+                                <div class="pagination-info">
+                                    <p>Page {{ current_page }} sur {{ total_pages }} ({{ packs|length }} packs affichés sur un total de {{ total_items ?? packs|length }})</p>
+                                </div>
                             {% endif %}
                         {% else %}
-                            <div class="text-center p-5">
-                                <i class="fas fa-box-open text-muted" style="font-size: 3rem;"></i>
-                                <p class="text-muted mt-3 fs-5">Aucun pack trouvé.</p>
+                            <div class="no-results-container">
+                                <i class="fas fa-box-open no-results-icon"></i>
+                                <p class="no-results-text">
+                                    Aucun pack trouvé avec les filtres actuels
+                                </p>
+                                <ul class="no-results-list">
+                                    <li>
+                                        <strong>Type:</strong> 
+                                        <span>{{ type is empty ? 'Aucun' : type }}</span>
+                                    </li>
+                                    <li>
+                                        <strong>Lieu:</strong> 
+                                        <span>{{ location is empty ? 'Aucun' : location }}</span>
+                                    </li>
+                                    <li>
+                                        <strong>Prix min:</strong> 
+                                        <span>{{ minPrice is null ? 'Aucun' : minPrice ~ ' dt' }}</span>
+                                    </li>
+                                    <li>
+                                        <strong>Prix max:</strong> 
+                                        <span>{{ maxPrice is null ? 'Aucun' : maxPrice ~ ' dt' }}</span>
+                                    </li>
+                                </ul>
+                                <a href="{{ path('admin_packs') }}" class="apply-filters-btn mt-4">
+                                    <i class="fas fa-undo me-2"></i> Réinitialiser les filtres
+                                </a>
                             </div>
                         {% endif %}
                     </div>
@@ -345,11 +618,11 @@
     </div>
 
     <div class="modal" id="packModal">
-        <span class="close-btn" id="closeModalBtn">×</span>
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="modalTitle"></h5>
                 <span class="modal-price-badge" id="modalPrice"></span>
+                <span class="close-btn" id="closeModalBtn">×</span>
             </div>
             <div class="modal-body">
                 <div class="modal-layout">
@@ -360,66 +633,474 @@
                         </div>
                     </div>
                     <div class="modal-details">
-                        <p class="modal-info"><strong class="modal-label">Description:</strong> <span id="modalDescription"></span></p>
-                        <p class="modal-info"><strong class="modal-label">Lieu:</strong> <span id="modalLocation"></span></p>
-                        <p class="modal-info"><strong class="modal-label">Type:</strong> <span id="modalType"></span></p>
-                        <p class="modal-info"><strong class="modal-label">Invités:</strong> <span id="modalGuests"></span></p>
-                        <p class="modal-info"><strong class="modal-label">Services:</strong></p>
-                        <ul id="modalServices" class="modal-services"></ul>
+                        <div class="modal-info">
+                            <i class="fas fa-info-circle modal-icon"></i>
+                            <div>
+                                <strong class="modal-label">Description:</strong> 
+                                <span id="modalDescription"></span>
+                            </div>
+                        </div>
+                        <div class="modal-info">
+                            <i class="fas fa-map-marker-alt modal-icon"></i>
+                            <div>
+                                <strong class="modal-label">Lieu:</strong> 
+                                <span id="modalLocation"></span>
+                            </div>
+                        </div>
+                        <div class="modal-info">
+                            <i class="fas fa-tag modal-icon"></i>
+                            <div>
+                                <strong class="modal-label">Type:</strong> 
+                                <span id="modalType"></span>
+                            </div>
+                        </div>
+                        <div class="modal-info">
+                            <i class="fas fa-users modal-icon"></i>
+                            <div>
+                                <strong class="modal-label">Invités:</strong> 
+                                <span id="modalGuests"></span>
+                            </div>
+                        </div>
+                        <div class="modal-info">
+                            <i class="fas fa-concierge-bell modal-icon"></i>
+                            <div>
+                                <strong class="modal-label">Services:</strong>
+                                <ul id="modalServices" class="modal-services"></ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="closeModalBtnFooter">Fermer</button>
             </div>
         </div>
     </div>
     <div class="overlay" id="overlay"></div>
 
     <style>
-        /* Sidebar */
         .sidenav {
-            background-color: #f8f9fa;
+            background-color: #f8f5f0;
             width: 250px;
             height: 100vh;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             position: fixed;
             z-index: 998;
         }
-        .sidenav-header { padding: 15px; }
-        .navbar-brand { display: flex; align-items: center; color: #333; }
-        .navbar-brand:hover { color: #ff6200; }
-        .navbar-nav .nav-link { padding: 12px 15px; color: #555; transition: all 0.3s ease; }
-        .navbar-nav .nav-link:hover { background-color: #ff6200; color: #fff; }
-        .navbar-nav .nav-link.active { background-color: #ff6200; color: #fff; }
-        .navbar-nav .nav-link .icon { width: 30px; height: 30px; background-color: #fff; transition: background-color 0.3s ease; }
-        .navbar-nav .nav-link:hover .icon, .navbar-nav .nav-link.active .icon { background-color: #ff6200; }
-        .navbar-nav .nav-link .icon i { font-size: 16px; }
-        .navbar-nav .dropdown-toggle::after { margin-left: 10px; transition: transform 0.3s ease; }
-        .navbar-nav .dropdown-toggle[aria-expanded="true"]::after { transform: rotate(180deg); }
-        .collapse { transition: all 0.3s ease; }
-        .navbar-nav .collapse .nav-link { padding-left: 40px; font-size: 0.9em; }
-        .navbar-nav .collapse .nav-link:hover { background-color: #ff8c00; }
-        hr.horizontal { border: 0; height: 1px; background-color: #ddd; }
-
-        /* Navbar */
-        .navbar-main {
-            height: 60px; /* Hauteur fixe pour toutes les pages */
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .sidenav-header { 
+            padding: 20px; 
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .navbar-main .container-fluid { height: 100%; }
-        .navbar-main .breadcrumb { margin-bottom: 0; }
-        .navbar-main .input-group { max-width: 300px; }
-        .navbar-main .nav-link { color: #333; }
-        .navbar-main .nav-link:hover { color: #ff6200; }
+        .navbar-brand { 
+            display: flex; 
+            align-items: center; 
+            color: #333; 
+            font-weight: 600;
+        }
+        .navbar-brand:hover { color: #01a3a4; }
+        .navbar-nav .nav-link { 
+            padding: 12px 18px; 
+            color: #555; 
+            transition: all 0.3s ease; 
+            border-radius: 10px;
+            margin: 5px 10px;
+        }
+        .navbar-nav .nav-link:hover { 
+            background-color: rgba(195, 175, 145, 0.1); 
+            color: #c3af91; 
+        }
+        .navbar-nav .nav-link.active { 
+            background: linear-gradient(135deg, #d9caab, #c3af91);
+            color: #fff; 
+            box-shadow: 0 4px 10px rgba(195, 175, 145, 0.2);
+        }
+        .navbar-nav .nav-link .icon { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 10px;
+            background-color: #fff; 
+            transition: all 0.3s ease; 
+        }
+        .navbar-nav .nav-link:hover .icon, 
+        .navbar-nav .nav-link.active .icon { 
+            background-color: rgba(255, 255, 255, 0.2); 
+            color: #fff;
+        }
+        .navbar-nav .nav-link .icon i { font-size: 16px; }
+        .navbar-nav .dropdown-toggle::after { 
+            margin-left: 10px; 
+            transition: transform 0.3s ease; 
+        }
+        .navbar-nav .dropdown-toggle[aria-expanded="true"]::after { 
+            transform: rotate(180deg); 
+        }
+        .collapse { transition: all 0.3s ease; }
+        .navbar-nav .collapse .nav-link { 
+            padding-left: 40px; 
+            font-size: 0.9em; 
+        }
+        .navbar-nav .collapse .nav-link:hover { 
+            background-color: rgba(195, 175, 145, 0.1); 
+        }
+        hr.horizontal { 
+            border: 0; 
+            height: 1px; 
+            background-color: rgba(0,0,0,0.05); 
+            margin: 10px 0;
+        }
 
-        /* Packs Container */
+        .navbar-main {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+            padding: 15px 25px;
+        }
+        .input-group {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .input-group-text {
+            background: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-right: none;
+            color: #6c757d;
+        }
+        .form-control {
+            border: 1px solid #ced4da;
+            font-size: 0.95rem;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+        .form-control:focus {
+            border-color: #01a3a4;
+            box-shadow: 0 0 10px rgba(1, 163, 164, 0.15);
+            outline: none;
+        } 
+        .form-select {
+            border-radius: 10px;
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            transition: all 0.3s ease;
+        }
+        .form-select:focus {
+            border-color: #01a3a4;
+            box-shadow: 0 0 10px rgba(1, 163, 164, 0.15);
+            outline: none;
+        }
+        
+        .filter-controls,
+        .sort-controls {
+            background: #fff;
+            padding: 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .filter-header,
+        .sort-header {
+            background: linear-gradient(135deg, #d9caab, #c3af91);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .filter-body,
+        .sort-body {
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+            flex: 1;
+        }
+        
+        .filter-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .price-range {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .price-range input {
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .price-range span {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+        
+        .sort-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-right: 20px;
+        }
+        
+        .sort-btn {
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #495057;
+            background: #f8f9fa;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid #e9ecef;
+            cursor: pointer;
+        }
+        
+        .sort-btn:hover {
+            background: #c3af91;
+            color: #fff;
+            border-color: #c3af91;
+        }
+        
+        .sort-btn.active {
+            background: #c3af91;
+            color: #fff;
+            font-weight: 600;
+            border-color: #c3af91;
+            box-shadow: 0 4px 10px rgba(195, 175, 145, 0.2);
+        }
+        
+        .sort-icon {
+            font-size: 0.8rem;
+            margin-left: 3px;
+        }
+        
+        .sort-reset-btn {
+            background: #6c757d;
+            color: #fff;
+            border-color: #6c757d;
+        }
+        
+        .sort-reset-btn:hover {
+            background: #5a6268;
+            border-color: #5a6268;
+        }
+        
+        .form-check-input:checked {
+            background-color: #c3af91;
+            border-color: #c3af91;
+        }
+        
+        .form-check-input:focus {
+            box-shadow: 0 0 5px rgba(195, 175, 145, 0.3);
+            border-color: #c3af91;
+        }
+
+        .apply-filters-btn {
+            background: linear-gradient(135deg, #d9caab, #c3af91);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(195, 175, 145, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .apply-filters-btn:hover {
+            background: linear-gradient(135deg, #c3af91, #b79f7e);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(195, 175, 145, 0.3);
+        }
+        
+        .pagination {
+            justify-content: center;
+            margin-top: 30px;
+            gap: 5px;
+        }
+        
+        .page-link {
+            border-radius: 8px;
+            color: #c3af91;
+            border: 1px solid #dee2e6;
+            padding: 8px 15px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .page-link:hover {
+            background-color: #c3af91;
+            color: #fff;
+            border-color: #c3af91;
+        }
+        
+        .page-item.active .page-link {
+            background-color: #c3af91;
+            border-color: #c3af91;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(195, 175, 145, 0.2);
+        }
+        
+        .page-item.disabled .page-link {
+            color: #ced4da;
+            pointer-events: none;
+            background-color: #f8f9fa;
+        }
+
+        .alert {
+            border-radius: 12px;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: none;
+        }
+        
+        .alerts-container {
+            margin-bottom: 20px;
+        }
+        
+        .filters-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .pagination {
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .pagination-info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 5px;
+            border-radius: 8px;
+            color: #c3af91;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .page-link:hover {
+            background-color: #c3af91;
+            color: #fff;
+            border-color: #c3af91;
+        }
+        
+        .page-item.active .page-link {
+            background-color: #c3af91;
+            border-color: #c3af91;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(195, 175, 145, 0.2);
+        }
+        
+        .page-item.disabled .page-link {
+            color: #ced4da;
+            pointer-events: none;
+            background-color: #f8f9fa;
+        }
+        
+        /* No results styles */
+        .no-results-container {
+            text-align: center;
+            padding: 40px 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .no-results-icon {
+            font-size: 4rem;
+            color: #adb5bd;
+            margin-bottom: 20px;
+        }
+        
+        .no-results-text {
+            font-size: 1.2rem;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+        
+        .no-results-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 auto;
+            max-width: 300px;
+            text-align: left;
+        }
+        
+        .no-results-list li {
+            padding: 10px 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+        }
+
         .packs-container {
             width: 100%;
-            height: 600px; /* Hauteur fixe pour toutes les pages */
+            max-height: 650px;
             overflow-y: auto;
             background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+        }
+        .packs-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .packs-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
             border-radius: 10px;
-            padding: 10px;
+        }
+        .packs-container::-webkit-scrollbar-thumb {
+            background: #01a3a4;
+            border-radius: 10px;
+        }
+        .packs-container::-webkit-scrollbar-thumb:hover {
+            background: #018f90;
         }
         .packs-container .row {
             width: 100%;
@@ -445,13 +1126,12 @@
             }
         }
 
-        /* Pack Card */
         .pack-card {
             border-radius: 20px;
             overflow: hidden;
-            background: linear-gradient(145deg, #ffffff, #f7f7f7);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
             border: none;
             position: relative;
             height: 450px;
@@ -459,100 +1139,174 @@
             flex-direction: column;
         }
         .pack-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(1, 163, 164, 0.2);
+        }
+        .card-status-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, #01a3a4, #00cdac);
+            z-index: 10;
         }
         .pack-card .card-header {
-            background: linear-gradient(135deg, #ff6200, #ff8c00);
+            background: linear-gradient(135deg, #d9caab, #c3af91);
             border-bottom: none;
             position: relative;
-            padding-bottom: 50px;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 20px 20px 0 0;
             flex-shrink: 0;
+        }
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 70%;
         }
         .pack-title {
             font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 1.3rem;
+            font-weight: 600;
+            font-size: 1.2rem;
             letter-spacing: 0.5px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+        .pack-type-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            backdrop-filter: blur(3px);
+        }
+        .pack-image-container {
+            position: relative;
+            margin-top: 10px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
         .pack-image {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
+            width: 110px;
+            height: 110px;
+            border-radius: 15px;
             object-fit: cover;
             border: 4px solid #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-            position: absolute;
-            bottom: -45px;
-            left: 50%;
-            transform: translateX(-50%);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
         .pack-image:hover {
-            transform: translateX(-50%) scale(1.1);
+            transform: scale(1.05);
         }
         .pack-image-placeholder {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
+            width: 110px;
+            height: 110px;
+            border-radius: 15px;
             background: #f5f5f5;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 4px solid #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-            position: absolute;
-            bottom: -45px;
-            left: 50%;
-            transform: translateX(-50%);
-            transition: transform 0.3s ease;
-        }
-        .pack-image-placeholder:hover {
-            transform: translateX(-50%) scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         .pack-image-placeholder i {
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: #adb5bd;
         }
         .price-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: linear-gradient(135deg, #28a745, #218838);
+            background: #00b894;
             color: #fff;
-            padding: 6px 12px;
-            border-radius: 25px;
-            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 12px;
+            font-size: 0.95rem;
             font-weight: 600;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 184, 148, 0.2);
+            display: inline-block;
         }
-        .price-badge:hover {
-            transform: scale(1.1);
+        .location-badge {
+            display: inline-block;
+            background: #f8f9fa;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            color: #495057;
+        }
+        .guests-counter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            color: #495057;
+            min-width: 30px;
+            height: 24px;
+            padding: 0 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .services-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        .service-tag {
+            display: inline-block;
+            background: rgba(1, 163, 164, 0.1);
+            color: #01a3a4;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        .more-services {
+            display: inline-block;
+            background: rgba(1, 163, 164, 0.2);
+            color: #01a3a4;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            line-height: 1.2;
         }
         .pack-details {
-            margin-top: 50px;
+            padding: 0 15px;
             flex-grow: 1;
             overflow: hidden;
         }
         .pack-info {
-            margin-bottom: 10px;
-            font-size: 0.95rem;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
             color: #6c757d;
-            line-height: 1.6;
             display: flex;
-            align-items: center;
-            gap: 8px;
+            align-items: flex-start;
+            gap: 10px;
             font-family: 'Roboto', sans-serif;
         }
         .pack-info strong {
             color: #343a40;
             font-weight: 600;
-            min-width: 90px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .info-icon {
+            color: #01a3a4;
+            font-size: 1rem;
+            min-width: 20px;
+            margin-top: 3px;
         }
         .pack-description {
             display: -webkit-box;
@@ -561,252 +1315,293 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .pack-services {
-            margin: 0;
-            padding-left: 25px;
-            font-size: 0.9rem;
-            color: #6c757d;
-            font-family: 'Roboto', sans-serif;
-            max-height: 60px;
-            overflow-y: auto;
-        }
-        .pack-services li {
-            margin-bottom: 8px;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-        .pack-services li:hover {
-            color: #ff6200;
-        }
-        .pack-services li:before {
-            content: '◆';
-            color: #ff9800;
-            position: absolute;
-            left: -20px;
-            font-size: 0.8rem;
-        }
         .card-footer {
             flex-shrink: 0;
-            background: transparent;
+            background: #f8f9fa;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 0 0 20px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px;
         }
 
-        /* Buttons */
         .custom-btn-ajouter,
         .custom-btn-modifier,
-        .custom-btn-supprimer {
+        .custom-btn-supprimer,
+        .custom-btn-voir {
             font-size: 0.9rem;
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 8px 16px;
+            border-radius: 20px;
             border: none;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
             display: inline-flex;
             align-items: center;
             gap: 5px;
             font-weight: 500;
             line-height: 1;
-            height: 40px;
+            height: 36px;
             min-width: 110px;
             justify-content: center;
             text-decoration: none;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            transition: all 0.3s ease;
+            background-image: linear-gradient(135deg, #d9caab, #c3af91);
+            color: #fff;
         }
-        .custom-btn-ajouter {
-            background: linear-gradient(135deg, #ffffff, #e9ecef);
-            color: #ff6200;
-        }
+
         .custom-btn-ajouter:hover {
-            background: linear-gradient(135deg, #e9ecef, #d3d6da);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            background-image: linear-gradient(135deg, #c3af91, #b79f7e);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(195, 175, 145, 0.2);
         }
+
         .custom-btn-modifier {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: #fff;
+            background-image: linear-gradient(135deg, #bfd8d5, #9dbab8);
         }
+
         .custom-btn-modifier:hover {
-            background: linear-gradient(135deg, #0056b3, #003d80);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            background-image: linear-gradient(135deg, #9dbab8, #83a7a5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(157, 186, 184, 0.2);
         }
+
         .custom-btn-supprimer {
-            background: linear-gradient(135deg, #dc3545, #b02a37);
-            color: #fff;
+            background-image: linear-gradient(135deg, #e4c7c7, #d1a3a3);
         }
+
         .custom-btn-supprimer:hover {
-            background: linear-gradient(135deg, #b02a37, #8b1e2a);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            background-image: linear-gradient(135deg, #d1a3a3, #c28989);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(209, 163, 163, 0.2);
         }
+
+        .custom-btn-voir {
+            background-image: linear-gradient(135deg, #d0d8c0, #b3c69f);
+        }
+
+        .custom-btn-voir:hover {
+            background-image: linear-gradient(135deg, #b3c69f, #97aa82);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(179, 198, 159, 0.2);
+        }
+
         .action-form {
             display: inline-flex;
             margin: 0;
             padding: 0;
-            vertical-align: middle;
         }
 
-        /* Alerts */
-        .alert {
-            border-radius: 15px;
-            margin-bottom: 20px;
-            padding: 15px 20px;
-            font-size: 0.95rem;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        .alert-success {
-            background: linear-gradient(135deg, #d4edda, #c3e6cb);
-            color: #155724;
-        }
-        .alert-danger {
-            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-            color: #721c24;
-        }
-        .alert-info {
-            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
-            color: #0c5460;
-        }
-        .alert:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 5px;
-            height: 100%;
-            background: #28a745;
-        }
-        .alert-danger:before { background: #dc3545; }
-        .alert-info:before { background: #17a2b8; }
-        .alert .btn-close {
-            padding: 15px;
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-        }
-        .alert .btn-close:hover { opacity: 1; }
-
-        /* Card Container */
-        .card {
-            border: none;
-            border-radius: 20px;
-            background: #f8f9fa;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        .card-header {
-            background: linear-gradient(135deg, #ff6200, #ff8c00);
-            border-radius: 20px 20px 0 0;
-            padding: 20px 25px;
-        }
-        .card-header h6 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin: 0;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .pagination .page-item .page-link {
-            color: #ff6200;
-            border: none;
-            margin: 0 5px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        .pagination .page-item.active .page-link {
-            background-color: #ff6200;
-            color: #fff;
-        }
-        .pagination .page-item .page-link:hover {
-            background-color: #ff8c00;
-            color: #fff;
-        }
-        .pagination .page-item.disabled .page-link { color: #ccc; }
-
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            width: 90%;
-            max-width: 700px; /* Taille standard pour toutes les pages */
-            max-height: 80vh; /* Limite la hauteur */
-            overflow-y: auto; /* Défilement si contenu dépasse */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1050;
+            overflow: auto;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
         }
-        .modal.active { display: block; }
+        
         .modal-content {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: #fff;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            margin: 5% auto;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease;
+            border: none;
             overflow: hidden;
         }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .modal-header {
-            background: #343a40;
-            color: white;
-            padding: 15px 20px;
+            background: linear-gradient(135deg, #d9caab, #c3af91);
+            color: #fff;
+            padding: 20px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: none;
         }
+        
+        .modal-header h5 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            flex: 1;
+        }
+        
         .modal-price-badge {
-            background: #ff6f61;
-            padding: 5px 10px;
-            border-radius: 12px;
-            font-size: 0.9rem;
+            background: #00b894;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 184, 148, 0.2);
+            margin-right: 15px;
         }
-        .modal-body { padding: 20px; }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
         .modal-layout {
             display: flex;
-            gap: 20px;
+            gap: 30px;
+            flex-wrap: wrap;
         }
-        .modal-image-container { flex: 1; }
+        
+        .modal-image-container {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
         .modal-image {
-            width: 100%;
-            height: 200px;
+            width: 180px;
+            height: 180px;
+            border-radius: 15px;
             object-fit: cover;
-            border-radius: 8px;
+            border: 4px solid #01a3a4;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
+        
         .modal-image-placeholder {
-            width: 100%;
-            height: 200px;
+            width: 180px;
+            height: 180px;
+            border-radius: 15px;
+            background: #f8f9fa;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f1f1f1;
-            border-radius: 8px;
+            border: 4px solid #01a3a4;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
+        
+        .modal-image-placeholder i {
+            font-size: 3rem;
+            color: #adb5bd;
+        }
+        
         .modal-details {
-            flex: 1;
-            font-size: 0.95rem;
+            flex: 2;
+            min-width: 300px;
         }
-        .modal-info { margin-bottom: 10px; }
+        
+        .modal-info {
+            margin-bottom: 15px;
+            font-size: 1rem;
+            color: #495057;
+            line-height: 1.6;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .modal-icon {
+            color: #01a3a4;
+            font-size: 1.2rem;
+            min-width: 20px;
+            margin-top: 3px;
+        }
+        
+        .modal-label {
+            color: #343a40;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        
         .modal-services {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+            margin: 10px 0 0 0;
+            padding-left: 5px;
+            font-size: 0.95rem;
+            color: #6c757d;
+            list-style-type: none;
+            max-height: 150px;
+            overflow-y: auto;
         }
-        .modal-services li { margin-bottom: 5px; }
-        .close-btn {
+        
+        .modal-services::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .modal-services::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .modal-services::-webkit-scrollbar-thumb {
+            background: #01a3a4;
+            border-radius: 10px;
+        }
+        
+        .modal-services li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .modal-services li:before {
+            content: '•';
+            color: #01a3a4;
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-            color: white;
-            cursor: pointer;
+            left: 0;
+            font-size: 1.2rem;
         }
+        
+        .modal-footer {
+            padding: 15px 25px;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: #f8f9fa;
+        }
+        
+        .modal-btn {
+            background: linear-gradient(135deg, #d9caab, #c3af91);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn:hover {
+            background: linear-gradient(135deg, #c3af91, #b79f7e);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(195, 175, 145, 0.2);
+        }
+        
+        .close-btn {
+            font-size: 1.8rem;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 300;
+            line-height: 1;
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+        
         .overlay {
             display: none;
             position: fixed;
@@ -815,105 +1610,535 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
+            backdrop-filter: blur(5px);
+            z-index: 1040;
         }
-        .overlay.active { display: block; }
 
-        /* Animation pour les cartes */
-        .pack-card-wrapper {
-            animation: fadeIn 0.6s ease-in-out forwards;
-            opacity: 0;
+        /* View Mode Switcher Styles */
+        .view-mode-container {
+            background: #fff;
+            border-radius: 15px;
+            padding: 15px 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
-        .pack-card-wrapper:nth-child(1) { animation-delay: 0.1s; }
-        .pack-card-wrapper:nth-child(2) { animation-delay: 0.2s; }
-        .pack-card-wrapper:nth-child(3) { animation-delay: 0.3s; }
-        .pack-card-wrapper:nth-child(4) { animation-delay: 0.4s; }
-        .pack-card-wrapper:nth-child(5) { animation-delay: 0.5s; }
-        .pack-card-wrapper:nth-child(6) { animation-delay: 0.6s; }
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+        
+        .view-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .view-mode-label {
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .view-toggle-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .view-toggle-btn {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            color: #6c757d;
+            padding: 8px 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .view-toggle-btn:hover {
+            background: rgba(1, 163, 164, 0.1);
+            color: #01a3a4;
+        }
+        
+        .view-toggle-btn.active {
+            background: linear-gradient(135deg, #d9caab, #c3af91);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 10px rgba(195, 175, 145, 0.2);
+        }
+        
+        /* Table View Styles */
+        .table-view-container {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, #d9caab, #c3af91);
+            color: #fff;
+            font-weight: 500;
+            padding: 15px;
+            border: none;
+            vertical-align: middle;
+        }
+        
+        .table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(195, 175, 145, 0.05);
+        }
+        
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            border: none;
+        }
+        
+        .table-image-container {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+        }
+        
+        .table-pack-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid #01a3a4;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table-image-placeholder {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e9ecef;
+        }
+        
+        .table-image-placeholder i {
+            font-size: 1.2rem;
+            color: #adb5bd;
+        }
+        
+        .td-content {
+            max-width: 220px;
+        }
+        
+        .table-type-badge, 
+        .table-location-badge, 
+        .table-guests-badge, 
+        .table-price-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .table-type-badge {
+            background: rgba(1, 163, 164, 0.1);
+            color: #01a3a4;
+        }
+        
+        .table-location-badge {
+            background: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
+        
+        .table-guests-badge {
+            background: rgba(13, 110, 253, 0.1);
+            color: #0d6efd;
+        }
+        
+        .table-price-badge {
+            background: rgba(0, 184, 148, 0.1);
+            color: #00b894;
+            font-weight: 600;
+        }
+        
+        .table-services-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            max-width: 200px;
+        }
+        
+        .table-service-tag {
+            display: inline-block;
+            background: rgba(1, 163, 164, 0.1);
+            color: #01a3a4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        
+        .table-more-services {
+            display: inline-block;
+            background: rgba(1, 163, 164, 0.2);
+            color: #01a3a4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .table-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            transition: all 0.3s ease;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            background-image: linear-gradient(135deg, #d9caab, #c3af91);
+        }
+        
+        .table-edit-btn {
+            background-image: linear-gradient(135deg, #bfd8d5, #9dbab8);
+        }
+        
+        .table-edit-btn:hover {
+            background-image: linear-gradient(135deg, #9dbab8, #83a7a5);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 8px rgba(157, 186, 184, 0.2);
+        }
+        
+        .table-delete-btn {
+            background-image: linear-gradient(135deg, #e4c7c7, #d1a3a3);
+        }
+        
+        .table-delete-btn:hover {
+            background-image: linear-gradient(135deg, #d1a3a3, #c28989);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 8px rgba(209, 163, 163, 0.2);
+        }
+        
+        .table-view-btn {
+            background-image: linear-gradient(135deg, #d0d8c0, #b3c69f);
+        }
+        
+        .table-view-btn:hover {
+            background-image: linear-gradient(135deg, #b3c69f, #97aa82);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 8px rgba(179, 198, 159, 0.2);
         }
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const packCards = document.querySelectorAll('.pack-card-clickable');
-            const modal = document.getElementById('packModal');
-            const overlay = document.getElementById('overlay');
-            const closeBtn = document.getElementById('closeModalBtn');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalPrice = document.getElementById('modalPrice');
+document.addEventListener('DOMContentLoaded', function() {
+    // Utility function to debounce events
+    function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    // Sort Buttons
+    document.querySelectorAll('.sort-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            if (this.classList.contains('sort-reset-btn')) return; // Skip reset button
+
+            const sortField = document.getElementById('sortField');
+            const orderField = document.getElementById('orderField');
+            const pageField = document.getElementById('pageField');
+            const currentSort = sortField.value;
+            const currentOrder = orderField.value;
+
+            const newSort = this.dataset.sort;
+            let newOrder = currentOrder;
+
+            if (currentSort === newSort) {
+                newOrder = currentOrder === 'ASC' ? 'DESC' : 'ASC';
+            } else {
+                newOrder = 'ASC';
+            }
+
+            sortField.value = newSort;
+            orderField.value = newOrder;
+            pageField.value = 1; // Reset to page 1 when sorting
+
+            // Update UI
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.classList.remove('active');
+                const icon = btn.querySelector('.sort-icon');
+                if (icon) icon.remove();
+            });
+            
+            this.classList.add('active');
+            const sortIcon = document.createElement('span');
+            sortIcon.className = 'sort-icon';
+            sortIcon.textContent = newOrder === 'ASC' ? '↑' : '↓';
+            this.appendChild(sortIcon);
+
+            document.getElementById('orderToggle').checked = newOrder === 'DESC';
+            document.querySelector('.order-label').textContent = newOrder === 'DESC' ? 'Descendant' : 'Ascendant';
+
+            // Submit the form
+            document.getElementById('filterSortForm').submit();
+        });
+    });
+
+    // Order Toggle (ASC/DESC)
+    document.getElementById('orderToggle').addEventListener('change', function() {
+        const orderField = document.getElementById('orderField');
+        const pageField = document.getElementById('pageField');
+        const order = this.checked ? 'DESC' : 'ASC';
+        
+        orderField.value = order;
+        pageField.value = 1; // Reset to page 1 when changing order
+        
+        document.querySelector('.order-label').textContent = order === 'DESC' ? 'Descendant' : 'Ascendant';
+
+        const activeSortBtn = document.querySelector('.sort-btn.active');
+        if (activeSortBtn) {
+            const icon = activeSortBtn.querySelector('.sort-icon');
+            if (icon) {
+                icon.textContent = order === 'ASC' ? '↑' : '↓';
+            } else {
+                const newIcon = document.createElement('span');
+                newIcon.className = 'sort-icon';
+                newIcon.textContent = order === 'ASC' ? '↑' : '↓';
+                activeSortBtn.appendChild(newIcon);
+            }
+        }
+
+        // Submit the form
+        document.getElementById('filterSortForm').submit();
+    });
+
+    // Modal Functionality
+    const modal = document.getElementById('packModal');
+    const overlay = document.getElementById('overlay');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const closeModalBtnFooter = document.getElementById('closeModalBtnFooter');
+
+    function openModal() {
+        modal.style.display = 'block';
+        overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Animation effect
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            overlay.style.opacity = '1';
+        }, 10);
+    }
+
+    function closeModal() {
+        modal.style.opacity = '0';
+        overlay.style.opacity = '0';
+        
+        setTimeout(() => {
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
+
+    document.querySelectorAll('.pack-card-clickable').forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Skip clicks on buttons
+            if (e.target.closest('.custom-btn-modifier') || 
+                e.target.closest('.custom-btn-supprimer') ||
+                e.target.closest('form')) {
+                return;
+            }
+
+            const name = this.dataset.name;
+            const description = this.dataset.description;
+            const location = this.dataset.location;
+            const type = this.dataset.type;
+            const guests = this.dataset.guests;
+            const price = this.dataset.price;
+            const image = this.dataset.image;
+            const services = this.dataset.services ? this.dataset.services.split(',') : [];
+
+            document.getElementById('modalTitle').textContent = name;
+            document.getElementById('modalDescription').textContent = description;
+            document.getElementById('modalLocation').textContent = location;
+            document.getElementById('modalType').textContent = type;
+            document.getElementById('modalGuests').textContent = guests;
+            document.getElementById('modalPrice').textContent = `${price} dt`;
+
             const modalImage = document.getElementById('modalImage');
             const modalImagePlaceholder = document.getElementById('modalImagePlaceholder');
-            const modalDescription = document.getElementById('modalDescription');
-            const modalLocation = document.getElementById('modalLocation');
-            const modalType = document.getElementById('modalType');
-            const modalGuests = document.getElementById('modalGuests');
-            const modalServices = document.getElementById('modalServices');
+            
+            if (image) {
+                modalImage.src = image;
+                modalImage.style.display = 'block';
+                modalImagePlaceholder.style.display = 'none';
+            } else {
+                modalImage.style.display = 'none';
+                modalImagePlaceholder.style.display = 'flex';
+            }
 
-            packCards.forEach(card => {
-                card.addEventListener('click', (e) => {
-                    if (e.target.closest('.custom-btn-modifier') || e.target.closest('.custom-btn-supprimer') || e.target.closest('.action-form')) {
-                        return;
-                    }
-
-                    modalTitle.textContent = card.getAttribute('data-name') || 'Non défini';
-                    modalPrice.textContent = card.getAttribute('data-price') ? card.getAttribute('data-price') + ' €' : 'N/A';
-                    modalDescription.textContent = card.getAttribute('data-description') || 'Aucune description';
-                    modalLocation.textContent = card.getAttribute('data-location') || 'Non défini';
-                    modalType.textContent = card.getAttribute('data-type') || 'N/A';
-                    modalGuests.textContent = card.getAttribute('data-guests') || '0';
-
-                    const imageUrl = card.getAttribute('data-image');
-                    if (imageUrl) {
-                        modalImage.src = imageUrl;
-                        modalImage.style.display = 'block';
-                        modalImagePlaceholder.style.display = 'none';
-                    } else {
-                        modalImage.style.display = 'none';
-                        modalImagePlaceholder.style.display = 'flex';
-                    }
-
-                    modalServices.innerHTML = '';
-                    const services = card.getAttribute('data-services');
-                    if (services) {
-                        services.split(',').forEach(service => {
-                            if (service.trim()) {
-                                const li = document.createElement('li');
-                                li.textContent = service.trim();
-                                modalServices.appendChild(li);
-                            }
-                        });
-                    } else {
-                        const li = document.createElement('li');
-                        li.textContent = 'Aucun service';
-                        li.classList.add('text-muted');
-                        modalServices.appendChild(li);
-                    }
-
-                    modal.classList.add('active');
-                    overlay.classList.add('active');
+            const servicesList = document.getElementById('modalServices');
+            servicesList.innerHTML = '';
+            
+            if (services.length > 0 && services[0] !== 'Aucun service') {
+                services.forEach(service => {
+                    const li = document.createElement('li');
+                    li.textContent = service;
+                    servicesList.appendChild(li);
                 });
-            });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'Aucun service';
+                li.classList.add('text-muted');
+                servicesList.appendChild(li);
+            }
 
-            closeBtn.addEventListener('click', () => {
-                modal.classList.remove('active');
-                overlay.classList.remove('active');
-            });
-
-            overlay.addEventListener('click', () => {
-                modal.classList.remove('active');
-                overlay.classList.remove('active');
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && modal.classList.contains('active')) {
-                    modal.classList.remove('active');
-                    overlay.classList.remove('active');
-                }
-            });
+            openModal();
         });
-    </script>
+    });
+
+    closeModalBtn.addEventListener('click', closeModal);
+    closeModalBtnFooter.addEventListener('click', closeModal);
+    overlay.addEventListener('click', closeModal);
+
+    // Close modal with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            closeModal();
+        }
+    });
+
+    // Add hover effect to pack cards
+    document.querySelectorAll('.pack-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px)';
+            this.style.boxShadow = '0 15px 35px rgba(1, 163, 164, 0.2)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.08)';
+        });
+    });
+    
+    // View Toggle Functionality
+    const cardsViewBtn = document.getElementById('cardsViewBtn');
+    const tableViewBtn = document.getElementById('tableViewBtn');
+    const cardsView = document.getElementById('cardsView');
+    const tableView = document.getElementById('tableView');
+    
+    // Save view preference to localStorage
+    function saveViewPreference(view) {
+        localStorage.setItem('packViewMode', view);
+    }
+    
+    // Load view preference from localStorage
+    function loadViewPreference() {
+        return localStorage.getItem('packViewMode') || 'cards';
+    }
+    
+    // Set active view based on preference
+    function setActiveView(view) {
+        if (view === 'cards') {
+            cardsView.style.display = 'block';
+            tableView.style.display = 'none';
+            cardsViewBtn.classList.add('active');
+            tableViewBtn.classList.remove('active');
+        } else {
+            cardsView.style.display = 'none';
+            tableView.style.display = 'block';
+            tableViewBtn.classList.add('active');
+            cardsViewBtn.classList.remove('active');
+        }
+    }
+    
+    // Initialize view based on saved preference
+    const savedView = loadViewPreference();
+    setActiveView(savedView);
+    
+    // Handle view toggle clicks
+    cardsViewBtn.addEventListener('click', function() {
+        setActiveView('cards');
+        saveViewPreference('cards');
+    });
+    
+    tableViewBtn.addEventListener('click', function() {
+        setActiveView('table');
+        saveViewPreference('table');
+    });
+    
+    // Enable details modal for table view buttons
+    document.querySelectorAll('.table-view-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const name = this.dataset.name;
+            const description = this.dataset.description;
+            const location = this.dataset.location;
+            const type = this.dataset.type;
+            const guests = this.dataset.guests;
+            const price = this.dataset.price;
+            const image = this.dataset.image;
+            const services = this.dataset.services ? this.dataset.services.split(',') : [];
+    
+            document.getElementById('modalTitle').textContent = name;
+            document.getElementById('modalDescription').textContent = description;
+            document.getElementById('modalLocation').textContent = location;
+            document.getElementById('modalType').textContent = type;
+            document.getElementById('modalGuests').textContent = guests;
+            document.getElementById('modalPrice').textContent = `${price} dt`;
+    
+            const modalImage = document.getElementById('modalImage');
+            const modalImagePlaceholder = document.getElementById('modalImagePlaceholder');
+                
+            if (image) {
+                modalImage.src = image;
+                modalImage.style.display = 'block';
+                modalImagePlaceholder.style.display = 'none';
+            } else {
+                modalImage.style.display = 'none';
+                modalImagePlaceholder.style.display = 'flex';
+            }
+    
+            const servicesList = document.getElementById('modalServices');
+            servicesList.innerHTML = '';
+                
+            if (services.length > 0 && services[0] !== 'Aucun service') {
+                services.forEach(service => {
+                    const li = document.createElement('li');
+                    li.textContent = service;
+                    servicesList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'Aucun service';
+                li.classList.add('text-muted');
+                servicesList.appendChild(li);
+            }
+    
+            openModal();
+        });
+    });
+});
+</script>
 </main>
 {% endblock %}

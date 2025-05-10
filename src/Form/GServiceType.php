@@ -129,14 +129,15 @@ class GServiceType extends AbstractType
                 'label' => 'Image',
                 'required' => false,
                 'mapped' => false, // Géré manuellement dans le contrôleur
+                'data_class' => null,
                 'constraints' => [
                     new Assert\File([
-                        'maxSize' => '2M',
-                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'maxSize' => '1024M', // Changé de 2048M à 1024M (1 Go)
+                        'mimeTypes' => ['image/jpeg', 'image/png','image/PNG'], // Types inchangés pour l'instant
                         'mimeTypesMessage' => 'Veuillez uploader une image valide (JPEG ou PNG).',
                     ]),
                 ],
-                'help' => 'Uploadez une image pour le service (max 2 Mo, formats JPEG ou PNG).',
+                'help' => 'Uploadez une image pour le service (max 1 Go, formats JPEG ou PNG).',
             ]);
     }
 

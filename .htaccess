@@ -1,0 +1,39 @@
+# PHP Upload Limits
+php_value upload_max_filesize 1024M
+php_value post_max_size 1024M
+php_value memory_limit 2048M
+php_value max_execution_time 600
+php_value max_input_time 600
+php_value max_file_uploads 20
+
+# PHP Flags
+php_flag file_uploads On
+
+<IfModule mod_php.c>
+    php_value upload_max_filesize 1024M
+    php_value post_max_size 1024M
+    php_value memory_limit 2048M
+    php_value max_execution_time 600
+    php_value max_input_time 600
+</IfModule>
+
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 1024M
+    php_value post_max_size 1024M
+    php_value memory_limit 2048M
+    php_value max_execution_time 600
+    php_value max_input_time 600
+</IfModule>
+
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 1024M
+    php_value post_max_size 1024M
+    php_value memory_limit 2048M
+    php_value max_execution_time 600
+    php_value max_input_time 600
+</IfModule>
+
+# Increase timeout for large uploads
+<IfModule mod_reqtimeout.c>
+    RequestReadTimeout header=60,MinRate=500 body=600,MinRate=500
+</IfModule> 

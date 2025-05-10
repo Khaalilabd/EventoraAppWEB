@@ -3,43 +3,47 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}Créer une Réservation Personnalisée - Eventora{% endblock %}</title>
+    <title>Create a Personalized Reservation - Eventora</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='%23fff'>sf</text></svg>">
 
     {% block stylesheets %}
-        <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Work+Sans:wght@400;600&family=Sacramento&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/icomoon.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/style1.css') }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <style>
+            /* Reset */
+            * { box-sizing: border-box; }
             body {
-                background-image: url({{ asset('images/img_bg_3.jpg') }});
-                background-size: cover;
-                background-position: center;
-                background-attachment: fixed;
                 min-height: 100vh;
                 margin: 0;
                 padding: 0;
-                position: relative;
+                font-family: 'Inter', sans-serif;
+                overflow-x: hidden;
+                color: #374151;
             }
-            body::before {
-                content: '';
-                position: absolute;
+            body.modal-open { overflow: hidden; }
+            #background-video {
+                position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.4);
+                object-fit: cover;
+                z-index: -2;
+                filter: brightness(0.75); /* Darken video for better contrast */
+            }
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, rgba(90, 24, 154, 0.7), rgba(0, 0, 0, 0.8)); /* Purple gradient overlay */
                 z-index: -1;
             }
             #page {
@@ -47,30 +51,45 @@
                 display: flex;
                 flex-direction: column;
                 padding-top: 70px;
+                animation: fadeIn 0.7s ease-out;
             }
             .fh5co-nav {
                 position: fixed;
                 top: 0;
                 width: 100%;
                 z-index: 1000;
-                background: rgba(255, 255, 255, 0.9);
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                background: rgba(15, 23, 42, 0.85);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
                 backdrop-filter: blur(10px);
             }
             .fh5co-nav .container {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 10px 15px;
+                padding: 12px 20px;
                 max-width: 1200px;
                 margin: 0 auto;
             }
             .fh5co-logo a {
                 font-family: 'Work Sans', sans-serif;
                 font-weight: 700;
-                font-size: 24px;
-                color: #934D1A;
+                font-size: 26px;
+                color: #f3f4f6;
                 text-decoration: none;
+                position: relative;
+                overflow: hidden;
+                display: inline-block;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            .fh5co-logo a:hover::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #9333ea;
+                animation: slideInFromLeft 0.3s forwards;
             }
             .user-circle {
                 display: inline-block;
@@ -79,11 +98,15 @@
                 line-height: 40px;
                 text-align: center;
                 border-radius: 50%;
-                background-color: #f0f0f0;
-                color: #333;
+                background-color: #4c1d95;
+                color: #fff;
                 font-size: 20px;
-                vertical-align: middle;
                 margin-right: 8px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                transition: transform 0.3s ease;
+            }
+            .user-circle:hover {
+                transform: scale(1.05);
             }
             .user-circle img {
                 width: 100%;
@@ -101,199 +124,822 @@
             }
             .fh5co-nav .menu-1 ul li {
                 margin: 0 15px;
+                position: relative;
             }
             .fh5co-nav .menu-1 ul li a {
                 font-family: 'Work Sans', sans-serif;
-                font-size: 16px;
-                color: #333;
+                font-size: 15px;
+                color: #e5e7eb;
                 text-transform: uppercase;
                 text-decoration: none;
-                transition: color 0.3s ease;
+                transition: all 0.3s ease;
+                position: relative;
+                display: inline-block;
+                padding: 5px 0;
+                letter-spacing: 0.5px;
+                font-weight: 500;
             }
-            .fh5co-nav .menu-1 ul li a:hover {
-                color: #934D1A;
+            .fh5co-nav .menu-1 ul li a:hover { 
+                color: #a855f7;
+                transform: translateY(-2px);
             }
-            .fh5co-nav .menu-1 ul li.active a {
-                color: #934D1A;
-                font-weight: 600;
+            .fh5co-nav .menu-1 ul li a::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: #a855f7;
+                transition: width 0.3s ease;
+            }
+            .fh5co-nav .menu-1 ul li a:hover::after {
+                width: 100%;
+            }
+            .fh5co-nav .menu-1 ul li.active a { 
+                color: #a855f7; 
+                font-weight: 600; 
+            }
+            .fh5co-nav .menu-1 ul li.active a::after {
+                width: 100%;
+                background-color: #a855f7;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
                 display: none;
                 position: absolute;
                 top: 100%;
                 right: 0;
-                background-color: #fff;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                background-color: rgba(15, 23, 42, 0.95);
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
                 list-style: none;
                 padding: 10px 0;
                 min-width: 180px;
                 z-index: 1001;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+                transform: translateY(10px);
+                border-radius: 8px;
+                border-top: 2px solid #9333ea;
             }
             .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
                 display: block;
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
             }
             .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
                 padding: 10px 20px;
                 font-size: 14px;
                 text-transform: none;
-                color: #333;
+                color: #e5e7eb;
+                display: block;
+                font-weight: 400;
             }
-            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                color: #007bff;
-                background-color: #f8f9fa;
+            .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover { 
+                color: #a855f7;
+                background-color: rgba(147, 51, 234, 0.1);
             }
             .menu-toggle {
                 display: none;
                 font-size: 24px;
                 cursor: pointer;
-                color: #333;
+                color: #934D1A;
                 padding: 10px;
             }
             .event-wrap {
-                background: rgba(255, 255, 255, 0.9);
+                background: #fff;
                 padding: 40px;
-                border-radius: 12px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-                max-width: 700px;
-                margin: 0 auto;
+                border-radius: 16px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+                max-width: 1000px;
+                margin: 40px auto;
+                position: relative;
+                overflow: hidden;
+                animation: fadeIn 0.5s ease-in-out;
+                z-index: 2;
+                border-top: 4px solid #9333ea;
+            }
+            .event-wrap::before {
+                content: '';
+                position: absolute;
+                top: -50px;
+                right: -50px;
+                width: 150px;
+                height: 150px;
+                background: rgba(168, 85, 247, 0.05);
+                border-radius: 50%;
+            }
+            .event-wrap::after {
+                content: '';
+                position: absolute;
+                bottom: -50px;
+                left: -50px;
+                width: 150px;
+                height: 150px;
+                background: rgba(168, 85, 247, 0.05);
+                border-radius: 50%;
             }
             .event-wrap h3 {
-                color: #333;
+                color: #6d28d9;
                 margin-bottom: 30px;
-                font-size: 24px;
-                text-transform: uppercase;
+                font-size: 26px;
+                font-weight: 700;
                 text-align: center;
+                position: relative;
+                padding-bottom: 15px;
+                letter-spacing: 0.5px;
             }
-            .event-wrap .form-group {
+            .event-wrap h3::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background: linear-gradient(90deg, #7c3aed, #a855f7);
+            }
+            .form-container {
+                display: flex;
+                gap: 30px;
+            }
+            .form-column {
+                flex: 1;
+                min-width: 0;
+            }
+            .form-group {
                 margin-bottom: 20px;
+                position: relative;
             }
-            .event-wrap .form-group label {
-                color: #333;
-                font-weight: 500;
+            .form-group label {
+                color: #4f46e5;
+                font-weight: 600;
+                font-size: 14px;
                 margin-bottom: 8px;
                 display: block;
+                transition: transform 0.3s ease, color 0.3s ease;
+                letter-spacing: 0.5px;
             }
-            .event-wrap .form-control {
-                background: #fff;
-                border: 1px solid #ced4da;
-                color: #333;
-                border-radius: 6px;
-                padding: 12px;
-                font-size: 16px;
-                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            .form-group:focus-within label {
+                color: #6d28d9;
+                transform: translateY(-2px);
             }
-            .event-wrap .form-control::placeholder {
-                color: #6c757d;
+            .form-group textarea.form-control {
+                min-height: 130px;
+                resize: vertical;
             }
-            .event-wrap .form-control:focus {
-                border-color: #007bff;
-                box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            .form-control {
+                background: #f9fafb;
+                border: 1px solid #ddd6fe;
+                color: #4b5563;
+                border-radius: 10px;
+                padding: 14px 16px;
+                font-size: 15px;
+                transition: all 0.3s ease;
+                width: 100%;
+                pointer-events: auto;
+                user-select: text;
+                height: 50px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            }
+            .form-control::placeholder { 
+                color: #9ca3af; 
+                opacity: 0.6;
+            }
+            .form-control:focus {
+                border-color: #8b5cf6;
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
                 outline: none;
+                background: #fff;
+                transform: translateY(-2px);
             }
-            .event-wrap .form-control.is-invalid {
-                border-color: #dc3545;
+            .form-control.is-invalid {
+                border-color: #ef4444;
+                background: #fef2f2;
+                box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
             }
-            .event-wrap .btn {
-                margin-top: 10px;
-                padding: 12px;
-                border-radius: 6px;
+            .btn {
+                padding: 14px 24px;
+                border-radius: 10px;
                 font-size: 16px;
-                font-weight: 500;
-                transition: background-color 0.3s ease, transform 0.2s ease;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                width: 100%;
+                margin-top: 10px;
+                position: relative;
+                overflow: hidden;
+                letter-spacing: 0.5px;
             }
-            .event-wrap .btn-primary {
-                background-color: #007bff;
-                border-color: #007bff;
+            .btn::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 5px;
+                height: 5px;
+                background: rgba(255, 255, 255, 0.3);
+                opacity: 0;
+                border-radius: 100%;
+                transform: scale(1, 1) translate(-50%);
+                transform-origin: 50% 50%;
             }
-            .event-wrap .btn-primary:hover {
-                background-color: #0056b3;
-                border-color: #0056b3;
-                transform: translateY(-2px);
+            .btn:focus:not(:active)::after {
+                animation: ripple 1s ease-out;
             }
-            .event-wrap .btn-secondary {
-                background-color: #6c757d;
-                border-color: #6c757d;
+            .btn-primary {
+                background: linear-gradient(135deg, #6d28d9, #9333ea);
+                border: none;
+                color: #ffffff;
+                box-shadow: 0 5px 15px rgba(147, 51, 234, 0.3);
             }
-            .event-wrap .btn-secondary:hover {
-                background-color: #545b62;
-                border-color: #545b62;
-                transform: translateY(-2px);
+            .btn-primary:hover {
+                background: linear-gradient(135deg, #5b21b6, #7e22ce);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
             }
-            .event-wrap .btn-info {
-                background-color: #17a2b8;
-                border-color: #17a2b8;
+            .btn-secondary {
+                background: #f9fafb;
+                border: 1px solid #8b5cf6;
+                color: #6d28d9;
             }
-            .event-wrap .btn-info:hover {
-                background-color: #138496;
-                border-color: #138496;
-                transform: translateY(-2px);
+            .btn-secondary:hover {
+                background: rgba(124, 58, 237, 0.05);
+                color: #6d28d9;
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(124, 58, 237, 0.15);
             }
-            .event-wrap .btn:disabled {
+            .btn-info {
+                background: linear-gradient(135deg, #1e40af, #4f46e5);
+                border: none;
+                color: #ffffff;
+                padding: 14px;
+                font-size: 16px;
+                box-shadow: 0 5px 15px rgba(79, 70, 229, 0.25);
+            }
+            .btn-info:hover {
+                background: linear-gradient(135deg, #1e3a8a, #3730a3);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+            }
+            .btn:disabled {
                 cursor: not-allowed;
                 opacity: 0.65;
             }
-            .event-wrap .checkbox-container {
-                max-height: 200px;
-                overflow-y: auto;
-                padding: 10px;
-                background: #f8f9fa;
-                border-radius: 6px;
-            }
-            .event-wrap .form-check-label {
-                color: #333;
-                margin-left: 10px;
-            }
-            .event-wrap .form-check-input {
-                transform: scale(1.5);
-            }
-            #fh5co-footer {
-                background: rgba(255, 255, 255, 0.95);
-                padding: 20px 0;
-                margin-top: auto;
-            }
-            #fh5co-event {
-                margin-top: 60px;
-                flex: 1 0 auto;
-                padding-top: 50px;
-            }
-            .fh5co-heading {
-                margin-bottom: 40px;
-            }
-            .fh5co-heading span {
-                color: #fff;
-                font-size: 18px;
-                display: block;
-                margin-bottom: 10px;
-            }
-            .fh5co-heading h2 {
-                color: #fff;
-                font-size: 36px;
-                margin: 0;
-            }
-            .text-danger {
+            .form-error, .text-danger {
+                color: #DC2626;
                 font-size: 14px;
-                margin-top: 5px;
-                color: #dc3545;
+                margin-top: 6px;
                 display: block;
+                padding-left: 5px;
+                border-left: 2px solid #DC2626;
+                background: rgba(254, 202, 202, 0.1);
+                padding: 5px 8px;
+                border-radius: 4px;
             }
             .loading-spinner {
                 display: none;
-                border: 4px solid #f3f3f3;
-                border-top: 4px solid #007bff;
+                border: 4px solid #E5E7EB;
+                border-top: 4px solid #934D1A;
                 border-radius: 50%;
                 width: 24px;
                 height: 24px;
                 animation: spin 1s linear infinite;
-                margin: 10px auto;
+                margin: 20px auto;
+            }
+            #fh5co-event {
+                flex: 1 0 auto;
+                padding: 40px 0;
+            }
+            .fh5co-heading {
+                margin-bottom: 40px;
+                text-align: center;
+                animation: fadeIn 0.7s ease-out;
+            }
+            .fh5co-heading span {
+                color: #C78741;
+                font-family: 'Sacramento', cursive;
+                font-size: 28px;
+                display: block;
+                margin-bottom: 10px;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+            .fh5co-heading h2 {
+                color: #FFFFFF;
+                font-size: 38px;
+                font-weight: 700;
+                margin: 0;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            #fh5co-footer {
+                background: #0f172a;
+                padding: 25px 0;
+                margin-top: auto;
+                position: relative;
+                z-index: 2;
+                border-top: 1px solid rgba(147, 51, 234, 0.3);
+            }
+            #fh5co-footer p {
+                color: #e5e7eb;
+                font-size: 14px;
+                text-align: center;
+                margin: 0;
+            }
+            #fh5co-footer a {
+                color: #c4b5fd;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+            #fh5co-footer a:hover { 
+                text-decoration: underline;
+                color: #a5b4fc;
+            }
+            
+            /* Service selection and display */
+            .service-button {
+                background: linear-gradient(135deg, #6d28d9, #9333ea) !important;
+                color: white !important;
+                font-weight: 600;
+                padding: 14px 24px;
+                border: none;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+                margin-bottom: 15px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                box-shadow: 0 5px 15px rgba(147, 51, 234, 0.25);
+                width: 100%;
+                max-width: 250px;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .service-button:hover {
+                background: linear-gradient(135deg, #5b21b6, #7e22ce) !important;
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+            }
+            
+            .service-button::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+                z-index: 1;
+            }
+            
+            .service-button i {
+                font-size: 18px;
+                z-index: 2;
+            }
+            
+            .service-button span {
+                z-index: 2;
+            }
+            
+            .selected-services-container {
+                margin-top: 20px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(147, 51, 234, 0.15);
+                transition: all 0.3s ease;
+                backdrop-filter: blur(5px);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .selected-services-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(168, 85, 247, 0.02));
+                z-index: -1;
+            }
+            
+            .selected-services-container:hover {
+                box-shadow: 0 6px 20px rgba(147, 51, 234, 0.2);
+                transform: translateY(-2px);
+            }
+            
+            .selected-services {
+                max-height: 250px;
+                overflow-y: auto;
+                scrollbar-width: thin;
+                scrollbar-color: #8b5cf6 #f3f4f6;
+            }
+            
+            .selected-services::-webkit-scrollbar {
+                width: 5px;
+            }
+            
+            .selected-services::-webkit-scrollbar-track {
+                background: #f3f4f6;
+                border-radius: 10px;
+            }
+            
+            .selected-services::-webkit-scrollbar-thumb {
+                background: #8b5cf6;
+                border-radius: 10px;
+            }
+            
+            #selected-services-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            #selected-services-list li {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 14px 18px;
+                background: white;
+                margin-bottom: 10px;
+                border-radius: 10px;
+                font-weight: 500;
+                border-left: 4px solid #7c3aed;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+                transition: all 0.3s ease;
+                color: #4b5563;
+            }
+            
+            #selected-services-list li:hover {
+                transform: translateX(5px);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+                background: #f9fafb;
+            }
+            
+            #selected-services-list li .service-name {
+                font-weight: 500;
+                color: #4b5563;
+                font-size: 15px;
+                flex: 1;
+            }
+            
+            .remove-service {
+                color: #ef4444;
+                font-size: 22px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                background: rgba(239, 68, 68, 0.1);
+                margin-left: 10px;
+            }
+            
+            .remove-service:hover {
+                transform: scale(1.1) rotate(90deg);
+                background: rgba(239, 68, 68, 0.15);
+                color: #dc2626;
+            }
+            
+            .services-empty-state {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 120px;
+                text-align: center;
+                color: #9ca3af;
+                font-style: italic;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 10px;
+                padding: 25px;
+            }
+            
+            .services-empty-state i {
+                font-size: 28px;
+                color: #8b5cf6;
+                margin-bottom: 12px;
+                opacity: 0.7;
+            }
+            
+            /* Service details modal styling */
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(15, 23, 42, 0.8);
+                z-index: 1000;
+                justify-content: center;
+                align-items: center;
+                overflow: auto;
+                padding: 20px;
+                backdrop-filter: blur(6px);
+            }
+            
+            .modal-content {
+                background: #ffffff;
+                border-radius: 16px;
+                width: 90%;
+                max-width: 600px;
+                max-height: 85vh;
+                padding: 25px;
+                position: relative;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+                animation: slideInUp 0.4s ease-out;
+                overflow-y: auto;
+                border: none;
+            }
+            
+            .modal-content h4, .modal-content h3 {
+                color: white;
+                font-size: 20px;
+                font-weight: 600;
+                text-align: center;
+                margin-bottom: 25px;
+                letter-spacing: 0.5px;
+            }
+            
+            .modal-content .close-modal {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                font-size: 22px;
+                color: white;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                z-index: 10;
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+            
+            .modal-content .close-modal:hover { 
+                color: #fff; 
+                background: rgba(239, 68, 68, 0.15);
+                transform: rotate(90deg);
+            }
+            
+            .services-columns {
+                display: flex;
+                flex-direction: column;
+                max-height: 450px;
+                overflow-y: auto;
+                padding: 15px;
+                background: #f9fafb;
+                border-radius: 12px;
+                scrollbar-width: thin;
+                scrollbar-color: #8b5cf6 #f3f4f6;
+                margin-bottom: 20px;
+                box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.06);
+            }
+            
+            .services-columns::-webkit-scrollbar {
+                width: 6px;
+            }
+            
+            .services-columns::-webkit-scrollbar-track {
+                background: #f3f4f6;
+                border-radius: 10px;
+            }
+            
+            .services-columns::-webkit-scrollbar-thumb {
+                background: #8b5cf6;
+                border-radius: 10px;
+            }
+            
+            .services-column {
+                width: 100%;
+            }
+            
+            .services-column .form-check {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                padding: 16px;
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                margin-bottom: 12px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            }
+            
+            .services-column .form-check:hover {
+                background: #f9fafb;
+                transform: translateX(4px);
+                border-color: #8b5cf6;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+            }
+            
+            .services-column .form-check .checkbox-label-container {
+                display: flex;
+                align-items: center;
+                flex: 1;
+                margin-right: 15px;
+            }
+            
+            .services-column .form-check-input {
+                margin-right: 15px;
+                cursor: pointer;
+                accent-color: #7c3aed;
+                width: 20px;
+                height: 20px;
+                transition: all 0.2s ease;
+            }
+            
+            .services-column .form-check-input:checked {
+                background-color: #7c3aed;
+                border-color: #7c3aed;
+                box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+            }
+            
+            .services-column .form-check-label {
+                color: #4b5563;
+                font-size: 16px;
+                font-weight: 500;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 1.4;
+            }
+            
+            .view-service-details {
+                min-width: 110px;
+                padding: 10px 15px !important;
+                border-radius: 8px;
+                border: none;
+                background-color: #7c3aed !important;
+                color: white !important;
+                font-size: 14px !important;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                text-align: center;
+                box-shadow: 0 3px 8px rgba(124, 58, 237, 0.2);
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+            }
+            
+            .view-service-details:hover {
+                background-color: #6d28d9 !important;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
+            }
+            
+            .modal-content .modal-actions {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+                margin-top: 25px;
+            }
+            
+            .btn-modal {
+                padding: 14px 25px;
+                border-radius: 10px;
+                font-size: 15px;
+                font-weight: 600;
+                cursor: pointer;
+                border: none;
+                min-width: 130px;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .btn-modal-confirm {
+                background: linear-gradient(135deg, #6d28d9, #9333ea);
+                color: #ffffff;
+            }
+            
+            .btn-modal-confirm:hover {
+                background: linear-gradient(135deg, #5b21b6, #7e22ce);
+                transform: translateY(-3px);
+                box-shadow: 0 6px 18px rgba(124, 58, 237, 0.3);
+            }
+            
+            .btn-modal-cancel {
+                background: #f3f4f6;
+                color: #4b5563;
+            }
+            
+            .btn-modal-cancel:hover {
+                background: #e5e7eb;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            }
+            
+            #service-details-modal .modal-content { 
+                max-width: 550px; 
+            }
+            
+            #service-details-modal h4 {
+                background-color: #6d28d9; 
+                color: white; 
+                padding: 16px 0; 
+                margin: -25px -25px 25px -25px; 
+                border-radius: 16px 16px 0 0; 
+                font-size: 18px;
+            }
+            
+            #service-details-modal .service-details-content { 
+                color: #4b5563; 
+                font-size: 16px;
+                background: #f9fafb;
+                padding: 25px;
+                border-radius: 12px;
+                line-height: 1.6;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+                margin-bottom: 20px;
+                border-left: 4px solid #7c3aed;
+            }
+            
+            #service-details-modal .service-details-content p { 
+                margin: 16px 0; 
+            }
+            
+            #service-details-modal .service-details-content strong {
+                color: #6d28d9;
+                font-weight: 600;
+                font-size: 16px;
+            }
+            
+            #service-details-modal .service-details-content img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 10px;
+                margin: 20px auto;
+                display: block;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                transition: transform 0.3s ease;
+                border: 3px solid white;
+            }
+            
+            #service-details-modal .service-details-content img:hover {
+                transform: scale(1.03);
+                box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+            }
+            
+            /* Animation for modals */
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
             @keyframes spin {
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
             }
-            @media (max-width: 768px) {
-                .menu-toggle {
-                    display: block;
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideInFromLeft {
+                from { width: 0; }
+                to { width: 100%; }
+            }
+            @keyframes ripple {
+                0% {
+                    transform: scale(0, 0);
+                    opacity: 1;
                 }
+                20% {
+                    transform: scale(25, 25);
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(40, 40);
+                }
+            }
+            @media (max-width: 768px) {
+                .menu-toggle { display: block; }
                 .fh5co-nav .menu-1 ul {
                     display: none;
                     flex-direction: column;
@@ -302,350 +948,885 @@
                     left: 0;
                     width: 100%;
                     background-color: #fff;
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                     padding: 20px 0;
                 }
-                .fh5co-nav .menu-1 ul.active {
-                    display: flex;
+                .fh5co-nav .menu-1 ul.active { display: flex; }
+                .fh5co-nav .menu-1 ul li { margin: 10px 0; text-align: center; }
+                .user-circle { margin-right: 0; margin-bottom: 5px; }
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    position: static;
+                    display: none;
+                    box-shadow: none;
+                    background-color: #f8f9fa;
+                    padding: 10px 0;
+                    opacity: 1;
+                    visibility: visible;
                 }
-                .fh5co-nav .menu-1 ul li {
-                    margin: 10px 0;
-                    text-align: center;
-                }
-                .user-circle {
-                    margin: 0 auto 5px;
-                }
-                .event-wrap {
-                    max-width: 90%;
-                    padding: 25px;
-                }
-                .fh5co-heading h2 {
-                    font-size: 28px;
-                }
-                #fh5co-event {
-                    padding-top: 30px;
-                }
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown { display: none; }
+                .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown { display: block; }
+                .event-wrap { max-width: 90%; padding: 24px; }
+                .form-container { flex-direction: column; gap: 20px; }
+                .fh5co-heading h2 { font-size: 28px; }
+                .fh5co-heading span { font-size: 20px; }
+                .btn { font-size: 14px; padding: 10px; }
+                .event-wrap h3 { font-size: 20px; }
+                .services-columns { flex-direction: column; gap: 10px; }
+                .services-column .form-check { flex-direction: column; align-items: flex-start; gap: 8px; }
+                .services-column .form-check .checkbox-label-container { max-width: 100%; }
+            }
+            @media (max-width: 480px) {
+                .fh5co-heading h2 { font-size: 24px; }
+                .fh5co-heading span { font-size: 18px; }
+                .event-wrap { padding: 20px; }
+                .form-control { font-size: 14px; padding: 10px; }
+                .modal-content { width: 95%; padding: 15px; }
+                .modal-content h4 { font-size: 18px; }
+            }
+            
+            /* Calendar Preview Styles */
+            .calendar-card {
+                background-color: white;
+                border-radius: 12px;
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                border: 1px solid rgba(147, 77, 26, 0.2);
+                transition: all 0.3s ease;
+                animation: fadeIn 0.5s ease-out;
+            }
+            
+            .calendar-card:hover {
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+                transform: translateY(-3px);
+            }
+            
+            .calendar-header {
+                background: linear-gradient(135deg, #934D1A, #CAB69A);
+                color: white;
+                padding: 15px;
+                font-weight: 600;
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .calendar-body {
+                padding: 15px;
+            }
+            
+            .calendar-detail {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 12px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+            
+            .calendar-detail:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+            }
+            
+            .calendar-detail i {
+                color: #934D1A;
+                width: 20px;
+                text-align: center;
             }
         </style>
     {% endblock %}
+    <script src="{{ asset('js/modernizr-2.6.2.min.js') }}"></script>
 </head>
 <body>
-<div id="page">
-    <nav class="fh5co-nav" role="navigation">
-        <div class="container">
-            <div class="fh5co-logo">
-                <a href="{{ path('app_home') }}">Eventora</a>
-            </div>
-            <div class="menu-toggle">
-                <i class="fas fa-bars"></i>
-            </div>
-            <div class="menu-1">
-                <ul>
-                    <li><a href="{{ path('app_home') }}">Home</a></li>
-                    <li class="has-dropdown">
-                        <a href="#">Réservation</a>
-                        <ul class="dropdown">
-                            <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Réservation personnalisée</a></li>
-                            <li><a href="{{ path('user_reservation_pack_new') }}">Réservation Pack</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="{{ path('user_packs') }}">Packs</a></li>
-                    <li class="has-dropdown">
-                        <a href="#">Services</a>
-                        <ul class="dropdown">
-                            <li><a href="{{ path('user_services') }}">Service</a></li>
-                            <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="{{ path('app_reclamation_new') }}">Réclamation</a></li>
-                    <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                    <li><a href="#">Talk with Evi</a></li>
-                    <li class="has-dropdown">
-                        <a href="#">
-                            <span class="user-circle">
-                                {% if app.user and app.user.image %}
-                                    <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                {% else %}
-                                    <i class="fas fa-user"></i>
-                                {% endif %}
-                            </span>
-                            Contact
-                        </a>
-                        <ul class="dropdown">
-                            {% if app.user %}
-                                <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                <li><a href="{{ path('app_user_history') }}">Historique</a></li>
-                                {% if is_granted('ROLE_ADMIN') %}
-                                    <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                {% endif %}
-                                <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                            {% else %}
-                                <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <video id="background-video" autoplay loop muted playsinline>
+        <source src="{{ asset('images/reservation2.mp4') }}" type="video/mp4">
+        Your browser does not support the video.
+    </video>
 
-    <div id="fh5co-event">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                    <span>Votre Événement Unique</span>
-                    <h2>Créer une Réservation Personnalisée</h2>
+    <div id="page">
+            <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown active">
+                            <a href="#">Reservation</a>
+                            <ul class="dropdown">
+                                <li class="active"><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
+                            </ul>
+                        </li>
+                                <li class="has-dropdown">
+                                <a href="#">Packs</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
+                                    {% if not is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Log out</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Sign up</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="row">
-                <div class="display-t">
-                    <div class="display-tc">
-                        <div class="col-md-10 col-md-offset-1">
-                            <div class="col-md-8 col-md-offset-2 text-center">
-                                <div class="event-wrap animate-box">
-                                    <h3>Remplissez le Formulaire</h3>
-                                    {{ form_start(form, {'attr': {'class': 'form', 'id': 'personnalise-reservation-form'}}) }}
-                                        {% if form_errors(form) %}
-                                            <div class="alert alert-danger">
-                                                {{ form_errors(form) }}
+        </nav>
+        <div id="fh5co-event">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
+                        <span>Your Unique Event</span>
+                        <h2>Create a Personalized Reservation</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="event-wrap animate-box">
+                            <h3>Reservation Information</h3>
+                            {% if form is defined %}
+                                {{ form_start(form, {'attr': {'class': 'form', 'id': 'personalized-reservation-form', 'novalidate': 'novalidate'}}) }}
+                                    {% if form_errors(form) %}
+                                        <div class="form-error">{{ form_errors(form) }}</div>
+                                    {% endif %}
+                                    <div class="form-container">
+                                        <div class="form-column">
+                                            <div class="form-group">
+                                                {{ form_label(form.nom, 'Last Name') }}
+                                                {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'placeholder': 'Your last name'}}) }}
+                                                <div class="form-error">{{ form_errors(form.nom) }}</div>
                                             </div>
-                                        {% endif %}
-
-                                        <div class="form-group">
-                                            {{ form_label(form.nom, 'Nom', {'label_attr': {'for': form.nom.vars.id}}) }}
-                                            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'id': form.nom.vars.id}}) }}
-                                            <div class="text-danger">{{ form_errors(form.nom) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.prenom, 'Prénom', {'label_attr': {'for': form.prenom.vars.id}}) }}
-                                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'id': form.prenom.vars.id}}) }}
-                                            <div class="text-danger">{{ form_errors(form.prenom) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.email, 'Email', {'label_attr': {'for': form.email.vars.id}}) }}
-                                            {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email', 'maxlength': '255', 'id': form.email.vars.id}}) }}
-                                            <div class="text-danger">{{ form_errors(form.email) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.numtel, 'Numéro de téléphone', {'label_attr': {'for': form.numtel.vars.id}}) }}
-                                            {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '8', 'pattern': '[0-9]{8}', 'placeholder': '12345678', 'id': form.numtel.vars.id}}) }}
-                                            {{ form_help(form.numtel) }}
-                                            <div class="text-danger">{{ form_errors(form.numtel) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.description, 'Description de l\'événement', {'label_attr': {'for': form.description.vars.id}}) }}
-                                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5', 'id': form.description.vars.id}}) }}
-                                            <div class="text-danger">{{ form_errors(form.description) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.date, 'Date de l\'événement', {'label_attr': {'for': form.date.vars.id}}) }}
-                                            {{ form_widget(form.date, {'attr': {'class': 'form-control', 'required': 'required', 'id': form.date.vars.id}}) }}
-                                            <div class="text-danger">{{ form_errors(form.date) }}</div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.services, 'Sélectionnez les Services', {'label_attr': {'for': form.services.vars.id}}) }}
-                                            <div class="checkbox-container">
-                                                {{ form_widget(form.services, {'attr': {'class': 'form-check-input'}}) }}
+                                            <div class="form-group">
+                                                {{ form_label(form.prenom, 'First Name') }}
+                                                {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '255', 'placeholder': 'Your first name'}}) }}
+                                                <div class="form-error">{{ form_errors(form.prenom) }}</div>
                                             </div>
-                                            <div class="text-danger">{{ form_errors(form.services) }}</div>
+                                            <div class="form-group">
+                                                {{ form_label(form.email, 'Email') }}
+                                                {{ form_widget(form.email, {'attr': {'class': 'form-control', 'required': 'required', 'type': 'email', 'maxlength': '255', 'placeholder': 'your@email.com'}}) }}
+                                                <div class="form-error">{{ form_errors(form.email) }}</div>
+                                            </div>
+                                            <div class="form-group">
+                                                {{ form_label(form.numtel, 'Phone Number') }}
+                                                {{ form_widget(form.numtel, {'attr': {'class': 'form-control', 'required': 'required', 'maxlength': '8', 'pattern': '[0-9]{8}', 'placeholder': '12345678'}}) }}
+                                                <div class="form-error">{{ form_errors(form.numtel) }}</div>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-primary btn-block">Créer la Réservation</button>
-                                            <a href="{{ path('app_home') }}" class="btn btn-secondary btn-block">Retour</a>
-                                            <a href="{{ path('google_auth') }}" class="btn btn-info btn-block">Ajouter au Google Calendar</a>
-                                            <div class="loading-spinner"></div>
+                                        <div class="form-column">
+                                            <div class="form-group">
+                                                {{ form_label(form.description, 'Event Description') }}
+                                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Details of your event'}}) }}
+                                                <div class="form-error">{{ form_errors(form.description) }}</div>
+                                            </div>
+                                            <div class="form-group">
+                                                {{ form_label(form.date, 'Event Date') }}
+                                                {{ form_widget(form.date, {'attr': {'class': 'form-control flatpickr', 'required': 'required', 'placeholder': 'Select a date'}}) }}
+                                                <div class="form-error">{{ form_errors(form.date) }}</div>
+                                            </div>
+                                            
+                                            <!-- Calendar Preview -->
+                                            <div id="calendar-preview" class="form-group" style="display: none; margin-top: 20px;">
+                                                <h4>Reservation Preview</h4>
+                                                <div class="calendar-card">
+                                                    <div class="calendar-header">
+                                                        <i class="fa fa-calendar"></i> 
+                                                        <span id="preview-date"></span>
+                                                    </div>
+                                                    <div class="calendar-body">
+                                                        <div class="calendar-detail">
+                                                            <i class="fa fa-user"></i> 
+                                                            <span id="preview-name"></span>
+                                                        </div>
+                                                        <div class="calendar-detail">
+                                                            <i class="fa fa-envelope"></i> 
+                                                            <span id="preview-email"></span>
+                                                        </div>
+                                                        <div class="calendar-detail">
+                                                            <i class="fa fa-phone"></i> 
+                                                            <span id="preview-phone"></span>
+                                                        </div>
+                                                        <div class="calendar-detail">
+                                                            <i class="fa fa-list"></i> 
+                                                            <span id="preview-services">No services selected yet</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                {{ form_label(form.services, 'Select Services') }}
+                                                <button type="button" class="btn btn-secondary service-button" id="open-services-modal">
+                                                    <i class="fas fa-list-check"></i> Choose Services
+                                                </button>
+                                                <div class="selected-services-container">
+                                                    <div class="selected-services">
+                                                        <ul id="selected-services-list"></ul>
+                                                    </div>
+                                                    <div class="services-empty-state" id="services-empty-state">
+                                                        <i class="fas fa-clipboard-list"></i>
+                                                        <p>No services selected yet. Click the button above to choose services.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-error" id="services-error">{{ form_errors(form.services) }}</div>
+                                                <div class="services-hidden" style="display: none;">
+                                                    {{ form_widget(form.services, {'attr': {'class': 'form-check-input'}}) }}
+                                                </div>
+                                            </div>
                                         </div>
-                                    {{ form_end(form) }}
+                                    </div>
+                                    <div class="form-group d-flex gap-3 flex-wrap justify-content-center">
+                                        <button type="submit" class="btn btn-primary">Create Reservation</button>
+                                        <a href="{{ path('app_home') }}" class="btn btn-secondary">Back</a>
+                                        <a href="{{ path('google_auth', {'return_to': 'user_reservation_personnalise_new'}) }}" class="btn btn-info">Add to Google Calendar</a>
+                                        <div class="loading-spinner" style="display: none;"></div>
+                                    </div>
+                                {{ form_end(form) }}
+                            {% else %}
+                                <div class="form-error text-danger">
+                                    Error: The form is not defined. Please check the controller.
                                 </div>
-                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="modal-overlay" id="services-modal">
+            <div class="modal-content">
+                <span class="close-modal" id="close-services-modal">×</span>
+                <h4 style="background-color: #6d28d9; color: white; padding: 16px 0; margin: -25px -25px 25px -25px; border-radius: 16px 16px 0 0; font-size: 18px;">Choose Your Services</h4>
+                
+                <!-- Search input for services -->
+                <div class="service-search-container" style="margin-bottom: 20px; position: relative;">
+                    <div class="input-group" style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); border-radius: 10px; overflow: hidden;">
+                        <span class="input-group-text" style="background: linear-gradient(135deg, #6d28d9, #9333ea); border: none; color: white; padding-left: 15px; padding-right: 15px;">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" id="service-search-input" class="form-control" placeholder="Search services..." style="border: none; padding: 12px 15px; font-size: 0.95rem;">
+                        <button type="button" id="clear-service-search" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #6c757d; cursor: pointer; display: none; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; z-index: 5;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="no-services-found" style="display: none; margin-top: 10px; padding: 8px 12px; background-color: #fff3cd; color: #856404; border-radius: 8px; font-size: 0.9rem; text-align: center;">
+                        <i class="fas fa-info-circle me-2"></i> No services match your search
+                    </div>
+                </div>
+                
+                <div class="services-columns">
+                    <div class="services-column" id="services-column-container"></div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-modal btn-modal-confirm" id="confirm-services">
+                        <i class="fas fa-check"></i> Confirm Selection
+                    </button>
+                    <button class="btn-modal btn-modal-cancel" id="cancel-services">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="service-details-modal">
+            <div class="modal-content">
+                <span class="close-modal" id="close-service-details-modal">×</span>
+                <h4 style="background-color: #6d28d9; color: white; padding: 16px 0; margin: -25px -25px 25px -25px; border-radius: 16px 16px 0 0; font-size: 18px;">Service Details</h4>
+                <div class="service-details-content" id="service-details-content"></div>
+                <div class="modal-actions">
+                    <button class="btn-modal btn-modal-confirm" id="close-service-details">
+                        <i class="fas fa-check"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer id="fh5co-footer" role="contentinfo">
+            <div class="container">
+                <div class="row copyright">
+                    <div class="col-md-12 text-center">
+                        <p>
+                            <small class="block">© 2025 Eventora. All Rights Reserved.</small>
+                            <small class="block">Designed by <a href="http://freehtml5.co/" target="_blank">FREEHTML5.co</a></small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
+    {% block javascripts %}
+        <script src="{{ asset('js/jquery.min.js') }}"></script>
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            $(document).ready(function() {
+                // Explicitly hide modals on page load
+                $('#services-modal').hide();
+                $('#service-details-modal').hide();
 
-</div>
+                // Menu toggle
+                $('.menu-toggle').click(function() {
+                    $('.fh5co-nav .menu-1 ul').toggleClass('active');
+                });
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    if (typeof jQuery === 'undefined') {
-        console.error("jQuery n'est pas chargé.");
-        Swal.fire({
-            title: 'Erreur',
-            text: 'Impossible de charger jQuery. Vérifiez votre connexion.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-    } else {
-        jQuery(document).ready(function($) {
-            // Menu toggle
-            $('.menu-toggle').click(function() {
-                $('.fh5co-nav .menu-1 ul').toggleClass('active');
-            });
-
-            // Mobile dropdowns
-            $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                if ($(window).width() <= 768) {
-                    e.preventDefault();
-                    $(this).parent().toggleClass('active').siblings().removeClass('active');
-                }
-            });
-
-            // Flatpickr
-            flatpickr("#{{ form.date.vars.id }}", {
-                dateFormat: "Y-m-d",
-                minDate: "today",
-                locale: "fr",
-                allowInput: true,
-                onChange: function(selectedDates, dateStr, instance) {
-                    const $input = $(instance.element);
-                    if (selectedDates.length === 0) {
-                        $input.addClass('is-invalid').next('.text-danger').text('La date est requise.');
-                    } else {
-                        $input.removeClass('is-invalid').next('.text-danger').text('');
+                // Mobile dropdowns
+                $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
+                    if ($(window).width() <= 768) {
+                        e.preventDefault();
+                        $(this).parent().toggleClass('active').siblings().removeClass('active');
                     }
+                });
+
+                // Prevent autofocus on description
+                if ($('#{{ form.description.vars.id }}').length) {
+                    $('#{{ form.description.vars.id }}').removeAttr('autofocus');
                 }
-            });
+                $('.form-control').on('focus', function() {
+                    $(this).select();
+                });
 
-            // Numtel input validation
-            $('#{{ form.numtel.vars.id }}').on('input', function() {
-                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
-            });
-
-            // Form validation and submission
-            $('#personnalise-reservation-form').on('submit', function(e) {
-                e.preventDefault();
-                let isValid = true;
-
-                // Clear existing errors
-                $('.form-control').removeClass('is-invalid');
-                $('.text-danger').text('');
-
-                // Nom
-                const $nomInput = $('#{{ form.nom.vars.id }}');
-                const nomValue = $nomInput.val().trim();
-                if (!nomValue) {
-                    $nomInput.addClass('is-invalid').next('.text-danger').text('Le nom est requis.');
-                    isValid = false;
-                } else if (nomValue.length > 255) {
-                    $nomInput.addClass('is-invalid').next('.text-danger').text('Le nom ne peut pas dépasser 255 caractères.');
-                    isValid = false;
-                }
-
-                // Prénom
-                const $prenomInput = $('#{{ form.prenom.vars.id }}');
-                const prenomValue = $prenomInput.val().trim();
-                if (!prenomValue) {
-                    $prenomInput.addClass('is-invalid').next('.text-danger').text('Le prénom est requis.');
-                    isValid = false;
-                } else if (prenomValue.length > 255) {
-                    $prenomInput.addClass('is-invalid').next('.text-danger').text('Le prénom ne peut pas dépasser 255 caractères.');
-                    isValid = false;
-                }
-
-                // Email
-                const $emailInput = $('#{{ form.email.vars.id }}');
-                const emailValue = $emailInput.val().trim();
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailValue) {
-                    $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email est requis.');
-                    isValid = false;
-                } else if (!emailRegex.test(emailValue)) {
-                    $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email n\'est pas valide.');
-                    isValid = false;
-                } else if (emailValue.length > 255) {
-                    $emailInput.addClass('is-invalid').next('.text-danger').text('L\'email ne peut pas dépasser 255 caractères.');
-                    isValid = false;
-                }
-
-                // Numtel
-                const $numtelInput = $('#{{ form.numtel.vars.id }}');
-                const numtelValue = $numtelInput.val().trim();
-                if (!numtelValue) {
-                    $numtelInput.addClass('is-invalid').next('.text-danger').text('Le numéro de téléphone est requis.');
-                    isValid = false;
-                } else if (!/^[0-9]{8}$/.test(numtelValue)) {
-                    $numtelInput.addClass('is-invalid').next('.text-danger').text('Le numéro doit contenir exactement 8 chiffres (ex. 12345678).');
-                    isValid = false;
-                }
-
-                // Date
+                // Flatpickr initialization
                 const $dateInput = $('#{{ form.date.vars.id }}');
-                const dateValue = $dateInput.val();
-                if (!dateValue) {
-                    $dateInput.addClass('is-invalid').next('.text-danger').text('La date est requise.');
-                    isValid = false;
-                } else if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
-                    $dateInput.addClass('is-invalid').next('.text-danger').text('La date doit être au format YYYY-MM-DD.');
-                    isValid = false;
-                } else {
-                    const selectedDate = new Date(dateValue);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    if (selectedDate < today) {
-                        $dateInput.addClass('is-invalid').next('.text-danger').text('La date doit être aujourd\'hui ou dans le futur.');
-                        isValid = false;
+                const flatpickrInstance = $dateInput.flatpickr({
+                    enableTime: false,
+                    altInput: true,
+                    altFormat: "F j, Y",
+                    dateFormat: "Y-m-d",
+                    minDate: "today",
+                    clickOpens: true,
+                    onChange: function(selectedDates, dateStr, instance) {
+                        // Toggle invalid class based on selection
+                        $input = $(instance.input);
+                        $input.toggleClass('is-invalid', selectedDates.length === 0)
+                              .next('.form-error').text(selectedDates.length === 0 ? 'The date is required.' : '');
+                        
+                        // Update calendar preview
+                        updateCalendarPreview();
                     }
-                }
+                });
 
-                // Services
-                const $servicesInputs = $('input[name="{{ form.services.vars.full_name }}[]"]:checked');
-                if ($servicesInputs.length === 0) {
-                    $('.checkbox-container').next('.text-danger').text('Vous devez sélectionner au moins un service.');
-                    isValid = false;
-                }
+                // Numtel input restriction
+                $('#{{ form.numtel.vars.id }}').on('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 8);
+                });
 
-                if (isValid) {
+                // Services Modal
+                const $servicesModal = $('#services-modal');
+                const $servicesColumnContainer = $('#services-column-container');
+                const $selectedServicesList = $('#selected-services-list');
+                const $servicesEmptyState = $('#services-empty-state');
+                const $servicesInputs = $('input[name="{{ form.services.vars.full_name }}[]"]');
+
+                // Initialize services in modal and selected list
+                let hasSelectedServices = false;
+                
+                // Clear previous content
+                $servicesColumnContainer.empty();
+                
+                // Add services to modal in better format
+                $servicesInputs.each(function() {
+                    const $input = $(this);
+                    const labelText = $input.next('label').text();
+                    const serviceId = $input.val();
+
+                    // Add to modal with improved layout
+                    $servicesColumnContainer.append(`
+                        <div class="form-check">
+                            <div class="checkbox-label-container">
+                                <input type="checkbox" class="form-check-input modal-service-checkbox" data-id="${serviceId}" ${$input.is(':checked') ? 'checked' : ''}>
+                                <label class="form-check-label">${labelText}</label>
+                            </div>
+                            <button type="button" class="view-service-details" data-id="${serviceId}">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        </div>
+                    `);
+                    
+                    // Add to selected list if checked
+                    if ($input.is(':checked')) {
+                        hasSelectedServices = true;
+                        $selectedServicesList.append(`
+                            <li data-id="${serviceId}" style="animation: fadeIn 0.3s ease-out;">
+                                <span class="service-name">${labelText}</span>
+                                <span class="remove-service" title="Remove service">×</span>
+                            </li>
+                        `);
+                    }
+                });
+                
+                // Show/hide empty state based on initial selection
+                $servicesEmptyState.toggle(!hasSelectedServices);
+                $selectedServicesList.toggle(hasSelectedServices);
+
+                $('#open-services-modal').click(function() {
+                    $servicesModal.css('display', 'flex').hide().fadeIn(400);
+                    $('body').addClass('modal-open');
+                    
+                    // Add subtle animation to checkboxes
+                    $('.form-check').each(function(index) {
+                        $(this).css({
+                            'opacity': 0,
+                            'transform': 'translateY(10px)'
+                        }).delay(index * 50).animate({
+                            'opacity': 1,
+                            'transform': 'translateY(0)'
+                        }, 300);
+                    });
+                });
+
+                $('.close-modal, #cancel-services').click(function() {
+                    $servicesModal.fadeOut(300, function() {
+                        $(this).css('display', 'none');
+                    });
+                    $('body').removeClass('modal-open');
+                });
+
+                $('#confirm-services').click(function() {
+                    const selectedServices = [];
+                    $selectedServicesList.empty();
+                    let hasSelectedServices = false;
+                    
+                    $('.modal-service-checkbox').each(function() {
+                        const $checkbox = $(this);
+                        const serviceId = $checkbox.data('id');
+                        const labelText = $checkbox.next('label').text();
+                        const $formCheckbox = $servicesInputs.filter(`[value="${serviceId}"]`);
+
+                        if ($checkbox.is(':checked')) {
+                            hasSelectedServices = true;
+                            selectedServices.push({
+                                id: serviceId,
+                                name: labelText
+                            });
+                            $formCheckbox.prop('checked', true);
+                        } else {
+                            $formCheckbox.prop('checked', false);
+                        }
+                    });
+                    
+                    // Add selected services with staggered animation
+                    selectedServices.forEach((service, index) => {
+                        const $listItem = $(`
+                            <li data-id="${service.id}" style="opacity: 0; transform: translateX(-10px);">
+                                <span class="service-name">${service.name}</span>
+                                <span class="remove-service" title="Remove service">×</span>
+                            </li>
+                        `);
+                        
+                        $selectedServicesList.append($listItem);
+                        
+                        setTimeout(() => {
+                            $listItem.css({
+                                'opacity': 1,
+                                'transform': 'translateX(0)',
+                                'transition': 'all 0.3s ease'
+                            });
+                        }, index * 100);
+                    });
+                    
+                    // Toggle empty state message
+                    $servicesEmptyState.toggle(!hasSelectedServices);
+                    $selectedServicesList.toggle(hasSelectedServices);
+                    
+                    // Show error if no services selected
+                    $('#services-error').text(hasSelectedServices ? '' : 'Please select at least one service.');
+                    
+                    // Close modal with animation
+                    $servicesModal.fadeOut(300, function() {
+                        $(this).css('display', 'none');
+                    });
+                    $('body').removeClass('modal-open');
+                    
+                    // Show confirmation if services were selected
+                    if (hasSelectedServices) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Services updated',
+                            text: `${selectedServices.length} service${selectedServices.length > 1 ? 's' : ''} selected`,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            toast: true,
+                            background: '#6d28d9',
+                            iconColor: '#ffffff',
+                            customClass: {
+                                title: 'text-white',
+                                content: 'text-white'
+                            }
+                        });
+                    }
+                });
+
+                // Delegated event for removing services
+                $selectedServicesList.on('click', '.remove-service', function() {
+                    const $li = $(this).parent();
+                    const serviceId = $li.data('id');
+                    
+                    // Animate removal
+                    $li.css({
+                        'transform': 'translateX(10px)',
+                        'opacity': 0
+                    });
+                    
+                    setTimeout(() => {
+                        $li.remove();
+                        
+                        // Toggle empty state if no services remain
+                        if ($selectedServicesList.children('li').length === 0) {
+                            $servicesEmptyState.fadeIn(200);
+                            $selectedServicesList.hide();
+                        }
+                        
+                        // Update form and modal checkboxes
+                        $servicesInputs.filter(`[value="${serviceId}"]`).prop('checked', false);
+                        $('.modal-service-checkbox[data-id="' + serviceId + '"]').prop('checked', false);
+                    }, 300);
+                });
+
+                // Service search functionality
+                const $serviceSearchInput = $('#service-search-input');
+                const $clearServiceSearch = $('#clear-service-search');
+                const $noServicesFound = $('#no-services-found');
+                
+                // Function to normalize text (remove accents and special characters)
+                function normalizeText(text) {
+                    return text.toLowerCase()
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '') // Remove accents
+                        .replace(/[^\w\s]/gi, ''); // Remove special characters
+                }
+                
+                // Function to filter services based on search input
+                function filterServices() {
+                    const searchValue = $serviceSearchInput.val().trim().toLowerCase();
+                    const $services = $('.form-check');
+                    let visibleCount = 0;
+                    
+                    $services.each(function() {
+                        const $service = $(this);
+                        const serviceText = $service.find('.form-check-label').text().toLowerCase();
+                        
+                        // Check if service text contains search value
+                        const isVisible = searchValue === '' || 
+                                          serviceText.includes(searchValue) || 
+                                          normalizeText(serviceText).includes(normalizeText(searchValue));
+                        
+                        // Show or hide service
+                        if (isVisible) {
+                            $service.show();
+                            visibleCount++;
+                        } else {
+                            $service.hide();
+                        }
+                    });
+                    
+                    // Show or hide "no results" message
+                    $noServicesFound.toggle(searchValue !== '' && visibleCount === 0);
+                    
+                    // Show or hide clear button
+                    $clearServiceSearch.css('display', searchValue !== '' ? 'flex' : 'none');
+                }
+                
+                // Initialize search events
+                $serviceSearchInput.on('input', filterServices);
+                
+                $clearServiceSearch.on('click', function() {
+                    $serviceSearchInput.val('').focus();
+                    filterServices();
+                });
+                
+                // Reset search when modal opens
+                $('#open-services-modal').on('click', function() {
+                    $serviceSearchInput.val('');
+                    $noServicesFound.hide();
+                    $clearServiceSearch.hide();
+                    $('.form-check').show(); // Show all services
+                });
+
+                // Service Details Modal
+                const $serviceDetailsModal = $('#service-details-modal');
+                const $serviceDetailsContent = $('#service-details-content');
+
+                $(document).on('click', '.view-service-details', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const serviceId = $(this).data('id');
+                    
+                    // Show loading state with animation
+                    $serviceDetailsContent.html(`
+                        <div class="text-center" style="padding: 30px 0;">
+                            <div class="loading-spinner" style="display:inline-block; margin:0 auto 20px; width:40px; height:40px; border-width:3px; border-top-color:#7c3aed;"></div>
+                            <p style="color:#6b7280; font-size:16px;"><i class="fas fa-info-circle"></i> Loading service details...</p>
+                        </div>
+                    `);
+                    
+                    $serviceDetailsModal.css('display', 'flex').hide().fadeIn(300);
+                    $('body').addClass('modal-open');
+                    
+                    $.ajax({
+                        url: `{{ path('user_service_details', {'id': 'SERVICE_ID'}) }}`.replace('SERVICE_ID', serviceId),
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.success) {
+                                const service = response.service;
+                                setTimeout(() => {
+                                    $serviceDetailsContent.html(`
+                                        <p><strong>Title:</strong> ${$('<div/>').text(service.titre).html()}</p>
+                                        <p><strong>Description:</strong> ${$('<div/>').text(service.description).html()}</p>
+                                        <p><strong>Price:</strong> ${$('<div/>').text(service.prix).html()} TND</p>
+                                        <p><strong>Location:</strong> ${$('<div/>').text(service.location).html()}</p>
+                                        <p><strong>Service Type:</strong> ${$('<div/>').text(service.type_service).html()}</p>
+                                        ${service.image ? `<img src="${$('<div/>').text(service.image).html()}" alt="${$('<div/>').text(service.titre).html()}">` : ''}
+                                    `).hide().fadeIn(300);
+                                }, 600); // Add slight delay for better UX
+                            } else {
+                                setTimeout(() => {
+                                    $serviceDetailsContent.html(`
+                                        <div class="alert alert-danger" style="background-color:#fef2f2; color:#b91c1c; padding:15px; border-radius:8px; border-left:4px solid #ef4444;">
+                                            <i class="fas fa-exclamation-circle"></i> 
+                                            ${response.message || 'Unable to load service details.'}
+                                        </div>
+                                    `).hide().fadeIn(300);
+                                }, 600);
+                            }
+                        },
+                        error: function() {
+                            setTimeout(() => {
+                                $serviceDetailsContent.html(`
+                                    <div class="alert alert-danger" style="background-color:#fef2f2; color:#b91c1c; padding:15px; border-radius:8px; border-left:4px solid #ef4444;">
+                                        <i class="fas fa-exclamation-circle"></i> 
+                                        Unable to retrieve service details. Please try again.
+                                    </div>
+                                `).hide().fadeIn(300);
+                            }, 600);
+                        }
+                    });
+                });
+
+                $('#close-service-details-modal, #close-service-details').click(function() {
+                    $serviceDetailsModal.fadeOut(300, function() {
+                        $(this).css('display', 'none');
+                    });
+                    $('body').removeClass('modal-open');
+                });
+
+                // Form validation
+                $('#personalized-reservation-form').on('submit', function(e) {
+                    let isValid = true;
+                    $('.form-control').removeClass('is-invalid');
+                    $('.form-error').text('');
+
+                    const validateField = ($input, value, maxLength, errorMsg, regex = null) => {
+                        if (!value) {
+                            $input.addClass('is-invalid').next('.form-error').text(errorMsg.required);
+                            return false;
+                        }
+                        if (value.length > maxLength) {
+                            $input.addClass('is-invalid').next('.form-error').text(errorMsg.maxLength);
+                            return false;
+                        }
+                        if (regex && !regex.test(value)) {
+                            $input.addClass('is-invalid').next('.form-error').text(errorMsg.invalid);
+                            return false;
+                        }
+                        return true;
+                    };
+
+                    // Last Name
+                    if ($('#{{ form.nom.vars.id }}').length) {
+                        isValid &= validateField(
+                            $('#{{ form.nom.vars.id }}'),
+                            $('#{{ form.nom.vars.id }}').val().trim(),
+                            255,
+                            { 
+                                required: 'Last name is required.', 
+                                maxLength: 'Last name cannot exceed 255 characters.' 
+                            }
+                        );
+                    }
+
+                    // First Name
+                    if ($('#{{ form.prenom.vars.id }}').length) {
+                        isValid &= validateField(
+                            $('#{{ form.prenom.vars.id }}'),
+                            $('#{{ form.prenom.vars.id }}').val().trim(),
+                            255,
+                            { 
+                                required: 'First name is required.', 
+                                maxLength: 'First name cannot exceed 255 characters.' 
+                            }
+                        );
+                    }
+
+                    // Email
+                    if ($('#{{ form.email.vars.id }}').length) {
+                        isValid &= validateField(
+                            $('#{{ form.email.vars.id }}'),
+                            $('#{{ form.email.vars.id }}').val().trim(),
+                            255,
+                            {
+                                required: 'Email is required.',
+                                maxLength: 'Email cannot exceed 255 characters.',
+                                invalid: 'Email is not valid.'
+                            },
+                            /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                        );
+                    }
+
+                    // Phone Number
+                    if ($('#{{ form.numtel.vars.id }}').length) {
+                        isValid &= validateField(
+                            $('#{{ form.numtel.vars.id }}'),
+                            $('#{{ form.numtel.vars.id }}').val().trim(),
+                            8,
+                            {
+                                required: 'Phone number is required.',
+                                invalid: 'Phone number must contain exactly 8 digits.'
+                            },
+                            /^[0-9]{8}$/
+                        );
+                    }
+
+                    // Date
+                    if ($('#{{ form.date.vars.id }}').length) {
+                        const $dateInput = $('#{{ form.date.vars.id }}');
+                        const dateValue = $dateInput.val();
+                        if (!dateValue) {
+                            $dateInput.addClass('is-invalid').next('.form-error').text('The date is required.');
+                            isValid = false;
+                        } else if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+                            $dateInput.addClass('is-invalid').next('.form-error').text('The date must be in YYYY-MM-DD format.');
+                            isValid = false;
+                        } else {
+                            const selectedDate = new Date(dateValue);
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            if (selectedDate < today) {
+                                $dateInput.addClass('is-invalid').next('.form-error').text('The date must be today or in the future.');
+                                isValid = false;
+                            }
+                        }
+                    }
+
+                    // Services
+                    if ($servicesInputs.length) {
+                        if (!$servicesInputs.filter(':checked').length) {
+                            $('#services-error').text('Please select at least one service.');
+                            isValid = false;
+                        }
+                    }
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    // AJAX submission
+                    e.preventDefault();
                     const $form = $(this);
                     const $submitButton = $form.find('button[type="submit"]');
-                    const $spinner = $form.find('.loading-spinner');
+                    const $spinner = $('.loading-spinner');
                     $submitButton.prop('disabled', true);
                     $spinner.show();
 
                     $.ajax({
-                        url: '{{ path('user_reservation_personnalise_new') }}',
-                        method: 'POST',
+                        url: $form.attr('action'),
+                        method: $form.attr('method'),
                         data: $form.serialize(),
                         dataType: 'json',
                         success: function(response) {
                             if (response.success) {
+                                // Prepare data for Google Calendar
+                                const eventName = $('#{{ form.nom.vars.id }}').val() + ' ' + $('#{{ form.prenom.vars.id }}').val() + ' - Event';
+                                const eventDescription = $('#{{ form.description.vars.id }}').val() || 'Custom reservation via Eventora';
+                                const eventDate = $('#{{ form.date.vars.id }}').val();
+                                const eventStart = new Date(eventDate);
+                                const eventEnd = new Date(eventStart.getTime() + 2 * 60 * 60 * 1000); // +2 hours
+                                const formattedStart = eventStart.toISOString().replace(/-|:|\.\d{3}/g, '');
+                                const formattedEnd = eventEnd.toISOString().replace(/-|:|\.\d{3}/g, '');
+
+                                // Generate Google Calendar link
+                                const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+                                    `&text=${encodeURIComponent(eventName)}` +
+                                    `&details=${encodeURIComponent(eventDescription)}` +
+                                    `&dates=${formattedStart}/${formattedEnd}`;
+
                                 Swal.fire({
-                                    title: 'Succès !',
+                                    title: 'Success',
                                     text: response.message,
                                     icon: 'success',
-                                    confirmButtonText: 'OK'
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Add to Google Calendar',
+                                    cancelButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        window.location.href = '{{ path('app_home', {'_fragment': 'fh5co-started'}) }}';
+                                        window.open(googleCalendarUrl, '_blank');
+                                        window.location.href = response.redirectUrl;
+                                    } else {
+                                        window.location.href = response.redirectUrl;
                                     }
                                 });
                             } else {
                                 Swal.fire({
-                                    title: 'Erreur',
-                                    text: response.message || 'Une erreur s\'est produite.',
+                                    title: 'Error',
+                                    text: response.message,
                                     icon: 'error',
                                     confirmButtonText: 'OK'
                                 });
                                 if (response.errors) {
-                                    $.each(response.errors, function(field, errors) {
-                                        const $field = $('#{{ form.vars.id }}_' + field);
-                                        $field.addClass('is-invalid').next('.text-danger').text(errors.join(', '));
+                                    Object.keys(response.errors).forEach(field => {
+                                        const $field = $(`#${field}`);
+                                        $field.addClass('is-invalid').next('.form-error').text(response.errors[field].join(', '));
                                     });
                                 }
                             }
                         },
                         error: function() {
                             Swal.fire({
-                                title: 'Erreur',
-                                text: 'Une erreur s\'est produite. Veuillez réessayer.',
+                                title: 'Error',
+                                text: 'An error occurred while submitting the form.',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
@@ -655,30 +1836,72 @@
                             $spinner.hide();
                         }
                     });
-                }
-            });
+                });
 
-            // Apply is-invalid on page load
-            $('.form-control').each(function() {
-                const $errorDiv = $(this).next('.text-danger');
-                if ($errorDiv.length && $errorDiv.text().trim()) {
-                    $(this).addClass('is-invalid');
-                }
-            });
+                // Apply is-invalid on load
+                $('.form-control').each(function() {
+                    const $errorDiv = $(this).next('.form-error');
+                    if ($errorDiv.length && $errorDiv.text().trim()) {
+                        $(this).addClass('is-invalid');
+                    }
+                });
 
-            // Handle flash messages
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    Swal.fire({
-                        title: '{{ label == 'success' ? 'Succès' : 'Erreur' }}',
-                        text: '{{ message|raw }}',
-                        icon: '{{ label == 'success' ? 'success' : 'error' }}',
-                        confirmButtonText: 'OK'
-                    });
+                // Handle flash messages
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        Swal.fire({
+                            title: '{{ label == 'success' ? 'Success' : 'Error' }}',
+                            text: '{{ message|raw }}',
+                            icon: '{{ label == 'success' ? 'success' : 'error' }}',
+                            confirmButtonText: 'OK'
+                        });
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        });
-    }
-</script>
+
+                // Function to update the calendar preview
+                function updateCalendarPreview() {
+                    const firstName = $('#{{ form.prenom.vars.id }}').val();
+                    const lastName = $('#{{ form.nom.vars.id }}').val();
+                    const email = $('#{{ form.email.vars.id }}').val();
+                    const phone = $('#{{ form.numtel.vars.id }}').val();
+                    const date = $('#{{ form.date.vars.id }}').val();
+                    
+                    if (date) {
+                        // Format the date for display
+                        const eventDate = new Date(date);
+                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                        const formattedDate = eventDate.toLocaleDateString('fr-FR', options);
+                        
+                        // Update preview elements
+                        $('#preview-date').text(formattedDate);
+                        $('#preview-name').text((firstName && lastName) ? `${firstName} ${lastName}` : 'Name not provided');
+                        $('#preview-email').text(email || 'Email not provided');
+                        $('#preview-phone').text(phone ? `+216 ${phone}` : 'Phone not provided');
+                        
+                        // Get selected services
+                        const selectedServices = [];
+                        $('input[name="reservation_personnalise[services][]"]:checked').each(function() {
+                            selectedServices.push($(this).parent().find('.checkbox-label').text().trim());
+                        });
+                        $('#preview-services').text(selectedServices.length > 0 ? selectedServices.join(', ') : 'No services selected');
+                        
+                        // Show the calendar preview
+                        $('#calendar-preview').show();
+                    } else {
+                        // Hide the preview if no date selected
+                        $('#calendar-preview').hide();
+                    }
+                }
+                
+                // Call update preview on field changes
+                $('#{{ form.prenom.vars.id }}, #{{ form.nom.vars.id }}, #{{ form.email.vars.id }}, #{{ form.numtel.vars.id }}').on('input', updateCalendarPreview);
+                
+                // Check if date is already selected on page load
+                if ($('#{{ form.date.vars.id }}').val()) {
+                    updateCalendarPreview();
+                }
+            });
+        </script>
+    {% endblock %}
 </body>
 </html>

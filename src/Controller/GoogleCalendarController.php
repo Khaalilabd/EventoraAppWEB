@@ -12,9 +12,18 @@ use Psr\Log\LoggerInterface;
 class GoogleCalendarController extends AbstractController
 {
     #[Route('/google-auth', name: 'google_auth')]
-    public function googleAuth(GoogleCalendarService $googleCalendarService): Response
+    public function googleAuth(Request $request, GoogleCalendarService $googleCalendarService): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        // Récupérer la page de retour depuis les paramètres
+        $returnTo = $request->query->get('return_to');
+        
+        // Stocker la page de retour en session pour l'utiliser après le callback
+        if ($returnTo) {
+            $request->getSession()->set('google_auth_return_to', $returnTo);
+        }
+        
         $authUrl = $googleCalendarService->getAuthUrl();
         return $this->redirect($authUrl);
     }
@@ -37,6 +46,15 @@ class GoogleCalendarController extends AbstractController
             $this->addFlash('error', 'Échec de l\'authentification Google Calendar.');
         }
 
+        // Récupérer la page de retour depuis la session
+        $returnTo = $request->getSession()->get('google_auth_return_to');
+        $request->getSession()->remove('google_auth_return_to'); // Nettoyer la session
+        
+        // Rediriger vers la page de retour si elle existe, sinon vers la page d'accueil
+        if ($returnTo) {
+            return $this->redirectToRoute($returnTo);
+        }
+        
         return $this->redirectToRoute('app_home_page', ['_fragment' => 'fh5co-started']);
     }
 }

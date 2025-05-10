@@ -2,17 +2,24 @@
 
 namespace App\Controller;
 
+use App\Repository\FeedbackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
-final class HomeController extends AbstractController
+class HomeController extends AbstractController
 {
-    #[Route('/home', name: 'app_home')]
-    public function index(): Response
+    #[Route('/', name: 'app_home')]
+    public function index(FeedbackRepository $feedbackRepository): Response
     {
+        $feedbacks = $feedbackRepository->findRandomFeedbacks(10);
+
+        if (empty($feedbacks)) {
+            $this->addFlash('warning', 'Aucun feedback disponible pour le moment.');
+        }
+
         return $this->render('home/home.html.twig', [
-            'controller_name' => 'HomeController',
+            'feedbacks' => $feedbacks,
         ]);
     }
 }

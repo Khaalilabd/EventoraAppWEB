@@ -18,7 +18,8 @@
             <!-- Bootstrap -->
             <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
             <!-- Navbar -->
-            <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/modern-navbar.css') }}">        
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
             <!-- Slider -->
             <link rel="stylesheet" href="{{ asset('css/slider.css') }}">
             <!-- Magnific Popup -->
@@ -143,135 +144,7 @@
                     padding-top: 70px; /* Ajusté pour une navbar plus compacte */
                 }
 
-                .fh5co-nav {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    z-index: 1000;
-                    background: rgba(255, 255, 255, 0.9);
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
-                }
-
-                .fh5co-nav .container {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 10px 15px;
-                    max-width: 1200px;
-                    margin: 0 auto;
-                }
-
-                .fh5co-logo a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-weight: 700;
-                    font-size: 24px;
-                    color: #934D1A;
-                    text-decoration: none;
-                }
-
-                .user-circle {
-                    display: inline-block;
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
-                    text-align: center;
-                    border-radius: 50%;
-                    background-color: #f0f0f0;
-                    color: #333;
-                    font-size: 20px;
-                    vertical-align: middle;
-                    margin-right: 8px;
-                }
-
-                .user-circle img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 50%;
-                }
-
-                .fh5co-nav .menu-1 {
-                    display: block;
-                }
-
-                .fh5co-nav .menu-1 ul {
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    margin: 0;
-                    padding: 0;
-                    list-style: none;
-                }
-
-                .fh5co-nav .menu-1 ul li {
-                    margin: 0 15px;
-                    position: relative;
-                }
-
-                .fh5co-nav .menu-1 ul li a {
-                    font-family: 'Work Sans', sans-serif;
-                    font-size: 16px;
-                    color: #333;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    transition: color 0.3s ease;
-                }
-
-                .fh5co-nav .menu-1 ul li a:hover {
-                    color: #934D1A;
-                }
-
-                .fh5co-nav .menu-1 ul li.active a {
-                    color: #934D1A !important;
-                    font-weight: 600;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown {
-                    position: relative;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    right: 0;
-                    background-color: #fff;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                    list-style: none;
-                    padding: 10px 0;
-                    min-width: 150px;
-                    z-index: 1001;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                    display: block !important;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
-                    margin: 0;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
-                    padding: 10px 20px;
-                    display: block;
-                    font-size: 14px;
-                    text-transform: none;
-                    color: #333;
-                }
-
-                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
-                    color: #007bff;
-                }
-
-                .menu-toggle {
-                    display: none;
-                    font-size: 24px;
-                    cursor: pointer;
-                    color: #333;
-                    padding: 10px;
-                }
+                /* Les styles de la navbar ont été supprimés car ils sont déjà dans modern-navbar.css */
 
                 /* Style des boutons */
                 .btn-default {
@@ -298,11 +171,12 @@
                 /* Typographie cohérente */
                 h1, h2, h3, h4, h5, h6 {
                     font-family: 'Work Sans', sans-serif;
+                    color:rgb(0, 0, 0);
                 }
 
                 .fh5co-heading h2 {
                     font-weight: 600;
-                    color: #333;
+                     color:rgb(0, 0, 0);
                 }
 
                 .fh5co-heading span {
@@ -484,8 +358,7 @@
                 }
 
                 .fh5co-heading h2 {
-                    color: #fff;
-                    font-size: 36px;
+ color:rgb(0, 0, 0);                    font-size: 36px;
                     margin: 0;
                 }
 
@@ -522,96 +395,222 @@
                     text-align: center;
                 }
 
-                /* Responsive adjustments */
-                @media (max-width: 900px) {
-                    body {
-                        font-size: 75%;
-                    }
+                /* Friends Wishes - Modern Redesign */
+                .friends-wishes-container {
+                    background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%) !important;
+                    position: relative;
+                    padding: 60px 0 30px;
+                    overflow: hidden;
                 }
 
+                .friends-wishes-container::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: url('https://i.pinimg.com/originals/8c/98/99/8c98994518b575bfd8c949e91d20548b.jpg');
+                    background-size: cover;
+                    background-position: center;
+                    opacity: 0.15;
+                    z-index: 0;
+                }
+
+                .friends-wishes-container .overlay {
+                    background: rgba(0, 0, 0, 0.3);
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+                }
+
+                .friends-wishes-container .container {
+                    position: relative;
+                    z-index: 3;
+                    max-width: 1200px;
+                    width: 90%;
+                    margin: 0 auto;
+                }
+
+                .friends-wishes-container .fh5co-heading {
+                    margin-bottom: 50px;
+                    text-align: center;
+                }
+
+                .friends-wishes-container .fh5co-heading span {
+                    color: #e5e5e5;
+                    font-size: 24px;
+                    display: block;
+                    margin-bottom: 15px;
+                    font-family: 'Sacramento', cursive;
+                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    animation: fadeIn 1s ease-out;
+                }
+
+                .friends-wishes-container .fh5co-heading h2 {
+                    color: #ffffff;
+                    font-size: 42px;
+                    margin: 0;
+                    font-weight: 700;
+                    position: relative;
+                    padding-bottom: 15px;
+                    font-weight: 600;
+                }
+
+                .friends-wishes-container .owl-carousel-fullwidth {
+                    margin: 0 auto 30px;
+                    max-width: 800px;
+                    overflow: hidden;
+                }
+
+                .friends-wishes-container .testimony-slide {
+                    background: rgba(255, 255, 255, 0.95);
+                    border-radius: 8px;
+                    padding: 25px;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+                    margin: 0 auto;
+                    max-width: 90%;
+                    box-sizing: border-box;
+                }
+
+                .friends-wishes-container .testimony-slide .user-profile {
+                    display: flex;
+                    justify-content: center;
+                    margin-bottom: 15px;
+                }
+
+                .friends-wishes-container .testimony-slide .user-profile img {
+                    width: 70px;
+                    height: 70px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    border: 3px solid #DAA520;
+                }
+
+                .friends-wishes-container .testimony-slide .star-rating {
+                    margin: 10px 0;
+                    font-size: 18px;
+                    color: #DAA520;
+                    text-align: center;
+                }
+
+                .friends-wishes-container .testimony-slide blockquote {
+                    font-size: 16px;
+                    color: #5C4033;
+                    line-height: 1.6;
+                    border-left: 4px solid #DAA520;
+                    padding-left: 15px;
+                    margin: 15px 0;
+                    max-width: 100%;
+                }
+
+                /* Fix owl carousel navigation dots */
+                .owl-carousel .owl-dots {
+                    text-align: center;
+                    margin: 10px 0 0;
+                    position: relative;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                }
+
+                .owl-carousel .owl-dot {
+                    display: inline-block;
+                    margin: 0 4px;
+                }
+
+                .owl-carousel .owl-dot span {
+                    width: 10px;
+                    height: 10px;
+                    background: rgba(255, 255, 255, 0.5);
+                    border-radius: 50%;
+                    display: block;
+                    transition: background 0.3s ease;
+                }
+
+                .owl-carousel .owl-dot.active span {
+                    background: #DAA520;
+                    transform: scale(1.2);
+                }
+
+                /* Fix the counters section */
+                .friends-wishes-container .row:last-child {
+                    margin-top: 20px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 8px;
+                    padding: 20px 0;
+                }
+
+                .friends-wishes-container .feature-center {
+                    text-align: center;
+                    padding: 10px;
+                }
+
+                .friends-wishes-container .counter {
+                    font-size: 36px;
+                    font-weight: bold;
+                    color: #ffffff;
+                    display: block;
+                    margin-bottom: 5px;
+                }
+
+                .friends-wishes-container .counter-label {
+                    color: #f0f0f0;
+                    font-size: 16px;
+                }
+
+                .friends-wishes-container .icon {
+                    color: #DAA520;
+                    font-size: 36px;
+                    margin-bottom: 10px;
+                    display: inline-block;
+                }
+
+                /* Responsive adjustments for feedback section */
                 @media (max-width: 768px) {
-                    .menu-toggle {
-                        display: block;
+                    .friends-wishes-container {
+                        padding: 30px 0;
                     }
 
-                    .fh5co-nav .menu-1 ul {
-                        display: none;
-                        flex-direction: column;
-                        position: absolute;
-                        top: 60px;
-                        left: 0;
-                        width: 100%;
-                        background-color: #fff;
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                        padding: 20px 0;
+                    .friends-wishes-container .testimony-slide {
+                        padding: 15px;
+                        margin: 0 auto;
                     }
 
-                    .fh5co-nav .menu-1 ul.active {
-                        display: flex;
+                    .friends-wishes-container .testimony-slide .user-profile img {
+                        width: 50px;
+                        height: 50px;
                     }
 
-                    .fh5co-nav .menu-1 ul li {
-                        margin: 10px 0;
-                        text-align: center;
-                    }
-
-                    .user-circle {
-                        margin-right: 0;
-                        margin-bottom: 5px;
-                    }
-
-                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
-                        position: static;
-                        display: none;
-                        box-shadow: none;
-                        background-color: #f8f9fa;
-                    }
-
-                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
-                        display: none !important;
-                    }
-
-                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
-                        display: block !important;
-                    }
-
-                    .event-wrap {
-                        max-width: 90%;
-                        padding: 20px;
-                    }
-
-                    .fh5co-heading h2 {
+                    .friends-wishes-container .counter {
                         font-size: 28px;
                     }
 
-                    #fh5co-event {
-                        padding-top: 30px;
-                    }
-
-                    .one-third {
-                        width: 50%;
-                    }
-
-                    #fh5co-couple {
-                        padding: 30px 0;
+                    .friends-wishes-container .counter-label {
+                        font-size: 14px;
                     }
                 }
 
                 @media (max-width: 480px) {
-                    .one-third {
-                        width: 100%;
-                    }
-
-                    #fh5co-couple .fh5co-heading h2 {
+                    .friends-wishes-container .fh5co-heading h2 {
                         font-size: 24px;
                     }
 
-                    #fh5co-couple .fh5co-heading h3 {
-                        font-size: 20px;
+                    .friends-wishes-container .testimony-slide .user-profile img {
+                        width: 40px;
+                        height: 40px;
                     }
 
-                    #fh5co-couple .fh5co-heading p {
-                        font-size: 14px;
+                    .friends-wishes-container .testimony-slide {
+                        padding: 10px;
+                    }
+
+                    .friends-wishes-container .counter {
+                        font-size: 24px;
                     }
                 }
             </style>
@@ -629,75 +628,82 @@
         <div class="fh5co-loader"></div>
         <div id="page">
             {% block body %}
-                <nav class="fh5co-nav" role="navigation">
-                    <div class="container">
-                        <div class="fh5co-logo">
-                            <a href="{{ path('app_home') }}">Eventora</a>
-                        </div>
-                        <div class="menu-toggle">
-                            <i class="icon-menu"></i>
-                        </div>
-                        <div class="menu-1">
-                            <ul>
-                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
-                                <li class="has-dropdown">
-                                    <a href="#">Réservation</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="{{ path('user_packs') }}">Packs</a>
-                                </li>
-                                <li class="has-dropdown">
-                                    <a href="#">Services</a>
-                                    <ul class="dropdown">
-                                        <li><a href="{{ path('user_services') }}">Service</a></li>
-                                        <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                                <li class="has-dropdown">
-                                      <a href="#">
-                                        <span class="user-circle">
-                                            {% if app.user and app.user.image %}
-                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                            {% else %}
-                                                <i class="icon-user"></i>
-                                            {% endif %}
-                                        </span>
-                                        Contact
-                                    </a>
-                                    <ul class="dropdown">
-                                        {% if app.user %}
-                                            <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                            <li><a href="{{ path('app_user_history') }}">Historique</a></li>
-                                            {% if is_granted('ROLE_ADMIN') %}
-                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                            {% endif %}
-                                            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                        {% else %}
-                                            <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                            <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
+                    <nav class="fh5co-nav" role="navigation">
+            <div class="container">
+                <div class="fh5co-logo">
+                    <a href="{{ path('app_home') }}">Eventora</a>
+                </div>
+                <div class="menu-toggle">
+                    <i class="icon-menu"></i>
+                </div>
+                <div class="menu-1">
+                    <ul>
+                        <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">Reservation</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                <li><a href="{{ path('user_reservation_pack_new') }}">Pack Reservation</a></li>
                             </ul>
-                        </div>
-                    </div>
-                </nav>
+                        </li>
+                                <li class="has-dropdown">
+                                <a href="#">Packs</a>
+                                <ul class="dropdown">
+                                    <li><a href="{{ path('user_packs') }}">Tous les Packs</a></li>
+                                    {% if not is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('user_favorites') }}">Packs Favoris</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        <li class="has-dropdown">
+                            <a href="#">Services</a>
+                            <ul class="dropdown">
+                                <li><a href="{{ path('user_services') }}">Service</a></li>
+                                <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ path('app_reclamation_new') }}">Complaint</a></li>
+                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                        <li><a href="{{ path('user_chat_ai') }}">Evi-AI</a></li>
+                        <li class="has-dropdown">
+                            <a href="#">
+                                <span class="user-circle">
+                                    {% if app.user and app.user.image %}
+                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                    {% else %}
+                                        <i class="icon-user"></i>
+                                    {% endif %}
+                                </span>
+                                Contact
+                            </a>
+                            <ul class="dropdown">
+                                {% if app.user %}
+                                    <li><a href="{{ path('app_settings') }}">Settings</a></li>
+                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                    <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('app_logout') }}">Log out</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('discord_login') }}">Log in with Discord</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                    <li><a href="{{ path('app_auth') }}">Sign up</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
 
                 <header id="fh5co-header" class="fh5co-cover" role="banner">
                     <div class="splitview skewed">
                         <div class="panel bottom">
                             <div class="content">
                                 <div class="description">
-                                    <h1>The original image.</h1>
-                                    <p>This is how the image looks like before applying a duotone effect.</p>
+                                    <h1>The MOMENT BECOMES ETERNAL</h1>
                                 </div>
                                 <img src="https://i.pinimg.com/736x/e2/1d/24/e21d24e61e8554d6af3c1aa37508bc89.jpg" alt="Original">
                             </div>
@@ -705,9 +711,8 @@
                         <div class="panel top">
                             <div class="content">
                                 <div class="description">
-                                    <h1>The duotone image.</h1>
-                                    <p>This is how the image looks like after applying a duotone effect.</p>
-                                </div>
+                                    <h1>THE PARTY DRESSES IN COLORS</h1>
+                                    </div>
                                 <img src="https://i.pinimg.com/736x/33/fb/3a/33fb3a348a77bfb030926ed612495cb8.jpg" alt="Duotone">
                             </div>
                         </div>
@@ -719,10 +724,30 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
-                                <h2>Hello!</h2>
-                                <h3>Welcome to Eventora</h3>
-                                <p>We invited you to enjoying your experience with us</p>
-                                <p>Our website give u the opportunity to organize your events</p>
+                                <h2>Join our community </h2>
+                                <h3>Plan your events with Eventora</h3>
+                                <p>Connect with other event enthusiasts on our Discord server. Share your ideas and receive real-time updates !</p>
+                                <a href="{{ path('discord_login') }}" class="btn btn-discord">
+                                    <i class="fab fa-discord"></i> Connect with Discord
+                                </a>
+                                <a href="https://discord.gg/VOTRE_INVITATION" target="_blank" class="btn btn-discord">
+                                    <i class="fab fa-discord"></i> Join our Discord !
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-3 text-center animate-box">
+                                <div class="event-wrap">
+                                    <h3>Send a message to our community</h3>
+                                    <div id="discord-message-error" class="form-error" style="display: none;"></div>
+                                    <form id="discord-message-form">
+                                        <div class="form-group">
+                                            <label for="message">Your message</label>
+                                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="Share your idea ou your question..." required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Send to Discord</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -757,7 +782,7 @@
                                         <div class="card">
                                             <div class="front" style="background-image: url(https://i.pinimg.com/736x/72/68/f4/7268f44ff8069168eb78f200ac377af6.jpg);">
                                                 <div class="case-studies-summary">
-                                                    <h2>Cerimonie</h2>
+                                                    <h2>Ceremony</h2>
                                                 </div>
                                             </div>
                                             <div class="back">
@@ -869,7 +894,7 @@
                             <div class="col-md-8 col-md-offset-2 text-center fh5co-heading animate-box">
                                 <span>We Love Each Other</span>
                                 <h2>Our Team</h2>
-                                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                                <p>Every event is born pure,ready to shine in our Memories</p>
                             </div>
                         </div>
                         <div class="row">
@@ -926,7 +951,7 @@
                     </div>
                 </div>
 
-                <div id="fh5co-counter" class="fh5co-bg fh5co-counter" style="background-image:url(images/img_bg_5.jpg);">
+                <div id="fh5co-counter" class="fh5co-bg fh5co-counter friends-wishes-container" style="background-image:url(images/img_bg_5.jpg);">
                     <div class="overlay"></div>
                     <div class="container">
                         <div class="row">
@@ -939,33 +964,43 @@
                             <div class="col-md-12 animate-box">
                                 <div class="wrap-testimony">
                                     <div class="owl-carousel-fullwidth">
-                                        <div class="item">
-                                            <div class="testimony-slide active text-center">
-                                                
-                                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
-                                                <blockquote>
-                                                    <p>"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics"</p>
-                                                </blockquote>
+                                        {% if feedbacks is defined and feedbacks is not empty %}
+                                            {% for feedback in feedbacks %}
+                                                <div class="item">
+                                                    <div class="testimony-slide active text-center">
+                                                        <div class="user-profile">
+                                                            <img src="{{ feedback.membre.image ? asset('Uploads/images/' ~ feedback.membre.image) : asset('Uploads/images/default-user.png') }}" alt="User Profile">
+                                                        </div>
+                                                        <div class="star-rating">
+                                                            {% for i in 1..5 %}
+                                                                <i class="fas fa-star {{ i <= feedback.Vote ? 'filled' : '' }}"></i>
+                                                            {% endfor %}
+                                                        </div>
+                                                        <blockquote>
+                                                            <p>{{ feedback.Description }}</p>
+                                                        </blockquote>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="item">
+                                                <div class="testimony-slide active text-center">
+                                                    <div class="user-profile">
+                                                        <img src="{{ asset('Uploads/images/default-user.png') }}" alt="Aucun utilisateur">
+                                                    </div>
+                                                    <div class="star-rating">
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                    </div>
+                                                    <blockquote>
+                                                        <p>Aucun feedback disponible pour le moment. Soyez le premier à partager votre expérience !</p>
+                                                    </blockquote>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="testimony-slide active text-center">
-                                               
-                                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
-                                                <blockquote>
-                                                    <p>"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, at the coast of the Semantics, a large language ocean."</p>
-                                                </blockquote>
-                                            </div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="testimony-slide active text-center">
-                                                
-                                                <span>John Doe, via <a href="#" class="twitter">Twitter</a></span>
-                                                <blockquote>
-                                                    <p>"Far far away, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean."</p>
-                                                </blockquote>
-                                            </div>
-                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -1020,7 +1055,7 @@
                         <div class="row animate-box">
                             <div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
                                 <h2>We Offer Services</h2>
-                                <p>Dignissimos asperiores vitae velit veniam totam fuga molestias accusamus alias autem provident. Odit ab aliquam dolor eius.</p>
+                                <p> </p>
                             </div>
                         </div>
                         <div class="row">
@@ -1031,7 +1066,7 @@
                                     </span>
                                     <div class="feature-copy">
                                         <h3>We Organized Events</h3>
-                                        <p>Facilis ipsum reprehenderit nemo molestias. Aut cum mollitia reprehenderit. Eos cumque dicta adipisci architecto culpa amet.</p>
+                                        <p>  </p>
                                     </div>
                                 </div>
                                 <div class="feature-left animate-box" data-animate-effect="fadeInLeft">
@@ -1040,7 +1075,7 @@
                                     </span>
                                     <div class="feature-copy">
                                         <h3>Photoshoot</h3>
-                                        <p>Facilis ipsum reprehenderit nemo molestias. Aut cum mollitia reprehenderit. Eos cumque dicta adipisci architecto culpa amet.</p>
+                                        <p></p>
                                     </div>
                                 </div>
                                 <div class="feature-left animate-box" data-animate-effect="fadeInLeft">
@@ -1049,12 +1084,12 @@
                                     </span>
                                     <div class="feature-copy">
                                         <h3>Video Editing</h3>
-                                        <p>Facilis ipsum reprehenderit nemo molestias. Aut cum mollitia reprehenderit. Eos cumque dicta adipisci architecto culpa amet.</p>
+                                        <p></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 animate-box">
-                                <div class="fh5co-video fh5co-bg" style="background-image: url(images/img_bg_3.jpg); ">
+                                <div class="fh5co-video fh5co-bg" style="background-image: url(images/img_bg_3.jpg);">
                                     <a href="https://vimeo.com/channels/staffpicks/93951774" class="popup-vimeo"><i class="icon-video2"></i></a>
                                     <div class="overlay"></div>
                                 </div>
@@ -1083,59 +1118,59 @@
 
             {% block javascripts %}
                 <script src="{{ asset('js/jquery.min.js') }}"></script>
-                <script src="https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min.js"></script>
+                <script src="{{ asset('js/jquery.waypoints.min.js') }}"></script>
                 <script src="{{ asset('js/jquery.stellar.min.js') }}"></script>
                 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
                 <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
                 <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-                <script src="{{ asset('js/simplyCountdown.js') }}"></script>
+                <script src="{{ asset('js/jquery.countTo.js') }}"></script>
                 <script src="{{ asset('js/main.js') }}"></script>
 
                 <script>
-                    var eventDate = new Date('2025-12-31');
-                    simplyCountdown('.simply-countdown-one', {
-                        year: eventDate.getFullYear(),
-                        month: eventDate.getMonth() + 1,
-                        day: eventDate.getDate(),
-                        enableUtc: false
-                    });
-
-                    // Menu hamburger pour mobile
                     $(document).ready(function() {
-                        $('.menu-toggle').click(function() {
-                            $('.fh5co-nav .menu-1 ul').toggleClass('active');
-                        });
-
-                        // Gestion des sous-menus sur mobile
-                        $('.fh5co-nav .menu-1 ul li.has-dropdown > a').click(function(e) {
-                            if ($(window).width() <= 768) {
-                                e.preventDefault();
-                                $(this).parent().toggleClass('active');
-                            }
-                        });
-
                         // Gestion du slider
-                        document.addEventListener('DOMContentLoaded', function() {
-                            var parent = document.querySelector('.splitview'),
-                                topPanel = parent.querySelector('.top'),
-                                handle = parent.querySelector('.handle'),
-                                skewHack = 0,
-                                delta = 0;
+                        var parent = document.querySelector('.splitview'),
+                            topPanel = parent ? parent.querySelector('.top') : null,
+                            handle = parent ? parent.querySelector('.handle') : null,
+                            skewHack = 0,
+                            delta = 0;
 
-                            // If the parent has .skewed class, set the skewHack var.
+                        if (parent) {
                             if (parent.className.indexOf('skewed') != -1) {
                                 skewHack = 1000;
                             }
 
                             parent.addEventListener('mousemove', function(event) {
-                                // Get the delta between the mouse position and center point.
                                 delta = (event.clientX - window.innerWidth / 2) * 0.5;
+                                if (handle) handle.style.left = event.clientX + delta + 'px';
+                                if (topPanel) topPanel.style.width = event.clientX + skewHack + delta + 'px';
+                            });
+                        }
 
-                                // Move the handle.
-                                handle.style.left = event.clientX + delta + 'px';
+                        // Gestion du formulaire Discord
+                        $('#discord-message-form').submit(function(e) {
+                            e.preventDefault();
+                            const message = $('#message').val();
+                            const errorDiv = $('#discord-message-error');
 
-                                // Adjust the top panel width.
-                                topPanel.style.width = event.clientX + skewHack + delta + 'px';
+                            if (!message) {
+                                errorDiv.text('Veuillez entrer un message.').show();
+                                return;
+                            }
+
+                            $.ajax({
+                                url: '/api/send-discord-message',
+                                method: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ message: message }),
+                                success: function(response) {
+                                    errorDiv.hide();
+                                    alert('Message envoyé avec succès !');
+                                    $('#message').val('');
+                                },
+                                error: function(xhr) {
+                                    errorDiv.text('Erreur : ' + (xhr.responseJSON?.error || 'Impossible d\'envoyer le message')).show();
+                                }
                             });
                         });
                     });

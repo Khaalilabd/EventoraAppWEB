@@ -182,7 +182,27 @@ class ReservationsController extends AbstractController
         $reservation->setMembre($defaultMembre);
         $reservation->setStatus('En attente');
 
-        $form = $this->createForm(ReservationPackType::class, $reservation, ['is_admin' => true]);
+        // Get current admin user for pre-filling form data
+        $currentUser = $this->getUser();
+        $userData = [];
+        
+        if ($currentUser) {
+            // If we have user data, prepare it for the form
+            $userData = [
+                'nom' => method_exists($currentUser, 'getNom') ? $currentUser->getNom() : '',
+                'prenom' => method_exists($currentUser, 'getPrenom') ? $currentUser->getPrenom() : '',
+                'email' => method_exists($currentUser, 'getEmail') ? $currentUser->getEmail() : '',
+                'numtel' => method_exists($currentUser, 'getNumTel') ? $currentUser->getNumTel() : '',
+            ];
+            
+            // Log the user data being passed to the form
+            $this->logger->info('Creating new reservation with user data', $userData);
+        }
+
+        $form = $this->createForm(ReservationPackType::class, $reservation, [
+            'is_admin' => true,
+            'user_data' => $userData,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -215,7 +235,27 @@ class ReservationsController extends AbstractController
         $reservation->setMembre($defaultMembre);
         $reservation->setStatus('En attente');
 
-        $form = $this->createForm(ReservationPersonnaliseType::class, $reservation, ['is_admin' => true]);
+        // Get current admin user for pre-filling form data
+        $currentUser = $this->getUser();
+        $userData = [];
+        
+        if ($currentUser) {
+            // If we have user data, prepare it for the form
+            $userData = [
+                'nom' => method_exists($currentUser, 'getNom') ? $currentUser->getNom() : '',
+                'prenom' => method_exists($currentUser, 'getPrenom') ? $currentUser->getPrenom() : '',
+                'email' => method_exists($currentUser, 'getEmail') ? $currentUser->getEmail() : '',
+                'numtel' => method_exists($currentUser, 'getNumTel') ? $currentUser->getNumTel() : '',
+            ];
+            
+            // Log the user data being passed to the form
+            $this->logger->info('Creating new personalized reservation with user data', $userData);
+        }
+
+        $form = $this->createForm(ReservationPersonnaliseType::class, $reservation, [
+            'is_admin' => true,
+            'user_data' => $userData,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -248,6 +288,19 @@ class ReservationsController extends AbstractController
         if (!$reservation) {
             throw $this->createNotFoundException('Réservation Pack non trouvée.');
         }
+        
+        // Debug: Log reservation data to verify it's loaded correctly
+        $this->logger->info('Editing reservation', [
+            'id' => $reservation->getIDReservationPack(),
+            'nom' => $reservation->getNom(),
+            'prenom' => $reservation->getPrenom(),
+            'email' => $reservation->getEmail(),
+            'numtel' => $reservation->getNumtel(),
+            'description' => $reservation->getDescription(),
+            'status' => $reservation->getStatus(),
+            'date' => $reservation->getDate() ? $reservation->getDate()->format('Y-m-d') : null,
+            'pack_id' => $reservation->getPack() ? $reservation->getPack()->getId() : null,
+        ]);
     
         $form = $this->createForm(ReservationPackType::class, $reservation, ['is_admin' => true]);
         $form->handleRequest($request);
@@ -351,6 +404,19 @@ class ReservationsController extends AbstractController
         if (!$reservation) {
             throw $this->createNotFoundException('Réservation Personnalisée non trouvée.');
         }
+
+        // Debug: Log reservation data to verify it's loaded correctly
+        $this->logger->info('Editing personalized reservation', [
+            'id' => $reservation->getIdReservationPersonalise(),
+            'nom' => $reservation->getNom(),
+            'prenom' => $reservation->getPrenom(),
+            'email' => $reservation->getEmail(),
+            'numtel' => $reservation->getNumtel(),
+            'description' => $reservation->getDescription(),
+            'status' => $reservation->getStatus(),
+            'date' => $reservation->getDate() ? $reservation->getDate()->format('Y-m-d') : null,
+            'services' => $reservation->getServices() ? count($reservation->getServices()) : 0,
+        ]);
     
         $form = $this->createForm(ReservationPersonnaliseType::class, $reservation, ['is_admin' => true]);
         $form->handleRequest($request);
@@ -480,7 +546,7 @@ class ReservationsController extends AbstractController
         $emailData = new \SendinBlue\Client\Model\SendSmtpEmail([
             'sender' => ['name' => $this->brevoSenderName, 'email' => $this->brevoSenderEmail],
             'to' => [['email' => $recipientEmail, 'name' => $userName]],
-            'templateId' => 5, // Modèle pour les mises à jour
+            'templateId' => 2, // Modèle pour les mises à jour
             'params' => $emailParams,
         ]);
 
@@ -627,21 +693,45 @@ class ReservationsController extends AbstractController
 
         return $this->redirectToRoute('admin_reservations', [], Response::HTTP_SEE_OTHER);
     }
-
     #[Route('/pack/{id}/pdf', name: 'admin_reservations_pack_pdf', methods: ['GET'])]
-    public function generatePdf(Reservationpack $reservation, Pdf $knpSnappyPdf): Response
+    public function generatePdf(Reservationpack $reservation, Pdf $knpSnappyPdf, LoggerInterface $logger): Response
     {
-        $html = $this->renderView('admin/reservation/pdf_pack_details.html.twig', [
-            'reservation' => $reservation,
+        $logger->info('Début de generatePdf', ['id' => $reservation->getIDReservationPack()]);
+    
+        // Vérifiez les données de la réservation
+        $logger->debug('Données de la réservation', [
+            'id' => $reservation->getIDReservationPack(),
+            'nom' => $reservation->getNom(),
+            'prenom' => $reservation->getPrenom(),
+            'date' => $reservation->getDate() ? $reservation->getDate()->format('Y-m-d H:i:s') : null,
+            'status' => $reservation->getStatus(),
+            'pack' => $reservation->getPack() ? $reservation->getPack()->getNomPack() : null,
         ]);
-
+    
+        try {
+            $html = $this->renderView('admin/reservation/pdf_pack_details.html.twig', [
+                'reservation' => $reservation,
+            ]);
+            $logger->info('Template rendu', ['html_length' => strlen($html)]);
+    
+            $pdf = $knpSnappyPdf->getOutputFromHtml($html);
+            $logger->info('PDF généré avec succès');
+        } catch (\Exception $e) {
+            $logger->error('Erreur lors de la génération du PDF', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'id' => $reservation->getIDReservationPack(),
+            ]);
+            throw new \RuntimeException('Impossible de générer le PDF : ' . $e->getMessage());
+        }
+    
         return new Response(
-            $knpSnappyPdf->getOutputFromHtml($html),
+            $pdf,
             200,
             [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="reservation_pack_' . $reservation->getIDReservationPack() . '.pdf"',
+                'Content-Disposition' => 'attachment; filename="reservationpack_' . $reservation->getIDReservationPack() . '.pdf"',
             ]
         );
-    }
+    }   
 }

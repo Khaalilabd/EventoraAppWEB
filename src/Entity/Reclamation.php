@@ -17,35 +17,35 @@ class Reclamation
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 100)]
-    #[Assert\NotBlank(message: "Le titre ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "The title cannot be empty.")]
     #[Assert\Length(
         max: 100,
-        maxMessage: "Le titre ne peut pas dépasser {{ limit }} caractères."
+        maxMessage: "The title cannot exceed {{ limit }} characters."
     )]
     private ?string $titre = null;
 
     #[ORM\Column(type: 'text')]
-    #[Assert\NotBlank(message: "La description ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "The description cannot be empty.")]
     private ?string $description = null;
 
     #[ORM\Column(type: 'string', length: 50, options: ['default' => 'Autre'])]
-    #[Assert\NotBlank(message: "Le type ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "The type cannot be empty.")]
     #[Assert\Choice(
         choices: self::TYPES,
-        message: "Le type '{{ value }}' n'est pas valide. Choisissez parmi : {{ choices }}."
+        message: "The type '{{ value }}' is not valid. Choose from: {{ choices }}."
     )]
     private ?string $Type = null;
 
     #[ORM\ManyToOne(targetEntity: Membre::class)]
     #[ORM\JoinColumn(name: 'idUser', referencedColumnName: 'id', nullable: false)]
-    #[Assert\NotNull(message: "Le membre doit être spécifié.")]
+    #[Assert\NotNull(message: "The member must be specified.")]
     private ?Membre $membre = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: false, options: ['default' => 'En_Attente'])]
-    #[Assert\NotBlank(message: "Le statut ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "The status cannot be empty.")]
     #[Assert\Choice(
         choices: self::STATUTS,
-        message: "Le statut '{{ value }}' n'est pas valide. Choisissez parmi : {{ choices }}."
+        message: "The status '{{ value }}' is not valid. Choose from: {{ choices }}."
     )]
     private ?string $statut = null;
 
@@ -58,7 +58,7 @@ class Reclamation
     #[ORM\OneToMany(mappedBy: 'reclamation', targetEntity: ReclamationRep::class, fetch: 'EXTRA_LAZY')]
     private Collection $reclamationReps;
 
-    // Constantes pour les valeurs possibles de Type
+    // Constants for possible Type values
     public const TYPE_PACKS = 'Packs';
     public const TYPE_SERVICE = 'Service';
     public const TYPE_PROBLEME_TECHNIQUE = 'Problème Technique';
@@ -73,7 +73,7 @@ class Reclamation
         self::TYPE_AUTRE,
     ];
 
-    // Constantes pour les valeurs possibles de Statut
+    // Constants for possible Status values
     public const STATUT_EN_ATTENTE = 'En_Attente';
     public const STATUT_EN_COURS = 'En_Cours';
     public const STATUT_RESOLU = 'Resolue';

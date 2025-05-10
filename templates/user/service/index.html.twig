@@ -32,7 +32,7 @@
             <!-- Font Awesome for icons -->
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
             <style>
-                /* Existing styles */
+                /* Existing styles remain unchanged */
                 .services-intro {
                     text-align: center;
                     padding: 40px 20px;
@@ -286,6 +286,68 @@
                     filter: blur(5px);
                 }
 
+                /* Styles pour le bouton de panier flottant */
+                .cart-button {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background-color: #934D1A; /* Couleur cohérente avec le thème */
+                    color: #ffffff;
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                    cursor: pointer;
+                    transition: transform 0.3s ease, background-color 0.3s ease;
+                    z-index: 1001; /* Au-dessus des autres éléments */
+                }
+
+                .cart-button:hover {
+                    background-color: #7a3e0f; /* Couleur légèrement plus foncée au survol */
+                    transform: scale(1.1);
+                }
+
+                .cart-button i {
+                    font-size: 24px;
+                }
+
+                .cart-count {
+                    position: absolute;
+                    top: -8px;
+                    right: -8px;
+                    background-color: #ff6b6b; /* Couleur de badge cohérente avec le thème */
+                    color: #ffffff;
+                    font-size: 12px;
+                    font-weight: 600;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                /* Assurer la responsivité pour le bouton de panier */
+                @media (max-width: 480px) {
+                    .cart-button {
+                        width: 50px;
+                        height: 50px;
+                    }
+
+                    .cart-button i {
+                        font-size: 20px;
+                    }
+
+                    .cart-count {
+                        font-size: 10px;
+                        width: 18px;
+                        height: 18px;
+                    }
+                }
+
                 @media (max-width: 768px) {
                     .card-container {
                         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -376,6 +438,232 @@
                         padding: 6px 12px;
                     }
                 }
+
+                #page {
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    padding-top: 70px; /* Ajusté pour une navbar plus compacte */
+                }
+
+                .fh5co-nav {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1000;
+                    background: rgba(255, 255, 255, 0.9);
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
+
+                .fh5co-nav .container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 15px;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+
+                .fh5co-logo a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-weight: 700;
+                    font-size: 24px;
+                    color: #934D1A;
+                    text-decoration: none;
+                }
+
+                .user-circle {
+                    display: inline-block;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    border-radius: 50%;
+                    background-color: #f0f0f0;
+                    color: #333;
+                    font-size: 20px;
+                    vertical-align: middle;
+                    margin-right: 8px;
+                }
+
+                .user-circle img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+
+                .fh5co-nav .menu-1 {
+                    display: block;
+                }
+
+                .fh5co-nav .menu-1 ul {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                    transition: all 0.3s ease;
+                }
+
+                .fh5co-nav .menu-1 ul li {
+                    margin: 0 15px;
+                    position: relative;
+                }
+
+                .fh5co-nav .menu-1 ul li a {
+                    font-family: 'Work Sans', sans-serif;
+                    font-size: 16px;
+                    color: #333;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: color 0.3s ease;
+                }
+
+                .fh5co-nav .menu-1 ul li a:hover {
+                    color: #934D1A;
+                }
+
+                .fh5co-nav .menu-1 ul li.active a {
+                    color: #934D1A !important;
+                    font-weight: 600;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown {
+                    position: relative;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    list-style: none;
+                    padding: 10px 0;
+                    min-width: 150px;
+                    z-index: 1001;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                    opacity: 0;
+                    visibility: hidden;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                    display: block;
+                    opacity: 1;
+                    visibility: visible;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li {
+                    margin: 0;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a {
+                    padding: 10px 20px;
+                    display: block;
+                    font-size: 14px;
+                    text-transform: none;
+                    color: #333;
+                }
+
+                .fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a:hover {
+                    color: #007bff;
+                }
+
+                .menu-toggle {
+                    display: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #333;
+                    padding: 10px;
+                }
+
+                /* Styles pour le bouton Réserver */
+                .reserve-btn {
+                    background-color: #934D1A; /* Couleur cohérente avec le thème */
+                    color: #ffffff;
+                    padding: 12px 24px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease, transform 0.3s ease;
+                    margin-top: 16px;
+                    width: 100%;
+                    text-align: center;
+                }
+
+                .reserve-btn:hover {
+                    background-color: #7a3e0f; /* Couleur plus foncée au survol */
+                    transform: scale(1.05);
+                }
+
+                .reserve-btn:focus {
+                    outline: 2px solid #934D1A;
+                    outline-offset: 2px;
+                }
+
+                /* Responsive adjustments for navbar */
+                @media (max-width: 768px) {
+                    .menu-toggle {
+                        display: block;
+                    }
+
+                    .fh5co-nav .menu-1 ul {
+                        display: none;
+                        flex-direction: column;
+                        position: absolute;
+                        top: 60px;
+                        left: 0;
+                        width: 100%;
+                        background-color: #fff;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        padding: 20px 0;
+                        opacity: 0;
+                        transform: translateY(-10px);
+                        transition: opacity 0.3s ease, transform 0.3s ease;
+                    }
+
+                    .fh5co-nav .menu-1 ul.active {
+                        display: flex;
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+
+                    .fh5co-nav .menu-1 ul li {
+                        margin: 10px 0;
+                        text-align: center;
+                    }
+
+                    .user-circle {
+                        margin-right: 0;
+                        margin-bottom: 5px;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown .dropdown {
+                        position: static;
+                        display: none;
+                        box-shadow: none;
+                        background-color: #f8f9fa;
+                        padding: 10px 0;
+                        opacity: 1;
+                        visibility: visible;
+                        transition: none;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown:hover .dropdown {
+                        display: none;
+                    }
+
+                    .fh5co-nav .menu-1 ul li.has-dropdown.active .dropdown {
+                        display: block;
+                    }
+                }
             </style>
         {% endblock %}
 
@@ -388,64 +676,68 @@
     <body>
         <div class="fh5co-loader"></div>
         {% block body %}
-        <nav class="fh5co-nav" role="navigation">
-            <div class="container">
-                <div class="menu-toggle">
-                    <i class="icon-menu"></i>
-                </div>
-                <div class="menu-1">
-                    <ul>
-                        <li ><a href="{{ path('app_home') }}">Home</a></li>
-                        <li class="has-dropdown">
-                            <a href="#">Réservation</a>
-                             <ul class="dropdown">
-                                    <li><a href="{{ path('user_reservation_personnalise_new') }}">Reservation personnalisée</a></li>
-                                    <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack</a></li>
-                                </ul>
-                        </li>
-                        <li class="has-dropdown">
-                            <a href="{{ path('user_packs') }}">Packs</a>
-                        </li>
-                        <li class="has-dropdown">
-                            <a href="#">Services</a>
-                            <ul class="dropdown">
-                                <li class="active"><a href="{{ path('user_services') }}">Service</a></li>
-                                <li><a href="{{ path('user_sponsor') }}">Partenaire</a></li>
+          <nav class="fh5co-nav" role="navigation">
+                    <div class="container">
+                        <div class="fh5co-logo">
+                            <a href="{{ path('app_home') }}">Eventora</a>
+                        </div>
+                        <div class="menu-toggle">
+                            <i class="icon-menu"></i>
+                        </div>
+                        <div class="menu-1">
+                            <ul>
+                                <li class="active"><a href="{{ path('app_home') }}">Home</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">Reservation</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_reservation_personnalise_new') }}">Personalized Booking</a></li>
+                                        <li><a href="{{ path('user_reservation_pack_new') }}">Reservation Pack </a></li>
+                                    </ul>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="{{ path('user_packs') }}">Packs</a>
+                                </li>
+                                <li class="has-dropdown">
+                                    <a href="#">Services</a>
+                                    <ul class="dropdown">
+                                        <li><a href="{{ path('user_services') }}">Service</a></li>
+                                        <li><a href="{{ path('user_sponsor') }}">Partner</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
+                                <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
+                                <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
+                                <li class="has-dropdown">
+                                    <a href="#">
+                                        <span class="user-circle">
+                                            {% if app.user and app.user.image %}
+                                                <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
+                                            {% else %}
+                                                <i class="icon-user"></i>
+                                            {% endif %}
+                                        </span>
+                                        Contact
+                                    </a>
+                                    <ul class="dropdown">
+                                        {% if app.user %}
+                                            <li><a href="{{ path('app_settings') }}">Parameters</a></li>
+                                            <li><a href="{{ path('app_home') }}">Notifications</a></li>
+                                            <li><a href="{{ path('app_user_history') }}">History</a></li>
+                                            {% if is_granted('ROLE_ADMIN') %}
+                                                <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
+                                            {% endif %}
+                                            <li><a href="{{ path('app_logout') }}">Disconnect</a></li>
+                                        {% else %}
+                                            <li><a href="{{ path('discord_login') }}">Connexion avec Discord</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Log in</a></li>
+                                            <li><a href="{{ path('app_auth') }}">Registration</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
                             </ul>
-                        </li>
-                        <li><a href="{{ path('app_reclamation_new') }}">Reclamation</a></li>
-                        <li><a href="{{ path('app_feedback_new') }}">Feedback</a></li>
-                        <li><a href="{{ path('user_chat_ai') }}">Talk with Evi</a></li>
-                        <li class="has-dropdown">
-                            <a href="#">
-                                <span class="user-circle">
-                                    {% if app.user and app.user.image %}
-                                        <img src="{{ asset('Uploads/images/' ~ app.user.image) }}" alt="Profile">
-                                    {% else %}
-                                        <i class="icon-user"></i>
-                                    {% endif %}
-                                </span>
-                                Contact
-                            </a>
-                            <ul class="dropdown">
-                                {% if app.user %}
-                                    <li><a href="{{ path('app_settings') }}">Paramètres</a></li>
-                                    <li><a href="{{ path('app_home') }}">Notifications</a></li>
-                                    <li><a href="{{ path('app_home') }}">Historique</a></li>
-                                    {% if is_granted('ROLE_ADMIN') %}
-                                        <li><a href="{{ path('admin_dashboard') }}">Dashboard</a></li>
-                                    {% endif %}
-                                    <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
-                                {% else %}
-                                    <li><a href="{{ path('app_auth') }}">Connexion</a></li>
-                                    <li><a href="{{ path('app_auth') }}">Inscription</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                        </div>
+                    </div>
+                </nav>
         <div id="page">
             <header id="fh5co-header" class="fh5co-cover" role="banner">
                 <div id="app" class="container">
@@ -455,7 +747,7 @@
                     </card>
                     <card data-image="https://i.pinimg.com/736x/1e/92/c4/1e92c41b988484af5a080b0eba820538.jpg">
                         <h1 slot="header">Lumiere</h1>
-                        <p slot="content">Notre service met la lumière au cœur de vos espaces. Avec des solutions d’éclairage sur mesure, nous créons des ambiances chaleureuses et modernes, jouant sur l’intensité, les couleurs et le design pour sublimer chaque pièce ou événement. Laissez vos espaces briller d’élégance !</p>
+                        <p slot="content">Notre service met la lumière au cœur de vos espaces. Avec des solutions d'éclairage sur mesure, nous créons des ambiances chaleureuses et modernes, jouant sur l'intensité, les couleurs et le design pour sublimer chaque pièce ou événement. Laissez vos espaces briller d'élégance !</p>
                     </card>
                     <card data-image="https://i.pinimg.com/474x/25/6e/75/256e75cd9f5e71cad09b060871e0e51b.jpg">
                         <h1 slot="header">Sono</h1>
@@ -478,11 +770,15 @@
                 </div>
                 <div class="card-container">
                     {% for service in GServices %}
-                        <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" role="article" aria-labelledby="service-title-{{ service.id }}" data-service-id="{{ service.id }}" data-service-title="{{ service.titre }}" data-service-description="{{ service.description }}" data-service-location="{{ service.location }}" data-service-type="{{ service.type_service }}" data-service-price="{{ service.prix }}" data-service-image="{{ asset(service.image) }}" data-service-partenaire="{{ service.sponsor.nom_partenaire }}">
+                        <div class="card" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}" role="article" aria-labelledby="service-title-{{ service.id }}" data-service-id="{{ service.id }}" data-service-title="{{ service.titre }}" data-service-description="{{ service.description }}" data-service-location="{{ service.location }}" data-service-type="{{ service.type_service }}" data-service-price="{{ service.prix }}" data-service-image="{% if service.image %}{{ asset(service.image) }}{% else %}{{ asset('service/default.jpg') }}{% endif %}" data-service-partenaire="{{ service.sponsor.nom_partenaire }}">
                             <div class="content">
                                 <div class="front">
                                     <div class="img">
-                                        <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img" loading="lazy">
+                                        {% if service.image %}
+                                            <img src="{{ asset(service.image) }}" alt="Image de {{ service.titre }}" class="service-img" loading="lazy">
+                                        {% else %}
+                                            <img src="{{ asset('service/default.jpg') }}" alt="Image par défaut" class="service-img" loading="lazy">
+                                        {% endif %}
                                         <div class="circle" id="right"></div>
                                         <div class="circle" id="bottom"></div>
                                     </div>
@@ -504,12 +800,17 @@
                     {% endfor %}
                 </div>
             </section>
+            <!-- Bouton de panier flottant -->
+            <div class="cart-button" id="cartButton" role="button" aria-label="Ouvrir le panier" tabindex="0">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
         </div>
         <!-- Details Container -->
         <div class="details-container" id="detailsContainer" role="dialog" aria-labelledby="details-title">
             <div class="details-content">
                 <button class="close-btn" aria-label="Fermer les détails"><i class="fas fa-times"></i></button>
-                <img id="details-image" src="" alt="">
+                <img id="details-image" src="" alt="" onerror="this.src='{{ asset('service/default.jpg') }}'">
                 <h2 id="details-title"></h2>
                 <div class="badges">
                     <small class="badge location" id="details-location"></small>
@@ -518,6 +819,8 @@
                 <p><strong>Partenaire:</strong> <span id="details-partenaire"></span></p>
                 <p><strong>Description: </strong><span id="details-description"></span></p>
                 <p><strong>Prix:</strong> <span id="details-price"></span></p>
+                <!-- Bouton Réserver -->
+                <button class="reserve-btn" id="reserveButton" aria-label="Réserver ce service">Réserver</button>
             </div>
         </div>
         {% endblock %}
@@ -546,50 +849,65 @@
                     day: eventDate.getDate(),
                     enableUtc: false
                 });
+            
+                $(document).ready(function() {
+                    // Navbar mobile toggle
+                    const menuToggle = $('.menu-toggle');
+                    const navMenu = $('.fh5co-nav .menu-1 ul');
+                    if (menuToggle.length && navMenu.length) {
+                        menuToggle.on('click', function() {
+                            navMenu.toggleClass('active');
+                            $(this).find('i').toggleClass('icon-menu icon-close');
+                        });
+
+                        // Close mobile menu when clicking outside
+                        $(document).on('click', function(e) {
+                            if (!menuToggle.is(e.target) && !navMenu.is(e.target) && navMenu.has(e.target).length === 0 && navMenu.hasClass('active')) {
+                                navMenu.removeClass('active');
+                                menuToggle.find('i').removeClass('icon-close').addClass('icon-menu');
+                            }
+                        });
+
+                        // Close mobile menu with Escape key
+                        $(document).on('keydown', function(e) {
+                            if (e.key === 'Escape' && navMenu.hasClass('active')) {
+                                navMenu.removeClass('active');
+                                menuToggle.find('i').removeClass('icon-close').addClass('icon-menu');
+                            }
+                        });
+                    }
+
+                    // Handle dropdowns on mobile
+                    const dropdownToggles = $('.dropdown-toggle');
+                    if (dropdownToggles.length) {
+                        dropdownToggles.on('click', function(e) {
+                            if ($(window).width() <= 768) {
+                                e.preventDefault();
+                                const parentLi = $(this).parent();
+                                const isActive = parentLi.hasClass('active');
+
+                                // Close all other dropdowns
+                                $('.has-dropdown').removeClass('active');
+
+                                // Toggle current dropdown
+                                if (!isActive) {
+                                    parentLi.addClass('active');
+                                }
+                            }
+                        });
+                    }
+
+                    // Set active state for Services in navbar dropdown
+                    $('.fh5co-nav .menu-1 ul li.has-dropdown .dropdown li a').each(function() {
+                        if ($(this).attr('href') === '{{ path('user_services') }}') {
+                            $(this).closest('.has-dropdown').addClass('active');
+                        }
+                    });
+                });
 
                 document.addEventListener('DOMContentLoaded', () => {
                     try {
-                        const toggleButtons = document.querySelectorAll('.toggle-details');
-                        
-                        toggleButtons.forEach(button => {
-                            const details = button.closest('.back-content').querySelector('.back-details');
-                            if (!details) {
-                                console.warn('No back-details element found for toggle button:', button);
-                                return;
-                            }
-                
-                            button.addEventListener('click', () => {
-                                const isExpanded = details.classList.toggle('expanded');
-                                button.setAttribute('aria-expanded', isExpanded);
-                                button.textContent = isExpanded ? 'Voir moins' : 'Voir plus';
-                                
-                                // Smooth scroll to top of details when expanding
-                                if (isExpanded) {
-                                    details.scrollTop = 0;
-                                }
-                            });
-                        });
-                
-                        // Add focus management for accessibility
-                        document.querySelectorAll('.card').forEach(card => {
-                            card.addEventListener('keydown', (e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    e.preventDefault();
-                                    card.querySelector('.reserve-btn')?.focus();
-                                }
-                            });
-                        });
-                
-                        // Lazy load AOS animations
-                        if (typeof AOS !== 'undefined') {
-                            AOS.init({
-                                duration: 800,
-                                once: true,
-                                offset: 100
-                            });
-                        }
-
-                        // Details container logic
+                        // Initialisation des éléments de l'interface
                         const cards = document.querySelectorAll('.card');
                         const detailsContainer = document.getElementById('detailsContainer');
                         const detailsContent = detailsContainer.querySelector('.details-content');
@@ -602,10 +920,39 @@
                         const detailsDescription = document.getElementById('details-description');
                         const detailsPrice = document.getElementById('details-price');
                         const detailsPartenaire = document.getElementById('details-partenaire');
-
+                        const cartButton = document.getElementById('cartButton');
+                        const cartCount = document.getElementById('cartCount');
+                        const reserveButton = document.getElementById('reserveButton');
+            
+                        // Panier : stocker les services ajoutés
+                        let cartItems = [];
+            
+                        // Récupérer les éléments du panier depuis la session au chargement
+                        fetch('{{ path('app_panier_get') }}', {
+                            method: 'GET',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            cartItems = data.cartItems || [];
+                            updateCartCount(cartItems.length);
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors de la récupération du panier:', error);
+                            cartItems = [];
+                            updateCartCount(0);
+                        });
+            
+                        // Gestion des clics sur les cartes pour afficher les détails
                         cards.forEach(card => {
                             card.addEventListener('click', () => {
-                                // Populate details
                                 detailsImage.src = card.dataset.serviceImage;
                                 detailsImage.alt = `Image de ${card.dataset.serviceTitle}`;
                                 detailsTitle.textContent = card.dataset.serviceTitle;
@@ -614,43 +961,51 @@
                                 detailsDescription.textContent = card.dataset.serviceDescription;
                                 detailsPrice.textContent = card.dataset.servicePrice;
                                 detailsPartenaire.textContent = card.dataset.servicePartenaire;
+                                
+                                // Gestion des erreurs d'image
+                                detailsImage.onerror = function() {
+                                    this.src = '{{ asset('service/default.jpg') }}';
+                                };
 
-                                // Show container and apply blur
+                                // Stocker l'ID du service pour le bouton Réserver
+                                reserveButton.dataset.serviceId = card.dataset.serviceId;
+            
+                                // Afficher la fenêtre modale et appliquer le flou
                                 detailsContainer.classList.add('active');
                                 pageContent.classList.add('blur-active');
-
-                                // Focus on close button for accessibility
+            
+                                // Focus sur le bouton de fermeture pour l'accessibilité
                                 closeBtn.focus();
                             });
                         });
-
-                        // Close container
+            
+                        // Fermer la fenêtre modale
                         closeBtn.addEventListener('click', () => {
                             detailsContainer.classList.remove('active');
                             pageContent.classList.remove('blur-active');
                         });
-
-                        // Close on outside click
+            
+                        // Fermer en cliquant à l'extérieur
                         detailsContainer.addEventListener('click', (e) => {
                             if (e.target === detailsContainer) {
                                 detailsContainer.classList.remove('active');
                                 pageContent.classList.remove('blur-active');
                             }
                         });
-
-                        // Close on Escape key
+            
+                        // Fermer avec la touche Échap
                         document.addEventListener('keydown', (e) => {
                             if (e.key === 'Escape' && detailsContainer.classList.contains('active')) {
                                 detailsContainer.classList.remove('active');
                                 pageContent.classList.remove('blur-active');
                             }
                         });
-
-                        // Accessibility: Trap focus within the details container
+            
+                        // Gestion du focus dans la fenêtre modale pour l'accessibilité
                         const focusableElements = detailsContent.querySelectorAll('button, [tabindex]');
                         const firstFocusable = focusableElements[0];
                         const lastFocusable = focusableElements[focusableElements.length - 1];
-
+            
                         detailsContent.addEventListener('keydown', (e) => {
                             if (e.key === 'Tab') {
                                 if (e.shiftKey && document.activeElement === firstFocusable) {
@@ -662,14 +1017,118 @@
                                 }
                             }
                         });
+            
+                        // Gestion du bouton Réserver
+                        reserveButton.addEventListener('click', () => {
+                            const serviceId = reserveButton.dataset.serviceId;
+                            const service = {
+                                id: serviceId,
+                                quantity: 1 // Données minimales attendues par le contrôleur
+                            };
+            
+                            // Vérifier si le service est déjà dans le panier
+                            if (!cartItems.some(item => item.id === serviceId)) {
+                                // Ajouter à l'affichage local du panier
+                                cartItems.push({
+                                    id: serviceId,
+                                    title: detailsTitle.textContent,
+                                    price: detailsPrice.textContent,
+                                    location: detailsLocation.textContent.replace('<i class="fas fa-map-marker-alt"></i> ', ''),
+                                    type: detailsType.textContent.replace('<i class="fas fa-concierge-bell"></i> ', ''),
+                                    quantity: 1
+                                });
+                                updateCartCount(cartItems.length);
+            
+                                // Envoyer le nouveau service au serveur via AJAX
+                                fetch('{{ path('app_panier_add') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'X-CSRF-Token': '{{ csrf_token('panier') }}' // Ajout du token CSRF
+                                    },
+                                    body: JSON.stringify({ cartItems: [service] }) // Envoyer uniquement le nouveau service
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.success) {
+                                        alert(`Service "${detailsTitle.textContent}" ajouté au panier !`);
+                                    } else {
+                                        alert(data.message || 'Erreur lors de l\'ajout au panier.');
+                                        // Revenir à l'état précédent du panier si l'ajout échoue
+                                        cartItems = cartItems.filter(item => item.id !== serviceId);
+                                        updateCartCount(cartItems.length);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Erreur AJAX:', error);
+                                    alert('Erreur lors de la communication avec le serveur: ' + error.message);
+                                    // Revenir à l'état précédent du panier
+                                    cartItems = cartItems.filter(item => item.id !== serviceId);
+                                    updateCartCount(cartItems.length);
+                                });
+                            } else {
+                                alert(`Service "${detailsTitle.textContent}" est déjà dans le panier.`);
+                            }
+                        });
+            
+                        // Gestion du bouton de panier
+                        cartButton.addEventListener('click', () => {
+                            window.location.href = '{{ path('app_panier_index') }}';
+                        });
+            
+                        // Accessibilité : activer le clic au clavier pour le bouton de panier
+                        cartButton.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                cartButton.click();
+                            }
+                        });
+            
+                        // Accessibilité : activer le clic au clavier pour le bouton Réserver
+                        reserveButton.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                reserveButton.click();
+                            }
+                        });
+            
+                        // Fonction pour mettre à jour le compteur du panier
+                        function updateCartCount(count) {
+                            cartCount.textContent = count;
+                        }
+            
+                        // Initialisation AOS pour les animations
+                        if (typeof AOS !== 'undefined') {
+                            AOS.init({
+                                duration: 800,
+                                once: true,
+                                offset: 100
+                            });
+                        }
+            
+                        // Accessibilité : focus sur les cartes
+                        document.querySelectorAll('.card').forEach(card => {
+                            card.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    card.click(); // Simuler un clic pour ouvrir les détails
+                                }
+                            });
+                        });
                     } catch (error) {
-                        console.error('Error initializing service cards:', error);
+                        console.error('Erreur lors de l\'initialisation des cartes de service:', error);
                     }
                 });
-
+            
                 // Vue.js Card Hover Effect
                 Vue.config.devtools = true;
-
+            
                 Vue.component('card', {
                     template: `
                         <div class="card-wrap"
@@ -717,18 +1176,18 @@
                             const tY = this.mousePY * -40;
                             return {
                                 transform: `translateX(${tX}px) translateY(${tY}px)`
-                            }
+                            };
                         },
                         cardBgImage() {
                             return {
                                 backgroundImage: `url(${this.dataImage})`
-                            }
+                            };
                         }
                     },
                     methods: {
                         handleMouseMove(e) {
-                            this.mouseX = e.pageX - this.$refs.card.offsetLeft - this.width/2;
-                            this.mouseY = e.pageY - this.$refs.card.offsetTop - this.height/2;
+                            this.mouseX = e.pageX - this.$refs.card.offsetLeft - this.width / 2;
+                            this.mouseY = e.pageY - this.$refs.card.offsetTop - this.height / 2;
                         },
                         handleMouseEnter() {
                             clearTimeout(this.mouseLeaveDelay);
@@ -741,7 +1200,7 @@
                         }
                     }
                 });
-
+            
                 const app = new Vue({
                     el: '#app'
                 });

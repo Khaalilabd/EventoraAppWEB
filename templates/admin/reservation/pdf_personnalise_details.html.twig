@@ -5,7 +5,7 @@
     <title>Réservation Personnalisée #{{ reservation.IDReservationPersonalise }}</title>
     <style>
         body {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             color: #333;
@@ -35,7 +35,7 @@
             font-weight: 600;
         }
         .header span {
-            font-family: cursive;
+            font-family: Times New Roman, serif;
             font-size: 20px;
             color: #007bff;
             display: block;
@@ -49,25 +49,6 @@
             text-align: center;
             margin-bottom: 20px;
             font-weight: 600;
-        }
-        dl {
-            margin: 0;
-            color: #2c3e50;
-        }
-        dt {
-            font-weight: 700;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-        dd {
-            font-size: 15px;
-            font-weight: 500;
-            margin-bottom: 20px;
-            padding: 10px 15px;
-            background: #f8f9fa;
-            border-radius: 5px;
         }
         table {
             width: 100%;
@@ -106,25 +87,42 @@
 <body>
     <div class="container">
         <div class="header">
+            <img src="{{ absolute_url(asset('assets/img/EVENTORA.png')) }}" alt="Eventora Logo">
             <span>Votre Événement</span>
             <h1>Réservation Personnalisée #{{ reservation.IDReservationPersonalise }}</h1>
         </div>
         <div class="content">
             <h2>Détails de la Réservation</h2>
-            <dl>
-                <dt>Nom</dt>
-                <dd>{{ reservation.nom|default('N/A') }}</dd>
-                <dt>Prénom</dt>
-                <dd>{{ reservation.prenom|default('N/A') }}</dd>
-                <dt>Email</dt>
-                <dd>{{ reservation.email|default('N/A') }}</dd>
-                <dt>Numéro de téléphone</dt>
-                <dd>{{ reservation.numtel|default('N/A') }}</dd>
-                <dt>Description</dt>
-                <dd>{{ reservation.description|default('N/A') }}</dd>
-                <dt>Date</dt>
-                <dd>{{ reservation.date ? reservation.date|date('Y-m-d') : 'N/A' }}</dd>
-            </dl>
+            <table>
+                <tr>
+                    <th>Champ</th>
+                    <th>Valeur</th>
+                </tr>
+                <tr>
+                    <td>Nom</td>
+                    <td>{{ reservation.nom|default('N/A') }}</td>
+                </tr>
+                <tr>
+                    <td>Prénom</td>
+                    <td>{{ reservation.prenom|default('N/A') }}</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>{{ reservation.email|default('N/A') }}</td>
+                </tr>
+                <tr>
+                    <td>Numéro de téléphone</td>
+                    <td>{{ reservation.numtel|default('N/A') }}</td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td>{{ reservation.description|slice(0, 500)|e|default('N/A') }}</td>
+                </tr>
+                <tr>
+                    <td>Date</td>
+                    <td>{{ reservation.date ? reservation.date|date('Y-m-d') : 'N/A' }}</td>
+                </tr>
+            </table>
             <h2>Services Sélectionnés</h2>
             <table>
                 <tr>
@@ -132,19 +130,17 @@
                     <th>Prix</th>
                     <th>Location</th>
                 </tr>
-                {% if reservation.services is not empty %}
-                    {% for service in reservation.services %}
-                        <tr>
-                            <td>{{ service.titre|default('N/A')|e }}</td>
-                            <td>{{ service.prix|default('N/A')|e }}</td>
-                            <td>{{ service.location|default('N/A')|e }}</td>
-                        </tr>
-                    {% endfor %}
+                {% for service in reservation.services|default([]) %}
+                    <tr>
+                        <td>{{ service.titre|slice(0, 100)|e|default('N/A') }}</td>
+                        <td>{{ service.prix|default('N/A') }}</td>
+                        <td>{{ service.location|slice(0, 100)|e|default('N/A') }}</td>
+                    </tr>
                 {% else %}
                     <tr>
                         <td colspan="3" style="text-align: center;">Aucun service sélectionné</td>
                     </tr>
-                {% endif %}
+                {% endfor %}
             </table>
         </div>
         <div class="footer">

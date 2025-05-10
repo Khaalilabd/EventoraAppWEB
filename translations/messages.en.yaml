@@ -1,4 +1,4 @@
-settings: Settings
+Settings: Settings
 languages: Languages
 french: French
 english: English
@@ -24,6 +24,7 @@ role: Role
 account_confirmed: Account Confirmed
 username: Username
 password: Password
+password.edit: Password (leave empty to keep current)
 save_changes: Save Changes
 event_title_pack: 'Eventora: Pack Reservation %pack%'
 event_title_personnalise: 'Eventora: Personalized Reservation'
@@ -33,3 +34,40 @@ google_auth_failed: 'Failed to connect to Google Calendar. Please try again.'
 add_to_calendar: 'Add to Google Calendar'
 success: 'Success'
 error: 'Error'
+
+# Registration page
+registration: Registration
+create_account: Create Account
+sign_up: Sign Up
+back_to_login: Back to Login
+generate_password: Generate Password
+browser_no_video: Your browser does not support the video tag.
+
+# Form errors and messages
+button_not_found: Button "generate-password" not found.
+password_field_not_found: Password field with id="registration_form_motDePasse" not found.
+toggle_password_not_found: Icon "toggle-password" not found.
+network_error: Network error or server unavailable: 
+password_generation_error: Error generating password:
+password_generation_error_try_again: Error generating password. Please try again.
+
+# Reservation forms
+event_description: Event Description
+event_date: Event Date
+services: Services
+select_services: Select Services
+select_pack: Select a Pack
+status: Status
+create_reservation: Create Reservation
+back: Back
+add_to_google_calendar: Add to Google Calendar
+reservation_success: Your reservation has been successfully created
+reservation_error: An error occurred while creating your reservation
+service_details: Service Details
+close: Close
+confirm: Confirm
+cancel: Cancel
+select_date: Select a date
+select_gender: Select your gender (optional)
+male: Male
+female: Female

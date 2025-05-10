@@ -19,11 +19,11 @@ class ReclamationRep
     #[Assert\NotNull(message: "La réclamation doit être spécifiée.")]
     private ?Reclamation $reclamation = null;
 
-    #[ORM\Column(type: 'string', length: 500)]
+    #[ORM\Column(type: 'string', length: 5000)]
     #[Assert\NotBlank(message: "La réponse ne peut pas être vide.")]
     #[Assert\Length(
         min: 10,
-        max: 500,
+        max: 50000,
         minMessage: "La réponse doit contenir au moins {{ limit }} caractères.",
         maxMessage: "La réponse ne peut pas dépasser {{ limit }} caractères."
     )]
