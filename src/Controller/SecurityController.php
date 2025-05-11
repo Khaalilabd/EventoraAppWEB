@@ -183,7 +183,7 @@ class SecurityController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         MailerInterface $mailer,
-        \Psr\Log\LoggerInterface $logger
+        LoggerInterface $logger
     ): Response {
         $form = $this->createForm(ResetPasswordRequestType::class);
         $form->handleRequest($request);
@@ -217,11 +217,18 @@ class SecurityController extends AbstractController
 
                 $resetLink = $this->generateUrl('app_reset_password', ['token' => $token], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
                 $logger->info('Lien de réinitialisation généré : ' . $resetLink);
+
+                // Utilisation de la template Twig pour l'email
                 $emailMessage = (new Email())
                     ->from('eventoraeventora@gmail.com')
                     ->to($email)
                     ->subject('Réinitialisation de votre mot de passe')
-                    ->html("Cliquez sur ce lien pour réinitialiser votre mot de passe : <a href='$resetLink'>$resetLink</a>");
+                    ->html(
+                        $this->renderView('emails/reset_password.html.twig', [
+                            'resetLink' => $resetLink,
+                            'unsubscribeLink' => 'https://eventora.com/unsubscribe', // Remplacez par un lien réel si disponible
+                        ])
+                    );
 
                 try {
                     $logger->info('Envoi d\'un email de réinitialisation à : ' . $email);
