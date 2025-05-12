@@ -12,7 +12,7 @@ class EviSugTimeAnalyzeCommand extends Command
 {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $pythonScript = __DIR__ . '/../../venv/bin/evisugtime/evisugtime_analyzer.py';
+        $pythonScript = __DIR__ . '/../../venv/bin/evisugtime_analyzer.py';
         $process = new Process(['python3', $pythonScript]);
         $process->run();
 

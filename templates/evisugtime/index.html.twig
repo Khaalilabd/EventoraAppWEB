@@ -2,255 +2,344 @@
 
 {% block title %}EviSugTime - Analyse des Réclamations{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f3f4f6;
+        }
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .nav-tabs {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            margin: 0 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-tab.active {
+            background: #2563eb;
+            color: white;
+        }
+        .section {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .cluster-card {
+            background: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease;
+        }
+        .cluster-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .suggestion-card {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+        }
+        .section-title {
+            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-title i {
+            color: #2563eb;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        .stat-label {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-<div class="min-h-screen bg-gray-50 font-sans">
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-8 shadow-lg">
-        <div class="container mx-auto px-4">
-            <h1 class="text-4xl font-extrabold tracking-tight">EviSugTime - Analyse des Réclamations</h1>
-            <p class="mt-2 text-lg opacity-90">Optimisez votre plateforme grâce à une analyse avancée des réclamations</p>
-            <div class="mt-6 flex items-center space-x-4">
-                <input type="text" id="searchInput" placeholder="Rechercher une réclamation..." class="w-full max-w-md px-4 py-2 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <select id="filterType" class="px-4 py-2 rounded-lg text-gray-900 focus:outline-none">
-                    <option value="">Filtrer par type</option>
-                    {% for label in results.type_distribution.labels %}
-                        <option value="{{ label }}">{{ label }}</option>
-                    {% endfor %}
-                </select>
+    <div class="main-container">
+        {# Navigation Tabs #}
+        <div class="nav-tabs">
+            <div class="flex justify-center space-x-4">
+                <button class="nav-tab active" data-section="overview">Vue d'ensemble</button>
+                <button class="nav-tab" data-section="clusters">Clusters</button>
+                <button class="nav-tab" data-section="suggestions">Suggestions</button>
+                <button class="nav-tab" data-section="charts">Graphiques</button>
             </div>
         </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-12">
-        {% if results.clusters is defined %}
-            <!-- Analytics Overview -->
-            <section class="mb-12" data-aos="fade-up">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6">Vue d'Ensemble des Analyses</h2>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Cluster Bar Chart -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg" data-aos="fade-right">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Réclamations par Cluster</h3>
-                        <canvas id="clusterChart" class="w-full h-64"></canvas>
-                    </div>
-                    <!-- Type Donut Chart -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg" data-aos="fade-up">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Types de Réclamations</h3>
-                        <canvas id="typeChart" class="w-full h-64"></canvas>
-                    </div>
-                    <!-- Priority Line Chart -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg" data-aos="fade-left">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Priorités des Réclamations</h3>
-                        {% if results.priority_distribution is defined and results.priority_distribution.data|length > 0 %}
-                            <canvas id="priorityChart" class="w-full h-64"></canvas>
-                        {% else %}
-                            <p class="text-gray-600 text-center">Aucune donnée de priorité disponible.</p>
-                        {% endif %}
+        {# Flash Messages #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded-lg {% if label == 'error' %}bg-red-100 text-red-700{% elseif label == 'warning' %}bg-yellow-100 text-yellow-700{% else %}bg-green-100 text-green-700{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        {# Overview Section #}
+        <section id="overview" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Vue d'ensemble
+            </h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">{{ results.clusters|length }}</div>
+                    <div class="stat-label">Nombre de Clusters</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total des Réclamations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ results.suggestions|length }}</div>
+                    <div class="stat-label">Suggestions Générées</div>
+                </div>
+            </div>
+        </section>
+
+        {# Charts Section #}
+        <section id="charts" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-pie"></i>
+                Analyse Graphique
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold mb-4">Distribution des Clusters</h3>
+                    <div class="chart-container">
+                        <canvas id="clusterChart"></canvas>
                     </div>
                 </div>
-            </section>
-
-            <!-- Clusters Details -->
-            <section class="mb-12" data-aos="fade-up">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6">Détails des Clusters</h2>
-                {% if results.clusters|length > 0 %}
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {% for clusterId, reclamations in results.clusters %}
-                            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
-                                <h3 class="text-xl font-semibold text-blue-900">Cluster {{ clusterId|number_format + 1 }}</h3>
-                                <ul class="mt-4 space-y-3">
-                                    {% for reclamation in reclamations %}
-                                        <li class="text-gray-600">
-                                            <span class="font-medium text-gray-800">{{ reclamation.titre }}</span>: {{ reclamation.description|slice(0, 100) }}{% if reclamation.description|length > 100 %}...{% endif %}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endfor %}
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold mb-4">Types de Réclamations</h3>
+                    <div class="chart-container">
+                        <canvas id="typeChart"></canvas>
                     </div>
-                {% else %}
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
-                        <p class="text-gray-700">Aucun cluster trouvé. Vérifiez les données des réclamations.</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold mb-4">Distribution des Priorités</h3>
+                    <div class="chart-container">
+                        <canvas id="priorityChart"></canvas>
                     </div>
-                {% endif %}
-            </section>
-
-            <!-- Improvement Solutions -->
-            <section data-aos="fade-up">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6">Solutions d'Amélioration</h2>
-                {% if results.suggestions|length > 0 %}
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {% for clusterId, suggestion in results.suggestions %}
-                            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
-                                <div class="flex items-start space-x-4">
-                                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                    </svg>
-                                    <div>
-                                        <h3 class="text-xl font-semibold text-gray-800">Solution pour Cluster {{ clusterId|number_format + 1 }}</h3>
-                                        <p class="text-gray-600 mt-2">{{ suggestion|default('Aucune suggestion disponible') }}</p>
-                                        <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Mettre en œuvre</button>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
-                        <p class="text-gray-700">Aucune suggestion d'amélioration disponible. Vérifiez l'API de suggestions.</p>
-                    </div>
-                {% endif %}
-            </section>
-        {% else %}
-            <div class="bg-white p-6 rounded-xl shadow-lg text-center" data-aos="fade-up">
-                <p class="text-gray-700 text-lg">Aucun résultat d'analyse disponible. Exécutez la commande : <code class="bg-gray-100 p-1 rounded">bin/console app:evisugtime:analyze</code></p>
+                </div>
             </div>
-        {% endif %}
-    </main>
+        </section>
 
-    <!-- Footer -->
-    <footer class="bg-blue-900 text-white py-6">
-        <div class="container mx-auto px-4 text-center">
-            <p>© {{ "now"|date("Y") }} EventoraApp. Tous droits réservés.</p>
+        {# Clusters Section #}
+        <section id="clusters" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-layer-group"></i>
+                Détails des Clusters
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for clusterId, reclamations in results.clusters %}
+                    <div class="cluster-card">
+                        <h3 class="text-lg font-semibold mb-3">Cluster {{ clusterId|number_format + 1 }}</h3>
+                        {% for reclamation in reclamations %}
+                            <div class="mb-3 p-3 bg-white rounded border border-gray-100">
+                                <h4 class="font-medium text-gray-800">{{ reclamation.titre|default('Sans titre') }}</h4>
+                                <p class="text-gray-600 text-sm">{{ reclamation.description|default('Aucune description')|slice(0, 150) }}{% if reclamation.description|length > 150 %}...{% endif %}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        {# Suggestions Section #}
+        <section id="suggestions" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-lightbulb"></i>
+                Suggestions d'Amélioration
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for clusterId, suggestion in results.suggestions %}
+                    <div class="suggestion-card">
+                        <h3 class="font-semibold mb-2">Cluster {{ clusterId|number_format + 1 }}</h3>
+                        <p class="text-gray-700">{{ suggestion|default('Aucune suggestion disponible') }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        {# Export Button #}
+        <div class="text-center mt-8">
+            <a href="{{ path('evisugtime_export_pdf') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <i class="fas fa-file-pdf mr-2"></i>
+                Exporter en PDF
+            </a>
         </div>
-    </footer>
+    </div>
+{% endblock %}
 
-    <!-- Scripts -->
+{% block javascripts %}
+    {{ parent() }}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
     <script>
-        AOS.init({
-            duration: 800,
-            once: true
-        });
-
-        {% if results.clusters is defined %}
-            // Cluster Bar Chart
-            const clusterCtx = document.getElementById('clusterChart').getContext('2d');
-            new Chart(clusterCtx, {
-                type: 'bar',
-                data: {
-                    labels: {{ results.chart.labels|json_encode|raw }},
-                    datasets: [{
-                        label: 'Nombre de Réclamations',
-                        data: {{ results.chart.data|json_encode|raw }},
-                        backgroundColor: 'rgba(30, 64, 175, 0.6)',
-                        borderColor: 'rgba(30, 64, 175, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: { beginAtZero: true }
-                    },
-                    plugins: {
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleFont: { size: 14 },
-                            bodyFont: { size: 12 }
-                        }
-                    }
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            const results = {{ results|json_encode|raw }};
+            
+            // Navigation Tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            const sections = document.querySelectorAll('section');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Show corresponding section
+                    const sectionId = tab.dataset.section;
+                    sections.forEach(section => {
+                        section.style.display = section.id === sectionId ? 'block' : 'none';
+                    });
+                });
             });
 
-            // Type Donut Chart
-            const typeCtx = document.getElementById('typeChart').getContext('2d');
-            new Chart(typeCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: {{ results.type_distribution.labels|json_encode|raw }},
-                    datasets: [{
-                        data: {{ results.type_distribution.data|json_encode|raw }},
-                        backgroundColor: [
-                            'rgba(30, 64, 175, 0.6)',
-                            'rgba(220, 38, 38, 0.6)',
-                            'rgba(5, 150, 105, 0.6)',
-                            'rgba(147, 51, 234, 0.6)',
-                            'rgba(234, 179, 8, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(30, 64, 175, 1)',
-                            'rgba(220, 38, 38, 1)',
-                            'rgba(5, 150, 105, 1)',
-                            'rgba(147, 51, 234, 1)',
-                            'rgba(234, 179, 8, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'top' },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleFont: { size: 14 },
-                            bodyFont: { size: 12 }
-                        }
-                    }
-                }
-            });
-
-            // Priority Line Chart
-            {% if results.priority_distribution is defined and results.priority_distribution.data|length > 0 %}
-                const priorityCtx = document.getElementById('priorityChart').getContext('2d');
-                new Chart(priorityCtx, {
-                    type: 'line',
+            // Initialize charts
+            function initCharts() {
+                // Cluster Chart
+                new Chart(document.getElementById('clusterChart'), {
+                    type: 'bar',
                     data: {
-                        labels: {{ results.priority_distribution.labels|json_encode|raw }},
+                        labels: results.chart.labels,
                         datasets: [{
                             label: 'Nombre de Réclamations',
-                            data: {{ results.priority_distribution.data|json_encode|raw }},
-                            fill: false,
-                            borderColor: 'rgba(30, 64, 175, 1)',
-                            tension: 0.4
+                            data: results.chart.data,
+                            backgroundColor: 'rgba(37, 99, 235, 0.5)',
+                            borderColor: 'rgba(37, 99, 235, 1)',
+                            borderWidth: 1
                         }]
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
-                            y: { beginAtZero: true }
-                        },
-                        plugins: {
-                            tooltip: {
-                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                titleFont: { size: 14 },
-                                bodyFont: { size: 12 }
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
                             }
                         }
                     }
                 });
-            {% endif %}
 
-            // Search and Filter Functionality
-            const searchInput = document.getElementById('searchInput');
-            const filterType = document.getElementById('filterType');
-            const clusterCards = document.querySelectorAll('.grid > div');
-
-            function filterCards() {
-                const searchText = searchInput.value.toLowerCase();
-                const selectedType = filterType.value.toLowerCase();
-
-                clusterCards.forEach(card => {
-                    const title = card.querySelector('h3').textContent.toLowerCase();
-                    const items = card.querySelectorAll('li');
-                    let hasMatch = false;
-
-                    items.forEach(item => {
-                        const text = item.textContent.toLowerCase();
-                        const matchesSearch = searchText === '' || text.includes(searchText);
-                        const matchesType = selectedType === '' || text.includes(selectedType);
-                        if (matchesSearch && matchesType) {
-                            hasMatch = true;
+                // Type Chart
+                new Chart(document.getElementById('typeChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: results.type_distribution.labels,
+                        datasets: [{
+                            data: results.type_distribution.data,
+                            backgroundColor: [
+                                'rgba(37, 99, 235, 0.5)',
+                                'rgba(16, 185, 129, 0.5)',
+                                'rgba(245, 158, 11, 0.5)',
+                                'rgba(239, 68, 68, 0.5)',
+                                'rgba(139, 92, 246, 0.5)'
+                            ],
+                            borderColor: [
+                                'rgba(37, 99, 235, 1)',
+                                'rgba(16, 185, 129, 1)',
+                                'rgba(245, 158, 11, 1)',
+                                'rgba(239, 68, 68, 1)',
+                                'rgba(139, 92, 246, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
                         }
-                    });
+                    }
+                });
 
-                    card.style.display = hasMatch ? 'block' : 'none';
+                // Priority Chart
+                new Chart(document.getElementById('priorityChart'), {
+                    type: 'line',
+                    data: {
+                        labels: results.priority_distribution.labels,
+                        datasets: [{
+                            label: 'Nombre de Réclamations',
+                            data: results.priority_distribution.data,
+                            fill: true,
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
+                            }
+                        }
+                    }
                 });
             }
 
-            searchInput.addEventListener('input', filterCards);
-            filterType.addEventListener('change', filterCards);
-        {% endif %}
+            // Initialize charts
+            initCharts();
+
+            // Show overview section by default
+            document.querySelector('[data-section="overview"]').click();
+        });
     </script>
-</div>
 {% endblock %}
